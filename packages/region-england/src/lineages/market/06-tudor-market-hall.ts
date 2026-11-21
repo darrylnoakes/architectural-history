@@ -71,7 +71,7 @@ export const tudorMarketHall: BuildingDef = {
       for (let i = 0; i < bays; i++) {
         const x = -UL / 2 + (i + 0.5) * bw;
         // close-studded lower register
-        b.frame(bw, 1.0, oak, { at: [x, y1, zf], facing, studs: 4, rails: 0, beam: 0.15 });
+        b.frame(bw, 1.0, oak, { at: [x, y1, zf], facing, studs: 3, rails: 0, beam: 0.15 });
         if (i % 2 === 1) {
           // a mullioned and transomed window with leaded lights
           b.frame(bw, UH - 1.0, oak, { at: [x, y1 + 1.0, zf], facing, studs: 0, rails: 0, beam: 0.15 });

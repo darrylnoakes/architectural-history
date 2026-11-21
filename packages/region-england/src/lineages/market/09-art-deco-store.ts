@@ -85,7 +85,7 @@ export const artDecoStore: BuildingDef = {
     }
     // parapet with stripes
     slab(b, outer, y, 1.6, faience, undefined, roundRect(W - 0.8, D - 0.8, R - 0.4, 6));
-    for (const dy of [0.35, 0.6]) slab(b, band, y + dy, 0.1, accent);
+    for (const dy of [0.35, 0.6]) slab(b, band, y + dy, 0.1, accent, undefined, roundRect(W - 0.8, D - 0.8, R - 0.4, 6));
     slab(b, roundRect(W + 0.2, D + 0.2, R + 0.1, 6), y + 1.6, 0.14, tint(faience, -0.05), undefined, roundRect(W - 0.8, D - 0.8, R - 0.4, 6));
     const yTop = y + 1.6;
     // flat roof and the lift motor room

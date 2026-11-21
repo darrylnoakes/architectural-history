@@ -39,10 +39,10 @@ export const brutalistArtsCentre: BuildingDef = {
   modelledOn: 'National Theatre, South Bank, London (Denys Lasdun, 1967-76)',
   lookFor: [
     { label: 'Strata', note: 'Deep horizontal terraces at different levels, stepping back like layers of rock. Lasdun called them his strata.', at: [-13.5, 6, 9.6] },
-    { label: 'Fly towers', note: 'The tall blind boxes above each stage, high enough to lift whole sets out of sight of the audience.', at: [-3.5, 27.4, -6.5] },
+    { label: 'Fly towers', note: 'The tall blind boxes above each stage, high enough to lift whole sets out of sight of the audience.', at: [-4, 27.4, -7] },
     { label: 'Board-marked concrete', note: 'Concrete poured into timber shuttering keeps the grain and joints of the boards on its face.', at: [11.2, 12, -4.4] },
     { label: 'Cantilever', note: 'The terraces reach out several metres beyond the glass beneath them, held by the concrete frame, with nothing underneath.', at: [10, 3.3, 9.4] },
-    { label: 'Glazed foyers', note: 'Glass walls set well back under the terraces, so the foyers open to the town but stay in shadow.', at: [-6, 2, 6.1] },
+    { label: 'Glazed foyers', note: 'Glass walls set well back under the terraces, so the foyers open to the town but stay in shadow.', at: [-6, 2, 8.0] },
   ],
   influences: ['corbusian-brutalism'],
   build(b) {
@@ -55,31 +55,31 @@ export const brutalistArtsCentre: BuildingDef = {
     b.stairs(10, 0.5, 1.5, 3, tint(conc, -0.04), { at: [-3, 0, 10.7] });
 
     // level 0: glazed foyer behind concrete piers
-    b.box(26, 3.1, 12.4, glass, { at: [0, 0.5, 0], ...G });
-    for (const x of spread(7, -13, 13)) b.box(0.25, 3.1, 0.06, P.castIron, { at: [x, 0.5, 6.22] });
-    for (const x of [-10, 0, 10]) b.box(1.0, 3.1, 1.0, conc, { at: [x, 0.5, 7.4] });
+    b.box(26, 3.1, 13.8, glass, { at: [0, 0.5, 0.9], ...G });
+    for (const x of spread(9, -13, 13)) b.box(0.22, 3.1, 0.06, P.castIron, { at: [x, 0.5, 7.82] });
+    for (const x of [-10, 0, 10]) b.box(1.0, 3.1, 1.0, conc, { at: [x, 0.5, 8.6] });
     terrace(b, -15.5, 15, -9, 9.8, 3.6, conc);
 
     // level 1
-    b.box(23, 3.2, 11, glass, { at: [-0.5, 4.3, -0.5], ...G });
-    for (const x of spread(6, -12, 11)) b.box(0.22, 3.2, 0.06, P.castIron, { at: [x, 4.3, 5.02] });
-    terrace(b, -14.5, 12.5, -8, 8.4, 7.5, conc);
+    b.box(23.5, 3.2, 13.4, glass, { at: [-0.75, 4.3, 0.7], ...G });
+    for (const x of spread(8, -12.5, 11)) b.box(0.2, 3.2, 0.06, P.castIron, { at: [x, 4.3, 7.42] });
+    terrace(b, -14.5, 12.5, -8, 8.8, 7.5, conc);
 
     // level 2
-    b.box(18, 3.0, 9, glass, { at: [-1.5, 8.2, -1.2], ...G });
-    terrace(b, -12.5, 10, -7, 6.6, 11.2, conc);
-    // level 3: a small top foyer and plant room
-    b.box(11, 2.6, 6, glass, { at: [-3, 11.9, -1], ...G });
-    b.box(12.5, 0.8, 7.4, conc, { at: [-3, 14.5, -1] });
+    b.box(18, 3.0, 11, glass, { at: [-1, 8.2, 0.5], ...G });
+    terrace(b, -12.5, 10, -7, 7.6, 11.2, conc);
+    // level 3: a small top foyer under a deep roof slab
+    b.box(8, 2.6, 8.6, glass, { at: [-3, 11.9, 0.3], ...G });
+    b.box(12, 1.2, 10.6, conc, { at: [-3, 14.5, 0.3] });
 
     // the stair and lift towers that tie the strata together
     boardMarked(b, 3.6, 16, 3.6, conc, [12.6, 0.5, -6.2]);
     boardMarked(b, 3, 14, 3, conc, [-14, 0.5, -5]);
 
-    // two fly towers, the larger turned on the diagonal
-    boardMarked(b, 10, 26.5, 10, conc, [-3.5, 0.5, -6.5], Math.PI / 4);
+    // two fly towers over the two stages
+    boardMarked(b, 10, 26.5, 9, conc, [-4, 0.5, -7]);
     boardMarked(b, 7.5, 21, 7, conc, [7.6, 0.5, -8]);
-    b.box(10.4, 0.5, 10.4, tint(conc, 0.05), { at: [-3.5, 27, -6.5], rotY: Math.PI / 4 });
+    b.box(10.4, 0.5, 9.4, tint(conc, 0.05), { at: [-4, 27, -7] });
     b.box(7.9, 0.5, 7.4, tint(conc, 0.05), { at: [7.6, 21.5, -8] });
     // scenery dock at the back
     b.box(10, 6.5, 3.6, tint(conc, -0.03), { at: [5, 0.5, -12.6] });
@@ -94,8 +94,8 @@ export const brutalistArtsCentre: BuildingDef = {
     b.box(9, 0.9, 0.12, P.black, { at: [2, 4.0, 9.86] });
     for (const x of spread(12, -2, 6)) b.box(0.45, 0.5, 0.05, P.windowLit, { at: [x, 4.2, 9.94] });
 
-    b.collider(26, 12.4, { at: [0, 0, 0] });
-    b.collider(14.2, 14.2, { at: [-3.5, 0, -6.5], rotY: Math.PI / 4 });
+    b.collider(26, 13.8, { at: [0, 0, 0.9] });
+    b.collider(10, 9, { at: [-4, 0, -7] });
     b.collider(7.5, 7, { at: [7.6, 0, -8] });
     b.collider(10, 3.6, { at: [5, 0, -12.6] });
     b.collider(3.6, 3.6, { at: [12.6, 0, -6.2] });
