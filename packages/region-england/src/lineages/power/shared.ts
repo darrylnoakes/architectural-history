@@ -394,3 +394,62 @@ export function columns(
     b.column(r, h, color, { at, order: o.order ?? 'tuscan', segs: o.segs ?? 7 });
   }
 }
+
+/**
+ * A battlemented stone curtain wall along a polyline, stepping up where it climbs the motte.
+ * `h` is the height of the wall-walk above the ground under it; merlons stand on the outer edge.
+ * `outer` is +1 if the outside is to the right of the direction of travel, -1 if to the left.
+ */
+export function curtain(
+  b: Builder,
+  pts: XZ[],
+  h: number,
+  t: number,
+  color: number,
+  o?: { base?: (x: number, z: number) => number; outer?: 1 | -1; merlon?: number; piece?: number; walk?: number },
+): void {
+  const base = o?.base ?? (() => 0);
+  const outer = o?.outer ?? 1;
+  const mw = o?.merlon ?? 0.8;
+  const piece = o?.piece ?? 4;
+  const walk = o?.walk ?? tint(color, -0.08);
+  for (let i = 0; i < pts.length - 1; i++) {
+    const [x0, z0] = pts[i];
+    const [x1, z1] = pts[i + 1];
+    const L = Math.hypot(x1 - x0, z1 - z0);
+    const n = Math.max(1, Math.ceil(L / piece));
+    const ang = Math.atan2(-(z1 - z0), x1 - x0);
+    // right-hand normal of the direction of travel (in plan)
+    const nx = -(z1 - z0) / L;
+    const nz = (x1 - x0) / L;
+    for (let k = 0; k < n; k++) {
+      const u0 = k / n;
+      const u1 = (k + 1) / n;
+      const ax = x0 + (x1 - x0) * u0;
+      const az = z0 + (z1 - z0) * u0;
+      const bx = x0 + (x1 - x0) * u1;
+      const bz = z0 + (z1 - z0) * u1;
+      const mx = (ax + bx) / 2;
+      const mz = (az + bz) / 2;
+      const lo = Math.min(base(ax, az), base(bx, bz)) - 0.6;
+      const top = base(mx, mz) + h;
+      const len = (L / n) + t * 0.6;
+      b.box(len, top - lo, t, color, { at: [mx, lo, mz], rotY: ang });
+      b.box(len, 0.06, t - 0.2, walk, { at: [mx, top, mz], rotY: ang, jitter: false });
+      // merlons along the outer edge
+      const m = Math.max(1, Math.round(L / n / (mw * 2)));
+      for (let j = 0; j < m; j++) {
+        const u = (j + 0.5) / m;
+        const px = ax + (bx - ax) * u - nx * outer * -1 * (t / 2 - 0.2);
+        const pz = az + (bz - az) * u - nz * outer * -1 * (t / 2 - 0.2);
+        b.box(mw, 0.9, 0.4, color, { at: [px, top, pz], rotY: ang, jitter: false });
+      }
+      // a low parapet on the inner edge
+      b.box(len, 0.5, 0.3, color, {
+        at: [mx - nx * outer * (t / 2 - 0.15), top, mz - nz * outer * (t / 2 - 0.15)],
+        rotY: ang,
+        jitter: false,
+      });
+    }
+  }
+}
