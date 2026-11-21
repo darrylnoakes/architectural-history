@@ -45,6 +45,13 @@ export class Engine {
   private elapsed = 0;
   private hoverPlot: string | null = null;
   private streetIndex = -1;
+  /** The part of the screen not covered by panels, in CSS pixels. */
+  private free = { x: 0, y: 0, w: 1, h: 1 };
+  /** How far the picture is currently shifted so its centre sits in the middle of that free area. */
+  private shift = new THREE.Vector2();
+  private frame = 0;
+  /** Frames to wait before flying to the selection, so its card is on screen and measured first. */
+  private focusPending = 0;
 
   constructor(
     private canvas: HTMLCanvasElement,
@@ -122,7 +129,7 @@ export class Engine {
     this.unsub = useApp.subscribe((s, prev) => {
       if (s.mode !== prev.mode) this.nav.setMode(s.mode);
       if (s.street !== prev.street) this.switchView(s.street, prev.street);
-      if (s.focusTick !== prev.focusTick) this.focusSelection();
+      if (s.focusTick !== prev.focusTick) this.focusPending = 3;
       if (s.selected !== prev.selected) this.calloutKey = STALE;
       if (s.intro !== prev.intro) this.nav.orbit.autoRotate = s.intro;
     });
@@ -232,9 +239,76 @@ export class Engine {
     const size = bounds.isEmpty() ? new THREE.Vector3(12, 6, 12) : bounds.getSize(new THREE.Vector3());
     const target = new THREE.Vector3(x, Math.min(size.y * 0.4, 9), 0);
     // far enough back to keep the neighbours either side in view: comparison is the point
-    const dist = Math.max(46, Math.hypot(size.x, size.z) * 1.35 + size.y * 1.1);
+    const dist = Math.max(46, Math.hypot(size.x, size.z) * 1.35 + size.y * 1.1) * this.fitScale();
     if (instant) this.nav.setOrbit(target, dist, 0.32, 1.16);
     else this.nav.flyTo(target, dist);
+  }
+
+  /**
+   * Work out which part of the screen the panels leave clear. Wide panels (the phone's bottom
+   * sheets, the timeline) take a band off the top or bottom; narrow ones take a strip off a side.
+   */
+  private measureFree() {
+    const vw = this.canvas.clientWidth;
+    const vh = this.canvas.clientHeight;
+    let l = 0;
+    let t = 0;
+    let r = vw;
+    let b = vh;
+    for (const sel of ['.timeline', '.card', '.era', '.street-banner', '.intro', '.brand', '.touch']) {
+      const el = document.querySelector(sel);
+      if (!el) continue;
+      const q = el.getBoundingClientRect();
+      if (q.width < 2 || q.height < 2) continue;
+      if (q.width > vw * 0.6) {
+        if (q.top + q.height / 2 < vh / 2) t = Math.max(t, q.bottom);
+        else b = Math.min(b, q.top);
+      } else if (sel === '.card' || sel === '.era') {
+        if (q.left + q.width / 2 < vw / 2) l = Math.max(l, q.right);
+        else r = Math.min(r, q.left);
+      } else if (vw < 820 && q.top < vh * 0.25) {
+        // on a phone the title block and mode switch between them span the top
+        t = Math.max(t, q.bottom);
+      }
+    }
+    if (r - l < 140 || b - t < 140) {
+      l = 0;
+      t = 0;
+      r = vw;
+      b = vh;
+    }
+    this.free = { x: l, y: t, w: r - l, h: b - t };
+  }
+
+  /** How much further back the camera must stand for something to fit the free area rather than the whole screen. */
+  private fitScale(): number {
+    const vw = this.canvas.clientWidth || 1;
+    const vh = this.canvas.clientHeight || 1;
+    const aspect = vw / vh;
+    // the full view is limited by its shorter side; so is the free area
+    const full = Math.min(1, aspect);
+    const clear = Math.min(this.free.h / vh, (this.free.w / vw) * aspect);
+    return Math.min(3.2, Math.max(1, full / Math.max(0.05, clear)));
+  }
+
+  /** Slide the picture so the point the camera looks at lands in the middle of the free area. */
+  private applyShift(dt: number) {
+    const vw = this.canvas.clientWidth;
+    const vh = this.canvas.clientHeight;
+    const s = useApp.getState();
+    // a first-person view on a desktop keeps its true centre: the aiming dot lives there
+    const on = s.mode === 'orbit' || s.touch;
+    const tx = on ? this.free.x + this.free.w / 2 - vw / 2 : 0;
+    const ty = on ? this.free.y + this.free.h / 2 - vh / 2 : 0;
+    const k = 1 - Math.exp(-7 * dt);
+    this.shift.x += (tx - this.shift.x) * k;
+    this.shift.y += (ty - this.shift.y) * k;
+    const cam = this.stage.camera;
+    if (Math.abs(this.shift.x) < 0.5 && Math.abs(this.shift.y) < 0.5) {
+      if (cam.view?.enabled) cam.clearViewOffset();
+    } else {
+      cam.setViewOffset(vw, vh, -this.shift.x, -this.shift.y, vw, vh);
+    }
   }
 
   private focusSelection() {
@@ -243,7 +317,7 @@ export class Engine {
     const p = this.town.get(s.selected);
     if (!p) return;
     const f = this.town.focus(p);
-    this.nav.flyTo(f.centre, Math.max(34, f.radius * 2.7));
+    this.nav.flyTo(f.centre, Math.max(34, f.radius * 2.7) * this.fitScale());
   }
 
   // ------------------------------------------------------------------ town <-> street
@@ -447,6 +521,11 @@ export class Engine {
       }
     }
     this.first = false;
+
+    // panels come and go: keep track of the clear part of the screen and frame the view in it
+    if (this.frame++ % 6 === 0 || this.focusPending > 0) this.measureFree();
+    if (this.focusPending > 0 && --this.focusPending === 0) this.focusSelection();
+    this.applyShift(dt);
 
     this.nav.update(dt);
 

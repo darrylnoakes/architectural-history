@@ -279,7 +279,7 @@ ul, ol { list-style: none; }
   width: 68px; height: 46px; border-radius: 12px; background: rgba(248, 243, 232, 0.8); font-weight: 650; font-size: 13px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2); touch-action: none;
 }
-.touch-btns button:active { background: var(--ink); color: var(--paper); }
+.touch-btns button:active, .touch-btns button.on { background: var(--ink); color: var(--paper); }
 
 /* ------------------------------------------------------------ small screens */
 @media (max-width: 820px) {

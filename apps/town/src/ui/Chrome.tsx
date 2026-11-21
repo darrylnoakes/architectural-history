@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { NavMode } from '@ah/engine';
 import { useApp } from '../state';
 import { Engine, region } from '../world/engine';
@@ -140,6 +140,10 @@ export function Help() {
                 <dd>The stick, bottom left</dd>
                 <dt>Look</dt>
                 <dd>Drag anywhere else</dd>
+                <dt>Run or fly fast</dt>
+                <dd>Tap the button to switch it on, tap again to switch it off</dd>
+                <dt>Height (flying)</dt>
+                <dd>Hold Up or Down; the stick keeps you level</dd>
                 <dt>Inspect</dt>
                 <dd>Tap a building</dd>
               </dl>
@@ -190,6 +194,16 @@ export function TouchControls() {
   const touch = useApp((s) => s.touch);
   const pad = useRef<HTMLDivElement>(null);
   const knob = useRef<HTMLDivElement>(null);
+  // running and flying fast are switched on and off, not held, so a thumb is free to steer
+  const [fast, setFast] = useState(false);
+
+  useEffect(() => {
+    const nav = Engine.instance?.nav;
+    if (nav) nav.input.run = fast && touch && mode !== 'orbit';
+    return () => {
+      if (nav) nav.input.run = false;
+    };
+  }, [fast, touch, mode]);
 
   useEffect(() => {
     const el = pad.current;
@@ -236,7 +250,7 @@ export function TouchControls() {
   }, [mode, touch]);
 
   if (!touch || mode === 'orbit') return null;
-  const hold = (key: 'up' | 'down' | 'run') => ({
+  const hold = (key: 'up' | 'down') => ({
     onPointerDown: (e: React.PointerEvent) => {
       (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
       const nav = Engine.instance?.nav;
@@ -263,7 +277,9 @@ export function TouchControls() {
             <button {...hold('down')}>Down</button>
           </>
         )}
-        <button {...hold('run')}>{mode === 'drone' ? 'Fast' : 'Run'}</button>
+        <button className={fast ? 'on' : ''} aria-pressed={fast} onClick={() => setFast((v) => !v)}>
+          {mode === 'drone' ? 'Fast' : 'Run'}
+        </button>
       </div>
     </div>
   );

@@ -53,7 +53,7 @@ function smooth(t: number) {
  * Three ways of moving through a world with one camera:
  *  - orbit: drag to turn the model, scroll or pinch to zoom, right-drag or two fingers to pan
  *  - walk:  first person at eye height, held to the ground, blocked by buildings
- *  - drone: free flight
+ *  - drone: free flight; forward, back and sideways keep to the level, height changes only on request
  * Desktop uses pointer lock for looking around in walk and drone; touch devices drag to look and
  * feed movement in through `input` (an on-screen stick).
  */
@@ -466,7 +466,9 @@ export class Navigator {
       pos.y += (gy - pos.y) * (1 - Math.exp(-14 * dt));
     } else {
       const speed = fast ? DRONE_FAST : DRONE_SPEED;
-      const fwd = new THREE.Vector3(0, 0, -1).applyQuaternion(this.camera.quaternion);
+      // forward is the way the camera is heading over the ground, whatever its tilt, so looking
+      // down and pushing forward travels across the map and never changes height
+      const fwd = new THREE.Vector3(-sinY, 0, -cosY);
       const right = new THREE.Vector3(cosY, 0, -sinY);
       const vy =
         (this.keys.has('Space') || this.keys.has('KeyE') || this.input.up ? 1 : 0) -
