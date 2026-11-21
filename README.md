@@ -27,8 +27,8 @@ apps/
 packages/
   kit/               Procedural low-poly building kit: the Builder, the palette, shared types.
   engine/            Renderer set-up, sky and sun, camera modes (model / walk / fly), the time scale.
-  region-england/    The content: eras, cross-pollination, the town plan, and ~110 buildings in
-                     ten lineages, each a generator function plus its card text.
+  region-england/    The content: eras, cross-pollination, the town plan, and 108 buildings in
+                     ten lineages (plus one-off extras), each a generator function plus its card text.
 docs/
   BUILDING_GUIDE.md  How to write a building.
   LINEAGES.md        The brief for every lineage and stage in the England region.

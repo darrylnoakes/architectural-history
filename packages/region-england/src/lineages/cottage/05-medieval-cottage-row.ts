@@ -1,5 +1,5 @@
 import { P, tint, type BuildingDef } from '@ah/kit';
-import { bar, paling } from './shared';
+import { bar, hurdles } from './shared';
 
 const UW = 4.5; // one dwelling per bay
 const GF = 2.45; // ground storey
@@ -21,8 +21,8 @@ export const medievalCottageRow: BuildingDef = {
   materials: ['oak frame', 'wattle and daub', 'clay plain tile', 'stone sill wall'],
   modelledOn: 'Lady Row, Goodramgate, York (1316), and the rows of Spon Street, Coventry',
   lookFor: [
-    { label: 'Jetty', note: 'The upper storey oversails the lower one on the ends of the floor joists.', at: [0, 2.55, 3.3] },
-    { label: 'Bressumer', note: 'The heavy beam along the front of the jetty that carries the upper wall.', at: [-4.5, 2.75, 3.35] },
+    { label: 'Jetty', note: 'The upper storey oversails the lower one on the ends of the floor joists.', at: [1.0, 2.38, 3.0] },
+    { label: 'Bressumer', note: 'The heavy beam along the front of the jetty that carries the upper wall.', at: [-4.5, 2.55, 3.3] },
     { label: 'Braced timber frame', note: 'Posts, rails and diagonal braces of oak, pegged together. The frame carries the weight; the panels just fill the gaps.', at: [-9.2, 4.2, 3.4] },
     { label: 'Wattle-and-daub panels', note: 'Woven staves plastered with clay and limewashed, filling the spaces between the timbers.', at: [4.0, 1.5, 2.85] },
     { label: 'One home to each bay', note: 'Every bay of the frame is a separate dwelling with its own door: one room down, one room up.', at: [9.0, 1.2, 2.9] },
@@ -67,7 +67,7 @@ export const medievalCottageRow: BuildingDef = {
       const solidR = doorLeft ? x + UW / 2 : dx - 0.55;
       b.box(solidR - solidL, 0.14, 0.1, oak, { at: [(solidL + solidR) / 2, 0.95, ZF] });
       b.box(0.12, GF - 1.1, 0.1, oak, { at: [wx + (doorLeft ? 0.75 : -0.75), 1.1, ZF] });
-      b.panel(0.9, 1.9, b.pick([P.oak, P.oakDark, P.oakSilver]), { at: [dx, 0.4, ZF], facing: '+z', depth: 0.08 });
+      b.panel(0.9, 1.9, b.pick([P.oak, P.oakDark, tint(P.oak, 0.06)]), { at: [dx, 0.4, ZF], facing: '+z', depth: 0.08 });
       // window with diamond-set mullions, unglazed, and a shutter hung below
       b.window(1.1, 0.75, { at: [wx, 1.25, ZF + 0.02], facing: '+z', frame: oak, glass: P.timberBlack, bars: [4, 1] });
       b.box(1.1, 0.4, 0.05, tint(oak, 0.08), { at: [wx, 0.8, ZF + 0.12] });
@@ -83,11 +83,11 @@ export const medievalCottageRow: BuildingDef = {
       b.window(0.7, 0.6, { at: [x - (doorLeft ? 1 : -1) * 0.8, 1.3, zb - 0.02], facing: '-z', frame: oak, glass: P.timberBlack, bars: [3, 1] });
 
       // garden strip behind, fenced off from the neighbours
-      if (i > 0) paling(b, [x - UW / 2, zb - 0.3], [x - UW / 2, -6.8], { h: 1.0, color: P.oakSilver });
+      if (i > 0) hurdles(b, [x - UW / 2, zb - 0.3], [x - UW / 2, -6.8], { h: 1.0 });
       b.box(0.9, 0.04, zb + 6.8 - 0.1, P.gravel, { at: [x + (doorLeft ? 1 : -1) * 1.0, 0, (zb - 0.1 - 6.8) / 2] });
       for (let k = 0; k < 3; k++) b.box(1.8, 0.2, 0.45, b.pick([P.leaf, P.leafDark, P.soil]), { at: [x + (doorLeft ? 0.8 : -0.8), 0, zb - 1.4 - k * 1.1] });
     }
-    paling(b, [-L / 2, -6.8], [L / 2, -6.8], { h: 1.1, color: P.oakSilver });
+    hurdles(b, [-L / 2, -6.8], [L / 2, -6.8], { h: 1.1 });
 
     // end walls (gables): frame on both storeys
     b.sym((s) => {

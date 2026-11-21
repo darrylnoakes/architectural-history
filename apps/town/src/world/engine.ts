@@ -486,3 +486,6 @@ export class Engine {
     if (Engine.instance === this) Engine.instance = null;
   }
 }
+
+// handy in the console, and used by the scripted checks
+if (typeof window !== 'undefined') (window as unknown as { __engine: () => Engine | null }).__engine = () => Engine.instance;

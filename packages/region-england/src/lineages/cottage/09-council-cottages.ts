@@ -1,5 +1,5 @@
 import { P, tint, type BuildingDef } from '@ah/kit';
-import { paling, thickHip } from './shared';
+import { hurdles, thickHip } from './shared';
 
 const L = 23.2;
 const D = 7.2;
@@ -21,10 +21,10 @@ export const councilCottages: BuildingDef = {
     'For the first time the cheapest housing on the plot was built by the public, not by a landlord or a charity.',
   materials: ['roughcast render over brick', 'clay plain tile', 'painted timber casements'],
   lookFor: [
-    { label: 'Block of four', note: 'Four houses under one roof, with the end houses marked by gables, so the group reads as one big cottage rather than a terrace.', at: [-8.7, 7.4, 3.2] },
-    { label: 'Wide frontage', note: 'Each house is wider than it is deep, so the living room and the bedrooms all have windows to the sun.', at: [-2.9, 1.5, 3.05] },
-    { label: 'Small-paned casements', note: 'Cottage-style windows with many panes, set high under the deep eaves.', at: [3.7, 4.0, 3.05] },
-    { label: 'Big hipped roof and chimneys', note: 'A steep plain-tile roof and massive stacks: the comfortable look of the Arts and Crafts country house, done cheaply.', at: [0, 10.1, -0.7] },
+    { label: 'Block of four', note: 'Four houses under one roof, with the end houses marked by gables, so the group reads as one big cottage rather than a terrace.', at: [-8.7, 6.5, 3.95] },
+    { label: 'Wide frontage', note: 'Each house is wider than it is deep, so the living room and the bedrooms all have windows to the sun.', at: [-2.9, 1.5, 3.45] },
+    { label: 'Small-paned casements', note: 'Cottage-style windows with many panes, set high under the deep eaves.', at: [2.3, 4.0, 3.45] },
+    { label: 'Big hipped roof and chimneys', note: 'A steep plain-tile roof and massive stacks: the comfortable look of the Arts and Crafts country house, done cheaply.', at: [-3, 8.2, 1.2] },
     { label: 'Front garden and hedge', note: 'Tudor Walters asked for gardens front and back; the privet hedge became a council estate trademark.', at: [6, 1.0, 6.6] },
   ],
   influences: ['arts-and-crafts-export'],
@@ -90,10 +90,10 @@ export const councilCottages: BuildingDef = {
       b.box(0.9, 0.9, 0.05, joinery, { at: [dx, 0, 6.6] });
       if (i > 0) b.box(0.4, 0.75, 7 - ZF - 0.9, P.hedge, { at: [x - hw / 2, 0, (7 + ZF + 0.5) / 2] });
       // back garden: fences and a vegetable plot
-      if (i > 0) paling(b, [x - hw / 2, ZF - D], [x - hw / 2, -6.9], { h: 1.2, color: P.oakSilver, gap: 0.16 });
+      if (i > 0) hurdles(b, [x - hw / 2, ZF - D], [x - hw / 2, -6.9], { h: 1.2, color: tint(P.oakSilver, -0.08), post: P.oakSilver });
       b.box(4.2, 0.25, 0.5, b.pick([P.leaf, P.leafDark]), { at: [x, 0, -6.35] });
     }
-    paling(b, [-L / 2, -6.9], [L / 2, -6.9], { h: 1.2, color: P.oakSilver, gap: 0.16 });
+    hurdles(b, [-L / 2, -6.9], [L / 2, -6.9], { h: 1.2, color: tint(P.oakSilver, -0.08), post: P.oakSilver });
     b.box(L, 0.03, 7 - ZF, P.grass, { at: [0, 0, (7 + ZF) / 2] });
   },
 };

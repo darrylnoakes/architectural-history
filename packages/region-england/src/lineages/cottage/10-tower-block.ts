@@ -23,9 +23,9 @@ export const towerBlock: BuildingDef = {
   modelledOn: 'Balfron Tower, Poplar (1967) and Trellick Tower, Kensington (1972), by Ernő Goldfinger, simplified',
   lookFor: [
     { label: 'Service tower', note: 'Lifts, stairs and rubbish chutes are in a separate tower, so the noise and traffic stay out of the flats.', at: [TX, 30, TZ + 2.3] },
-    { label: 'Access bridges', note: 'Bridges every third floor link the service tower to internal corridors; flats are reached up or down a short stair from them.', at: [7.2, POD + FH * 9 + 1.4, TZ] },
-    { label: 'Boiler house', note: 'The jutting box at the top of the service tower held the boilers for the whole block, a signature of Goldfinger’s towers.', at: [TX - 1.8, 41.5, TZ + 2.6] },
-    { label: 'Balconies', note: 'Every flat has its own concrete balcony: a substitute for the back yard and garden it replaced.', at: [SX - 4.4, POD + FH * 5 + 0.9, SD / 2 + 1.3] },
+    { label: 'Access bridges', note: 'Bridges every third floor link the service tower to internal corridors; flats are reached up or down a short stair from them.', at: [6.45, POD + FH * 10 + 1.3, TZ + 1.0] },
+    { label: 'Boiler house', note: 'The jutting box at the top of the service tower held the boilers for the whole block, a signature of Goldfinger’s towers.', at: [TX - 1.8, 40.4, TZ + 2.75] },
+    { label: 'Balconies', note: 'Every flat has its own concrete balcony: a substitute for the back yard and garden it replaced.', at: [-8.0, POD + FH * 5 + 0.9, SD / 2 + 1.25] },
     { label: 'Podium', note: 'A deck of shops and garages under the flats, separating cars from people as the planners of the 1960s wanted.', at: [0, 1.8, 6.6] },
   ],
   influences: ['corbusian-brutalism', 'continental-modernism'],

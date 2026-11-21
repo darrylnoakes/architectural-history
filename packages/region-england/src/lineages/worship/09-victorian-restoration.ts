@@ -45,7 +45,6 @@ export const victorianRestoration: BuildingDef = {
     { label: 'Lychgate', note: 'A roofed gate where the coffin waited for the priest at the start of a funeral.', at: [9.2, 3.4, 22.2] },
     { label: 'Headstones and yews', note: 'Carved stone grave markers spread across the churchyard in the 18th and 19th centuries; yews are its oldest residents.', at: [11.2, 1.2, -6] },
   ],
-  influences: ['gothic-revival-export'],
   build(b) {
     church(b, perpChurchSpec({
       naveRoof: { rise: 4.6, color: P.slate, parapet: 'battle' },

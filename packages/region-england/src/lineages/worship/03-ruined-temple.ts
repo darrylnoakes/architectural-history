@@ -1,5 +1,5 @@
 import { P, tint, type BuildingDef, type Builder } from '@ah/kit';
-import { AMB, CELLA, PLASTER, RED, TZ, WALLSTONE, colPos, precinctWall } from './02-romano-celtic-temple';
+import { AMB, CELLA, PLASTER, TZ, WALLSTONE, colPos, precinctWall } from './02-romano-celtic-temple';
 import { graveMounds } from './shared';
 
 /** A wall run broken into pieces of uneven height (ragged top of a robbed wall). */
@@ -44,7 +44,6 @@ export const ruinedTemple: BuildingDef = {
     brokenWall(b, c - t / 2, TZ - c, c - t / 2, TZ + c, t, [3.1, 5.0, 6.8, 7.8], PLASTER, 0.5);
     brokenWall(b, -c + t / 2, TZ - c, -c + t / 2, TZ + c, t, [1.4, 2.6, 4.6, 5.2], PLASTER, 0.5);
     brokenWall(b, -c, TZ - c + t / 2, c, TZ - c + t / 2, t, [2.3, 0.2, 0, 1.2], PLASTER, 0.5);
-    b.box(CELLA + 0.04, 0.8, CELLA + 0.04, RED, { at: [0, 0.5, TZ], jitter: false });
     // patches of exposed flint core where the plaster has fallen
     b.box(0.08, 2.0, 1.6, WALLSTONE, { at: [c + 0.02, 2.6, TZ + 1.4] });
     b.box(1.8, 1.8, 0.08, WALLSTONE, { at: [-1.0, 3.6, TZ + c + 0.02] });

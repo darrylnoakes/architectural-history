@@ -91,7 +91,9 @@ export class Street implements Walkable {
       const origin = { x: ox, z: 0, rotY: 0 };
       this.cols.push(...b.colliders.map((c) => toWorld(c, origin)));
       this.dks.push(...b.decks.map((d) => toWorld(d, origin)));
-      this.items.push({ stageIndex: i, built: b, x: cx, width: w, label: new THREE.Vector3(cx, 0.2, front + 9.6) });
+      // the date tag floats over the building, where the timeline panel cannot hide it
+      const top = b.bounds.isEmpty() ? 5 : Math.min(b.bounds.max.y, 24);
+      this.items.push({ stageIndex: i, built: b, x: cx, width: w, label: new THREE.Vector3(cx, top + 2.5, 0) });
       x += w + gap;
     });
 

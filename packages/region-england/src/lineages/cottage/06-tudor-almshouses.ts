@@ -9,15 +9,15 @@ const MID = 4.2; // central gabled bay
 
 /** Tall brick stack: square base through the roof, then clustered octagonal shafts with spreading caps. */
 function stack(b: Builder, x: number, z: number, y0: number, h: number, shafts: number, brick: number): void {
-  const bw = 0.55 * shafts + 0.25;
+  const bw = 0.62 * shafts + 0.25;
   b.box(bw, h * 0.45, 0.85, brick, { at: [x, y0, z] });
   b.box(bw + 0.14, 0.12, 0.99, tint(brick, 0.05), { at: [x, y0 + h * 0.45, z] });
   for (let i = 0; i < shafts; i++) {
-    const sx = x - (0.55 * (shafts - 1)) / 2 + i * 0.55;
-    b.cyl(0.24, 0.15, brick, { at: [sx, y0 + h * 0.45 + 0.12, z], segs: 8 });
-    b.cyl(0.2, h * 0.5, brick, { at: [sx, y0 + h * 0.45 + 0.27, z], segs: 8 });
-    b.cyl(0.2, 0.22, brick, { at: [sx, y0 + h * 0.95 + 0.27, z], rTop: 0.29, segs: 8 });
-    b.cyl(0.29, 0.1, tint(brick, 0.05), { at: [sx, y0 + h * 0.95 + 0.49, z], segs: 8 });
+    const sx = x - (0.62 * (shafts - 1)) / 2 + i * 0.62;
+    b.cyl(0.3, 0.15, brick, { at: [sx, y0 + h * 0.45 + 0.12, z], segs: 8 });
+    b.cyl(0.26, h * 0.5, brick, { at: [sx, y0 + h * 0.45 + 0.27, z], segs: 8 });
+    b.cyl(0.26, 0.22, brick, { at: [sx, y0 + h * 0.95 + 0.27, z], rTop: 0.34, segs: 8 });
+    b.cyl(0.34, 0.1, tint(brick, 0.05), { at: [sx, y0 + h * 0.95 + 0.49, z], segs: 8 });
   }
 }
 
@@ -41,11 +41,11 @@ export const tudorAlmshouses: BuildingDef = {
     'The great change from the medieval row is the chimney: every room has its own fireplace, and the stacks are made tall and decorative to show it.',
   materials: ['red brick', 'limestone dressings', 'clay plain tile'],
   lookFor: [
-    { label: 'Clustered chimney stacks', note: 'Groups of tall octagonal brick shafts with moulded caps: a fireplace for every lodging, and a display of the bricklayer’s skill.', at: [5, 8.6, -1.2] },
-    { label: 'Founder’s plaque', note: 'A carved stone panel in the central gable with the benefactor’s arms and the date, so no one forgot whose charity this was.', at: [0, 4.35, 3.0] },
-    { label: 'Mullioned windows with hood moulds', note: 'Stone uprights divide each window into lights; the projecting hood mould above throws rainwater clear.', at: [-6.5, 2.25, 1.8] },
-    { label: 'A door for each almsperson', note: 'Each resident had their own front door and room, opening off the shared garden.', at: [-9.2, 1.1, 1.8] },
-    { label: 'Coped gable', note: 'The end walls rise above the roof and are capped with stone coping, a fashion brought with brick from the Low Countries.', at: [11.2, 5.5, -1.2] },
+    { label: 'Clustered chimney stacks', note: 'Groups of tall octagonal brick shafts with moulded caps: a fireplace for every lodging, and a display of the bricklayer’s skill.', at: [5.1, 8.4, -1.6] },
+    { label: 'Founder’s plaque', note: 'A carved stone panel in the central gable with the benefactor’s arms and the date, so no one forgot whose charity this was.', at: [0, 4.4, 2.65] },
+    { label: 'Mullioned windows with hood moulds', note: 'Stone uprights divide each window into lights; the projecting hood mould above throws rainwater clear.', at: [-7.15, 1.6, 1.75] },
+    { label: 'A door for each almsperson', note: 'Each resident had their own front door and room, opening off the shared garden.', at: [-8.85, 1.1, 1.75] },
+    { label: 'Coped gable', note: 'The end walls rise above the roof and are capped with stone coping, a fashion brought with brick from the Low Countries.', at: [11.1, 5.0, -1.2] },
   ],
   influences: ['flemish-brick'],
   build(b) {
@@ -82,7 +82,7 @@ export const tudorAlmshouses: BuildingDef = {
     b.box(MID, WALL, bayD, brick, { at: [0, 0, bzc] });
     b.box(MID + 0.12, 0.12, bayD + 0.12, stone, { at: [0, WALL - 0.12, bzc] });
     b.extrude([[-MID / 2, 0], [MID / 2, 0], [0, rh + 0.35]], 0.3, brick, { at: [0, WALL, pz - 0.15] });
-    b.gable(MID - 0.3, bayD - 0.3, rh, tile, { at: [0, WALL, bzc - 0.15], ridge: 'z', overhang: 0.1, wall: brick });
+    b.gable(MID - 0.3, pz - zc, rh, tile, { at: [0, WALL, (pz + zc) / 2 - 0.15], ridge: 'z', overhang: 0.1, wall: brick });
     bar(b, [-MID / 2 - 0.1, WALL + 0.2, pz - 0.15], [0, WALL + rh + 0.4, pz - 0.15], 0.36, stone);
     bar(b, [MID / 2 + 0.1, WALL + 0.2, pz - 0.15], [0, WALL + rh + 0.4, pz - 0.15], 0.36, stone);
     b.cone(0.2, 0.6, stone, { at: [0, WALL + rh + 0.45, pz - 0.15], segs: 4 });

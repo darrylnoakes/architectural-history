@@ -32,15 +32,15 @@ export const saxonHuts: BuildingDef = {
     'There was no tile, mortar or straight street any more: everything was timber, thatch and wattle, and the family plot was marked off by a fence.',
   materials: ['oak posts and split planks', 'thatch', 'wattle'],
   lookFor: [
-    { label: 'Earth-fast posts', note: 'Each wall post was set straight into a hole in the ground; archaeologists find these buildings as rows of post holes.', at: [-8.2, 1.2, 1.9] },
+    { label: 'Earth-fast posts', note: 'Each wall post was set straight into a hole in the ground; archaeologists find these buildings as rows of post holes.', at: [-8.5, 1.2, 2.65] },
     { label: 'Doors in the middle of the long walls', note: 'The hall had opposed doorways halfway along each side, a habit brought from the Continent.', at: [-4, 1.0, 2.6] },
-    { label: 'Sunken-featured building', note: 'A hut built over a shallow pit with a tent-like roof almost to the ground. Loom weights are often found in them.', at: [5.6, 2.5, 3.0] },
+    { label: 'Sunken-featured building', note: 'A hut built over a shallow pit with a tent-like roof almost to the ground. Loom weights are often found in them.', at: [5.6, 1.8, 3.4] },
     { label: 'Fenced toft', note: 'A wattle fence enclosed the family plot (the toft) with its buildings, garden and animals.', at: [12.5, 1.0, 2] },
-    { label: 'Ruined Roman wall', note: 'Settlers rarely reused Roman buildings; their crumbling walls stood as quarries and curiosities.', at: [-10.5, 1.6, -5.9] },
+    { label: 'Ruined Roman wall', note: 'Settlers rarely reused Roman buildings; their crumbling walls stood as quarries and curiosities.', at: [-10.4, 1.6, -5.55] },
   ],
   influences: [],
   build(b) {
-    const thatch = b.pick([P.thatchOld, tint(P.thatchOld, -0.04), P.reed]);
+    const thatch = b.pick([P.reed, tint(P.thatchOld, 0.06), P.thatch]);
     const plank = b.pick([P.oakSilver, tint(P.oakSilver, -0.06), P.oak]);
     patch(b, 25.2, 13.2, tint(P.earth, 0.06), [0, 0]);
 
@@ -104,6 +104,6 @@ export const saxonHuts: BuildingDef = {
     hurdles(b, [-X, Z], [-2.4, Z], { h: 1.1 });
     hurdles(b, [1.6, Z], [X, Z], { h: 1.1 });
     // gate hurdle swung open
-    hurdles(b, [-2.4, Z], [-2.0, Z + 1.6], { h: 1.0 });
+    hurdles(b, [-2.4, Z], [-2.0, Z - 1.6], { h: 1.0 });
   },
 };

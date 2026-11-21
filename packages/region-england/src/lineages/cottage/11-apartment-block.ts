@@ -22,11 +22,11 @@ export const apartmentBlock: BuildingDef = {
     'It houses as many people as the tower did, in a form that meets the street.',
   materials: ['brick slips and facing brick', 'zinc and anodised aluminium cladding', 'glass', 'concrete frame'],
   lookFor: [
-    { label: 'Inset balconies', note: 'Recessed into the facade rather than bolted on, they are more private and keep the brick front flat and calm.', at: [-6, GF + FH * 1.5, ZF - 0.3] },
-    { label: 'Ground-floor shop', note: 'A shopfront at street level keeps the pavement lively, a lesson learned from the blank podiums of the 1960s.', at: [-6, 2.0, ZF + 0.2] },
-    { label: 'Set-back metal top floor', note: 'The top storey is stepped back and clad in zinc, so from the street the block reads as brick and lighter at the top.', at: [3, GF + FH * UP + 1.8, ZF - SETBACK + 0.1] },
+    { label: 'Inset balconies', note: 'Recessed into the facade rather than bolted on, they are more private and keep the brick front flat and calm.', at: [-2, GF + FH + 1.0, ZF - 0.6] },
+    { label: 'Ground-floor shop', note: 'A shopfront at street level keeps the pavement lively, a lesson learned from the blank podiums of the 1960s.', at: [-4.4, 2.0, ZF + 0.1] },
+    { label: 'Set-back metal top floor', note: 'The top storey is stepped back and clad in zinc, so from the street the block reads as brick and lighter at the top.', at: [3, GF + FH * UP + 1.8, 3.5] },
     { label: 'Roof terrace', note: 'The roof in front of the top floor is a shared garden with planting and a glass balustrade.', at: [-8, GF + FH * UP + 1.0, ZF - 1.0] },
-    { label: 'Tall windows in deep reveals', note: 'Windows are vertical and set back into the brick, giving the plain front shadow and rhythm, as on a Georgian terrace.', at: [8, GF + FH * 2.5, ZF + 0.1] },
+    { label: 'Tall windows', note: 'Vertical windows in a steady grid give the plain brick front the rhythm of a Georgian terrace, a deliberate nod to the older town.', at: [6, GF + FH * 2 + 1.5, ZF + 0.05] },
   ],
   influences: ['passivhaus'],
   build(b) {
@@ -67,8 +67,7 @@ export const apartmentBlock: BuildingDef = {
           b.box(bw - 0.4, 0.04, INSET, P.concreteWhite, { at: [x, y + FH - 0.04, ZF - INSET / 2] });
         } else {
           b.box(bw - 0.4, FH, INSET, brick, { at: [x, y, ZF - INSET / 2] });
-          b.box(1.5, 2.3, 0.2, P.timberBlack, { at: [x, y + 0.45, ZF - 0.08] }); // reveal shadow
-          b.window(1.3, 2.15, { at: [x, y + 0.5, ZF - 0.15], facing: '+z', frame, glass: P.glassDark, mat: 'glass', bars: [1, 2], border: 0.07 });
+          b.window(1.3, 2.15, { at: [x, y + 0.5, ZF], facing: '+z', frame, glass: P.glassDark, mat: 'glass', bars: [1, 2], border: 0.07 });
           b.box(1.5, 0.08, 0.12, P.concreteWhite, { at: [x, y + 0.42, ZF + 0.02] });
         }
         // back: plain windows, projecting steel balconies on alternate bays

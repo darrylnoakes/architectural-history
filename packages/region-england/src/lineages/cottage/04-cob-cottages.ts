@@ -5,7 +5,7 @@ import { hurdles, patch, thickHip } from './shared';
 function cobCottage(b: Builder, x: number, z: number, flip: 1 | -1, cob: number, thatch: number): void {
   const w = 6.6;
   const d = 4.5;
-  const h = 2.0;
+  const h = 2.3;
   const rc = 0.45;
   b.group({ at: [x, 0, z] }, () => {
     // rubble plinth keeps the earth wall off the wet ground
@@ -19,13 +19,13 @@ function cobCottage(b: Builder, x: number, z: number, flip: 1 | -1, cob: number,
       b.cyl(rc + 0.05, 0.45, P.rubble, { at: [sx * (w / 2 - rc), 0, sz * (d / 2 - rc)], segs: 8 });
     }));
     // steep half-hipped thatch with a smoke hole in each gablet: there is no chimney
-    thickHip(b, w, d, 3.0, thatch, { at: [0, h, 0], ov: 0.5, t: 0.5, ridge: 2.6, gablet: 0.95, hole: P.timberBlack });
+    thickHip(b, w, d, 3.0, thatch, { at: [0, h, 0], ov: 0.4, t: 0.45, ridge: 2.6, gablet: 0.95, hole: P.timberBlack });
     // ledged plank door and a small unglazed window with a shutter, on the front
     const dx = flip * 1.4;
     b.panel(0.95, 1.75, P.oak, { at: [dx, 0.05, d / 2], facing: '+z', depth: 0.08 });
-    b.box(1.25, 0.14, 0.25, P.oakDark, { at: [dx, 1.8, d / 2 + 0.02] });
-    b.panel(0.55, 0.5, P.timberBlack, { at: [-flip * 1.3, 0.95, d / 2], facing: '+z' });
-    b.box(0.55, 0.5, 0.05, P.oakSilver, { at: [-flip * 1.3 - flip * 0.58, 0.95, d / 2 + 0.06] });
+    b.box(1.25, 0.14, 0.25, P.oakDark, { at: [dx, 1.8, d / 2 + 0.02] }); // lintel
+    b.panel(0.6, 0.55, P.timberBlack, { at: [-flip * 1.3, 1.1, d / 2], facing: '+z' });
+    b.box(0.6, 0.55, 0.05, P.oakSilver, { at: [-flip * 1.3 - flip * 0.64, 1.1, d / 2 + 0.06] });
     // a back door to the croft
     b.panel(0.9, 1.7, P.oak, { at: [-dx, 0.05, -d / 2], facing: '-z', depth: 0.08 });
   });
@@ -44,10 +44,10 @@ export const cobCottages: BuildingDef = {
   materials: ['cob (clay and straw)', 'rubble stone plinth', 'straw thatch', 'oak'],
   lookFor: [
     { label: 'Cob walls', note: 'Wet clay and straw built up in layers a foot or two at a time, then pared smooth. A good cob wall stands for centuries if kept dry.', at: [-6.2, 1.3, 3.85] },
-    { label: 'Rounded corners', note: 'Earth walls are not built of blocks, so their corners are rounded rather than squared off.', at: [-9.3, 1.2, 3.5] },
-    { label: 'Smoke hole (gablet)', note: 'The hipped roof stops short of the ridge at each end, leaving a small triangular vent for the smoke of the open hearth.', at: [-8.5, 4.5, 1.5] },
+    { label: 'Rounded corners', note: 'Earth walls are not built of blocks, so their corners are rounded rather than squared off.', at: [-9.6, 1.2, 3.8] },
+    { label: 'Smoke hole (gablet)', note: 'The hipped roof stops short of the ridge at each end, leaving a small triangular vent for the smoke of the open hearth.', at: [-8.7, 5.0, 1.6] },
     { label: 'Stone plinth', note: 'The low stone base kept rising damp out of the cob: "a good hat and a good pair of boots".', at: [6.2, 0.25, 3.9] },
-    { label: 'Unglazed window', note: 'A small opening closed by a wooden shutter. Glass was far too costly for a cottager.', at: [5.0, 1.2, 3.85] },
+    { label: 'Unglazed window', note: 'A small opening closed by a wooden shutter. Glass was far too costly for a cottager.', at: [-7.6, 1.4, 3.9] },
   ],
   influences: [],
   build(b) {

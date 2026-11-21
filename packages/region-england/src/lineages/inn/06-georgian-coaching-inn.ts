@@ -73,13 +73,13 @@ export const georgianCoachingInn: BuildingDef = {
       const zz = f === '+z' ? z - 0.25 : z + 0.25;
       b.archWall(2 * PW, 5.0, 0.5, brick, { at: [0, 0, zz], facing: f, openings: 1, openW: 3.2, openH: 4.6, shape: 'round' });
     }
-    b.panel(3.8, 4.9, stone, { at: [0, 0, ZF], facing: '+z', shape: 'round', depth: 0.05 });
-    b.panel(3.2, 4.6, P.cobble, { at: [0, 0, ZF], facing: '+z', shape: 'round', depth: 0.09 });
+    b.archWall(3.8, 4.95, 0.1, stone, { at: [0, 0, ZF + 0.05], facing: '+z', openings: 1, openW: 3.2, openH: 4.6, shape: 'round' });
     b.panel(0.5, 0.7, stone, { at: [0, 4.35, ZF], facing: '+z', depth: 0.12 });
     b.box(2 * PW, 0.2, dep, tint(P.plaster, -0.1), { at: [0, 4.8, zm] });
 
     // stone dressings: band courses, cornice, parapet with coping, quoins
-    for (const y of [G, G + F1]) b.box(2 * XO + 0.1, 0.22, dep + 0.1, stone, { at: [0, y - 0.1, zm] });
+    b.box(2 * XO + 0.1, 0.22, dep + 0.1, stone, { at: [0, G + F1 - 0.1, zm] });
+    b.sym((s) => b.box(sw + 0.05, 0.22, dep + 0.1, stone, { at: [s * (PW + sw / 2 + 0.025), G - 0.1, zm] }));
     b.box(2 * XO + 0.5, 0.35, dep + 0.5, stone, { at: [0, TOP - 0.35, zm] });
     b.box(2 * XO, 0.8, 0.3, brick, { at: [0, TOP, ZF - 0.15] });
     b.box(2 * XO, 0.8, 0.3, brick, { at: [0, TOP, ZFB + 0.15] });

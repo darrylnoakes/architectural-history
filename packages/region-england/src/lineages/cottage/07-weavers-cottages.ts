@@ -34,11 +34,11 @@ export const weaversCottages: BuildingDef = {
     'A taking-in door high in the end wall let the clothier’s yarn and finished pieces in and out without carrying them through the house.',
   materials: ['gritstone or sandstone', 'stone slate', 'oak and pine joinery'],
   lookFor: [
-    { label: 'Weavers’ windows', note: 'Long rows of narrow lights divided by stone mullions, lighting the looms on the top floor from both sides.', at: [-8, 7.3, 3.2] },
-    { label: 'Loomshop', note: 'The whole top floor was one workroom for the looms, often running through the whole row.', at: [2.6, 7.0, 3.3] },
-    { label: 'Taking-in door', note: 'A door high in the gable with a beam above it for a hoist, so pieces and yarn could be lifted straight to the loomshop.', at: [10.8, 7.2, -0.2] },
-    { label: 'Stone-slate roof', note: 'Heavy sandstone slabs need a low pitch so they do not slide; the roof is much flatter than thatch.', at: [-3, 9.2, 0] },
-    { label: 'Shared chimney stacks', note: 'Stacks on the ridge at each party wall serve the fireplaces of the houses either side.', at: [0, 10.3, -0.2] },
+    { label: 'Weavers’ windows', note: 'Long rows of narrow lights divided by stone mullions, lighting the looms on the top floor from both sides.', at: [-7.95, 6.7, 3.1] },
+    { label: 'Loomshop', note: 'The whole top floor was one workroom for the looms, lit by long windows on the back as well as the front.', at: [2.65, 6.7, -3.5] },
+    { label: 'Taking-in door', note: 'A door high in the gable with a beam above it for a hoist, so pieces and yarn could be lifted straight to the loomshop.', at: [10.7, 6.5, 0.3] },
+    { label: 'Stone-slate roof', note: 'Heavy sandstone slabs need a low pitch so they do not slide; the roof is much flatter than thatch.', at: [-3, 9.1, 1.6] },
+    { label: 'Shared chimney stacks', note: 'Stacks on the ridge at each party wall serve the fireplaces of the houses either side.', at: [0, 10.6, -0.2] },
   ],
   influences: ['industrial-export'],
   build(b) {

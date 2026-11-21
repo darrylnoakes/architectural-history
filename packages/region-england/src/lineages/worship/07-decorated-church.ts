@@ -40,7 +40,7 @@ export const decoratedChurch: BuildingDef = {
   summary:
     'Prosperity in the early fourteenth century paid for wider aisles with much bigger windows, whose stone tracery now fills the head of each window with circles, curves and ogees. ' +
     'A great five-light east window was cut into the Early English chancel, a porch was built over the south door, and the tower was raised a stage to carry a taller spire behind a pinnacled parapet. ' +
-    'The Norman nave walls, the zigzag doorway and the chancel lancets all survive inside the new work. Building stopped abruptly when the Black Death struck in 1348.',
+    'The Norman nave walls, the zigzag doorway and the chancel lancets all survive inside the new work. Within a decade the Black Death of 1348 to 1349 would halt work like this across England.',
   materials: ['ragstone', 'limestone tracery and dressings', 'clay tile', 'lead'],
   lookFor: [
     { label: 'Geometric tracery', note: 'Two pointed lights with a foiled circle above: the window is now a stone pattern, not just a hole.', at: [9.4, 3.4, -2.7] },

@@ -51,11 +51,11 @@ export const romanWorkersRow: BuildingDef = {
     'What is new since the roundhouse is the rectangle, the street line and, on some roofs, fired clay tiles, though thatch stayed common on cheaper buildings.',
   materials: ['timber frame', 'wattle and daub, plastered', 'clay roof tile', 'thatch', 'stone footings'],
   lookFor: [
-    { label: 'Gable end to the street', note: 'Plots along a busy street were narrow, so the building turned its short end to the road and stretched back.', at: [-8.5, 4.4, 4.5] },
-    { label: 'Open shop front', note: 'The whole front opened by day behind shutters, with a counter on the street. Living space lay behind.', at: [-8.5, 1.4, 6.6] },
-    { label: 'Tegulae and imbrices', note: 'The Roman tile roof: flat tiles with raised edges, the joints covered by half-round tiles that make the ribs.', at: [-3, 4.0, 0] },
-    { label: 'Timber portico', note: 'A covered walk of posts along the frontage sheltered shoppers and the goods laid out on the counters.', at: [3.0, 2.2, 6.9] },
-    { label: 'Sill beam on a stone footing', note: 'Timber laid on a low stone wall kept the frame off the wet ground and lasted far longer than posts set in the earth.', at: [11.6, 0.3, 0] },
+    { label: 'Gable end to the street', note: 'Plots along a busy street were narrow, so the building turned its short end to the road and stretched back.', at: [-8.85, 3.6, 4.5] },
+    { label: 'Open shop front', note: 'The whole front opened by day behind shutters, with a counter on the street. Living space lay behind.', at: [-9.45, 1.5, 4.9] },
+    { label: 'Tegulae and imbrices', note: 'The Roman tile roof: flat tiles with raised edges, the joints covered by half-round tiles that make the ribs.', at: [-4.3, 3.8, 0] },
+    { label: 'Timber portico', note: 'A covered walk of posts along the frontage sheltered shoppers and the goods laid out on the counters.', at: [3.0, 2.4, 6.3] },
+    { label: 'Sill beam on a stone footing', note: 'Timber laid on a low stone wall kept the frame off the wet ground and lasted far longer than posts set in the earth.', at: [11.6, 0.43, 0] },
   ],
   influences: ['roman-conquest'],
   build(b) {

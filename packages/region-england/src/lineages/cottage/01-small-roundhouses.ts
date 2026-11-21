@@ -34,10 +34,10 @@ export const smallRoundhouses: BuildingDef = {
     'Grain for next year was kept on a raised four-post granary, and animals were penned in moveable wattle hurdles.',
   materials: ['wattle and daub', 'straw or reed thatch', 'oak and hazel'],
   lookFor: [
-    { label: 'Conical thatched roof', note: 'Pitched at about 50 degrees so rain runs off before it soaks in; smoke from the hearth filtered out through it.', at: [-8, 4.6, 1] },
+    { label: 'Conical thatched roof', note: 'Pitched at about 50 degrees so rain runs off before it soaks in; smoke from the hearth filtered out through it.', at: [-8, 5.6, 1] },
     { label: 'Wattle-and-daub wall', note: 'Hazel rods woven between stakes and plastered with clay, dung and straw. Low, so the roof did most of the work.', at: [-8, 0.9, 4.3] },
-    { label: 'Porch', note: 'Doorways usually face east or south-east, towards the morning sun and away from the prevailing wind.', at: [-6.8, 1.9, 4.2] },
-    { label: 'Four-post granary', note: 'A small store raised on posts to keep seed corn dry and out of reach of rats.', at: [10, 2.6, -4.2] },
+    { label: 'Porch', note: 'Doorways usually face east or south-east, towards the morning sun and away from the prevailing wind.', at: [-6.5, 1.9, 4.3] },
+    { label: 'Four-post granary', note: 'A small store raised on posts to keep seed corn dry and out of reach of rats.', at: [10, 2.0, -3.2] },
     { label: 'Hurdle pen', note: 'Panels of woven hazel staked into the ground: a fence that could be moved and rebuilt in an afternoon.', at: [-5.5, 1.2, -3.5] },
   ],
   influences: [],

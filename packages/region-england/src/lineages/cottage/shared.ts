@@ -66,13 +66,15 @@ export function thickHip(
   }
   if (o.gablet && r > 0.01) {
     const g = o.gablet;
-    const slope = (pw / 2) / H; // horizontal run of the hip end per metre of rise
-    const xg = r / 2 + g * slope;
-    const span = (2 * g * D) / 2 / H;
+    const span = (g * D) / H; // same pitch as the long slopes
+    const th = 0.08;
+    const tv = (th * Math.hypot(span / 2, g)) / (span / 2);
+    const yb = y0 + H + t - g - tv; // cap top surface lies on the main roof's top surface
+    const xg = r / 2 + ((pw / 2) * (g + tv)) / H; // where the hip end's top surface meets the gablet base
     for (const s of [-1, 1]) {
-      const len = xg - r / 2 + 0.25;
-      const cx = at[0] + s * (r / 2 + len / 2 - 0.25 + 0.02);
-      b.gable(len, span, g, color, { at: [cx, y0 + H - g + t * 0.6, at[2]], thick: t * 0.8, wall: o.hole ?? P.timberBlack });
+      const len = xg - r / 2 + 0.3;
+      const cx = at[0] + s * (xg - len / 2);
+      b.gable(len, span, g, color, { at: [cx, yb, at[2]], thick: th, wall: o.hole ?? P.timberBlack });
     }
   }
 }
