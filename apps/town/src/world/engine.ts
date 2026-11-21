@@ -51,6 +51,7 @@ export class Engine {
   private savedOrbit: { pos: THREE.Vector3; target: THREE.Vector3 } | null = null;
   private elapsed = 0;
   private hoverPlot: string | null = null;
+  private streetIndex = -1;
 
   constructor(
     private canvas: HTMLCanvasElement,
@@ -97,7 +98,7 @@ export class Engine {
     this.nav.onKey = (e) => this.key(e);
 
     // selection ring
-    const ringGeo = new THREE.RingGeometry(0.94, 1, 72);
+    const ringGeo = new THREE.RingGeometry(0.972, 1, 96);
     ringGeo.rotateX(-Math.PI / 2);
     this.ring = new THREE.Mesh(
       ringGeo,
@@ -230,17 +231,16 @@ export class Engine {
   gotoStreetStage(stageIndex: number) {
     const lin = this.street.lineage;
     if (!lin) return;
-    const from = lin.stages[stageIndex].from;
-    useApp.getState().jumpTo(from);
-    const it = this.street.items[stageIndex];
-    if (it && this.nav.mode === 'orbit') this.flyToItem(it.x, it.built.bounds, false);
+    // the frame loop notices the change of stage and moves the camera
+    useApp.getState().jumpTo(lin.stages[stageIndex].from);
   }
 
   private flyToItem(x: number, bounds: THREE.Box3, instant: boolean) {
     const size = bounds.isEmpty() ? new THREE.Vector3(12, 6, 12) : bounds.getSize(new THREE.Vector3());
     const target = new THREE.Vector3(x, Math.min(size.y * 0.4, 9), 0);
-    const dist = Math.max(26, Math.hypot(size.x, size.z) * 0.95 + size.y * 0.9);
-    if (instant) this.nav.setOrbit(target, dist, 0.5, 1.12);
+    // far enough back to keep the neighbours either side in view: comparison is the point
+    const dist = Math.max(46, Math.hypot(size.x, size.z) * 1.35 + size.y * 1.1);
+    if (instant) this.nav.setOrbit(target, dist, 0.32, 1.16);
     else this.nav.flyTo(target, dist);
   }
 
@@ -274,6 +274,7 @@ export class Engine {
       this.nav.applyWorldLimits();
       const it = this.street.itemAt(useApp.getState().year);
       if (it) this.flyToItem(it.x, it.built.bounds, true);
+      this.streetIndex = it?.stageIndex ?? -1;
       for (const item of this.street.items) {
         const def = lineage.stages[item.stageIndex].def;
         const el = document.createElement('button');
@@ -413,7 +414,7 @@ export class Engine {
       }
     }
     this.ring.visible = show;
-    if (show) (this.ring.material as THREE.MeshBasicMaterial).opacity = 0.6 + 0.3 * Math.sin(this.elapsed * 3);
+    if (show) (this.ring.material as THREE.MeshBasicMaterial).opacity = 0.55 + 0.25 * Math.sin(this.elapsed * 3);
   }
 
   // ------------------------------------------------------------------ frame
@@ -442,6 +443,14 @@ export class Engine {
       this.terrain.update(dt);
       this.scenery.update(dt, this.elapsed);
       this.town.update(dt);
+    }
+    else {
+      // on the street, time picks which building is in focus
+      const it = this.street.itemAt(year);
+      if (it && it.stageIndex !== this.streetIndex) {
+        this.streetIndex = it.stageIndex;
+        if (this.nav.mode === 'orbit') this.flyToItem(it.x, it.built.bounds, false);
+      }
     }
     this.first = false;
 

@@ -11,8 +11,8 @@ const PITCH = 1.19; // tan 50 degrees
 const XO = 10.5; // outer face of the side ranges
 const XI = 5.5; // yard face of the side ranges
 const GAL = 1.2; // gallery depth
-const ZF = 10.0; // street face, ground storey
-const ZFI = 4.5; // yard face of the front range
+const ZF = 9.2; // street face, ground storey
+const ZFI = 4.0; // yard face of the front range
 const ZBI = -5.5; // yard face of the back range
 const ZB = -10.5; // back wall
 const AW = 3.4; // carriage arch width
@@ -29,7 +29,7 @@ function gallery(b: Builder, len: number, y: number, h: number, timber: number) 
   b.box(len, 0.12, 0.14, timber, { at: [0, y + 0.95, GAL - 0.1] });
   b.box(len, 0.1, 0.12, timber, { at: [0, y + 0.05, GAL - 0.1] });
   b.box(len, 0.18, 0.18, timber, { at: [0, y + h - 0.18, GAL - 0.1] });
-  for (const x of spread(Math.round(len / 0.32), -len / 2 + 0.2, len / 2 - 0.2)) {
+  for (const x of spread(Math.round(len / 0.55), -len / 2 + 0.2, len / 2 - 0.2)) {
     b.box(0.06, 0.85, 0.06, tint(timber, 0.08), { at: [x, y + 0.1, GAL - 0.1], jitter: false });
   }
 }
@@ -48,7 +48,7 @@ export const galleriedInn: BuildingDef = {
   lookFor: [
     { label: 'Open galleries', note: 'Two tiers of balconies give every chamber its own door, and later inspired the galleries of Shakespeare’s playhouses.', at: [-XI + GAL + 0.3, 6.4, -1] },
     { label: 'Carriage arch', note: 'A wide gateway through the street range, big enough for a loaded packhorse or wagon to reach the yard.', at: [0, 3.4, ZF + 0.3] },
-    { label: 'Close studding', note: 'Oak studs set as close as their own width, a display of timber that showed the owner’s wealth.', at: [-6.5, 5.2, ZF + 0.8] },
+    { label: 'Close studding', note: 'Upright oak studs set close together, using far more timber than the frame needed: a show of the owner’s wealth.', at: [-6.5, 5.2, ZF + 0.8] },
     { label: 'Jetty', note: 'Each upper storey oversails the one below on the ends of the floor joists, gaining space over the street.', at: [6.5, G + 0.1, ZF + 0.6] },
     { label: 'Courtyard', note: 'Stables in the back range and chambers on three sides: the plan of the English inn for the next 400 years.', at: [1.5, 0.5, -1.5] },
   ],
@@ -71,7 +71,7 @@ export const galleriedInn: BuildingDef = {
       const xc = s * (AW / 2 + fw / 2);
       b.box(fw, G, ZF - ZFI, fill, { at: [xc, 0, (ZF + ZFI) / 2] });
       b.box(fw + 0.06, 0.3, ZF - ZFI + 0.06, P.rubble, { at: [xc, 0, (ZF + ZFI) / 2] });
-      b.frame(fw, G - 0.3, oak, { at: [xc, 0.3, ZF], facing: '+z', studs: Math.round(fw / 0.5), rails: 1, beam: 0.16 });
+      b.frame(fw, G - 0.3, oak, { at: [xc, 0.3, ZF], facing: '+z', studs: Math.round(fw / 0.62), rails: 1, beam: 0.16 });
       // ground floor: a mullioned window and a door in each half
       b.window(2.4, 1.2, { at: [s * 6.6, 1.2, ZF + 0.07], facing: '+z', frame: oak, bars: [5, 1], border: 0.1 });
       b.panel(1.0, 2.1, P.oakDark, { at: [s * 3.0, 0.3, ZF + 0.07], facing: '+z', shape: 'pointed', depth: 0.06 });
@@ -90,11 +90,11 @@ export const galleriedInn: BuildingDef = {
     // bressumers and joist ends at each jetty
     b.box(2 * XO + 0.1, 0.24, 0.25, oak, { at: [0, G - 0.04, z1 - 0.1] });
     b.box(2 * XO + 0.1, 0.24, 0.25, oak, { at: [0, G + F1 - 0.04, z2 - 0.1] });
-    for (const x of spread(30, -XO + 0.2, XO - 0.2)) {
+    for (const x of spread(22, -XO + 0.2, XO - 0.2)) {
       b.box(0.12, 0.12, 0.5, tint(oak, -0.08), { at: [x, G - 0.15, ZF + 0.2], jitter: false });
     }
-    b.frame(2 * XO, F1 - 0.24, oak, { at: [0, G + 0.2, z1], facing: '+z', studs: 40, rails: 1, beam: 0.15 });
-    b.frame(2 * XO, F2 - 0.24, oak, { at: [0, G + F1 + 0.2, z2], facing: '+z', studs: 40, rails: 1, beam: 0.15 });
+    b.frame(2 * XO, F1 - 0.24, oak, { at: [0, G + 0.2, z1], facing: '+z', studs: 32, rails: 1, beam: 0.15 });
+    b.frame(2 * XO, F2 - 0.24, oak, { at: [0, G + F1 + 0.2, z2], facing: '+z', studs: 32, rails: 1, beam: 0.15 });
     for (const x of [-7.5, -3.8, 0, 3.8, 7.5]) {
       b.window(2.2, 1.1, { at: [x, G + 0.95, z1 + 0.07], facing: '+z', frame: oak, bars: [5, 2], border: 0.1 });
       b.window(1.8, 0.95, { at: [x, G + F1 + 0.9, z2 + 0.07], facing: '+z', frame: oak, bars: [4, 2], border: 0.1 });
@@ -103,6 +103,16 @@ export const galleriedInn: BuildingDef = {
     b.sym((s) => {
       b.frame(ZF - ZFI, G - 0.3, oak, { at: [s * XO, 0.3, (ZF + ZFI) / 2], facing: s > 0 ? '+x' : '-x', studs: 5, rails: 1, brace: 'corner' });
       b.frame(z2 - ZFI, F1 + F2 - 0.2, oak, { at: [s * XO, G + 0.1, (z2 + ZFI) / 2], facing: s > 0 ? '+x' : '-x', studs: 5, rails: 2, brace: 'corner' });
+    });
+    // studs in the gable ends of the street range
+    b.sym((s) => {
+      const gz = (z2 + ZFI - GAL) / 2;
+      const half = (z2 - ZFI + GAL) / 2;
+      for (const dz of [-2.4, -1.2, 0, 1.2, 2.4]) {
+        const hh = (half - Math.abs(dz)) * PITCH - 0.2;
+        if (hh > 0.3) b.panel(0.15, hh, oak, { at: [s * XO, TOP, gz + dz], facing: s > 0 ? '+x' : '-x', depth: 0.06 });
+      }
+      b.panel(2 * half - 0.4, 0.16, oak, { at: [s * XO, TOP + 0.02, gz], facing: s > 0 ? '+x' : '-x', depth: 0.06 });
     });
     // roof over the street range and its yard gallery
     const zf0 = ZFI - GAL;
@@ -114,7 +124,7 @@ export const galleriedInn: BuildingDef = {
     b.sym((s) => b.chimney(1.1, 3.0, 0.9, P.brickRed, { at: [s * 6, TOP + fRise - 1.6, (z2 + zf0) / 2 - 0.6], pots: 0 }));
 
     // the inn sign, hung over the street beside the gate
-    hangingSign(b, [AW / 2 + 1.4, G + 1.0, z1 + 0.07], '+z', P.doorRed, { out: 1.6, picture: P.gold, bracket: P.oakDark, w: 1.1, h: 1.2 });
+    hangingSign(b, [AW / 2 + 1.4, G + 1.0, z1 + 0.07], '+z', P.doorRed, { out: 0.95, picture: P.gold, bracket: P.oakDark, w: 0.8, h: 1.1 });
 
     // street-range yard face and its galleries
     b.frame(2 * XI, G - 0.3, oak, { at: [0, 0.3, ZFI], facing: '-z', studs: 12, rails: 1 });
@@ -140,7 +150,7 @@ export const galleriedInn: BuildingDef = {
       // outer wall: square panels with corner braces, storey by storey
       for (const [y, h] of [[0.3, G - 0.3], [G, F1], [G + F1, F2]]) {
         b.frame(sLen, h, oak, { at: [s * XO, y, sZ], facing: out, studs: 7, rails: 1, brace: 'corner', beam: 0.17 });
-        b.frame(sLen, h, oak, { at: [s * XI, y, sZ], facing: inn, studs: 9, rails: 1, beam: 0.15 });
+        b.frame(sLen, h, oak, { at: [s * XI, y, sZ], facing: inn, studs: 5, rails: 1, beam: 0.15 });
       }
       for (const z of [-3, 0.4, 3]) {
         b.window(1.4, 1.0, { at: [s * XO, G + 0.9, z], facing: out, frame: oak, bars: [3, 2] });
@@ -174,8 +184,8 @@ export const galleriedInn: BuildingDef = {
     const bz = (ZB + ZBI) / 2;
     b.box(2 * XO, BH, ZBI - ZB, fill, { at: [0, 0, bz] });
     b.box(2 * XO + 0.06, 0.3, ZBI - ZB + 0.06, P.rubble, { at: [0, 0, bz] });
-    b.frame(2 * XO, BH - 0.3, oak, { at: [0, 0.3, ZB], facing: '-z', studs: 16, rails: 1, brace: 'corner', beam: 0.17 });
-    b.frame(2 * XI, BH - 0.3, oak, { at: [0, 0.3, ZBI], facing: '+z', studs: 12, rails: 1, beam: 0.17 });
+    b.frame(2 * XO, BH - 0.3, oak, { at: [0, 0.3, ZB], facing: '-z', studs: 11, rails: 1, brace: 'corner', beam: 0.17 });
+    b.frame(2 * XI, BH - 0.3, oak, { at: [0, 0.3, ZBI], facing: '+z', studs: 8, rails: 1, beam: 0.17 });
     b.sym((s) => b.frame(ZBI - ZB, BH - 0.3, oak, { at: [s * XO, 0.3, bz], facing: s > 0 ? '+x' : '-x', studs: 3, rails: 1, brace: 'corner' }));
     for (const x of spread(4, -3.6, 3.6)) {
       b.panel(1.5, 2.4, tint(oak, 0.04), { at: [x, 0.3, ZBI + 0.06], facing: '+z' });

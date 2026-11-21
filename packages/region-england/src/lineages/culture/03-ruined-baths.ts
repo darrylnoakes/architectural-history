@@ -1,6 +1,6 @@
 import { P, mix, spread, tint, type BuildingDef } from '@ah/kit';
 import { BATHS } from './02-roman-baths';
-import { facet, roundArch, ruinWall } from './shared';
+import { facet, roundArch, ruinWall, type Pt } from './shared';
 
 export const ruinedBaths: BuildingDef = {
   id: 'ruined-baths',
@@ -57,8 +57,28 @@ export const ruinedBaths: BuildingDef = {
     for (let y = 1.1; y < top - 0.4; y += 1.25) {
       b.box(tw + t + 0.06, 0.22, t + 0.06, tile, { at: [tx, y, back + t / 2], jitter: false });
     }
-    b.vault(tw + t, D / 2 - 0.4, tile, { at: [tx, top, back + D / 4 - 0.2], squash: 0.75, segs: 10 });
-    b.vault(tw - t, D / 2 - 0.3, core, { at: [tx, top - 0.01, back + D / 4 - 0.2], squash: 0.75, segs: 10 });
+    // the surviving half of the vault, its broken end showing the thickness of the shell
+    const band = (ro: number, ri: number, a0: number, a1: number, len: number, z: number, color: number) => {
+      const pts: Pt[] = [];
+      const n = Math.max(3, Math.round((a1 - a0) * 3));
+      for (let i = 0; i <= n; i++) {
+        const a = a0 + ((a1 - a0) * i) / n;
+        pts.push([ro * Math.cos(a), ro * Math.sin(a) * 0.75]);
+      }
+      for (let i = n; i >= 0; i--) {
+        const a = a0 + ((a1 - a0) * i) / n;
+        pts.push([ri * Math.cos(a), ri * Math.sin(a) * 0.75]);
+      }
+      b.extrude(pts, len, color, { at: [tx, top, z] });
+    };
+    const vo = (tw + t) / 2;
+    const vi = (tw - t) / 2;
+    const vlen = D / 2 - 0.4;
+    const vz = back + D / 4 - 0.2;
+    band(vo, vi, 0, Math.PI, vlen, vz, core);
+    band(vo + 0.12, vo, 0, Math.PI, vlen - 0.3, vz - 0.15, tile);
+    band(vo, vi, 0, 1.1, 1.4, back + D / 2 + 0.3, core);
+    band(vo, vi, Math.PI - 0.7, Math.PI, 0.9, back + D / 2 + 0.2, core);
     ruinWall(b, tw - 0.6, 0.4, 1.4, t, stone, { at: [tx, 0, front - t / 2] });
     for (let i = 0; i < 5; i++) rubble(tx + b.range(-2.5, 2.5), front - b.range(1, 3.5), b.range(0.6, 1.1));
     b.box(1.6, 0.25, 0.9, tile, { at: [tx - 1, 0.4, front - 2.5], rotY: 0.4, rot: [0.2, 0, 0] });

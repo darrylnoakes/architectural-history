@@ -14,7 +14,7 @@ function rib(b: Builder, l: Lobe, y0: number, f: number, color: number): void {
   const k = Math.sqrt(1 - f * f);
   const a = l.rz * k + 0.08;
   const c = l.ry * k + 0.08;
-  const t = 0.28;
+  const t = 0.16;
   const segs = 12;
   const pts: Pt[] = [];
   for (let i = 0; i <= segs; i++) {
@@ -42,7 +42,7 @@ export const concertHall: BuildingDef = {
   lookFor: [
     { label: 'Curved shell', note: 'A single roof of stainless-steel panels, curved in two directions, wrapping all three halls like a blanket.', at: [-6.5, 18.8, -1] },
     { label: 'Three lobes', note: 'Each hump of the shell covers one hall, so you can count the halls from outside.', at: [11.5, 11.9, -3] },
-    { label: 'Steel arches', note: 'Ribs running over the shell carry it from back to front, the structure left on show in High-Tech fashion.', at: [0.0, 14.2, 5] },
+    { label: 'Stainless-steel panels', note: 'The shell is clad in some 3,000 stainless-steel panels, with glass only where light is wanted. The seams run in long curves.', at: [0.0, 14.2, 5] },
     { label: 'Glazed concourse', note: 'A full-height glass wall under the shell\'s overhanging edge, so the foyers face the town and the river.', at: [-2, 2, 10.7] },
   ],
   influences: ['high-tech-export'],

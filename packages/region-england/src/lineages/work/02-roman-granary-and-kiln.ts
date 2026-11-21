@@ -63,7 +63,7 @@ export const romanGranaryAndKiln: BuildingDef = {
     for (let i = 0; i < 14; i++) {
       const x = gx - L / 2 + 0.6 + i * ((L - 1.2) / 13);
       b.sym((s) => {
-        b.group({ at: [x, H + 0.95, gz + s * 2.2], rot: [s * -0.41, 0, 0] }, () => b.log(0.06, 4.6, tint(tile, -0.05), { axis: 'z', segs: 5 }));
+        b.group({ at: [x, H + 0.95, gz + s * 2.2], rot: [s * 0.41, 0, 0] }, () => b.log(0.06, 4.6, tint(tile, -0.05), { axis: 'z', segs: 5 }));
       });
     }
     // loading platform and big door on the +X end

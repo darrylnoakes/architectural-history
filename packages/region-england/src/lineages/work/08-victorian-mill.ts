@@ -58,12 +58,11 @@ export const victorianMill: BuildingDef = {
     for (let f = 0; f < N; f++) {
       const y = 0.6 + f * S + 0.7;
       for (const x of bayX) {
-        b.sym((s) => b.window(0.95, 2.1, { at: [mx + x + s * 0.65, y, fz], facing: '+z', shape: 'segmental', frame: P.white, glass, border: 0.08 }));
-        b.sym((s) => b.panel(0.95, 2.1, glass, { at: [mx + x + s * 0.65, y, mz - D / 2], facing: '-z', shape: 'segmental' }));
-        b.panel(0.4, 2.4, tint(brick, -0.06), { at: [mx + x, y - 0.2, fz], facing: '+z', depth: 0.04 });
+        b.window(1.9, 2.2, { at: [mx + x, y, fz], facing: '+z', shape: 'segmental', frame: P.white, glass, border: 0.1 });
+        b.panel(1.9, 2.1, glass, { at: [mx + x, y, mz - D / 2], facing: '-z' });
       }
       b.sym((s) => {
-        for (const z of [-3.2, 0, 3.2]) b.panel(1.1, 2.1, glass, { at: [mx + (s * L) / 2, y, mz + z], facing: s > 0 ? '+x' : '-x', shape: 'segmental' });
+        for (const z of [-3.2, 0, 3.2]) b.panel(1.4, 2.1, glass, { at: [mx + (s * L) / 2, y, mz + z], facing: s > 0 ? '+x' : '-x' });
       });
     }
     // loading doors stacked in the end bay, with a hoist beam
@@ -148,7 +147,7 @@ export const victorianMill: BuildingDef = {
     b.group({ at: [-6, WATER - 0.2, BANK - 2.8] }, () => {
       b.box(12, 0.9, 3.0, P.timberBlack);
       b.box(11, 0.1, 2.6, P.oakDark, { at: [0, 0.82, 0] });
-      for (const x of [-3.5, 0, 3.5]) b.blob(1.0, P.black, { at: [x, 0.9, 0], stretch: [1.4, 0.45, 1] });
+      for (const x of [-3.5, 0, 3.5]) b.blob(1.0, P.castIron, { at: [x, 0.8, 0], stretch: [1.5, 0.7, 1.1], detail: 0 });
       b.box(0.15, 5, 0.15, P.oak, { at: [-4.5, 0.9, 0] });
     });
     b.blob(1.2, P.black, { at: [16.6, 0, -6.6], stretch: [0.9, 0.6, 1.8] });

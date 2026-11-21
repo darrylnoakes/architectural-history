@@ -2,8 +2,8 @@ import { P, spread, tint, type Builder, type BuildingDef } from '@ah/kit';
 import { ground, hangingSign } from './shared';
 
 const XO = 10.5;
-const ZF = 10.3; // street face
-const ZFB = 3.0; // back of the street range
+const ZF = 9.6; // street face
+const ZFB = 2.6; // back of the street range
 const G = 3.6;
 const F1 = 3.4;
 const F2 = 2.8;
@@ -44,7 +44,7 @@ export const georgianCoachingInn: BuildingDef = {
     { label: 'Carriage arch', note: 'Tall and wide enough for a loaded stagecoach with passengers riding on the roof.', at: [0, 4.7, ZF + 0.3] },
     { label: 'Sash windows', note: 'Two sliding frames, six panes each, set in a regular grid. Tallest on the first floor, where the best rooms were.', at: [-6, 5.8, ZF + 0.3] },
     { label: 'Venetian window', note: 'An arched light between two square-headed ones, a Palladian motif marking the centre of the front.', at: [0, 6.4, ZF + 0.4] },
-    { label: 'Swinging sign', note: 'A painted board on a wrought-iron bracket, readable by coachmen from far down the street.', at: [4.65, 2.6, ZF + 2.0] },
+    { label: 'Swinging sign', note: 'A painted board on a wrought-iron bracket, readable by coachmen from far down the street.', at: [4.95, 2.8, ZF + 1.0] },
     { label: 'Parapet', note: 'A low wall above the cornice that hides the roof, so the front reads as a neat brick box.', at: [-8, TOP + 0.9, ZF + 0.2] },
   ],
   influences: ['palladianism', 'dutch-classicism'],
@@ -59,7 +59,7 @@ export const georgianCoachingInn: BuildingDef = {
 
     ground(b, 2 * XO, 13.4, P.cobble, [0, -3.7]);
     ground(b, 2 * PW, dep, P.cobble, [0, zm]);
-    ground(b, 21.4, 0.9, P.paving, [0, ZF + 0.45], 0.08);
+    ground(b, 21.4, 1.3, P.paving, [0, ZF + 0.65], 0.08);
 
     // ---------------- street range
     const sw = XO - PW;
@@ -131,7 +131,7 @@ export const georgianCoachingInn: BuildingDef = {
       b.box(0.24, 0.4, 0.24, P.windowLit, { at: [s * 2.35, 3.1, ZF + 0.6], jitter: false });
       b.pyramid(0.34, 0.34, 0.2, P.castIron, { at: [s * 2.35, 3.5, ZF + 0.6] });
     });
-    hangingSign(b, [4.65, 4.3, ZF], '+z', P.doorBlue, { out: 2.0, w: 1.4, h: 1.5, picture: P.gold, frame: P.black });
+    hangingSign(b, [4.65, 4.3, ZF], '+z', P.doorBlue, { out: 0.95, w: 0.85, h: 1.3, picture: P.gold, frame: P.black });
 
     // back of the street range: plainer sashes and a stair window
     for (const x of [-8.7, -6, 6, 8.7]) {

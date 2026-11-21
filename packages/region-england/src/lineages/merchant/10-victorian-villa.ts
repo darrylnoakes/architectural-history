@@ -4,7 +4,7 @@ import { bargeboard, cantedBay } from './shared';
 /** A Gothic window: pointed head, plate glass, a polychrome arch of contrasting brick above. */
 function gothicWin(b: Builder, x: number, y: number, z: number, facing: Facing, w: number, h: number, arch: number, stone: number) {
   b.panel(w + 0.36, h + 0.2, arch, { at: [x, y, z], facing, shape: 'pointed', depth: 0.04 });
-  b.window(w, h, { at: [x, y, z], facing, shape: 'pointed', frame: P.white, bars: [2, 2], border: 0.07 });
+  b.window(w, h, { at: [x, y, z], facing, shape: 'pointed', frame: P.white, bars: [2, 1], border: 0.07 });
   b.panel(w + 0.3, 0.14, stone, { at: [x, y - 0.12, z], facing, depth: 0.12 });
 }
 
@@ -106,7 +106,7 @@ export const victorianVilla: BuildingDef = {
     for (const y of [base + 0.6, base + g + 0.6]) {
       gothicWin(b, -6, y, 3.5, '-x', 1.1, 2.2, band, stone);
       gothicWin(b, -6, y, 8.5, '-x', 1.1, 2.2, band, stone);
-      for (const x of [-3.75, 0.5, 3.5]) gothicWin(b, x, y, 1, '-z', 1.1, 2.2, band, stone);
+      for (const x of [-3.75, 0.5]) gothicWin(b, x, y, 1, '-z', 1.1, 2.2, band, stone);
       gothicWin(b, 5, y, 7.5, '+x', 1.0, 2.2, band, stone);
     }
     // back kitchen wing

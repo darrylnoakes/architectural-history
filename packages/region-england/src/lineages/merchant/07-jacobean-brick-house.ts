@@ -66,9 +66,13 @@ export const jacobeanBrickHouse: BuildingDef = {
       quoins(b, x - s * 2.5, zf, -s, 1, H, stone);
     });
     // string courses and plinth
-    b.box(18.5, 0.16, zf - zb + 0.1, stone, { at: [0, g, (zf + zb) / 2] });
-    b.box(18.5, 0.5, zf - zb + 0.1, tint(brick, -0.06), { at: [0, 0, (zf + zb) / 2] });
-    b.box(18.5, 0.2, zf - zb + 0.12, stone, { at: [0, H - 0.2, (zf + zb) / 2] });
+    const course = (w: number, d: number, x: number, z: number) => {
+      b.box(w + 0.1, 0.16, d + 0.1, stone, { at: [x, g, z] });
+      b.box(w + 0.1, 0.5, d + 0.1, tint(brick, -0.06), { at: [x, 0, z] });
+      b.box(w + 0.12, 0.2, d + 0.12, stone, { at: [x, H - 0.2, z] });
+    };
+    b.sym((s) => course(5, zf - zb, s * 6.7, (zf + zb) / 2));
+    course(8.4, zr - zb, 0, (zr + zb) / 2);
 
     // ---- windows: stone mullion-and-transom crosses with leaded lights
     const mt = (x: number, y: number, z: number, w: number, h: number, facing: '+z' | '-z' | '+x' | '-x') => {
@@ -103,8 +107,6 @@ export const jacobeanBrickHouse: BuildingDef = {
     b.box(pw, pH, zf - zr, brick, { at: [0, 0, pz] });
     shapedGable(b, 3.1, 2.4, 0, pH, zf, brick, stone);
     b.gable(pw, zf - zr, 1.3, tile, { at: [0, pH, pz], ridge: 'z', overhang: 0.02, wall: brick });
-    quoins(b, pw / 2, zf, 1, 1, pH, stone);
-    quoins(b, -pw / 2, zf, -1, 1, pH, stone);
     // round-arched doorway framed by paired Doric columns on pedestals and an entablature
     b.panel(1.9, 2.9, stone, { at: [0, 0.3, zf], facing: '+z', shape: 'round', depth: 0.08 });
     b.panel(1.3, 2.6, P.oakDark, { at: [0, 0.3, zf], facing: '+z', shape: 'round', depth: 0.1 });

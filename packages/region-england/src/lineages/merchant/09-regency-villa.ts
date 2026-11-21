@@ -14,9 +14,6 @@ function bowRailing(b: Builder, cx: number, y: number, cz: number, r: number, ir
     if (prev) {
       beam(b, prev, top, 0.06, iron);
       beam(b, [prev[0], y + 0.12, prev[2]], [x, y + 0.12, z], 0.04, iron);
-      // a simple anthemion-like X between posts
-      beam(b, [prev[0], y + 0.15, prev[2]], [x, y + 0.9, z], 0.025, iron);
-      beam(b, [x, y + 0.15, z], [prev[0], y + 0.9, prev[2]], 0.025, iron);
     }
     prev = top;
   }

@@ -63,7 +63,7 @@ export const romanMacellum: BuildingDef = {
     const rH = 1.7;
     const rY = 0.3 + BH;
     b.gable(BW, BD, rH, tile, { at: [0, rY, 0], ridge: 'x', overhang: 0.35, wall: plaster });
-    const xs = spread(34, -BW / 2 - 0.1, BW / 2 + 0.1);
+    const xs = spread(24, -BW / 2 - 0.1, BW / 2 + 0.1);
     imbrices(b, BW, xs, rY - 0.1, BD / 2 + 0.35, rH + 0.2, -(BD / 2 + 0.35), tint(tile, -0.05));
     imbrices(b, BW, xs, rY - 0.1, -BD / 2 - 0.35, rH + 0.2, BD / 2 + 0.35, tint(tile, -0.05));
     b.log(0.12, BW + 0.7, tint(tile, -0.08), { at: [0, rY + rH + 0.06, 0], segs: 6 });
@@ -74,7 +74,7 @@ export const romanMacellum: BuildingDef = {
     b.hip(OW, OD, slope * (OD / 2), tile, { at: [0, pY, 0], overhang: 0.3, ridge: OW - OD });
     // imbrices on the long portico slopes
     const pRun = (OD - BD) / 2 + 0.3;
-    const pxs = spread(46, -OW / 2 + 0.6, OW / 2 - 0.6);
+    const pxs = spread(30, -OW / 2 + 0.6, OW / 2 - 0.6);
     for (const s of [-1, 1]) {
       imbrices(b, OW, pxs, pY - 0.07 - 0.05, s * (OD / 2 + 0.3), pRun * slope + 0.02, -s * pRun, tint(tile, -0.05));
     }

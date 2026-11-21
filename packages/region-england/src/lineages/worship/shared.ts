@@ -450,7 +450,7 @@ export function buttress(
 /** Long-and-short quoins at a corner (x, z); sx, sz give the outward directions of the two faces. */
 export function quoins(b: Builder, x: number, z: number, sx: number, sz: number, h: number, color: number) {
   let y = 0.2;
-  while (y < h - 0.5) {
+  while (y + 1.05 < h - 0.1) {
     b.box(0.32, 0.85, 0.32, color, { at: [x - sx * 0.14, y, z - sz * 0.14] });
     y += 0.85;
     b.box(0.66, 0.2, 0.66, color, { at: [x - sx * 0.31, y, z - sz * 0.31] });

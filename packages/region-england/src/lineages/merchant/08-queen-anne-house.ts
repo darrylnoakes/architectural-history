@@ -16,14 +16,14 @@ export const queenAnneHouse: BuildingDef = {
     { label: 'Modillion cornice', note: 'A deep timber cornice carried on a row of small carved brackets called modillions.', at: [-5.5, 7.6, 11.7] },
     { label: 'Shell hood', note: 'A carved hood shaped like a scallop shell, on scrolled brackets, shelters the front door.', at: [0, 4.4, 11.9] },
     { label: 'Sash windows', note: 'Tall windows of two sliding halves with thin glazing bars, set in seven even bays.', at: [5.0, 5.4, 11.1] },
-    { label: 'Tall chimney stacks', note: 'Massive panelled stacks rise from the roof, each serving several fireplaces.', at: [5.6, 14.6, 6.5] },
+    { label: 'Tall chimney stacks', note: 'Massive panelled stacks rise from the roof, each serving several fireplaces.', at: [5.6, 14.8, 6.4] },
   ],
   influences: ['dutch-classicism', 'baroque'],
   build(b) {
     const brick = b.pick([P.brickRed, tint(P.brickRed, 0.03), P.brickOrange]);
     const rubbed = tint(brick, 0.12);
     const stone = b.pick([P.portland, P.limestone]);
-    const roof = b.pick([P.tileRed, P.tileBrown, P.slate]);
+    const roof = b.pick([P.tileRed, P.tileBrown, tint(P.tileRed, -0.05)]);
     const door = b.pick([P.doorGreen, P.doorBlack, P.oakDark]);
     const W = 17.5;
     const D = 10;
@@ -41,7 +41,7 @@ export const queenAnneHouse: BuildingDef = {
     b.box(W + 0.1, 0.2, D + 0.1, rubbed, { at: [0, base + g - 0.05, zc] });
     // stone quoins at the corners
     for (const sx of [-1, 1]) {
-      for (const sz of [-1, 1]) {
+      for (const sz of [1]) {
         for (let i = 0; i < 14; i++) {
           const long = i % 2 === 0;
           const y = base + i * 0.5 + 0.03;
@@ -55,10 +55,10 @@ export const queenAnneHouse: BuildingDef = {
     const cY = H - 0.1;
     b.box(W + 0.9, 0.32, D + 0.9, P.white, { at: [0, cY, zc] });
     b.box(W + 0.4, 0.16, D + 0.4, P.white, { at: [0, cY - 0.16, zc] });
-    for (const x of linspace(Math.round(W / 0.5), -W / 2 + 0.1, W / 2 - 0.1)) {
+    for (const x of linspace(Math.round(W / 0.75), -W / 2 + 0.1, W / 2 - 0.1)) {
       for (const sz of [1, -1]) b.box(0.12, 0.12, 0.3, P.white, { at: [x, cY - 0.12, zc + sz * (D / 2 + 0.28)] });
     }
-    for (const z of linspace(Math.round(D / 0.5), zb + 0.1, zf - 0.1)) {
+    for (const z of linspace(Math.round(D / 0.75), zb + 0.1, zf - 0.1)) {
       for (const sx of [1, -1]) b.box(0.3, 0.12, 0.12, P.white, { at: [sx * (W / 2 + 0.28), cY - 0.12, z] });
     }
 
@@ -82,10 +82,10 @@ export const queenAnneHouse: BuildingDef = {
     // tall panelled chimney stacks rising through the roof near each end
     b.sym((s) => {
       const cx = s * 5.6;
-      b.box(1.0, 6.8, 2.4, brick, { at: [cx, rY + 1.0, zc] });
-      b.box(0.9, 4.0, 0.08, rubbed, { at: [cx, rY + 3.6, zc + 1.22] });
-      b.box(1.25, 0.22, 2.65, rubbed, { at: [cx, rY + 7.6, zc] });
-      b.box(1.1, 0.15, 2.5, brick, { at: [cx, rY + 7.82, zc] });
+      b.box(1.0, 5.6, 1.9, brick, { at: [cx, rY + 1.0, zc] });
+      b.box(0.8, 2.8, 0.08, rubbed, { at: [cx, rY + 3.6, zc + 0.97] });
+      b.box(1.25, 0.22, 2.15, rubbed, { at: [cx, rY + 6.4, zc] });
+      b.box(1.1, 0.15, 2.0, brick, { at: [cx, rY + 6.62, zc] });
     });
 
     // ---- seven bays of sash windows, with gauged brick flat arches

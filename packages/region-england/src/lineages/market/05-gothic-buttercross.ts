@@ -50,7 +50,10 @@ export const gothicButtercross: BuildingDef = {
       const cz = Math.cos(th) * (a - T / 2);
       b.archWall(side + 0.02, WH, T, stone, { at: [cx, F, cz], facing: th, openings: 1, openW: 2.2, openH: 3.3, shape: 'pointed' });
       // square-headed label mould round the arch, the Perpendicular way
-      b.archWall(2.75, 3.65, 0.1, dark, { at: [Math.sin(th) * (a + 0.04), F, Math.cos(th) * (a + 0.04)], facing: th, openings: 1, openW: 2.2, openH: 3.3, shape: 'pointed' });
+      b.group({ at: [Math.sin(th) * a, F, Math.cos(th) * a], rotY: th }, () => {
+        b.panel(2.75, 0.2, dark, { at: [0, 3.45, 0], depth: 0.08 });
+        for (const sx of [-1, 1]) b.panel(0.2, 3.65, dark, { at: [sx * 1.27, 0, 0], depth: 0.08 });
+      });
     }
 
     // corner buttresses with pinnacles
