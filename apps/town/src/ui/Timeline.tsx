@@ -3,7 +3,7 @@ import { formatYear } from '@ah/engine';
 import type { Influence } from '@ah/kit';
 import { useApp } from '../state';
 import { region, timeScale } from '../world/engine';
-import { IconArrowIn, IconArrowOut, IconClose, IconHome, IconPause, IconPlay } from './icons';
+import { IconArrowIn, IconArrowOut, IconClose, IconHome, IconList, IconPause, IconPlay } from './icons';
 
 const css = (n: number) => '#' + n.toString(16).padStart(6, '0');
 const SPEEDS = [0.5, 1, 2, 4];
@@ -78,6 +78,9 @@ export function Timeline() {
             <span className="tl-era-tag">{era.tagline}</span>
           </button>
         </div>
+        <button className="tl-ideas" onClick={() => useApp.setState({ ideasOpen: true, intro: false })} title="List every idea that arrived or left">
+          <IconList /> <span>Ideas</span>
+        </button>
         <div className="tl-speed" role="group" aria-label="Playback speed">
           {SPEEDS.map((v) => (
             <button key={v} className={v === speed ? 'on' : ''} onClick={() => useApp.setState({ speed: v })}>

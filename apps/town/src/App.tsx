@@ -4,6 +4,9 @@ import { Engine, timeScale } from './world/engine';
 import { Brand, Crosshair, Help, Intro, ModeSwitch, StreetBanner, TouchControls } from './ui/Chrome';
 import { Card } from './ui/Card';
 import { EraPanel } from './ui/EraPanel';
+import { Explorer } from './ui/Explorer';
+import { IdeasDialog } from './ui/Ideas';
+import { RegionsDialog } from './ui/Regions';
 import { Timeline } from './ui/Timeline';
 
 function hexToCss(n: number) {
@@ -42,7 +45,10 @@ export function App() {
         <Timeline />
       </div>
       <Crosshair />
+      <Explorer />
       <Help />
+      <IdeasDialog />
+      <RegionsDialog />
     </div>
   );
 }

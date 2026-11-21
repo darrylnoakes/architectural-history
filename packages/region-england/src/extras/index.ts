@@ -5,6 +5,7 @@ import { longhouse } from './longhouse';
 /** One-off buildings that appear at a point in the story and stay. */
 export const chapel: Lineage = {
   id: 'chapel',
+  kind: 'worship',
   name: 'The Chapel',
   role: 'The meeting house of those who would not worship in the parish church.',
   plotSize: [12, 18],
@@ -14,6 +15,7 @@ export const chapel: Lineage = {
 /** A peasant holding beyond the last houses: the rural building the town plots never had. */
 export const farm: Lineage = {
   id: 'farm',
+  kind: 'farm',
   name: 'The Farm',
   role: 'A peasant holding at the edge of the town fields, where a family and its cattle shared one roof.',
   plotSize: [14, 18],

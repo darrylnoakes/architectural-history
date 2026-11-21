@@ -7,24 +7,27 @@ import type { Influence } from '@ah/kit';
 export const influences: Influence[] = [
   {
     id: 'roman-conquest',
+    at: [41.9, 12.5],
     year: 43,
     dir: 'in',
     place: 'Rome and the Mediterranean',
-    region: 'rome',
+    region: 'italy',
     title: 'Rome brings a building culture',
     text: 'Mortar, fired brick, roof tile, window glass, the arch, underfloor heating, the classical orders and the surveyed street grid all arrive together with the legions.',
   },
   {
     id: 'roman-christianity',
+    at: [41.9, 12.5],
     year: 597,
     dir: 'in',
     place: 'Rome and Gaul',
-    region: 'rome',
+    region: 'italy',
     title: 'The mission brings back stone',
     text: 'Augustine’s mission from Rome reintroduces building in mortared stone. Later in the 7th century Benedict Biscop fetches masons and glaziers from Gaul for his monastery at Monkwearmouth, and churches such as Brixworth follow the plan of the Roman basilica.',
   },
   {
     id: 'norman-romanesque',
+    at: [49.18, -0.37],
     year: 1066,
     dir: 'in',
     place: 'Normandy',
@@ -34,6 +37,7 @@ export const influences: Influence[] = [
   },
   {
     id: 'french-gothic',
+    at: [48.2, 3.28],
     year: 1175,
     dir: 'in',
     place: 'Île-de-France',
@@ -43,6 +47,7 @@ export const influences: Influence[] = [
   },
   {
     id: 'crusader-castles',
+    at: [34.76, 36.29],
     year: 1270,
     dir: 'in',
     place: 'The Levant and Savoy',
@@ -59,6 +64,7 @@ export const influences: Influence[] = [
   },
   {
     id: 'flemish-brick',
+    at: [51.21, 3.22],
     year: 1440,
     dir: 'in',
     place: 'Flanders and the Hanseatic ports',
@@ -67,6 +73,7 @@ export const influences: Influence[] = [
   },
   {
     id: 'italian-renaissance',
+    at: [43.77, 11.25],
     year: 1520,
     dir: 'in',
     place: 'Italy, by way of France and Flanders',
@@ -76,6 +83,7 @@ export const influences: Influence[] = [
   },
   {
     id: 'palladianism',
+    at: [45.55, 11.54],
     year: 1616,
     dir: 'in',
     place: 'Vicenza and the Veneto',
@@ -85,6 +93,7 @@ export const influences: Influence[] = [
   },
   {
     id: 'dutch-classicism',
+    at: [52.08, 4.31],
     year: 1665,
     dir: 'in',
     place: 'The Netherlands',
@@ -93,6 +102,7 @@ export const influences: Influence[] = [
   },
   {
     id: 'baroque',
+    at: [41.9, 12.5],
     year: 1670,
     dir: 'in',
     place: 'Rome and Paris',
@@ -102,6 +112,7 @@ export const influences: Influence[] = [
   },
   {
     id: 'palladian-export',
+    at: [37.54, -77.43],
     year: 1740,
     dir: 'out',
     place: 'North America, Ireland, Russia',
@@ -111,6 +122,7 @@ export const influences: Influence[] = [
   },
   {
     id: 'greek-revival',
+    at: [37.97, 23.73],
     year: 1762,
     dir: 'in',
     place: 'Athens',
@@ -120,6 +132,7 @@ export const influences: Influence[] = [
   },
   {
     id: 'empire-exotic',
+    at: [22.57, 88.36],
     year: 1790,
     dir: 'in',
     place: 'India and China',
@@ -128,6 +141,7 @@ export const influences: Influence[] = [
   },
   {
     id: 'industrial-export',
+    at: [42.63, -71.32],
     year: 1800,
     dir: 'out',
     place: 'Europe and North America',
@@ -136,6 +150,7 @@ export const influences: Influence[] = [
   },
   {
     id: 'gothic-revival-export',
+    at: [18.94, 72.83],
     year: 1860,
     dir: 'out',
     place: 'The British Empire',
@@ -144,6 +159,7 @@ export const influences: Influence[] = [
   },
   {
     id: 'arts-and-crafts-export',
+    at: [49.87, 8.65],
     year: 1900,
     dir: 'out',
     place: 'Germany and the United States',
@@ -153,6 +169,7 @@ export const influences: Influence[] = [
   },
   {
     id: 'chicago-frame',
+    at: [41.88, -87.63],
     year: 1906,
     dir: 'in',
     place: 'Chicago',
@@ -162,6 +179,7 @@ export const influences: Influence[] = [
   },
   {
     id: 'art-deco',
+    at: [48.86, 2.35],
     year: 1925,
     dir: 'in',
     place: 'Paris and New York',
@@ -171,6 +189,7 @@ export const influences: Influence[] = [
   },
   {
     id: 'continental-modernism',
+    at: [51.83, 12.24],
     year: 1933,
     dir: 'in',
     place: 'Germany, France and Russia',
@@ -180,6 +199,7 @@ export const influences: Influence[] = [
   },
   {
     id: 'corbusian-brutalism',
+    at: [43.3, 5.37],
     year: 1955,
     dir: 'in',
     place: 'Marseille',
@@ -189,6 +209,7 @@ export const influences: Influence[] = [
   },
   {
     id: 'high-tech-export',
+    at: [22.28, 114.16],
     year: 1977,
     dir: 'out',
     place: 'Paris, Hong Kong and beyond',
@@ -197,6 +218,7 @@ export const influences: Influence[] = [
   },
   {
     id: 'american-postmodern',
+    at: [39.95, -75.17],
     year: 1980,
     dir: 'in',
     place: 'The United States',
@@ -206,6 +228,7 @@ export const influences: Influence[] = [
   },
   {
     id: 'passivhaus',
+    at: [49.87, 8.65],
     year: 2005,
     dir: 'in',
     place: 'Germany, Austria and Scandinavia',

@@ -14,6 +14,7 @@ import { timberWorkspace } from './11-timber-workspace';
 
 const lineage: Lineage = {
   id: 'work',
+  kind: 'work',
   name: 'The Works',
   role: 'The riverside plot where the town makes things: from a smith’s hearth and a waterwheel to the steam mill, the factory and the maker space.',
   plotSize: [36, 22],

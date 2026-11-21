@@ -12,6 +12,7 @@ import { concertHall } from './10-concert-hall';
 
 const lineage: Lineage = {
   id: 'culture',
+  kind: 'culture',
   name: 'Leisure and Learning',
   role: 'Where the town gathers to bathe, pray, watch, dance and listen: from an ancestral mound to a concert hall.',
   plotSize: [34, 30],

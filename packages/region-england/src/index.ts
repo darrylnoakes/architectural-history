@@ -19,6 +19,7 @@ export { eras, influences, plots };
 export const england: Region = {
   id: 'england',
   name: 'England',
+  location: [52.2, -1.3],
   subtitle: 'A market town on a river',
   start: -500,
   end: 2025,

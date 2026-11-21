@@ -39,3 +39,21 @@ export const IconArrowOut = () => (
 export const IconHome = () => (
   <svg {...base} width={14} height={14}><path d="M12 5l7 7-7 7-7-7z" /></svg>
 );
+export const IconDown = () => (
+  <svg {...base} width={16} height={16}><path d="M6 9l6 6 6-6" /></svg>
+);
+export const IconLibrary = () => (
+  <svg {...base}><path d="M4 5h4v15H4zM10 5h4v15h-4zM16.500 6l3.500-1 3 14-3.500 1z" /></svg>
+);
+export const IconCompare = () => (
+  <svg {...base}><rect x="3" y="5" width="7.500" height="14" rx="1.500" /><rect x="13.500" y="5" width="7.500" height="14" rx="1.500" /></svg>
+);
+export const IconList = () => (
+  <svg {...base}><path d="M8 6h12M8 12h12M8 18h12M4 6h.01M4 12h.01M4 18h.01" /></svg>
+);
+export const IconGlobe = () => (
+  <svg {...base}><circle cx="12" cy="12" r="9.500" /><path d="M2.500 12h19M12 2.500c3 3 3 16 0 19M12 2.500c-3 3-3 16 0 19" /></svg>
+);
+export const IconSearch = () => (
+  <svg {...base}><circle cx="11" cy="11" r="6.500" /><path d="M16 16l4.500 4.500" /></svg>
+);

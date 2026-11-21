@@ -14,6 +14,13 @@ import {
   valueNoise,
 } from './layout';
 
+// Heights of the street layers above the ground. They must stack in this order: the depth offsets on
+// their materials only settle ties at a distance and cannot be relied on to reorder them close up.
+const PAVE_Y = 0.04;
+const SQUARE_Y = 0.05;
+const ROAD_Y = 0.07;
+const LINE_Y = 0.09;
+
 const N = 300;
 const SPAN = 1700;
 
@@ -266,8 +273,9 @@ export class Terrain {
     for (const r of roads) {
       if ((r.since ?? -Infinity) > year) continue;
       const w = r.kind === 'main' ? st.main : st.lane;
-      if (st.pavement) ribbon(r.pts, w + st.pavement * 2, 0.05, pave);
-      ribbon(r.pts, w, st.pavement ? 0.035 : 0.06, road);
+      // the carriageway lies above the pavement strip it runs along, so near or far it is what you see
+      if (st.pavement) ribbon(r.pts, w + st.pavement * 2, PAVE_Y, pave);
+      ribbon(r.pts, w, ROAD_Y, road);
       if (st.lines && r.kind === 'main') {
         // dashed centre line
         for (let i = 0; i < r.pts.length - 1; i++) {
@@ -284,7 +292,7 @@ export class Terrain {
                 [ax + (bx - ax) * t1, az + (bz - az) * t1],
               ],
               0.16,
-              0.075,
+              LINE_Y,
               lines,
             );
           }
@@ -294,8 +302,8 @@ export class Terrain {
     // the market square, and the bridge approaches
     const sq = SQUARE;
     // once streets have pavements the square is flagged over rather than left as carriageway
-    if (st.pavement) quad(sq.x0 - 1, sq.z0 - 1, sq.x1 + 1, sq.z1 + 1, 0.055, pave);
-    else quad(sq.x0, sq.z0, sq.x1, sq.z1, 0.062, road);
+    if (st.pavement) quad(sq.x0 - 1, sq.z0 - 1, sq.x1 + 1, sq.z1 + 1, SQUARE_Y, pave);
+    else quad(sq.x0, sq.z0, sq.x1, sq.z1, ROAD_Y, road);
     if (road.idx.length) this.roadGroup.add(meshFrom(road, this.roadMat));
     if (pave.idx.length) this.roadGroup.add(meshFrom(pave, this.paveMat));
     if (lines.idx.length) this.roadGroup.add(meshFrom(lines, this.lineMat));

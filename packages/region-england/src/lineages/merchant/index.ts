@@ -16,6 +16,7 @@ import { glassHouse } from './13-glass-house';
 
 const lineage: Lineage = {
   id: 'merchant',
+  kind: 'elite',
   name: 'The Big House',
   role: 'The home of the richest household in town, where each new fashion in building arrives first.',
   plotSize: [20, 24],

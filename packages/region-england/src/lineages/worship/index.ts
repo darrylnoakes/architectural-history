@@ -11,6 +11,7 @@ import { victorianRestoration } from './09-victorian-restoration';
 
 const lineage: Lineage = {
   id: 'worship',
+  kind: 'worship',
   name: 'The Church',
   role: 'The sacred site: an Iron Age shrine, then a Roman temple, then one parish church enlarged and altered for twelve centuries.',
   plotSize: [26, 46],

@@ -42,7 +42,10 @@ export function EraPanel() {
         </div>
         {ideas.length > 0 && (
           <>
-            <h3>Ideas on the move</h3>
+            <h3 className="with-link">
+              Ideas on the move
+              <button onClick={() => useApp.setState({ ideasOpen: true })}>See all</button>
+            </h3>
             <ul className="ideas">
               {ideas.map((i) => (
                 <li key={i.id}>

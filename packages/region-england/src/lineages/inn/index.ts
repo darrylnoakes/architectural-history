@@ -13,6 +13,7 @@ import { gastropub } from './10-gastropub';
 
 const lineage: Lineage = {
   id: 'inn',
+  kind: 'hospitality',
   name: 'The Inn',
   role: 'Hospitality on the square: the plot where travellers and townsfolk have eaten, drunk and slept, from a chief’s feasting house to a craft-brewing gastropub.',
   plotSize: [22, 22],

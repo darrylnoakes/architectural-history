@@ -62,12 +62,25 @@ function makeSky(): THREE.Mesh {
   return mesh;
 }
 
-/** Renderer, sky, sun and soft fill light shared by the town, the lineage street and the gallery. */
-export function createStage(opts: StageOptions): Stage3D {
+export interface Rig {
+  scene: THREE.Scene;
+  camera: THREE.PerspectiveCamera;
+  sun: THREE.DirectionalLight;
+  hemi: THREE.HemisphereLight;
+  sky: THREE.Mesh;
+  setShadowCentre(x: number, z: number): void;
+}
+
+/** A WebGL renderer set up the way every view in the project expects. */
+export function createRenderer(
+  canvas: HTMLCanvasElement,
+  opts: { shadows?: boolean; maxPixelRatio?: number; preserveDrawingBuffer?: boolean } = {},
+): THREE.WebGLRenderer {
   const renderer = new THREE.WebGLRenderer({
-    canvas: opts.canvas,
+    canvas,
     antialias: true,
     powerPreference: 'high-performance',
+    preserveDrawingBuffer: opts.preserveDrawingBuffer ?? false,
   });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, opts.maxPixelRatio ?? 2));
   renderer.outputColorSpace = THREE.SRGBColorSpace;
@@ -75,10 +88,17 @@ export function createStage(opts: StageOptions): Stage3D {
   renderer.toneMappingExposure = 1.02;
   renderer.shadowMap.enabled = opts.shadows !== false;
   renderer.shadowMap.type = THREE.PCFShadowMap;
+  return renderer;
+}
 
+/** A scene with the standard sky, sun and soft fill light, and a camera to look at it with. */
+export function createRig(
+  renderer: THREE.WebGLRenderer,
+  opts: { shadowExtent?: number; shadowMapSize?: number; shadows?: boolean; fog?: boolean } = {},
+): Rig {
   const scene = new THREE.Scene();
   scene.background = SKY_HORIZON.clone();
-  scene.fog = new THREE.Fog(0xdfe9ee, 260, 1500);
+  if (opts.fog !== false) scene.fog = new THREE.Fog(0xdfe9ee, 260, 1500);
 
   const camera = new THREE.PerspectiveCamera(50, 1, 0.3, 5000);
 
@@ -119,28 +139,36 @@ export function createStage(opts: StageOptions): Stage3D {
   // make sure the shared building materials exist before the first compile
   getMaterials();
 
-  const resize = () => {
-    const w = opts.canvas.clientWidth || window.innerWidth;
-    const h = opts.canvas.clientHeight || window.innerHeight;
-    renderer.setSize(w, h, false);
-    camera.aspect = w / h;
-    camera.updateProjectionMatrix();
-  };
-  resize();
-
   return {
-    renderer,
     scene,
     camera,
     sun,
     hemi,
     sky,
-    resize,
     setShadowCentre(x, z) {
       sun.target.position.set(x, 0, z);
       sun.position.set(x + sunOffset.x, sunOffset.y, z + sunOffset.z);
       sun.target.updateMatrixWorld();
     },
+  };
+}
+
+/** Renderer, sky, sun and soft fill light shared by the town, the lineage street and the gallery. */
+export function createStage(opts: StageOptions): Stage3D {
+  const renderer = createRenderer(opts.canvas, opts);
+  const rig = createRig(renderer, opts);
+  const resize = () => {
+    const w = opts.canvas.clientWidth || window.innerWidth;
+    const h = opts.canvas.clientHeight || window.innerHeight;
+    renderer.setSize(w, h, false);
+    rig.camera.aspect = w / h;
+    rig.camera.updateProjectionMatrix();
+  };
+  resize();
+  return {
+    renderer,
+    ...rig,
+    resize,
     dispose() {
       renderer.dispose();
     },

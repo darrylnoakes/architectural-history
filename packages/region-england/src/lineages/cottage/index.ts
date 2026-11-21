@@ -14,6 +14,7 @@ import { apartmentBlock } from './11-apartment-block';
 
 const lineage: Lineage = {
   id: 'cottage',
+  kind: 'workers',
   name: 'The Row',
   role: 'Homes of labourers and the poor, from a huddle of roundhouses to a tower of flats.',
   plotSize: [26, 14],

@@ -14,6 +14,7 @@ import { civicHub } from './11-civic-hub';
 
 const lineage: Lineage = {
   id: 'power',
+  kind: 'power',
   name: 'The Seat of Power',
   role: 'The plot where whoever rules the town lives or governs, from chieftain and lord to council and citizens.',
   plotSize: [44, 44],

@@ -2,15 +2,17 @@ import { useEffect, useRef, useState } from 'react';
 import type { NavMode } from '@ah/engine';
 import { useApp } from '../state';
 import { Engine, region } from '../world/engine';
-import { IconClose, IconDrone, IconHelp, IconLeft, IconOrbit, IconPlay, IconWalk } from './icons';
+import { IconClose, IconDown, IconDrone, IconHelp, IconLeft, IconLibrary, IconOrbit, IconPlay, IconWalk } from './icons';
 
 export function Brand() {
   return (
-    <div className="brand panel">
-      <div className="kicker">A history of architecture</div>
-      <div className="brand-title">{region.name}</div>
-      <div className="brand-sub">{region.subtitle}, 500 BC to today</div>
-    </div>
+    <button className="brand panel" onClick={() => useApp.setState({ regionsOpen: true, intro: false })} title="Choose a region">
+      <span className="kicker">A history of architecture</span>
+      <span className="brand-title">
+        {region.name} <IconDown />
+      </span>
+      <span className="brand-sub">{region.subtitle}, 500 BC to today</span>
+    </button>
   );
 }
 
@@ -35,6 +37,9 @@ export function ModeSwitch() {
           <span>{m.label}</span>
         </button>
       ))}
+      <button className="help-btn" title="Library of every building" onClick={() => useApp.getState().openLibrary()}>
+        <IconLibrary />
+      </button>
       <button className="help-btn" title="Controls (H)" onClick={() => useApp.setState({ helpOpen: true })}>
         <IconHelp />
       </button>

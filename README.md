@@ -16,7 +16,16 @@ timber house without leaving the spot.
 - **Lineage street.** Line up every building that ever stood on a plot, oldest to newest, to compare
   them side by side.
 - **Ideas on the move.** Markers on the timeline show styles arriving from elsewhere (Gothic from
-  France, Palladio from the Veneto) and leaving for elsewhere (the Georgian house to America).
+  France, Palladio from the Veneto) and leaving for elsewhere (the Georgian house to America). The
+  Ideas button lists them all; choosing one goes to that year.
+- **The library.** Every building with a picture rendered from its model, filtered by region, type
+  and era, or searched by name, style and material.
+- **Through time.** Any one lineage on its own: turn the model round and step through every building
+  that stood on the plot.
+- **Compare.** Any two lineages side by side, sharing one timeline: the family home beside the great
+  house now, the English home beside the Italian one once a second region exists.
+- **Regions.** The title card opens a globe with the regions built and planned, and the routes the
+  ideas travelled. `docs/REGIONS.md` is the plan for adding them.
 
 ## Layout
 
@@ -34,6 +43,7 @@ packages/
 docs/
   BUILDING_GUIDE.md  How to write a building.
   LINEAGES.md        The brief for every lineage and stage in the England region.
+  REGIONS.md         The plan for further regions, and what the platform needs first.
 tools/
   shot.mjs           Screenshots of buildings from the gallery page, for authoring.
 ```
@@ -68,9 +78,9 @@ Recorded here so they are not lost; none of this is built.
   and vegetation. The kit already tags every surface with a named material, which is the hook for it.
 - **The long road.** A second app where distance is time: one road, each era a district along it,
   with driving as well as walking and flying.
-- **More regions.** Rome, France, the United States, China and others, each as its own town, and
-  links between them wherever an idea crossed a border: the cross-pollination entries already carry
-  the id of the region they point to.
+- **More regions.** Italy, France, the United States, China and others, each as its own town, and
+  links between them wherever an idea crossed a border. The plan is in `docs/REGIONS.md`.
+- **A date-range filter in the library**, beside the era filter.
 - **Interiors.** Step inside the hall house, the church, the mill.
 - **People and traffic.** Carts, market crowds, trains on the viaduct.
 - **Town defences.** A lineage for the palisade, Roman wall, burh rampart and medieval town wall.

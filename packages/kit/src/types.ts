@@ -58,9 +58,41 @@ export interface Stage {
   def: BuildingDef;
 }
 
+/**
+ * What a plot is for. Lineage ids and names belong to their region; the kind is shared, so the
+ * family home of one region can be set beside the family home of another.
+ */
+export type BuildingKind =
+  | 'home'
+  | 'workers'
+  | 'elite'
+  | 'worship'
+  | 'power'
+  | 'market'
+  | 'work'
+  | 'crossing'
+  | 'culture'
+  | 'hospitality'
+  | 'farm';
+
+export const KINDS: Record<BuildingKind, { label: string; blurb: string }> = {
+  home: { label: 'Family home', blurb: 'The house of an ordinary, middling household' },
+  workers: { label: 'Workers’ housing', blurb: 'Homes of labourers and the poor' },
+  elite: { label: 'Great house', blurb: 'The home of the richest household in town' },
+  worship: { label: 'Place of worship', blurb: 'The sacred site and its buildings' },
+  power: { label: 'Seat of power', blurb: 'Where whoever rules the town lives or governs' },
+  market: { label: 'Market', blurb: 'Where the town buys and sells' },
+  work: { label: 'Workplace', blurb: 'Where the town makes things' },
+  crossing: { label: 'River crossing', blurb: 'Fords and bridges' },
+  culture: { label: 'Leisure and learning', blurb: 'Baths, theatres, halls and the like' },
+  hospitality: { label: 'Inn', blurb: 'Food, drink and a bed for the night' },
+  farm: { label: 'Farm', blurb: 'Rural buildings at the edge of the town' },
+};
+
 export interface Lineage {
   id: string;
   name: string;
+  kind: BuildingKind;
   /** One line on what this plot is and whose story it tells. */
   role: string;
   /** Maximum footprint [width along X, depth along Z] in metres. */
@@ -111,6 +143,8 @@ export interface Influence {
   region?: string;
   title: string;
   text: string;
+  /** Where on the globe the idea came from or went to: [latitude, longitude]. */
+  at?: [number, number];
 }
 
 /** Where a lineage stands in the town. Local +Z (the building's front) is rotated by rotY. */
@@ -142,6 +176,8 @@ export interface Plot {
 export interface Region {
   id: string;
   name: string;
+  /** Where the town stands, for the world map: [latitude, longitude]. */
+  location: [number, number];
   /** e.g. "A market town on a river". */
   subtitle: string;
   start: number;

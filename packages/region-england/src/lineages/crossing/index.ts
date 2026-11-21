@@ -11,6 +11,7 @@ import { millenniumFootbridge } from './09-millennium-footbridge';
 
 const lineage: Lineage = {
   id: 'crossing',
+  kind: 'crossing',
   name: 'The River Crossing',
   role: 'Where the High Street meets the river: the ford that founded the town and every bridge that has carried the road since.',
   plotSize: [14, 30],

@@ -14,6 +14,7 @@ import { marketPavilion } from './11-market-pavilion';
 
 const lineage: Lineage = {
   id: 'market',
+  kind: 'market',
   name: 'The Market',
   role: 'The island in the middle of the square where the town buys and sells, from a trodden trading ground to a covered market hall.',
   plotSize: [22, 18],

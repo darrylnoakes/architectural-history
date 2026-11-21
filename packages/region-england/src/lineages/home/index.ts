@@ -15,6 +15,7 @@ import { ecoHouse } from './12-eco-house';
 
 const lineage: Lineage = {
   id: 'home',
+  kind: 'home',
   name: 'The Family Home',
   role: 'One ordinary family plot, rebuilt as farmers, craftsmen, shopkeepers and clerks lived on it for two and a half thousand years.',
   plotSize: [14, 18],

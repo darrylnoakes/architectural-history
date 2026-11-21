@@ -147,6 +147,14 @@ export class Engine {
 
   private key(e: KeyboardEvent) {
     const s = useApp.getState();
+    if (s.screen.kind !== 'town' || s.regionsOpen || s.ideasOpen) {
+      if (e.code === 'Escape') {
+        if (s.regionsOpen || s.ideasOpen) useApp.setState({ regionsOpen: false, ideasOpen: false });
+        else if (s.screen.kind === 'library') s.closeScreen();
+        else s.openLibrary();
+      }
+      return;
+    }
     switch (e.code) {
       case 'Digit1':
         useApp.setState({ mode: 'orbit' });
@@ -502,6 +510,9 @@ export class Engine {
       if (t >= 1) useApp.setState({ year: region.end, playing: false });
       else useApp.setState({ year });
     }
+
+    // a full-screen view (library, viewer, compare) covers the town: keep time running, draw nothing
+    if (s.screen.kind !== 'town') return;
 
     const era = timeScale.era(year);
     if (!s.street) {

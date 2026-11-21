@@ -2,7 +2,7 @@ import { formatYear } from '@ah/engine';
 import type { BuildingDef, Lineage, StageEnd } from '@ah/kit';
 import { useApp } from '../state';
 import { Engine, region } from '../world/engine';
-import { IconClose, IconLeft, IconRight, IconStreet } from './icons';
+import { IconClose, IconLeft, IconLibrary, IconRight, IconStreet } from './icons';
 import { InfluenceIcon, influenceVerb } from './Timeline';
 
 interface Step {
@@ -233,9 +233,14 @@ export function Card() {
             </button>
           </div>
           {!street && (
-            <button className="btn primary" onClick={() => useApp.getState().openStreet(cur.plotId, lineage.id)}>
-              <IconStreet /> Line them all up: the lineage street
-            </button>
+            <div className="card-actions">
+              <button className="btn primary" onClick={() => useApp.getState().openStreet(cur.plotId, lineage.id)}>
+                <IconStreet /> Lineage street
+              </button>
+              <button className="btn" onClick={() => useApp.getState().openBuilding({ region: region.id, lineage: lineage.id })}>
+                <IconLibrary /> Study and compare
+              </button>
+            </div>
           )}
         </div>
       )}
