@@ -1,4 +1,4 @@
-import { P, tint, type BuildingDef, type Builder } from '@ah/kit';
+import { P, mix, tint, type BuildingDef, type Builder } from '@ah/kit';
 import { barrel, beam, goods, trestle } from './shared';
 
 /** A permanent market booth: a small timber-framed stall under a steep thatch, open at the front. */
@@ -44,7 +44,7 @@ export const normanMarketCross: BuildingDef = {
   build(b) {
     const stone = b.pick([P.limestone, P.limestoneWarm, P.ragstone]);
     // cobbled square around the cross
-    b.group({ scale: [1.1, 1, 0.88] }, () => b.cyl(9.4, 0.04, P.cobble, { segs: 18 }));
+    b.group({ scale: [1.1, 1, 0.88] }, () => b.cyl(9.4, 0.04, mix(P.cobble, P.earth, 0.5), { segs: 18 }));
 
     // three square steps
     for (let i = 0; i < 3; i++) {

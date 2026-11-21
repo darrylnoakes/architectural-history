@@ -95,7 +95,8 @@ export const romanMansio: BuildingDef = {
     b.gable(X1 - X0, DEP, rf, tile, { at: [0, HS, ZB + DEP / 2], overhang: 0.4, wall: render });
     b.sym((s) => {
       const x = s > 0 ? X1 - DEP / 2 : X0 + DEP / 2;
-      b.gable(DEP, sideLen + DEP, rf, tile, { at: [x, H, zM + DEP / 4], ridge: 'z', overhang: 0.4, wall: render });
+      const zr = ZF - DEP / 2; // run the side roof up to the street-range ridge so its end is buried
+      b.gable(DEP, zr - zBr, rf, tile, { at: [x, H, (zr + zBr) / 2], ridge: 'z', overhang: 0.4, wall: render });
       imbrices(b, sideLen - 1, DEP / 2, 0.4, rf, imbrex, 'z', [x, H, zM]);
     });
     imbrices(b, X1 - X0, DEP / 2, 0.4, rf, imbrex, 'x', [0, H, ZF - DEP / 2]);

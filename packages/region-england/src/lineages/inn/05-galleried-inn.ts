@@ -16,6 +16,7 @@ const ZFI = 4.0; // yard face of the front range
 const ZBI = -5.5; // yard face of the back range
 const ZB = -10.5; // back wall
 const AW = 3.4; // carriage arch width
+const BH = G + 0.6; // eaves of the stable range
 
 /** Open gallery along a yard face: floor, posts, rail and balusters. `len` runs along local X; outward is local +Z. */
 function gallery(b: Builder, len: number, y: number, h: number, timber: number) {
@@ -29,7 +30,7 @@ function gallery(b: Builder, len: number, y: number, h: number, timber: number) 
   b.box(len, 0.12, 0.14, timber, { at: [0, y + 0.95, GAL - 0.1] });
   b.box(len, 0.1, 0.12, timber, { at: [0, y + 0.05, GAL - 0.1] });
   b.box(len, 0.18, 0.18, timber, { at: [0, y + h - 0.18, GAL - 0.1] });
-  for (const x of spread(Math.round(len / 0.55), -len / 2 + 0.2, len / 2 - 0.2)) {
+  for (const x of spread(Math.round(len / 0.8), -len / 2 + 0.2, len / 2 - 0.2)) {
     b.box(0.06, 0.85, 0.06, tint(timber, 0.08), { at: [x, y + 0.1, GAL - 0.1], jitter: false });
   }
 }
@@ -71,7 +72,7 @@ export const galleriedInn: BuildingDef = {
       const xc = s * (AW / 2 + fw / 2);
       b.box(fw, G, ZF - ZFI, fill, { at: [xc, 0, (ZF + ZFI) / 2] });
       b.box(fw + 0.06, 0.3, ZF - ZFI + 0.06, P.rubble, { at: [xc, 0, (ZF + ZFI) / 2] });
-      b.frame(fw, G - 0.3, oak, { at: [xc, 0.3, ZF], facing: '+z', studs: Math.round(fw / 0.62), rails: 1, beam: 0.16 });
+      b.frame(fw, G - 0.3, oak, { at: [xc, 0.3, ZF], facing: '+z', studs: Math.round(fw / 0.75), rails: 1, beam: 0.16 });
       // ground floor: a mullioned window and a door in each half
       b.window(2.4, 1.2, { at: [s * 6.6, 1.2, ZF + 0.07], facing: '+z', frame: oak, bars: [5, 1], border: 0.1 });
       b.panel(1.0, 2.1, P.oakDark, { at: [s * 3.0, 0.3, ZF + 0.07], facing: '+z', shape: 'pointed', depth: 0.06 });
@@ -93,8 +94,8 @@ export const galleriedInn: BuildingDef = {
     for (const x of spread(22, -XO + 0.2, XO - 0.2)) {
       b.box(0.12, 0.12, 0.5, tint(oak, -0.08), { at: [x, G - 0.15, ZF + 0.2], jitter: false });
     }
-    b.frame(2 * XO, F1 - 0.24, oak, { at: [0, G + 0.2, z1], facing: '+z', studs: 32, rails: 1, beam: 0.15 });
-    b.frame(2 * XO, F2 - 0.24, oak, { at: [0, G + F1 + 0.2, z2], facing: '+z', studs: 32, rails: 1, beam: 0.15 });
+    b.frame(2 * XO, F1 - 0.24, oak, { at: [0, G + 0.2, z1], facing: '+z', studs: 26, rails: 1, beam: 0.15 });
+    b.frame(2 * XO, F2 - 0.24, oak, { at: [0, G + F1 + 0.2, z2], facing: '+z', studs: 26, rails: 1, beam: 0.15 });
     for (const x of [-7.5, -3.8, 0, 3.8, 7.5]) {
       b.window(2.2, 1.1, { at: [x, G + 0.95, z1 + 0.07], facing: '+z', frame: oak, bars: [5, 2], border: 0.1 });
       b.window(1.8, 0.95, { at: [x, G + F1 + 0.9, z2 + 0.07], facing: '+z', frame: oak, bars: [4, 2], border: 0.1 });
@@ -175,12 +176,12 @@ export const galleriedInn: BuildingDef = {
       const len = zEnd - ZBI;
       b.gable(span, len, rise, tile, { at: [s * (XO + yardX) / 2, TOP, ZBI + len / 2], ridge: 'z', overhang: 0.3, wall: fill });
       // the gable end that shows above the stable roof
-      b.frame(span - 0.4, 2.8, oak, { at: [s * (XO + yardX) / 2, TOP - 2.8, ZBI - 0.02], facing: '-z', studs: 6, rails: 1 });
+      b.frame(span - 0.4, TOP - BH, oak, { at: [s * (XO + yardX) / 2, BH, ZBI - 0.02], facing: '-z', studs: 6, rails: 2, brace: 'corner' });
+      for (const x of [-1.5, 1.5]) b.window(1.1, 0.9, { at: [s * (XO + yardX) / 2 + x, G + F1 + 0.8, ZBI - 0.02], facing: '-z', frame: oak, bars: [3, 2] });
       b.chimney(0.9, 2.6, 1.0, P.brickRed, { at: [s * (XO - 1.4), TOP + rise * 0.4, -1.0] });
     });
 
     // ---------------- back range: stables with a hayloft over
-    const BH = G + 2.4;
     const bz = (ZB + ZBI) / 2;
     b.box(2 * XO, BH, ZBI - ZB, fill, { at: [0, 0, bz] });
     b.box(2 * XO + 0.06, 0.3, ZBI - ZB + 0.06, P.rubble, { at: [0, 0, bz] });
@@ -190,7 +191,9 @@ export const galleriedInn: BuildingDef = {
     for (const x of spread(4, -3.6, 3.6)) {
       b.panel(1.5, 2.4, tint(oak, 0.04), { at: [x, 0.3, ZBI + 0.06], facing: '+z' });
     }
-    b.panel(1.4, 1.5, tint(oak, 0.04), { at: [0, G + 0.3, ZBI + 0.06], facing: '+z' });
+    b.box(1.6, 1.0, 1.0, fill, { at: [0, BH, ZBI - 0.5] });
+    b.panel(1.1, 0.85, tint(oak, 0.04), { at: [0, BH + 0.05, ZBI], facing: '+z' });
+    b.gable(1.6, 1.0, 0.9, tile, { at: [0, BH + 1.0, ZBI - 0.5], ridge: 'z', overhang: 0.15, wall: fill });
     for (const x of [-6, -2, 2, 6]) b.panel(1.2, 0.6, P.windowDark, { at: [x, 1.6, ZB - 0.06], facing: '-z' });
     const bRise = ((ZBI - ZB) / 2) * PITCH * 0.95;
     b.gable(2 * XO, ZBI - ZB, bRise, tile, { at: [0, BH, bz], overhang: 0.3, wall: fill });

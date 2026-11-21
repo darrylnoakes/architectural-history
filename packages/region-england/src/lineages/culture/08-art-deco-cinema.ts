@@ -54,19 +54,19 @@ export const artDecoCinema: BuildingDef = {
     const r = 5;
 
     // ---------------------------------------------------------------- auditorium: a brick box
-    const az0 = -14.6;
+    const az0 = -14.4;
     const ah = 13.2;
     b.box(24, ah, fz0 - az0 + 0.5, brick, { at: [0, 0, (az0 + fz0) / 2 - 0.25] });
     b.box(24.3, 0.4, fz0 - az0 + 0.8, tint(cream, -0.04), { at: [0, ah, (az0 + fz0) / 2 - 0.25] });
-    b.gable(23, fz0 - az0 - 1, 2.0, P.asphalt, { at: [0, ah, (az0 + fz0) / 2 - 0.4], ridge: 'z' });
+    b.gable(23, fz0 - az0 - 1, 2.0, P.cladGrey, { at: [0, ah, (az0 + fz0) / 2 - 0.4], ridge: 'z' });
     b.sym((s) => {
       for (const z of spread(5, az0, fz0)) b.box(0.6, ah - 0.4, 0.9, tint(brick, -0.05), { at: [s * 12.15, 0, z] });
       b.panel(1.8, 2.2, P.doorBlack, { at: [s * 12, 0, az0 + 3], facing: s > 0 ? '+x' : '-x' });
       b.box(2.4, 0.15, 1.2, tint(cream, -0.03), { at: [s * 12.6, 2.4, az0 + 3] });
     });
     b.panel(3.6, 3.0, P.doorBlack, { at: [0, 0, az0], facing: '-z' }); // scenery and service doors at the back
-    b.box(4.4, 2.6, 2.6, brick, { at: [-6.5, 0, az0 - 1.3] }); // boiler house
-    b.chimney(0.9, 6, 0.9, brick, { at: [-7.8, 2.6, az0 - 1.6] });
+    b.box(2.6, 3.2, 4.4, brick, { at: [-13.3, 0, az0 + 8] }); // boiler house
+    b.chimney(0.9, 7, 0.9, brick, { at: [-13.3, 3.2, az0 + 7] });
     // projection box on the roof at the front
     b.box(8, 2.4, 3.0, brick, { at: [0, ah, fz0 - 1.6] });
 
@@ -94,7 +94,6 @@ export const artDecoCinema: BuildingDef = {
     const finX = -10.2;
     b.box(1.4, 21, 7, cream, { at: [finX, 0, fz1 - 3.2] });
     b.box(1.6, 0.4, 7.2, black, { at: [finX, 21, fz1 - 3.2] });
-    for (const dz of [-1.8, 0, 1.8]) b.box(1.5, 10, 0.12, P.cladGreen, { at: [finX, fh + 0.5, fz1 - 3.2 + dz + 2.0] });
     b.box(0.3, 14, 0.3, P.postRed, { at: [finX, 6, fz1 + 0.35] });
     for (let i = 0; i < 4; i++) b.box(1.8 - i * 0.2, 0.25, 7.4 - i * 0.6, black, { at: [finX, 14 + i * 1.6, fz1 - 3.2] });
 
@@ -117,6 +116,6 @@ export const artDecoCinema: BuildingDef = {
 
     b.collider(24, fz0 - az0 + 0.5, { at: [0, 0, (az0 + fz0) / 2 - 0.25] });
     b.collider(fx1 - fx0, fz1 - fz0, { at: [(fx0 + fx1) / 2, 0, (fz0 + fz1) / 2] });
-    b.collider(4.4, 2.6, { at: [-6.5, 0, az0 - 1.3] });
+    b.collider(2.6, 4.4, { at: [-13.3, 0, az0 + 8] });
   },
 };

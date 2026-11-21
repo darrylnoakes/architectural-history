@@ -50,10 +50,10 @@ export const tudorMarketHall: BuildingDef = {
     // floor beams, joist ends of the jetty, bressumer
     b.box(L + 0.4, 0.3, W + 0.4, oak, { at: [0, PH - 0.2, 0] });
     b.box(L + 2 * J, 0.12, W + 2 * J, tint(P.oak, 0.05), { at: [0, PH - 0.02, 0] }); // underside boards
-    for (const x of linspace(30, -L / 2 - J + 0.15, L / 2 + J - 0.15)) {
+    for (const x of linspace(19, -L / 2 - J + 0.15, L / 2 + J - 0.15)) {
       for (const s of [-1, 1]) b.box(0.13, 0.16, J + 0.2, oak, { at: [x, PH - 0.12, s * (W / 2 + J / 2)] });
     }
-    for (const z of linspace(12, -W / 2 - J + 0.15, W / 2 + J - 0.15)) {
+    for (const z of linspace(8, -W / 2 - J + 0.15, W / 2 + J - 0.15)) {
       for (const s of [-1, 1]) b.box(J + 0.2, 0.16, 0.13, oak, { at: [s * (L / 2 + J / 2), PH - 0.12, z] });
     }
     const y1 = PH + 0.1;
@@ -94,7 +94,9 @@ export const tudorMarketHall: BuildingDef = {
     const yR = y1 + UH;
     const rH = 3.4;
     b.box(UL + 0.1, 0.22, UW + 0.1, oak, { at: [0, yR - 0.22, 0] }); // wall plate
-    b.gable(UL, UW, rH, b.pick([P.tileBrown, P.tileRed]), { at: [0, yR, 0], ridge: 'x', overhang: 0.35, wall: fill });
+    const tile = b.pick([P.tileBrown, P.tileRed]);
+    b.gable(UL, UW, rH, tile, { at: [0, yR, 0], ridge: 'x', overhang: 0.35, wall: fill });
+    b.log(0.14, UL + 0.7, tint(tile, -0.1), { at: [0, yR + rH, 0], segs: 6 });
     // framed gable triangles: studs, collar and bargeboards
     for (const s of [1, -1] as const) {
       const xf = s * (UL / 2 + 0.04);

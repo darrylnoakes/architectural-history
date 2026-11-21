@@ -116,9 +116,10 @@ export const fullingMill: BuildingDef = {
     b.window(3.0, 1.0, { at: [wx, 0.4 + g1 + 0.8, wkz - wd / 2], facing: '-z', frame: oak, bars: [5, 1] });
     // brick chimney stack on the +X gable, with clustered shafts
     const cx = wx + ww / 2 + 0.5;
-    b.box(1.6, wtop + 1.5, 1.4, brick, { at: [cx, 0, wkz] });
-    b.sym((s) => b.cyl(0.32, 2.0, brick, { at: [cx, wtop + 1.5, wkz + s * 0.35], segs: 8 }));
-    b.box(1.4, 0.2, 1.4, brick, { at: [cx, wtop + 3.5, wkz] });
+    b.box(1.6, wtop + 2.6, 1.4, brick, { at: [cx, 0, wkz] });
+    b.box(1.8, 0.2, 1.6, brick, { at: [cx, wtop + 2.6, wkz] });
+    b.sym((s) => b.cyl(0.3, 1.6, brick, { at: [cx, wtop + 2.8, wkz + s * 0.35], segs: 8 }));
+    b.box(1.5, 0.2, 1.5, brick, { at: [cx, wtop + 4.4, wkz] });
 
     // ---- the tenter field, and a landing stage with bales of finished cloth
     const cloths = [P.doorBlue, P.cream, P.doorRed, tint(P.cream, -0.05), P.doorGreen];
