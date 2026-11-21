@@ -28,7 +28,7 @@ export const victorianMarketHall: BuildingDef = {
   lookFor: [
     { label: 'Polychrome brickwork', note: 'Bands and arches in different coloured bricks: structural colour rather than paint.', at: [-6.5, 5.0, 8.15] },
     { label: 'Iron and glass roof', note: 'Glass held in a frame of cast and wrought iron ribs, the same system as the new railway stations.', at: [5.0, 9.6, 2.0] },
-    { label: 'Ventilating lantern', note: 'A raised strip along the ridge with louvred sides lets stale air and heat escape.', at: [0, 12.2, -2.0] },
+    { label: 'Ventilating lantern', note: 'A raised strip along the ridge with louvred sides lets stale air and heat escape.', at: [1.35, 11.3, -2.0] },
     { label: 'Entrance arch', note: 'A huge round arch with striped voussoirs and an iron fanlight, wide enough for carts.', at: [0, 6.2, 8.4] },
     { label: 'Screen gable', note: 'The brick front rises above the glass roof behind it, giving the hall a civic face.', at: [3.2, 11.4, 8.1] },
   ],

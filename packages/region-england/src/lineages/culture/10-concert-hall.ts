@@ -40,21 +40,21 @@ export const concertHall: BuildingDef = {
   materials: ['stainless steel panels', 'glass', 'steel arches', 'concrete hall boxes'],
   modelledOn: 'Sage Gateshead (Foster + Partners, 2004), renamed The Glasshouse International Centre for Music in 2024',
   lookFor: [
-    { label: 'Curved shell', note: 'A single roof of stainless-steel panels, curved in two directions, wrapping all three halls like a blanket.', at: [-6.5, 18.8, -1] },
-    { label: 'Three lobes', note: 'Each hump of the shell covers one hall, so you can count the halls from outside.', at: [11.5, 11.9, -3] },
-    { label: 'Stainless-steel panels', note: 'The shell is clad in some 3,000 stainless-steel panels, with glass only where light is wanted. The seams run in long curves.', at: [0.0, 14.2, 5] },
-    { label: 'Glazed concourse', note: 'A full-height glass wall under the shell\'s overhanging edge, so the foyers face the town and the river.', at: [-2, 2, 10.7] },
+    { label: 'Curved shell', note: 'A single roof of stainless-steel panels, curved in two directions, wrapping all three halls like a blanket.', at: [-6.2, 18.4, -1] },
+    { label: 'Three lobes', note: 'Each hump of the shell covers one hall, so you can count the halls from outside.', at: [12, 12.6, -2.6] },
+    { label: 'Stainless-steel panels', note: 'The shell is clad in some 3,000 stainless-steel panels, with glass only where light is wanted. The seams run in long curves.', at: [0.5, 14.2, 5.5] },
+    { label: 'Glazed concourse', note: 'A full-height glass wall under the shell\'s overhanging edge, so the foyers face the town and the river.', at: [-6.2, 3, 11.0] },
   ],
   influences: ['high-tech-export'],
   build(b) {
     const steel = tint(P.aluminium, 0.04);
     const ribC = tint(P.steel, -0.05);
     const glass = mix(P.glass, P.white, 0.1);
-    const y0 = 3.6;
+    const y0 = 5.6;
     const lobes: Lobe[] = [
-      { x: -6.5, z: -1, rx: 9.6, rz: 13.2, ry: 15.2 },
-      { x: 4.2, z: -1.8, rx: 7.6, rz: 11.6, ry: 11.4 },
-      { x: 11.6, z: -3, rx: 5.0, rz: 9.2, ry: 8.0 },
+      { x: -6.2, z: -1, rx: 10.4, rz: 13.2, ry: 12.6 },
+      { x: 4.8, z: -1.6, rx: 8.4, rz: 11.8, ry: 9.6 },
+      { x: 12.0, z: -2.6, rx: 4.9, rz: 9.6, ry: 6.8 },
     ];
 
     // plaza and steps down to the street
@@ -86,7 +86,7 @@ export const concertHall: BuildingDef = {
       b.box(0.12, y0 - 0.3, 0.12, ribC, { at: [x, 0.3, z + 0.04] });
     }
     // the halls themselves show at the back as solid boxes, with a service yard
-    b.box(26, y0 + 2, 5, tint(P.concrete, 0.02), { at: [-1, 0, -12.2] });
+    b.box(26, y0 + 1, 5, tint(P.concrete, 0.02), { at: [-1, 0, -12.2] });
     b.panel(4, 3.4, P.cladGrey, { at: [3, 0.3, -14.7], facing: '-z' });
     b.panel(4, 3.4, P.cladGrey, { at: [-8, 0.3, -14.7], facing: '-z' });
     // entrance canopy and doors at the front of the big lobe
