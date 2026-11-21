@@ -3,7 +3,7 @@ import { ground, prism } from './shared';
 
 const X0 = -10;
 const X1 = 10;
-const ZF = 10.4; // main street front
+const ZF = 10.0; // main street front
 const ZR = 1.0; // back of the main block
 const CH = 2.6; // corner chamfer
 const G = 4.3;
@@ -63,7 +63,7 @@ export const victorianPub: BuildingDef = {
     { label: 'Corner entrance', note: 'The door is set in the cut-off corner so the pub faces both streets and catches trade from each.', at: [X1 - CH / 2 + 0.3, 1.6, ZF - CH / 2 + 0.3] },
     { label: 'Glazed tile front', note: 'Glossy faience on the ground floor shrugged off soot and could be washed down, and made the pub shine at night.', at: [-6.2, 1.2, ZF + 0.3] },
     { label: 'Etched windows', note: 'Frosted, patterned glass on the lower panes kept drinkers private from the street while letting in light.', at: [-3.6, 1.6, ZF + 0.35] },
-    { label: 'Gas lamps', note: 'Large lanterns on iron brackets, lit at dusk to draw customers off a dark street.', at: [X1 + 0.9, 4.1, ZF + 0.9] },
+    { label: 'Gas lamps', note: 'Large lanterns on iron brackets, lit at dusk to draw customers off a dark street.', at: [X1 + 0.75, 3.4, ZF + 0.75] },
     { label: 'Shaped gable', note: 'A curving Flemish-style gable with stone coping, part of the "Queen Anne" fashion for picturesque skylines.', at: [-2.1, TOP + 2.8, ZF + 0.4] },
   ],
   build(b) {
@@ -130,7 +130,7 @@ export const victorianPub: BuildingDef = {
       b.window(w, 2.6, { at: at(0.5), facing: f, frame: tileLight, glass: P.windowDark, border: 0.1, bars: [2, 1] });
       b.panel(w - 0.3, 1.25, etched, { at: at(0.6), facing: f, depth: 0.1 });
       for (const p of spread(3, -w / 2 + 0.45, w / 2 - 0.45)) {
-        b.panel(0.4, 0.4, P.white, { at: fz ? [x + p, 1.0, z] : [z, 1.0, x + p], facing: f, shape: 'circle', depth: 0.12 });
+        b.panel(0.36, 0.36, P.white, { at: fz ? [x + p, 1.05, z] : [z, 1.05, x + p], facing: f, depth: 0.12 });
       }
       b.panel(w - 0.2, 0.06, tileLight, { at: at(2.75), facing: f, depth: 0.1 });
     };
@@ -163,7 +163,12 @@ export const victorianPub: BuildingDef = {
     b.box(0.14, 0.25, dep, stone, { at: [X1, G + F1 - 0.1, zm - CH / 2] });
     b.box(X1 - X0 + 0.3, 0.4, 0.3, stone, { at: [0, TOP - 0.35, ZF] });
     b.box(0.3, 0.4, dep + 0.3, stone, { at: [X1, TOP - 0.35, zm] });
-    const sash = (x: number, y: number, z: number, h: number, f: Facing, ped: boolean) => {
+    const sash = (x: number, y: number, z: number, h: number, f: Facing, ped: boolean, plain = false) => {
+      if (plain) {
+        b.window(1.1, h, { at: [x, y, z], facing: f, frame: P.white, bars: [1, 2], border: 0.09 });
+        b.panel(1.35, 0.22, stone, { at: [x, y + h, z], facing: f, depth: 0.06 });
+        return;
+      }
       b.window(1.15, h, { at: [x, y, z], facing: f, frame: P.white, bars: [1, 2], border: 0.09, shape: 'segmental' });
       b.panel(1.45, 0.12, stone, { at: [x, y - 0.12, z], facing: f, depth: 0.1 });
       if (ped) {
@@ -240,9 +245,9 @@ export const victorianPub: BuildingDef = {
         b.cyl(0.2, 0.1, P.castIron, { at: [0, -1.02, out], segs: 6 });
       });
     };
-    lamp([X1 + 0.12, 4.3, ZF + 0.12], Math.PI / 4, 1.1);
-    lamp([-5.1, 4.25, ZF + 0.22], 0, 1.0);
-    lamp([X1 + 0.22, 4.25, 1.8], Math.PI / 2, 1.0);
+    lamp([X1 + 0.12, 4.3, ZF + 0.12], Math.PI / 4, 0.75);
+    lamp([-5.1, 4.25, ZF + 0.22], 0, 0.6);
+    lamp([X1 + 0.22, 4.25, 1.8], Math.PI / 2, 0.6);
 
     // ---------------- side wing along the side street: billiard room and kitchen, two storeys
     const WX0 = 3.6;
@@ -255,19 +260,19 @@ export const victorianPub: BuildingDef = {
     b.box(X1 - WX0 + 0.1, 0.22, wd + 0.1, stone, { at: [(X1 + WX0) / 2, G - 0.1, wz] });
     b.gable(X1 - WX0, wd, ((X1 - WX0) / 2) * PITCH, slate, { at: [(X1 + WX0) / 2, wH, wz], ridge: 'z', overhang: 0.25, wall: brick });
     for (const z of [-8.4, -5.8, -3.2]) {
-      sash(X1, 1.2, z, 2.4, '+x', false);
-      sash(X1, G + 0.6, z, 1.9, '+x', false);
+      sash(X1, 1.2, z, 2.4, '+x', false, true);
+      sash(X1, G + 0.6, z, 1.9, '+x', false, true);
     }
     pubDoor(X1 + 0.05, -1.1, '+x'); // the jug-and-bottle door for off-sales
-    for (const z of [-8, -4.5]) sash(WX0, G + 0.6, z, 1.9, '-x', false);
+    for (const z of [-8, -4.5]) sash(WX0, G + 0.6, z, 1.9, '-x', false, true);
     b.panel(1.1, 2.3, P.doorGreen, { at: [WX0, 0, -2.4], facing: '-x' });
     b.window(1.2, 1.4, { at: [(X1 + WX0) / 2, wH + 0.4, WZ0], facing: '-z', frame: P.white, bars: [2, 2] });
 
     // back of the main block
     for (const x of [-8.4, -5.4, -2.4, 0.6]) {
-      sash(x, 1.2, ZR, 2.2, '-z', false);
-      sash(x, G + 0.7, ZR, 2.0, '-z', false);
-      sash(x, G + F1 + 0.6, ZR, 1.7, '-z', false);
+      sash(x, 1.2, ZR, 2.2, '-z', false, true);
+      sash(x, G + 0.7, ZR, 2.0, '-z', false, true);
+      sash(x, G + F1 + 0.6, ZR, 1.7, '-z', false, true);
     }
     b.panel(1.1, 2.3, P.doorGreen, { at: [2.4, 0, ZR], facing: '-z' });
 

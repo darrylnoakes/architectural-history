@@ -25,7 +25,7 @@ export const georgianMarketHouse: BuildingDef = {
   materials: ['limestone ashlar', 'Welsh slate', 'lead', 'painted timber sashes'],
   lookFor: [
     { label: 'Open arcade', note: 'Round arches on square piers, open on all sides, so the market still trades on the ground floor.', at: [0, 2.4, 4.95] },
-    { label: 'Pediment', note: 'The low triangular gable of a classical temple, marking the centre of the main fronts. The clock sits in its tympanum.', at: [0, 9.7, 5.0] },
+    { label: 'Pediment', note: 'The low triangular gable of a classical temple, marking the centre of the main fronts. The clock sits in its tympanum.', at: [0, 10.4, 5.2] },
     { label: 'Sash windows', note: 'Tall windows of small panes in sliding timber sashes, evenly spaced to light the assembly room.', at: [-6.1, 6.4, 4.85] },
     { label: 'Cupola', note: 'A small domed lantern on the roof, holding the market bell and giving the building a skyline.', at: [0, 13.6, 0.4] },
     { label: 'Keystones', note: 'The wedge at the crown of each arch, here enlarged and carved to show it off.', at: [3.2, 4.05, 4.95] },
