@@ -26,7 +26,7 @@ const lineage: Lineage = {
     { from: -250, def: fulleryAndKilns },
     { from: 60, def: bakery },
     { from: 150, builtUntil: 300, end: gothicWar, def: horrea },
-    { from: 540, def: floatingMills },
+    { from: 540, builtUntil: 800, def: floatingMills },
     { from: 1150, def: fullingMill },
     { from: 1350, builtUntil: 1500, def: woolWorks },
     { from: 1550, builtUntil: 1750, def: silkMill },
