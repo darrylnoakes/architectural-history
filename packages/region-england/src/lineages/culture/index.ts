@@ -2,6 +2,7 @@ import type { Lineage } from '@ah/kit';
 import { roundBarrow } from './01-round-barrow';
 import { romanBaths } from './02-roman-baths';
 import { ruinedBaths } from './03-ruined-baths';
+import { priory } from './04-priory';
 
 const lineage: Lineage = {
   id: 'culture',
@@ -12,6 +13,7 @@ const lineage: Lineage = {
     { from: -500, def: roundBarrow },
     { from: 110, def: romanBaths },
     { from: 430, def: ruinedBaths },
+    { from: 1140, def: priory },
   ],
 };
 

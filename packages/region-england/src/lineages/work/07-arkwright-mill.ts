@@ -1,4 +1,4 @@
-import { P, tint, type BuildingDef } from '@ah/kit';
+import { P, spread, tint, type BuildingDef } from '@ah/kit';
 import { BANK, WATER, riverWall, waterwheel, water } from './shared';
 
 export const arkwrightMill: BuildingDef = {
@@ -17,8 +17,8 @@ export const arkwrightMill: BuildingDef = {
     { label: 'Rows of identical windows', note: 'Five storeys of small, evenly spaced windows: every floor the same, every bay the same, like the machines inside.', at: [-9.6, 9.0, 0.3] },
     { label: 'Bell cupola', note: 'The bell called the workers in at the start of each shift. Factory time replaced the farmer’s day.', at: [-3, 19.5, -4.6] },
     { label: 'Venetian windows', note: 'The one bit of polite architecture: a three-part window with a round-headed middle, lighting the staircase bay.', at: [-3, 8.6, 0.9] },
-    { label: 'Wheel house', note: 'A large breastshot wheel inside its own house at the end of the mill; one shaft from it powered every floor.', at: [12.4, 4.6, -5.4] },
-    { label: 'Mill leat and sluice', note: 'A channel brings water from upstream; the sluice controls how much reaches the wheel.', at: [16.2, 1.4, 0.6] },
+    { label: 'Wheel house', note: 'A large breastshot wheel inside its own house at the end of the mill; one shaft from it powered every floor.', at: [15.4, 4.6, -5.2] },
+    { label: 'Mill leat and sluice', note: 'A channel brings water from upstream; the sluice controls how much reaches the wheel.', at: [16.4, 1.6, 4.3] },
   ],
   influences: ['industrial-export', 'palladianism'],
   build(b) {
@@ -59,12 +59,8 @@ export const arkwrightMill: BuildingDef = {
     b.box(1.8, 0.16, 1.8, P.white, { at: [mx, ry + 1.6, mz] });
     b.lathe([[0.95, 0], [0.8, 0.35], [0.45, 0.7], [0.1, 1.0], [0.04, 1.6]], P.lead, { at: [mx, ry + 1.76, mz], segs: 8 });
     // rows of windows: 12 bays a side, five floors, small and identical
-    const bays: number[] = [];
-    for (let i = 0; i < 12; i++) {
-      const x = -L / 2 + 1.1 + i * 2.15 + (i >= 6 ? 2.4 : 0) - 0.0;
-      if (Math.abs(x) < 2.6) continue;
-      bays.push(x);
-    }
+    const half = spread(6, -L / 2 + 0.4, -2.6);
+    const bays = [...half, ...half.map((x) => -x)];
     for (let f = 0; f < N; f++) {
       const y = 0.5 + f * S + 0.75;
       for (const x of bays) {
@@ -96,9 +92,18 @@ export const arkwrightMill: BuildingDef = {
     const ay = wr + 0.1;
     waterwheel(b, { at: [hx - 0.1, ay, hz - 0.5], r: wr, width: 2.6, axis: 'x', kind: 'breast', paddles: 32, spokes: 8, color: P.oak, axleDir: -1, spin: b.rand() });
     // the breast: a curved masonry apron hugging the upstream side of the wheel
-    b.extrude([[0, 0], [2.2, 0], [2.2, 3.3], [1.4, 2.6], [0.6, 1.5], [0.1, 0.4]], 2.8, stone, { at: [hx - 0.1, 0, hz + 0.4], rotY: -Math.PI / 2 });
+    const br: [number, number][] = [[0, 0]];
+    for (let i = 0; i <= 8; i++) {
+      const t = (i / 8) * 1.45;
+      br.push([Math.sin(t) * (wr + 0.15), Math.max(0, ay - Math.cos(t) * (wr + 0.15))]);
+    }
+    br.push([wr + 1.0, ay - 0.2], [wr + 1.0, 0]);
+    b.extrude(br, 2.8, stone, { at: [hx - 0.1, 0, hz - 0.5], rotY: -Math.PI / 2 });
+    // back wall toward the river, open in a great arch
+    b.archWall(hw, hh, 0.6, brick, { at: [hx, 0, hz - hd / 2 + 0.3], facing: '-z', openings: 1, openW: 3.8, openH: 6.0, shape: 'round', sill: 0.6 });
     // head race (the leat) coming in from upstream to the +Z side of the wheel house
     const lz = hz + hd / 2 + 1.3;
+    b.panel(2.6, 1.6, P.timberBlack, { at: [hx + 0.2, 0, hz + hd / 2 + 0.02], facing: '+z', shape: 'segmental' });
     b.box(4.0, 0.9, 6.2, P.earth, { at: [hx + 0.2, 0, lz + 1.0], jitter: false });
     water(b, 2.6, 6.2, [hx + 0.2, 0.9, lz + 1.0]);
     b.sym((s) => b.box(0.6, 1.25, 6.2, stone, { at: [hx + 0.2 + s * 1.6, 0, lz + 1.0] }));
@@ -106,10 +111,10 @@ export const arkwrightMill: BuildingDef = {
     water(b, 4.2, 2.0, [hx + 3.3, 0.9, lz + 3.4]);
     b.sym((s) => b.box(4.0, 1.25, 0.5, stone, { at: [hx + 3.4, 0, lz + 3.4 + s * 1.25] }));
     // sluice gate with its rack-and-pinion headstock
-    b.sym((s) => b.box(0.25, 2.6, 0.25, P.castIron, { at: [hx + 0.2 + s * 1.4, 0.9, lz - 1.2] }));
-    b.box(3.1, 0.3, 0.3, P.castIron, { at: [hx + 0.2, 3.4, lz - 1.2] });
-    b.box(2.6, 0.9, 0.12, P.oak, { at: [hx + 0.2, 1.3, lz - 1.2] });
-    b.cyl(0.35, 0.1, P.castIron, { at: [hx + 1.7, 3.0, lz - 1.2], rot: [0, 0, Math.PI / 2], segs: 10 });
+    b.sym((s) => b.box(0.25, 2.6, 0.25, P.castIron, { at: [hx + 0.2 + s * 1.4, 0.9, lz + 0.4] }));
+    b.box(3.1, 0.3, 0.3, P.castIron, { at: [hx + 0.2, 3.4, lz + 0.4] });
+    b.box(2.6, 0.9, 0.12, P.oak, { at: [hx + 0.2, 1.3, lz + 0.4] });
+    b.cyl(0.35, 0.1, P.castIron, { at: [hx + 1.7, 3.0, lz + 0.4], rot: [0, 0, Math.PI / 2], segs: 10 });
     // tail race: out under an arch in the river wall
     riverWall(b, -17.6, 17.6, stone, { coping: tint(stone, 0.08) });
     b.panel(3.0, 1.0, P.timberBlack, { at: [hx - 0.1, WATER - 0.1, BANK - 0.2], facing: '-z', shape: 'segmental' });

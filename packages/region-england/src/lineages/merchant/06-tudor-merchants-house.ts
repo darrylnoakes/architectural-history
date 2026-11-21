@@ -1,32 +1,5 @@
-import { P, tint, type Builder, type BuildingDef } from '@ah/kit';
-import { archOutline, beam, flatOnFront } from './shared';
-
-/** A carved bargeboard for a gable facing +Z: hangs under the verge, with a cusped lower edge. */
-function bargeboard(b: Builder, half: number, h: number, ov: number, x: number, y: number, z: number, color: number) {
-  const drop = (ov * h) / half;
-  const L: [number, number] = [-half - ov, -drop - 0.02];
-  const R: [number, number] = [half + ov, -drop - 0.02];
-  const apex: [number, number] = [0, h - 0.02];
-  const n = 9;
-  const inner = (side: 1 | -1) => {
-    const out: [number, number][] = [];
-    for (let i = 0; i <= n; i++) {
-      const t = i / n; // 0 at apex, 1 at eaves
-      const px = side * (half + ov) * t;
-      const py = h - 0.02 - (h + drop) * t;
-      const d = i % 2 === 0 ? 0.42 : 0.26;
-      out.push([px, py - d]);
-    }
-    return out;
-  };
-  const right = inner(1).reverse(); // from eaves end back to apex
-  const left = inner(-1); // from apex out to the left eaves
-  const pts: [number, number][] = [L, apex, R, ...right, ...left.slice(1)];
-  b.extrude(pts, 0.08, color, { at: [x, y, z] });
-  // turned pendant and finial at the apex
-  b.cyl(0.08, 1.2, color, { at: [x, y + h - 0.7, z], segs: 6 });
-  b.cone(0.11, 0.3, color, { at: [x, y + h + 0.5, z], segs: 6 });
-}
+import { P, tint, type BuildingDef } from '@ah/kit';
+import { archOutline, bargeboard, beam, flatOnFront } from './shared';
 
 export const tudorMerchantsHouse: BuildingDef = {
   id: 'tudor-merchants-house',

@@ -1,6 +1,8 @@
 import type { Lineage } from '@ah/kit';
 import { feastingHouse } from './01-feasting-house';
 import { romanMansio } from './02-roman-mansio';
+import { saxonAlehouse } from './03-saxon-alehouse';
+import { normanAlehouse } from './04-norman-alehouse';
 
 const lineage: Lineage = {
   id: 'inn',
@@ -10,6 +12,8 @@ const lineage: Lineage = {
   stages: [
     { from: -500, def: feastingHouse },
     { from: 70, def: romanMansio },
+    { from: 450, def: saxonAlehouse },
+    { from: 1100, def: normanAlehouse },
   ],
 };
 

@@ -59,17 +59,20 @@ export class Engine {
     Engine.instance = this;
     const touch = useApp.getState().touch;
     const small = Math.min(window.innerWidth, window.innerHeight) < 700;
+    // ?q=low is for weak devices (and software renderers): no shadows, fewer trees
+    const low = new URLSearchParams(location.search).get('q') === 'low';
     this.stage = createStage({
       canvas,
       shadowExtent: 250,
       shadowMapSize: touch ? 2048 : 4096,
-      maxPixelRatio: touch ? 1.5 : 2,
+      shadows: !low,
+      maxPixelRatio: low ? 1 : touch ? 1.5 : 2,
     });
     const { scene, camera } = this.stage;
 
     this.terrain = new Terrain();
     this.town = new Town(region);
-    this.scenery = new Scenery(region, { treeCount: touch || small ? 1100 : 2200 });
+    this.scenery = new Scenery(region, { treeCount: low ? 500 : touch || small ? 1100 : 2200 });
     scene.add(this.terrain.group, this.town.group, this.scenery.group, this.street.group);
 
     const town = this.town;

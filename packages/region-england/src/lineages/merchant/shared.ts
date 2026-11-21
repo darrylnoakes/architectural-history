@@ -136,3 +136,63 @@ export function archOutline(w: number, h: number, rise: number, kind: 'tudor' | 
 export function flatOnFront(b: Builder, pts: [number, number][], x: number, y: number, z: number, depth: number, color: number): void {
   b.extrude(pts, depth, color, { at: [x, y, z + depth / 2 - 0.02] });
 }
+
+/** A carved bargeboard for a gable facing +Z: hangs under the verge, with a cusped lower edge. */
+export function bargeboard(b: Builder, half: number, h: number, ov: number, x: number, y: number, z: number, color: number) {
+  const drop = (ov * h) / half;
+  const L: [number, number] = [-half - ov, -drop - 0.02];
+  const R: [number, number] = [half + ov, -drop - 0.02];
+  const apex: [number, number] = [0, h - 0.02];
+  const n = 9;
+  const inner = (side: 1 | -1) => {
+    const out: [number, number][] = [];
+    for (let i = 0; i <= n; i++) {
+      const t = i / n; // 0 at apex, 1 at eaves
+      const px = side * (half + ov) * t;
+      const py = h - 0.02 - (h + drop) * t;
+      const d = i % 2 === 0 ? 0.42 : 0.26;
+      out.push([px, py - d]);
+    }
+    return out;
+  };
+  const right = inner(1).reverse(); // from eaves end back to apex
+  const left = inner(-1); // from apex out to the left eaves
+  const pts: [number, number][] = [L, apex, R, ...right, ...left.slice(1)];
+  b.extrude(pts, 0.08, color, { at: [x, y, z] });
+  // turned pendant and finial at the apex
+  b.cyl(0.08, 1.2, color, { at: [x, y + h - 0.7, z], segs: 6 });
+  b.cone(0.11, 0.3, color, { at: [x, y + h + 0.5, z], segs: 6 });
+}
+
+/**
+ * A canted bay window against a wall facing +Z: trapezoid plan wBack wide at the wall, wFront wide
+ * at the front, projecting proj. Returns the three faces (centre point and facing angle) so windows
+ * can be placed on them.
+ */
+export function cantedBay(
+  b: Builder,
+  x: number,
+  zWall: number,
+  y0: number,
+  h: number,
+  wBack: number,
+  wFront: number,
+  proj: number,
+  color: number,
+): { at: [number, number]; facing: number; w: number }[] {
+  const plan: [number, number][] = [
+    [-wBack / 2, 0.02],
+    [wBack / 2, 0.02],
+    [wFront / 2, -proj],
+    [-wFront / 2, -proj],
+  ];
+  b.extrude(plan, h, color, { at: [x, y0 + h / 2, zWall], rot: [-Math.PI / 2, 0, 0] });
+  const side = (wBack - wFront) / 2;
+  const ang = Math.atan2(proj, side);
+  const sw = Math.hypot(side, proj);
+  return [
+    { at: [x - (wBack + wFront) / 4, zWall + proj / 2], facing: -ang, w: sw },
+    { at: [x, zWall + proj], facing: 0, w: wFront },
+    { at: [x + (wBack + wFront) / 4, zWall + proj / 2], facing: ang, w: sw },
+  ];
+}

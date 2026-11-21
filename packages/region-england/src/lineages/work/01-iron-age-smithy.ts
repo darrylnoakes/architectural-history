@@ -28,8 +28,8 @@ export const ironAgeSmithy: BuildingDef = {
     'Pots were fired in a clamp, a heap of fuel and turf over the stacked pots, and cloth was woven on an upright loom held taut by clay weights.',
   materials: ['oak posts', 'wattle and daub', 'straw thatch', 'clay'],
   lookFor: [
-    { label: 'Bowl furnace', note: 'A low clay chimney over a bowl in the ground. Charcoal and ore went in the top; bellows blew air in at the base.', at: [-8.6, 1.3, 1] },
-    { label: 'Open-sided shelter', note: 'Just posts and a steep thatched roof, so the smith had light and the smoke and sparks could get out.', at: [-5.5, 3.6, 4.2] },
+    { label: 'Bowl furnace', note: 'A low clay chimney over a bowl in the ground. Charcoal and ore went in the top; bellows blew air in at the base.', at: [-11.3, 1.5, 1] },
+    { label: 'Open-sided shelter', note: 'Just posts and a steep thatched roof, so the smith had light and the smoke and sparks could get out.', at: [-3.0, 2.9, 3.5] },
     { label: 'Clamp kiln', note: 'Pots stacked under fuel and turves and fired in one go. Afterwards the heap was pulled apart, so nothing of it survives but ash.', at: [3.2, 1.3, 7] },
     { label: 'Warp-weighted loom', note: 'The threads hang from a beam and are pulled straight by a row of clay loom weights, which archaeologists find by the dozen.', at: [9, 2.3, 5.1] },
     { label: 'Roundhouse', note: 'The usual British building for a thousand years: a circle of wattle and daub under a cone of thatch.', at: [9, 4.5, -1] },
@@ -44,19 +44,21 @@ export const ironAgeSmithy: BuildingDef = {
     const sz = 1;
     const W = 7;
     const D = 5;
-    const eave = 2.1;
+    const eave = 2.5;
     for (const x of [-W / 2 + 0.2, 0, W / 2 - 0.2]) {
       b.sym((s) => b.cyl(0.13, eave, post, { at: [sx + x, 0, sz + s * (D / 2 - 0.2)], segs: 6 }));
     }
     b.sym((s) => b.box(W, 0.18, 0.2, post, { at: [sx, eave - 0.18, sz + s * (D / 2 - 0.2)] }));
-    b.gable(W, D, 3.1, thatch, { at: [sx, eave, sz], overhang: 0.6, thick: 0.4 });
+    b.gable(W, D, 3.0, thatch, { at: [sx, eave, sz], overhang: 0.4, thick: 0.4 });
     // floor of trodden earth
     b.box(W + 1, 0.04, D + 1, P.earth, { at: [sx, 0, sz], jitter: false });
     // bowl furnace: a short clay shaft with a tuyere and a pair of skin bellows
-    b.lathe([[0.62, 0], [0.6, 0.4], [0.42, 0.9], [0.28, 1.15], [0.2, 1.15], [0.2, 1.0]], P.cob, { at: [sx - 2.6, 0, sz], segs: 10 });
-    b.log(0.06, 0.6, P.terracotta, { at: [sx - 2.0, 0.2, sz], segs: 6 });
-    b.blob(0.3, P.mud, { at: [sx - 1.5, 0.25, sz - 0.25], stretch: [1.3, 0.6, 0.9] });
-    b.blob(0.3, P.mud, { at: [sx - 1.5, 0.25, sz + 0.3], stretch: [1.3, 0.6, 0.9] });
+    // (it stands out in the open beside the shelter, as furnaces usually did)
+    const fx = sx - W / 2 - 1.8;
+    b.lathe([[0.62, 0], [0.6, 0.4], [0.42, 0.9], [0.28, 1.15], [0.2, 1.15], [0.2, 1.0]], P.cob, { at: [fx, 0, sz], segs: 10 });
+    b.log(0.06, 0.6, P.terracotta, { at: [fx + 0.6, 0.2, sz], segs: 6 });
+    b.blob(0.3, P.mud, { at: [fx + 1.1, 0.25, sz - 0.25], stretch: [1.3, 0.6, 0.9] });
+    b.blob(0.3, P.mud, { at: [fx + 1.1, 0.25, sz + 0.3], stretch: [1.3, 0.6, 0.9] });
     // smithing hearth, anvil stone and quench trough
     b.box(1.2, 0.5, 1.0, P.cob, { at: [sx + 0.6, 0, sz - 1.1] });
     b.box(0.7, 0.08, 0.5, P.brickDark, { at: [sx + 0.6, 0.5, sz - 1.1], jitter: false });
@@ -77,8 +79,8 @@ export const ironAgeSmithy: BuildingDef = {
     // porch: two posts and a short gabled thatch
     const pz = hz + R;
     b.panel(1.1, 1.6, P.oakDark, { at: [hx, 0, pz - 0.02], facing: '+z' });
-    b.sym((s) => b.cyl(0.11, 1.9, post, { at: [hx + s * 1.3, 0, pz + 2.1], segs: 6 }));
-    b.gable(3.0, 2.6, 1.7, thatch, { at: [hx, 1.9, pz + 1.0], ridge: 'z', overhang: 0.25, thick: 0.3 });
+    b.sym((s) => b.cyl(0.11, 2.5, post, { at: [hx + s * 1.3, 0, pz + 2.1], segs: 6 }));
+    b.gable(3.0, 2.6, 1.5, thatch, { at: [hx, 2.5, pz + 1.0], ridge: 'z', overhang: 0.2, thick: 0.3 });
     loom(b, hx, pz + 1.9, b.pick([P.doorBlue, P.ochreWash, P.doorRed, P.daub]));
 
     // ---- clamp kiln: a low turf-covered mound with pots waiting to be fired

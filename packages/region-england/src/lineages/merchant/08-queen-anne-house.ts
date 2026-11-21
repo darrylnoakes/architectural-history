@@ -72,11 +72,11 @@ export const queenAnneHouse: BuildingDef = {
     for (const sz of [1, -1]) {
       for (const x of dormerXs) {
         const dz = zc + sz * (D / 2 + 0.3 - 1.3); // dormer face
-        const dd = 1.7;
+        const dd = 2.0;
         const dcz = dz - sz * dd / 2;
-        b.box(1.2, 1.5, dd, P.white, { at: [x, rY + 0.65, dcz] });
-        b.gable(1.2, dd, 0.55, roof, { at: [x, rY + 2.15, dcz], ridge: 'z', overhang: 0.12, wall: P.white });
-        sash(b, [x, rY + 0.8, dz], sz > 0 ? '+z' : '-z', 0.8, 1.15, { bars: [2, 3] });
+        b.box(1.2, 1.5, dd, P.white, { at: [x, rY + 0.95, dcz] });
+        b.gable(1.2, dd, 0.55, roof, { at: [x, rY + 2.45, dcz], ridge: 'z', overhang: 0.12, wall: P.white });
+        sash(b, [x, rY + 1.1, dz], sz > 0 ? '+z' : '-z', 0.8, 1.15, { bars: [2, 3] });
       }
     }
     // tall panelled chimney stacks rising through the roof near each end
