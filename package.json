@@ -1,0 +1,16 @@
+{
+  "name": "architectural-history",
+  "private": true,
+  "packageManager": "pnpm@10.28.0",
+  "type": "module",
+  "scripts": {
+    "dev": "pnpm --filter @ah/town dev",
+    "build": "turbo run build",
+    "typecheck": "turbo run typecheck",
+    "shot": "node tools/shot.mjs"
+  },
+  "devDependencies": {
+    "turbo": "^2.5.0",
+    "typescript": "^5.7.0"
+  }
+}

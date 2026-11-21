@@ -1,0 +1,396 @@
+import { Builder, P, mix, tint, type Opts } from '@ah/kit';
+
+/*
+ * Local helpers for the power lineage: raw triangle meshes (partial lathes, serrated palisades,
+ * bowed roofs), the motte that carries the castle from 1068 to 1575, the bailey outline that the
+ * palisade, then the curtain walls follow, and the 1874 clock tower that survives to 2008.
+ */
+
+type Geo = Parameters<Builder['add']>[0];
+type XZ = [number, number];
+
+// ------------------------------------------------------------------ raw triangles
+
+let template: Geo | null = null;
+/** A geometry instance to clone, taken from a finished Builder (this package cannot import three). */
+function tmpl(): Geo {
+  if (!template) {
+    const built = new Builder(1).box(1, 1, 1, 0).finish();
+    template = (built.object.children[0] as unknown as { geometry: Geo }).geometry;
+  }
+  return template;
+}
+
+/** Add a triangle soup: `pos` is a flat [x, y, z, ...] list, three vertices per triangle. */
+export function soup(b: Builder, pos: number[], color: number, o?: Opts): void {
+  if (!pos.length) return;
+  const t = tmpl();
+  const g = t.clone();
+  for (const k of Object.keys(g.attributes)) g.deleteAttribute(k);
+  g.setIndex(null);
+  g.clearGroups();
+  g.boundingBox = null;
+  g.boundingSphere = null;
+  const Attr = t.attributes.position.constructor as new (a: Float32Array, n: number) => never;
+  g.setAttribute('position', new Attr(new Float32Array(pos), 3));
+  b.add(g, color, o);
+}
+
+/** Push a quad (a, b, c, d in order around its edge) as two triangles. */
+export function quad(out: number[], a: number[], b: number[], c: number[], d: number[]): void {
+  out.push(...a, ...b, ...c, ...a, ...c, ...d);
+}
+
+/**
+ * A lathe swept only between angles a0 and a1 (radians, measured in the XZ plane: x = r cos a,
+ * z = r sin a, so +Z, the front, is a = PI / 2). Profile is [radius, height] from outside in or
+ * bottom up; it is not capped.
+ */
+export function arcLathe(
+  b: Builder,
+  profile: [number, number][],
+  a0: number,
+  a1: number,
+  segs: number,
+  color: number,
+  o?: Opts,
+): void {
+  const out: number[] = [];
+  for (let i = 0; i < segs; i++) {
+    const t0 = a0 + ((a1 - a0) * i) / segs;
+    const t1 = a0 + ((a1 - a0) * (i + 1)) / segs;
+    for (let j = 0; j < profile.length - 1; j++) {
+      const [r0, y0] = profile[j];
+      const [r1, y1] = profile[j + 1];
+      quad(
+        out,
+        [r0 * Math.cos(t0), y0, r0 * Math.sin(t0)],
+        [r0 * Math.cos(t1), y0, r0 * Math.sin(t1)],
+        [r1 * Math.cos(t1), y1, r1 * Math.sin(t1)],
+        [r1 * Math.cos(t0), y1, r1 * Math.sin(t0)],
+      );
+    }
+  }
+  soup(b, out, color, o);
+}
+
+/** A flat polygon strip on the ground (ditches, paths, beds), from a list of [x, z] centre points. */
+export function strip(b: Builder, pts: XZ[], width: number, y: number, color: number, o?: Opts): void {
+  const out: number[] = [];
+  for (let i = 0; i < pts.length - 1; i++) {
+    const [x0, z0] = pts[i];
+    const [x1, z1] = pts[i + 1];
+    const L = Math.hypot(x1 - x0, z1 - z0) || 1;
+    const nx = (-(z1 - z0) / L) * (width / 2);
+    const nz = ((x1 - x0) / L) * (width / 2);
+    // extend each piece a little so the joints close
+    const ex = ((x1 - x0) / L) * (width / 2);
+    const ez = ((z1 - z0) / L) * (width / 2);
+    quad(
+      out,
+      [x0 - ex + nx, y, z0 - ez + nz],
+      [x1 + ex + nx, y, z1 + ez + nz],
+      [x1 + ex - nx, y, z1 + ez - nz],
+      [x0 - ex - nx, y, z0 - ez - nz],
+    );
+  }
+  soup(b, out, color, o);
+}
+
+/** Points along an arc of radius r about (cx, cz) between angles a0 and a1. */
+export function arcPts(cx: number, cz: number, r: number, a0: number, a1: number, n: number): XZ[] {
+  const pts: XZ[] = [];
+  for (let i = 0; i <= n; i++) {
+    const a = a0 + ((a1 - a0) * i) / n;
+    pts.push([cx + r * Math.cos(a), cz + r * Math.sin(a)]);
+  }
+  return pts;
+}
+
+/**
+ * A palisade of split oak stakes with pointed tops, following a polyline of [x, z] points.
+ * `base(x, z)` gives the ground height under each stake (for palisades climbing a motte or a bank).
+ */
+export function palisade(
+  b: Builder,
+  pts: XZ[],
+  h: number,
+  color: number,
+  o?: { stake?: number; base?: (x: number, z: number) => number; rail?: number },
+): void {
+  const s = o?.stake ?? 0.38;
+  const base = o?.base ?? (() => 0);
+  const out: number[] = [];
+  for (let i = 0; i < pts.length - 1; i++) {
+    const [x0, z0] = pts[i];
+    const [x1, z1] = pts[i + 1];
+    const L = Math.hypot(x1 - x0, z1 - z0);
+    const n = Math.max(1, Math.round(L / s));
+    for (let k = 0; k < n; k++) {
+      const u0 = k / n;
+      const u1 = (k + 1) / n;
+      const ax = x0 + (x1 - x0) * u0;
+      const az = z0 + (z1 - z0) * u0;
+      const bx = x0 + (x1 - x0) * u1;
+      const bz = z0 + (z1 - z0) * u1;
+      const mx = (ax + bx) / 2;
+      const mz = (az + bz) / 2;
+      const y0 = base(mx, mz) - 0.3;
+      const top = base(mx, mz) + h * (0.94 + 0.06 * (((k * 7) % 5) / 4));
+      quad(out, [ax, y0, az], [bx, y0, bz], [bx, top, bz], [ax, top, az]);
+      out.push(ax, top, az, bx, top, bz, mx, top + s * 1.1, mz);
+    }
+  }
+  soup(b, out, color);
+  // a horizontal rail on the inside face, every stake pegged to it
+  if (o?.rail !== undefined) {
+    for (let i = 0; i < pts.length - 1; i++) {
+      const [x0, z0] = pts[i];
+      const [x1, z1] = pts[i + 1];
+      const y = Math.min(base(x0, z0), base(x1, z1)) + o.rail;
+      beam(b, [x0, z0], [x1, z1], 0.12, 0.16, tint(color, -0.06), y);
+    }
+  }
+}
+
+/** A box running from p to q (plan points), `w` thick and `h` tall, its base at height y. */
+export function beam(b: Builder, p: XZ, q: XZ, w: number, h: number, color: number, y = 0, extend = 0): void {
+  const dx = q[0] - p[0];
+  const dz = q[1] - p[1];
+  const L = Math.hypot(dx, dz);
+  b.box(L + extend * 2, h, w, color, { at: [(p[0] + q[0]) / 2, y, (p[1] + q[1]) / 2], rotY: Math.atan2(-dz, dx) });
+}
+
+/** One walk collider per segment of a polyline. */
+export function lineColliders(b: Builder, pts: XZ[], thick: number): void {
+  for (let i = 0; i < pts.length - 1; i++) {
+    const [x0, z0] = pts[i];
+    const [x1, z1] = pts[i + 1];
+    const dx = x1 - x0;
+    const dz = z1 - z0;
+    b.collider(Math.hypot(dx, dz) + thick * 0.5, thick, {
+      at: [(x0 + x1) / 2, 0, (z0 + z1) / 2],
+      rotY: Math.atan2(-dz, dx),
+    });
+  }
+}
+
+/** A long earth bank of triangular section along a polyline. */
+export function bank(b: Builder, pts: XZ[], w: number, h: number, color: number): void {
+  const out: number[] = [];
+  for (let i = 0; i < pts.length - 1; i++) {
+    const [x0, z0] = pts[i];
+    const [x1, z1] = pts[i + 1];
+    const L = Math.hypot(x1 - x0, z1 - z0) || 1;
+    const nx = (-(z1 - z0) / L) * (w / 2);
+    const nz = ((x1 - x0) / L) * (w / 2);
+    const ex = ((x1 - x0) / L) * (w * 0.3);
+    const ez = ((z1 - z0) / L) * (w * 0.3);
+    const a = [x0 - ex, 0, z0 - ez];
+    const c = [x1 + ex, 0, z1 + ez];
+    quad(out, [a[0] + nx, 0, a[2] + nz], [c[0] + nx, 0, c[2] + nz], [c[0], h, c[2]], [a[0], h, a[2]]);
+    quad(out, [a[0] - nx, 0, a[2] - nz], [a[0], h, a[2]], [c[0], h, c[2]], [c[0] - nx, 0, c[2] - nz]);
+  }
+  soup(b, out, color);
+}
+
+// ------------------------------------------------------------------ the motte (1068 to 1575)
+
+/** The earth mound thrown up in 1068. Its centre and size are fixed so later stages can reuse it. */
+export const MOTTE = { x: -10, z: -10, rBase: 12.2, rTop: 6.8, h: 6.5 };
+
+const MOTTE_PROFILE: [number, number][] = [
+  [MOTTE.rBase, 0],
+  [11.2, 0.7],
+  [9.6, 2.8],
+  [8, 5.2],
+  [7.2, 6.2],
+  [MOTTE.rTop, MOTTE.h],
+  [0, MOTTE.h],
+];
+
+/** Height of the motte surface at plan point (x, z); 0 off the mound. */
+export function motteY(x: number, z: number): number {
+  const r = Math.hypot(x - MOTTE.x, z - MOTTE.z);
+  if (r >= MOTTE.rBase) return 0;
+  for (let i = 0; i < MOTTE_PROFILE.length - 1; i++) {
+    const [r0, y0] = MOTTE_PROFILE[i];
+    const [r1, y1] = MOTTE_PROFILE[i + 1];
+    if (r <= r0 && r >= r1) return y0 + ((y1 - y0) * (r0 - r)) / (r0 - r1 || 1);
+  }
+  return MOTTE.h;
+}
+
+/**
+ * The motte: a turfed (or, later, grown-over) cone of rammed earth with a flat top, and the walkable
+ * deck on its summit. `ditch` paints the dry ditch on the bailey side ('water' for a wet moat).
+ */
+export function motte(b: Builder, o?: { color?: number; ditch?: 'dry' | 'water' | 'none' }): void {
+  const col = o?.color ?? P.turf;
+  b.lathe(MOTTE_PROFILE, col, { at: [MOTTE.x, 0, MOTTE.z], segs: 22 });
+  b.deck(MOTTE.rTop * 1.4, MOTTE.rTop * 1.4, MOTTE.h, { at: [MOTTE.x, 0, MOTTE.z] });
+  const ditch = o?.ditch ?? 'dry';
+  if (ditch !== 'none') {
+    // the ditch that cuts the motte off from the bailey (the outer sides run off the plot)
+    const wet = ditch === 'water';
+    arcLathe(
+      b,
+      [
+        [MOTTE.rBase + 0.1, 0.03],
+        [MOTTE.rBase + 2.4, 0.03],
+      ],
+      -1.25,
+      2.82,
+      18,
+      wet ? P.water : mix(P.soil, P.earth, 0.3),
+      { at: [MOTTE.x, 0, MOTTE.z], mat: wet ? 'glass' : 'matte' },
+    );
+  }
+}
+
+// ------------------------------------------------------------------ the bailey outline
+
+/**
+ * The bailey boundary, clockwise from where it leaves the motte at the back to where it rejoins it
+ * on the left. The gate gap is between BAILEY_FRONT_R and BAILEY_FRONT_L on the front (z = 19).
+ */
+export const BAILEY_RIGHT: XZ[] = [
+  [-1.6, -14.2],
+  [3, -19],
+  [16, -19],
+  [19.5, -6],
+  [19.5, 11],
+  [13, 19],
+  [4.2, 19],
+];
+export const BAILEY_LEFT: XZ[] = [
+  [-1.2, 19],
+  [-12, 19],
+  [-19.5, 11],
+  [-19.5, 2],
+  [-16.6, -3.8],
+];
+/** Centre of the gateway on the front line. */
+export const GATE: XZ = [1.5, 19];
+
+/** Points along a polyline, `step` apart, with the direction of travel at each. */
+export function along(pts: XZ[], step: number): { x: number; z: number; ang: number }[] {
+  const res: { x: number; z: number; ang: number }[] = [];
+  for (let i = 0; i < pts.length - 1; i++) {
+    const [x0, z0] = pts[i];
+    const [x1, z1] = pts[i + 1];
+    const L = Math.hypot(x1 - x0, z1 - z0);
+    const n = Math.max(1, Math.round(L / step));
+    for (let k = 0; k < n; k++) {
+      const u = (k + 0.5) / n;
+      res.push({ x: x0 + (x1 - x0) * u, z: z0 + (z1 - z0) * u, ang: Math.atan2(-(z1 - z0), x1 - x0) });
+    }
+  }
+  return res;
+}
+
+// ------------------------------------------------------------------ the 1874 clock tower
+
+/** Plan position and size of the Victorian clock tower, kept when the town hall around it goes. */
+export const TOWER = { x: -11, z: 12, w: 6.4, shaft: 27 };
+
+/**
+ * The clock tower of 1874: polychrome brick shaft with stone bands and corner buttresses, a clock
+ * stage with four dials, an open belfry with pointed openings, corner pinnacles and a steep spire.
+ * Total height about 44 m. `weathered` tones it down for its later life as a survivor.
+ */
+export function clockTower(b: Builder, o?: { brick?: number; stone?: number }): void {
+  const brick = o?.brick ?? P.brickRed;
+  const stone = o?.stone ?? P.limestoneWarm;
+  const W = TOWER.w;
+  const S = TOWER.shaft;
+  b.group({ at: [TOWER.x, 0, TOWER.z] }, () => {
+    // plinth and shaft
+    b.box(W + 0.6, 1.2, W + 0.6, stone);
+    b.box(W, S, W, brick, { at: [0, 1.2, 0] });
+    // polychrome bands: pale stone stripes every 2.6 m, dark blue brick between pairs
+    for (let y = 3.4; y < S; y += 2.6) b.box(W + 0.08, 0.32, W + 0.08, stone, { at: [0, y, 0], jitter: false });
+    for (let y = 4.7; y < S - 4; y += 5.2) b.box(W + 0.05, 0.22, W + 0.05, P.brickBlue, { at: [0, y, 0], jitter: false });
+    // stepped corner buttresses
+    for (const sx of [-1, 1])
+      for (const sz of [-1, 1]) {
+        b.box(0.9, S * 0.55, 0.9, brick, { at: [sx * (W / 2 - 0.15), 1.2, sz * (W / 2 - 0.15)] });
+        b.box(0.7, S * 0.35, 0.7, brick, { at: [sx * (W / 2 - 0.1), 1.2 + S * 0.55, sz * (W / 2 - 0.1)] });
+        b.box(0.9, 0.3, 0.9, stone, { at: [sx * (W / 2 - 0.15), 1.2 + S * 0.55, sz * (W / 2 - 0.15)] });
+      }
+    // lancet windows up the shaft on all four faces
+    for (const f of ['+z', '-z', '+x', '-x'] as const) {
+      const rot = { '+z': 0, '-z': Math.PI, '+x': Math.PI / 2, '-x': -Math.PI / 2 }[f];
+      b.group({ rotY: rot }, () => {
+        b.panel(1.6, 3.4, stone, { at: [0, 1.2, W / 2], shape: 'pointed' });
+        b.panel(1.2, 3.0, P.doorBlack, { at: [0, 1.2, W / 2 + 0.03], shape: 'pointed' });
+        for (const y of [7.5, 13.5]) b.window(0.9, 2.6, { at: [0, y, W / 2], shape: 'pointed', frame: stone });
+        b.window(0.7, 2.2, { at: [0, 19.2, W / 2], shape: 'pointed', frame: stone });
+        // clock stage: projecting stone frame with a big white dial
+        b.box(W - 0.6, 3.8, 0.25, stone, { at: [0, S - 3.2, W / 2] });
+        b.panel(3.1, 3.1, P.white, { at: [0, S - 3.0, W / 2 + 0.25], shape: 'circle', depth: 0.08 });
+        b.panel(0.12, 1.2, P.black, { at: [0, S - 1.45, W / 2 + 0.36], depth: 0.03 });
+        b.panel(0.9, 0.12, P.black, { at: [0.45, S - 1.45, W / 2 + 0.36], depth: 0.03 });
+        // gablet over each dial
+        b.extrude([[-1.9, 0], [1.9, 0], [0, 1.6]], 0.4, stone, { at: [0, S + 0.6, W / 2 - 0.05] });
+      });
+    }
+    // cornice and the open belfry stage above
+    b.box(W + 0.5, 0.6, W + 0.5, stone, { at: [0, S + 1.2, 0] });
+    const B0 = S + 1.8;
+    const BH = 5;
+    for (const f of [0, Math.PI / 2, Math.PI, -Math.PI / 2]) {
+      b.archWall(W - 0.6, BH, 0.5, brick, {
+        facing: f,
+        at: [Math.sin(f) * (W / 2 - 0.55), B0, Math.cos(f) * (W / 2 - 0.55)],
+        openings: 2,
+        openW: 1.3,
+        openH: 3.8,
+        shape: 'pointed',
+        sill: 0.5,
+      });
+    }
+    for (const sx of [-1, 1])
+      for (const sz of [-1, 1]) {
+        b.box(1, BH, 1, brick, { at: [sx * (W / 2 - 0.5), B0, sz * (W / 2 - 0.5)] });
+        // corner pinnacles
+        b.box(0.8, 1.6, 0.8, stone, { at: [sx * (W / 2 - 0.45), B0 + BH + 0.4, sz * (W / 2 - 0.45)] });
+        b.cone(0.55, 3.2, stone, { at: [sx * (W / 2 - 0.45), B0 + BH + 2, sz * (W / 2 - 0.45)], segs: 4, rotY: Math.PI / 4 });
+      }
+    b.box(W - 1.2, 0.3, W - 1.2, P.oakDark, { at: [0, B0 + 0.4, 0] });
+    b.box(W + 0.4, 0.4, W + 0.4, stone, { at: [0, B0 + BH, 0] });
+    // parapet and the steep slate spire with lucarnes, finished with a gilded vane
+    b.crenel(W + 0.4, W + 0.4, stone, { at: [0, B0 + BH + 0.4, 0], merlonW: 0.45, merlonH: 0.55, t: 0.3 });
+    const SP = B0 + BH + 0.4;
+    b.cone((W - 0.8) * 0.72, 11, P.slate, { at: [0, SP, 0], segs: 8, rotY: Math.PI / 8 });
+    for (const f of [0, Math.PI / 2, Math.PI, -Math.PI / 2]) {
+      b.group({ rotY: f, at: [0, SP + 1.2, 0] }, () => {
+        b.box(1.0, 1.3, 1.2, stone, { at: [0, 0, 1.6] });
+        b.gable(1.0, 1.2, 0.8, P.slate, { at: [0, 1.3, 1.6], ridge: 'z', wall: stone });
+      });
+    }
+    b.cyl(0.07, 2.4, P.iron, { at: [0, SP + 10.6, 0], segs: 4 });
+    b.box(0.9, 0.35, 0.04, P.gold, { at: [0.2, SP + 12.2, 0] });
+  });
+}
+
+/** Height of the top of the vane above the ground, for anchors and checks. */
+export const TOWER_TOP = TOWER.shaft + 1.8 + 5 + 0.4 + 13;
+
+/** Like Builder.colonnade but with a facet count, to keep long colonnades within budget. */
+export function columns(
+  b: Builder,
+  n: number,
+  spacing: number,
+  r: number,
+  h: number,
+  color: number,
+  o: { at: [number, number, number]; axis?: 'x' | 'z'; order?: 'plain' | 'tuscan' | 'doric' | 'ionic' | 'corinthian'; segs?: number },
+): void {
+  for (let i = 0; i < n; i++) {
+    const p = (i - (n - 1) / 2) * spacing;
+    const at: [number, number, number] =
+      o.axis === 'z' ? [o.at[0], o.at[1], o.at[2] + p] : [o.at[0] + p, o.at[1], o.at[2]];
+    b.column(r, h, color, { at, order: o.order ?? 'tuscan', segs: o.segs ?? 7 });
+  }
+}

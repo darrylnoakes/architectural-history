@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Building gallery</title>
+    <style>
+      html, body { margin: 0; height: 100%; background: #dfe9ee; font: 13px system-ui, sans-serif; }
+      canvas { display: block; width: 100vw; height: 100vh; }
+      #info { position: fixed; left: 10px; top: 8px; color: #223; background: #fffc; padding: 4px 8px; border-radius: 4px; white-space: pre; }
+      #err { position: fixed; left: 10px; bottom: 8px; right: 10px; color: #a00; background: #fff; padding: 8px; white-space: pre-wrap; display: none; }
+    </style>
+  </head>
+  <body>
+    <canvas id="c"></canvas>
+    <div id="info"></div>
+    <div id="err"></div>
+    <script type="module" src="/src/gallery.ts"></script>
+  </body>
+</html>
