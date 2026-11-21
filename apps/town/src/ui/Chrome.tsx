@@ -1,17 +1,20 @@
 import { useEffect, useRef, useState } from 'react';
 import type { NavMode } from '@ah/engine';
 import { useApp } from '../state';
-import { Engine, region } from '../world/engine';
+import { formatYear } from '@ah/engine';
+import { Engine } from '../world/engine';
+import { useRegion } from './useRegion';
 import { IconClose, IconDown, IconDrone, IconHelp, IconLeft, IconLibrary, IconOrbit, IconPlay, IconWalk } from './icons';
 
 export function Brand() {
+  const { region } = useRegion();
   return (
     <button className="brand panel" onClick={() => useApp.setState({ regionsOpen: true, intro: false })} title="Choose a region">
       <span className="kicker">A history of architecture</span>
       <span className="brand-title">
         {region.name} <IconDown />
       </span>
-      <span className="brand-sub">{region.subtitle}, 500 BC to today</span>
+      <span className="brand-sub">{region.subtitle}, {formatYear(region.start)} to today</span>
     </button>
   );
 }

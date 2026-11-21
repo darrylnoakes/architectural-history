@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import type { NavMode } from '@ah/engine';
+import { plotSchedule, type NavMode } from '@ah/engine';
 import { REGIONS } from './regions';
 
 /** A lineage in a region: what the library, the viewer and the compare view point at. */
@@ -15,6 +15,8 @@ export type Screen =
   | { kind: 'compare'; a: LineageRef; b: LineageRef };
 
 export interface AppState {
+  /** The region whose town is showing. */
+  regionId: string;
   year: number;
   playing: boolean;
   /** 1 = the whole story in about two minutes. */
@@ -40,6 +42,8 @@ export interface AppState {
   touch: boolean;
   ready: boolean;
 
+  /** Go to another region's town, keeping the year where the two stories overlap. */
+  setRegion(id: string): void;
   setYear(year: number): void;
   jumpTo(year: number): void;
   togglePlay(): void;
@@ -56,10 +60,12 @@ export interface AppState {
 }
 
 const params = new URLSearchParams(typeof location !== 'undefined' ? location.search : '');
-const startYear = Number(params.get('y') ?? -500);
+const startRegion = REGIONS[params.get('r') ?? ''] ? params.get('r')! : 'england';
+const startYear = Number(params.get('y') ?? REGIONS[startRegion].start);
 
 export const useApp = create<AppState>((set, get) => ({
-  year: Number.isFinite(startYear) ? startYear : -500,
+  regionId: startRegion,
+  year: Number.isFinite(startYear) ? startYear : REGIONS[startRegion].start,
   playing: false,
   speed: 1,
   mode: 'orbit',
@@ -77,6 +83,21 @@ export const useApp = create<AppState>((set, get) => ({
   touch: typeof window !== 'undefined' && window.matchMedia?.('(pointer: coarse)').matches,
   ready: false,
 
+  setRegion: (id) => {
+    const region = REGIONS[id];
+    if (!region || id === get().regionId) return;
+    set((s) => ({
+      regionId: id,
+      year: Math.min(region.end, Math.max(region.start, s.year)),
+      screen: { kind: 'town' },
+      street: null,
+      selected: null,
+      hoverFeature: null,
+      playing: false,
+      mode: 'orbit',
+      regionsOpen: false,
+    }));
+  },
   setYear: (year) => set({ year }),
   jumpTo: (year) => set({ year, playing: false }),
   togglePlay: () => set({ playing: !get().playing, intro: false }),
@@ -88,17 +109,41 @@ export const useApp = create<AppState>((set, get) => ({
   openBuilding: (ref, year) =>
     set((s) => ({ screen: { kind: 'building', ref }, playing: false, intro: false, year: year ?? s.year })),
   openCompare: (a, b) => set({ screen: { kind: 'compare', a, b }, playing: false, intro: false }),
-  closeScreen: () => set({ screen: { kind: 'town' }, playing: false }),
+  closeScreen: () =>
+    set((s) => {
+      // the viewer may have wandered to years this town's story does not reach
+      const region = REGIONS[s.regionId];
+      return { screen: { kind: 'town' }, playing: false, year: Math.min(region.end, Math.max(region.start, s.year)) };
+    }),
   showInTown: (ref, year) => {
-    const plots = REGIONS[ref.region]?.plots.filter((p) => p.lineage === ref.lineage) ?? [];
-    const plot = plots.find((p) => p.hero) ?? plots[0];
+    const region = REGIONS[ref.region];
+    const lineage = region?.lineages.find((l) => l.id === ref.lineage);
+    if (!region || !lineage) return;
+    // the building the viewer was showing: find a plot where it stands, in that year if possible
+    let want = 0;
+    lineage.stages.forEach((st, k) => {
+      if (year >= st.from) want = k;
+    });
+    const plots = region.plots.filter((p) => p.lineage === ref.lineage).sort((a, b) => Number(!!b.hero) - Number(!!a.hero));
+    let pick: { id: string; year: number } | null = null;
+    for (const p of plots) {
+      const entry = plotSchedule(p, lineage, region.end).find((e) => e.index === want && e.state === 'standing');
+      if (!entry) continue;
+      if (year >= entry.from && year < entry.to) {
+        pick = { id: p.id, year };
+        break;
+      }
+      pick ??= { id: p.id, year: entry.from };
+    }
+    pick ??= plots[0] ? { id: plots[0].id, year } : null;
     set((s) => ({
+      regionId: region.id,
       screen: { kind: 'town' },
       street: null,
       playing: false,
-      year,
+      year: Math.min(region.end, Math.max(region.start, pick?.year ?? year)),
       mode: 'orbit',
-      selected: plot?.id ?? null,
+      selected: pick?.id ?? null,
       hoverFeature: null,
       focusTick: s.focusTick + 1,
     }));

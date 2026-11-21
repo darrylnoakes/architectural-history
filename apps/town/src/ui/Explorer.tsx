@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { TimeScale, formatYear } from '@ah/engine';
 import { KINDS, type BuildingDef, type BuildingKind, type Lineage, type Region } from '@ah/kit';
-import { REGIONS, allLineages } from '../regions';
+import { REGIONS, allLineages, scaleOf } from '../regions';
 import { useApp, type LineageRef } from '../state';
 import { Studio } from '../studio/studio';
 import type { Subject } from '../studio/subject';
@@ -13,13 +13,6 @@ import './explorer.css';
 
 const css = (n: number) => '#' + n.toString(16).padStart(6, '0');
 const SEED = 1;
-
-const scales = new Map<string, TimeScale>();
-function scaleOf(region: Region): TimeScale {
-  let s = scales.get(region.id);
-  if (!s) scales.set(region.id, (s = new TimeScale(region.eras)));
-  return s;
-}
 
 function resolve(ref: LineageRef): { region: Region; lineage: Lineage } | null {
   const region = REGIONS[ref.region];

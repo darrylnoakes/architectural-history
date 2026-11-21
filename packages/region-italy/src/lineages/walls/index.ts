@@ -1,30 +1,18 @@
-import { P, type Lineage } from '@ah/kit';
+import type { Lineage } from '@ah/kit';
+import { rampart } from './01-rampart';
+import { etruscanGate } from './02-etruscan-gate';
+import { romanGate } from './03-roman-gate';
+import { aurelianGate } from './04-aurelian-gate';
+import { communalGate } from './05-communal-gate';
+import { bastionGate } from './06-bastion-gate';
 
-// PLACEHOLDER: replaced by the real lineage.
 const lineage: Lineage = {
   id: 'walls',
   name: 'Walls and Gates',
   kind: 'defence',
-  role: 'Placeholder',
+  role: 'The town gate and the wall either side of it.',
   plotSize: [30, 16],
-  stages: [
-    {
-      from: -750,
-      def: {
-        id: 'walls-placeholder',
-        name: 'Walls and Gates',
-        style: 'Placeholder',
-        date: 'n/a',
-        summary: 'Placeholder building.',
-        materials: [],
-        lookFor: [],
-        build(b) {
-          b.box(15.0, 4, 8.0, P.intonacoOchre);
-          b.gable(15.0, 8.0, 2, P.coppi, { at: [0, 4, 0], overhang: 0.3 });
-        },
-      },
-    },
-  ],
+  stages: [{ from: -750, def: rampart }, { from: -400, def: etruscanGate }, { from: -30, def: romanGate }, { from: 275, def: aurelianGate }, { from: 1150, def: communalGate }, { from: 1540, def: bastionGate }],
 };
 
 export default lineage;

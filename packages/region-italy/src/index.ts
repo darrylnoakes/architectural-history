@@ -2,6 +2,7 @@ import type { Region } from '@ah/kit';
 import { eras } from './eras';
 import { influences } from './influences';
 import { plots } from './plots';
+import { site } from './site';
 import home from './lineages/home';
 import tenement from './lineages/tenement';
 import palazzo from './lineages/palazzo';
@@ -29,6 +30,7 @@ export const italy: Region = {
   influences,
   lineages: [home, tenement, palazzo, duomo, power, market, work, bridge, spectacle, osteria, walls, station, fountain],
   plots,
+  site,
 };
 
 export default italy;

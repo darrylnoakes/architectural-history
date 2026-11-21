@@ -1,29 +1,21 @@
-import { P, type Lineage } from '@ah/kit';
+import type { Lineage } from '@ah/kit';
+import { gothicWar, renewedBy } from '../../ends';
+import { cattleMarket } from './01-cattle-market';
+import { forumShops } from './02-forum-shops';
+import { macellum } from './03-macellum';
+import { stallsInTheRuins } from './04-stalls-in-the-ruins';
 
-// PLACEHOLDER: replaced by the real lineage.
 const lineage: Lineage = {
   id: 'market',
-  name: 'The Market',
   kind: 'market',
-  role: 'Placeholder',
+  name: 'The Market',
+  role: 'Where the town buys and sells, from cattle pens by the ford to a restored iron market hall.',
   plotSize: [26, 22],
   stages: [
-    {
-      from: -750,
-      def: {
-        id: 'market-placeholder',
-        name: 'The Market',
-        style: 'Placeholder',
-        date: 'n/a',
-        summary: 'Placeholder building.',
-        materials: [],
-        lookFor: [],
-        build(b) {
-          b.box(13.0, 4, 11.0, P.intonacoOchre);
-          b.gable(13.0, 11.0, 2, P.coppi, { at: [0, 4, 0], overhang: 0.3 });
-        },
-      },
-    },
+    { from: -750, end: renewedBy(-150), def: cattleMarket },
+    { from: -200, end: gothicWar, def: forumShops },
+    { from: 60, end: gothicWar, def: macellum },
+    { from: 950, end: renewedBy(1350), def: stallsInTheRuins },
   ],
 };
 

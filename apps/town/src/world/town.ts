@@ -249,6 +249,13 @@ export class Town {
     }
   }
 
+  dispose() {
+    for (const p of this.plots) {
+      for (const b of p.cache.values()) b.object.traverse((o) => (o as THREE.Mesh).geometry?.dispose());
+      p.cache.clear();
+    }
+  }
+
   colliders(): readonly WorldCollider[] {
     this.refresh();
     return this.allColliders;

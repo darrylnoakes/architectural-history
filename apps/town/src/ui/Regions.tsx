@@ -6,7 +6,8 @@ import type { Feature, FeatureCollection, Geometry, LineString } from 'geojson';
 import { formatYear } from '@ah/engine';
 import { useApp } from '../state';
 import { REGION_LIST, type RegionInfo } from '../regions';
-import { region } from '../world/engine';
+import type { Region } from '@ah/kit';
+import { useRegion } from './useRegion';
 import { IconClose } from './icons';
 import './regions.css';
 
@@ -63,7 +64,7 @@ interface Arc {
   label: string;
 }
 
-function useArcs(): Arc[] {
+function useArcs(region: Region): Arc[] {
   return useMemo(() => {
     const byKey = new Map<string, Arc>();
     const [hLat, hLon] = region.location;
@@ -91,7 +92,7 @@ function useArcs(): Arc[] {
       }
     }
     return [...byKey.values()];
-  }, []);
+  }, [region]);
 }
 
 const ease = (t: number) => (t < 0.5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2);
@@ -103,6 +104,7 @@ export function RegionsDialog() {
 }
 
 function Dialog() {
+  const { region } = useRegion();
   const [hot, setHot] = useState<string | null>(null);
   const listRef = useRef<HTMLUListElement>(null);
 
@@ -127,7 +129,7 @@ function Dialog() {
 
   const choose = (r: RegionInfo) => {
     if (r.status !== 'ready') return;
-    // only one region is built so far, so choosing a ready region simply returns to it
+    if (r.id !== region.id) useApp.getState().setRegion(r.id);
     close();
   };
 
@@ -201,6 +203,7 @@ function Row({
   setHot: (id: string | null) => void;
   choose: (r: RegionInfo) => void;
 }) {
+  const { region } = useRegion();
   const current = r.id === region.id;
   const ready = r.status === 'ready';
   const body = (
@@ -243,7 +246,8 @@ function Row({
 
 function Globe({ hot, onMarker }: { hot: string | null; onMarker: (r: RegionInfo) => void }) {
   const land = useLand();
-  const arcs = useArcs();
+  const { region } = useRegion();
+  const arcs = useArcs(region);
   const [rot, setRot] = useState<Rotation>(() => rotationFor(region.location));
   const rotRef = useRef(rot);
   rotRef.current = rot;
@@ -335,7 +339,7 @@ function Globe({ hot, onMarker }: { hot: string | null; onMarker: (r: RegionInfo
   const centre: [number, number] = [-rot[0], -rot[1]];
   const visible = (lat: number, lon: number) => geoDistance([lon, lat], centre) < Math.PI / 2 - 0.02;
   const hotRegion = hot ?? null;
-  const markers = useMemo(() => placeMarkers(projection, centre, hotRegion), [projection, hotRegion]);
+  const markers = useMemo(() => placeMarkers(projection, centre, hotRegion, region.id), [projection, hotRegion, region.id]);
 
   return (
     <svg
@@ -418,7 +422,7 @@ interface Placed {
  * then the rest from the middle of the globe outwards, each on the first side that does not overlap
  * a name already placed. A name with no free side is left off (its marker still shows).
  */
-function placeMarkers(projection: GeoProjection, centre: [number, number], hot: string | null): Placed[] {
+function placeMarkers(projection: GeoProjection, centre: [number, number], hot: string | null, here: string): Placed[] {
   const items: (Placed & { d: number; rank: number })[] = [];
   for (const r of REGION_LIST) {
     const [lat, lon] = r.location;
@@ -426,7 +430,7 @@ function placeMarkers(projection: GeoProjection, centre: [number, number], hot: 
     if (d > Math.PI / 2 - 0.02) continue;
     const p = projection([lon, lat]);
     if (!p) continue;
-    const rank = r.id === region.id ? 0 : r.id === hot ? 1 : 2;
+    const rank = r.id === here ? 0 : r.id === hot ? 1 : 2;
     items.push({ r, p: p as [number, number], label: null, d, rank });
   }
   const order = [...items].sort((a, b) => a.rank - b.rank || a.d - b.d);

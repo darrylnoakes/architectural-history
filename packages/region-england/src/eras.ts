@@ -14,7 +14,7 @@ export const eras: Era[] = [
     traits: ['Circular plans', 'Conical thatched roofs', 'Earth banks and palisades', 'No chimneys, no windows'],
     materials: ['Wattle and daub', 'Oak posts', 'Wheat-straw thatch', 'Turf'],
     color: 0x8a9a5b,
-    env: { streets: 'track', treeCover: 1, ground: P.earth, fields: P.meadow, extent: 75 },
+    env: { streets: 'track', treeCover: 1, ground: P.earth, fields: P.meadow, extent: 75, fieldSize: [34, 30] },
   },
   {
     id: 'roman',
@@ -29,7 +29,7 @@ export const eras: Era[] = [
     traits: ['Rectangular, axial plans', 'Columns and pediments', 'Round arches and vaults', 'Red tiled roofs', 'A street grid'],
     materials: ['Stone and flint with tile courses', 'Lime mortar and concrete', 'Terracotta tile', 'Painted plaster'],
     color: 0xc46f4a,
-    env: { streets: 'paved', treeCover: 0.55, ground: P.gravel, fields: P.crop, extent: 105 },
+    env: { streets: 'paved', treeCover: 0.55, ground: P.gravel, fields: P.crop, extent: 105, fieldSize: [48, 44] },
   },
   {
     id: 'anglo-saxon',
@@ -44,7 +44,7 @@ export const eras: Era[] = [
     traits: ['Timber halls with steep roofs', 'Sunken-floored huts', 'Tall narrow stone churches', 'Tiny round or triangular-headed windows'],
     materials: ['Oak planks and posts', 'Thatch and shingles', 'Reused Roman stone and brick'],
     color: 0x7f6a4a,
-    env: { streets: 'mud', treeCover: 0.8, ground: P.earth, fields: P.meadow, extent: 85 },
+    env: { streets: 'mud', treeCover: 0.8, ground: P.earth, fields: P.meadow, extent: 85, fieldSize: [13, 120] },
   },
   {
     id: 'norman',
@@ -59,7 +59,7 @@ export const eras: Era[] = [
     traits: ['Round arches', 'Thick walls, small windows', 'Square keeps and mottes', 'Zigzag (chevron) carving', 'Flat buttresses'],
     materials: ['Rubble and ashlar stone', 'Caen limestone', 'Oak', 'Thatch and shingle for ordinary houses'],
     color: 0x9a927c,
-    env: { streets: 'mud', treeCover: 0.6, ground: P.earth, fields: P.grassDry, extent: 100 },
+    env: { streets: 'mud', treeCover: 0.6, ground: P.earth, fields: P.grassDry, extent: 100, fieldSize: [13, 120] },
   },
   {
     id: 'gothic',
@@ -74,7 +74,7 @@ export const eras: Era[] = [
     traits: ['Pointed arches', 'Buttresses and pinnacles', 'Window tracery and spires', 'Timber-framed open halls', 'Jettied upper floors'],
     materials: ['Dressed limestone and flint', 'Oak framing with wattle infill', 'Lead and clay tile', 'Stained glass'],
     color: 0x6f86a8,
-    env: { streets: 'mud', treeCover: 0.4, ground: P.earth, fields: P.crop, extent: 115 },
+    env: { streets: 'mud', treeCover: 0.4, ground: P.earth, fields: P.crop, extent: 115, fieldSize: [13, 120] },
   },
   {
     id: 'tudor',
@@ -89,7 +89,7 @@ export const eras: Era[] = [
     traits: ['Tall brick chimney stacks', 'Close-studded and patterned timber framing', 'Mullioned windows', 'Jetties and gables', 'Symmetrical show fronts'],
     materials: ['Oak frame with plaster or brick infill', 'Red brick', 'Clay tile', 'Leaded glass'],
     color: 0x8f4f3a,
-    env: { streets: 'cobble', treeCover: 0.36, ground: P.earth, fields: P.crop, extent: 125 },
+    env: { streets: 'cobble', treeCover: 0.36, ground: P.earth, fields: P.crop, extent: 125, fieldSize: [22, 120] },
   },
   {
     id: 'georgian',

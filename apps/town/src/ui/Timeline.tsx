@@ -2,7 +2,8 @@ import { useCallback, useRef, useState } from 'react';
 import { formatYear } from '@ah/engine';
 import type { Influence } from '@ah/kit';
 import { useApp } from '../state';
-import { region, timeScale } from '../world/engine';
+import { scaleOf } from '../regions';
+import { activeTimeline } from '../timeline';
 import { IconArrowIn, IconArrowOut, IconClose, IconHome, IconList, IconPause, IconPlay } from './icons';
 
 const css = (n: number) => '#' + n.toString(16).padStart(6, '0');
@@ -24,9 +25,20 @@ export function Timeline() {
   const jumpTo = useApp((s) => s.jumpTo);
   const bar = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState<Influence | null>(null);
-  const era = timeScale.era(year);
+  const regionId = useApp((s) => s.regionId);
+  const screen = useApp((s) => s.screen);
+  const { scale: timeScale, regions } = activeTimeline({ regionId, screen });
+  const single = regions.length === 1;
+  const region = regions[0];
+  const here = regions.map((r) => (year >= r.start && year <= r.end ? scaleOf(r).era(year) : null));
+  const era = here[0] ?? scaleOf(region).era(year);
   const t = timeScale.toT(year);
-  const atEnd = year >= region.end;
+  const atEnd = year >= timeScale.end;
+  // tick labels: every era boundary, dropping those that would print on top of the one before
+  const ticks: number[] = [];
+  for (const y of [...new Set(regions.flatMap((r) => r.eras.map((e) => e.from)))].sort((a, b) => a - b)) {
+    if (!ticks.length || timeScale.toT(y) - timeScale.toT(ticks[ticks.length - 1]) > (single ? 0 : 0.045)) ticks.push(y);
+  }
 
   const scrub = useCallback(
     (clientX: number) => {
@@ -34,7 +46,7 @@ export function Timeline() {
       jumpTo(Math.round(timeScale.toYear((clientX - r.left) / r.width)));
       useApp.setState({ intro: false });
     },
-    [jumpTo],
+    [jumpTo, timeScale],
   );
 
   const onDown = (e: React.PointerEvent) => {
@@ -64,7 +76,7 @@ export function Timeline() {
         <button
           className="play"
           onClick={() => {
-            if (atEnd && !playing) jumpTo(region.start);
+            if (atEnd && !playing) jumpTo(timeScale.start);
             togglePlay();
           }}
           aria-label={playing ? 'Pause' : 'Play'}
@@ -73,14 +85,26 @@ export function Timeline() {
         </button>
         <div className="tl-now">
           <div className="tl-year">{formatYear(year)}</div>
-          <button className="tl-era" onClick={() => useApp.setState((s) => ({ eraOpen: !s.eraOpen }))}>
-            <span className="tl-era-name">{era.name}</span>
-            <span className="tl-era-tag">{era.tagline}</span>
-          </button>
+          {single ? (
+            <button className="tl-era" onClick={() => useApp.setState((s) => ({ eraOpen: !s.eraOpen }))}>
+              <span className="tl-era-name">{era.name}</span>
+              <span className="tl-era-tag">{era.tagline}</span>
+            </button>
+          ) : (
+            <div className="tl-era tl-era-pair">
+              {regions.map((r, i) => (
+                <span key={r.id} className="tl-era-name" style={{ ['--era' as string]: css(here[i]?.color ?? 0xb9b4a8) }}>
+                  {r.name}: {here[i]?.name ?? (year < r.start ? 'not begun' : 'ended')}
+                </span>
+              ))}
+            </div>
+          )}
         </div>
-        <button className="tl-ideas" onClick={() => useApp.setState({ ideasOpen: true, intro: false })} title="List every idea that arrived or left">
-          <IconList /> <span>Ideas</span>
-        </button>
+        {screen.kind === 'town' && (
+          <button className="tl-ideas" onClick={() => useApp.setState({ ideasOpen: true, intro: false })} title="List every idea that arrived or left">
+            <IconList /> <span>Ideas</span>
+          </button>
+        )}
         <div className="tl-speed" role="group" aria-label="Playback speed">
           {SPEEDS.map((v) => (
             <button key={v} className={v === speed ? 'on' : ''} onClick={() => useApp.setState({ speed: v })}>
@@ -89,9 +113,9 @@ export function Timeline() {
           ))}
         </div>
       </div>
-      <div className="tl-bar-wrap">
+      <div className={`tl-bar-wrap${single ? '' : ' pair'}`}>
         <div className="tl-marks">
-          {region.influences.map((inf) => (
+          {(screen.kind === 'town' ? region.influences : []).map((inf) => (
             <button
               key={inf.id}
               className={`tl-mark dir-${inf.dir}${open?.id === inf.id ? ' on' : ''}`}
@@ -107,29 +131,35 @@ export function Timeline() {
           ))}
         </div>
         <div className="tl-bar" ref={bar} onPointerDown={onDown} onPointerMove={onMove}>
-          {region.eras.map((e, i) => {
-            const [a, b] = timeScale.spans[i];
-            return (
-              <div
-                key={e.id}
-                className={`tl-seg${e.id === era.id ? ' on' : ''}`}
-                style={{ width: `${(b - a) * 100}%`, background: css(e.color) }}
-                title={`${e.name}, ${formatYear(e.from)} to ${formatYear(e.to)}`}
-              >
-                <span>{e.name}</span>
-              </div>
-            );
-          })}
+          {regions.map((r, k) => (
+            <div className="tl-row" key={r.id}>
+              {r.eras.map((e) => {
+                const a = timeScale.toT(e.from);
+                const b = timeScale.toT(e.to);
+                return (
+                  <div
+                    key={e.id}
+                    className={`tl-seg${e.id === here[k]?.id ? ' on' : ''}`}
+                    style={{ left: `${a * 100}%`, width: `${(b - a) * 100}%`, background: css(e.color) }}
+                    title={`${single ? '' : r.name + ': '}${e.name}, ${formatYear(e.from)} to ${formatYear(e.to)}`}
+                  >
+                    <span>{e.name}</span>
+                  </div>
+                );
+              })}
+              {!single && <em className="tl-row-name">{r.name}</em>}
+            </div>
+          ))}
           <div className="tl-head-pin" style={{ left: `${t * 100}%` }} />
         </div>
         <div className="tl-ticks">
-          {region.eras.map((e, i) => (
-            <span key={e.id} style={{ left: `${timeScale.spans[i][0] * 100}%` }}>
-              {formatYear(e.from)}
+          {ticks.map((y) => (
+            <span key={y} style={{ left: `${timeScale.toT(y) * 100}%` }}>
+              {formatYear(y)}
             </span>
           ))}
           <span style={{ left: '100%' }} className="last">
-            {formatYear(region.end)}
+            {formatYear(timeScale.end)}
           </span>
         </div>
       </div>

@@ -1,30 +1,14 @@
-import { P, type Lineage } from '@ah/kit';
+import type { Lineage } from '@ah/kit';
+import { gothicPalazzo } from './08-gothic-palazzo';
+import { renaissancePalazzo } from './09-renaissance-palazzo';
 
-// PLACEHOLDER: replaced by the real lineage.
 const lineage: Lineage = {
   id: 'palazzo',
   name: 'The Palazzo',
   kind: 'elite',
-  role: 'Placeholder',
+  role: 'wip',
   plotSize: [24, 26],
-  stages: [
-    {
-      from: -750,
-      def: {
-        id: 'palazzo-placeholder',
-        name: 'The Palazzo',
-        style: 'Placeholder',
-        date: 'n/a',
-        summary: 'Placeholder building.',
-        materials: [],
-        lookFor: [],
-        build(b) {
-          b.box(12.0, 4, 13.0, P.intonacoOchre);
-          b.gable(12.0, 13.0, 2, P.coppi, { at: [0, 4, 0], overhang: 0.3 });
-        },
-      },
-    },
-  ],
+  stages: [{ from: 1320, def: gothicPalazzo }, { from: 1460, def: renaissancePalazzo }],
 };
 
 export default lineage;

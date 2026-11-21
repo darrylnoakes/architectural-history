@@ -1,30 +1,15 @@
-import { P, type Lineage } from '@ah/kit';
+import type { Lineage } from '@ah/kit';
+import { tumulus } from './01-tumulus';
+import { amphitheatre } from './02-amphitheatre';
+import { arenaHouses } from './03-arena-houses';
 
-// PLACEHOLDER: replaced by the real lineage.
 const lineage: Lineage = {
   id: 'spectacle',
   name: 'Spectacle',
   kind: 'culture',
-  role: 'Placeholder',
+  role: 'Where the town goes to be entertained.',
   plotSize: [40, 36],
-  stages: [
-    {
-      from: -750,
-      def: {
-        id: 'spectacle-placeholder',
-        name: 'Spectacle',
-        style: 'Placeholder',
-        date: 'n/a',
-        summary: 'Placeholder building.',
-        materials: [],
-        lookFor: [],
-        build(b) {
-          b.box(20.0, 4, 18.0, P.intonacoOchre);
-          b.gable(20.0, 18.0, 2, P.coppi, { at: [0, 4, 0], overhang: 0.3 });
-        },
-      },
-    },
-  ],
+  stages: [{ from: -700, def: tumulus }, { from: 70, def: amphitheatre }, { from: 1000, def: arenaHouses }],
 };
 
 export default lineage;

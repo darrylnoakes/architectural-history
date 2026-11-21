@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { formatYear } from '@ah/engine';
 import type { Influence } from '@ah/kit';
 import { useApp } from '../state';
-import { region, timeScale } from '../world/engine';
+import { useRegion } from './useRegion';
 import { IconClose } from './icons';
 import { InfluenceIcon, influenceVerb } from './Timeline';
 
@@ -21,7 +21,8 @@ export function IdeasDialog() {
   const year = useApp((s) => s.year);
   const [filter, setFilter] = useState<Filter>('all');
   const list = useRef<HTMLDivElement>(null);
-  const sorted = useMemo(() => [...region.influences].sort((a, b) => a.year - b.year), []);
+  const { region, timeScale } = useRegion();
+  const sorted = useMemo(() => [...region.influences].sort((a, b) => a.year - b.year), [region]);
   // the entry nearest the current year, so the list opens where you are in the story
   const nearest = useMemo(
     () => sorted.reduce((best, i) => (Math.abs(i.year - year) < Math.abs(best.year - year) ? i : best), sorted[0]),

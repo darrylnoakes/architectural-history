@@ -1,4 +1,6 @@
 import england from '@ah/england';
+import italy from '@ah/italy';
+import { TimeScale, formatYear } from '@ah/engine';
 import type { Region } from '@ah/kit';
 
 /** A region on the world map: either built, or planned and shown as a marker only. */
@@ -16,32 +18,44 @@ export interface RegionInfo {
   blurb: string;
 }
 
-/** Regions whose content is built and loaded. */
-export const REGIONS: Record<string, Region> = { england };
+/** A region has a town to visit once its plots are laid out. */
+function hasTown(region: Region | undefined): region is Region {
+  return !!region && region.plots.length > 0;
+}
+
+/**
+ * Regions whose content is built and loaded. A region joins the list when its town plan is laid out;
+ * until then its buildings can be worked on in the gallery without showing here.
+ */
+export const REGIONS: Record<string, Region> = Object.fromEntries([england, italy].filter(hasTown).map((r) => [r.id, r]));
+
+const scales = new Map<string, TimeScale>();
+/** The timeline of a region: its eras laid out on a 0..1 bar. */
+export function scaleOf(region: Region): TimeScale {
+  let s = scales.get(region.id);
+  if (!s) scales.set(region.id, (s = new TimeScale(region.eras)));
+  return s;
+}
+
+function built(region: Region, blurb: string): RegionInfo {
+  return {
+    id: region.id,
+    name: region.name,
+    subtitle: region.subtitle,
+    span: `${formatYear(region.start)} to today`,
+    location: region.location,
+    status: hasTown(region) ? 'ready' : 'planned',
+    blurb,
+  };
+}
 
 /**
  * Every region on the map. The planned ones are the places England's story already points to (see
  * the `region` field of its cross-pollination entries) and the other great building traditions.
  */
 export const REGION_LIST: RegionInfo[] = [
-  {
-    id: 'england',
-    name: england.name,
-    subtitle: england.subtitle,
-    span: '500 BC to today',
-    location: england.location,
-    status: 'ready',
-    blurb: 'Roundhouses, a Roman town and its ruin, Saxon timber, Norman stone, Gothic, Tudor, Georgian, Victorian and modern, all on the same plots.',
-  },
-  {
-    id: 'italy',
-    name: 'Italy',
-    subtitle: 'A city on a river',
-    span: '750 BC to today',
-    location: [42.4, 12.6],
-    status: 'planned',
-    blurb: 'Etruscan and Roman beginnings, the classical orders at their source, Romanesque communes, the Renaissance, the Baroque and after.',
-  },
+  built(england, 'Roundhouses, a Roman town and its ruin, Saxon timber, Norman stone, Gothic, Tudor, Georgian, Victorian and modern, all on the same plots.'),
+  built(italy, 'Etruscan and Roman beginnings, the classical orders at their source, the communes and their towers, the Renaissance, the Baroque and after: a city that was never abandoned.'),
   {
     id: 'france',
     name: 'France',

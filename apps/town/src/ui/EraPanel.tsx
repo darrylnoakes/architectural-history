@@ -1,10 +1,11 @@
 import { formatYear } from '@ah/engine';
 import { useApp } from '../state';
-import { region, timeScale } from '../world/engine';
+import { useRegion } from './useRegion';
 import { IconClose, IconLeft, IconRight } from './icons';
 import { InfluenceIcon, influenceVerb } from './Timeline';
 
 export function EraPanel() {
+  const { region, timeScale } = useRegion();
   const open = useApp((s) => s.eraOpen);
   const eraIndex = useApp((s) => timeScale.eraIndex(s.year));
   const jumpTo = useApp((s) => s.jumpTo);

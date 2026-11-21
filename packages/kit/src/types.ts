@@ -133,6 +133,8 @@ export interface Era {
     fields: number;
     /** Rough radius of the built-up area in metres. */
     extent: number;
+    /** Size of one field in the farmland, [width, length] in metres. Long thin cells read as strips. */
+    fieldSize?: [number, number];
   };
 }
 
@@ -177,6 +179,61 @@ export interface Plot {
   hero?: boolean;
 }
 
+/** A street or country road. It follows the ground; where it meets the river a bridge plot takes over. */
+export interface Road {
+  id: string;
+  /** Polyline of [x, z] points. */
+  pts: [number, number][];
+  kind: 'main' | 'lane';
+  /** Laid out in this year (omit for roads as old as the town). */
+  since?: number;
+  /** Built over or closed in this year. */
+  until?: number;
+}
+
+export type TreeKind = 'round' | 'conifer' | 'poplar' | 'bush' | 'cypress' | 'pine' | 'olive';
+
+/**
+ * Something in the landscape that is not a plot building: a standing stone, a viaduct, street lamps,
+ * parked cars. `build` works in world metres; `ground(x, z)` gives the height of the land there.
+ */
+export interface SiteProp {
+  id: string;
+  since?: number;
+  until?: number;
+  build(b: Builder, ground: (x: number, z: number) => number): void;
+}
+
+/**
+ * The ground the town stands on. World axes: +x east, +z south, y up; the main square is near the
+ * origin and the river, if there is one, flows roughly along x.
+ */
+export interface Site {
+  /** Middle of the area the camera may roam, and its radius in metres. */
+  centre: [number, number];
+  radius: number;
+  river?: {
+    /** z of the centre line at a given x. */
+    z(x: number): number;
+    /** Half the width of the channel. */
+    half: number;
+  };
+  /** Height of the natural ground in metres, before the river channel is cut into it. */
+  relief(x: number, z: number): number;
+  roads: Road[];
+  /** Open paved spaces, as rectangles. */
+  squares: { x0: number; x1: number; z0: number; z1: number; since?: number }[];
+  /** The woodland mix, most common first. `share` values are relative. */
+  trees: { kind: TreeKind; share: number }[];
+  /** Places trees never grow (beyond roads, plots, squares and the river, which are kept clear anyway). */
+  clearings?: { x: number; z: number; r: number }[];
+  props: SiteProp[];
+  /** Wind turbines: each [x, z]. They are the one thing in the landscape that moves. */
+  turbines?: { since: number; at: [number, number][] };
+  /** Where the camera starts: the point it looks at, its distance, and its angles. */
+  view?: { target: [number, number, number]; distance: number; azimuth: number; polar: number };
+}
+
 export interface Region {
   id: string;
   name: string;
@@ -190,4 +247,5 @@ export interface Region {
   influences: Influence[];
   lineages: Lineage[];
   plots: Plot[];
+  site: Site;
 }

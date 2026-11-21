@@ -8,7 +8,7 @@ const N = Math.PI; // front faces north (-z)
 /**
  * The town plan. World axes: +x east, +z south. The market square is at the origin, the High Street
  * runs north-south along x = 0, Cross Street east-west along z = 0, and the river flows west to east
- * along z = 78. The roads that serve these plots are in apps/town/src/world/layout.ts.
+ * along z = 78. The roads and the ground itself are in `site.ts`.
  *
  * `lag` makes a plot adopt each new building type late (but always within the years that type was
  * really being built); `keep` freezes it at one durable building, which is how a Tudor house or a

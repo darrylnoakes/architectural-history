@@ -1,16 +1,15 @@
 import * as THREE from 'three';
-import england from '@ah/england';
-import { Navigator, TimeScale, createStage, formatYear, type Stage3D, type Walkable } from '@ah/engine';
-import type { BuildingDef, Lineage } from '@ah/kit';
+import { Navigator, createStage, formatYear, type Stage3D, type TimeScale, type Walkable } from '@ah/engine';
+import type { BuildingDef, Lineage, Region } from '@ah/kit';
+import { REGIONS, scaleOf } from '../regions';
 import { useApp } from '../state';
-import { WORLD_CENTRE, WORLD_RADIUS, baseHeight } from './layout';
+import { activeTimeline } from '../timeline';
+import { Land } from './land';
 import { Scenery } from './scenery';
 import { Street } from './street';
 import { Terrain } from './terrain';
 import { Town, deckHeightAt, type PlotState } from './town';
 
-export const region = england;
-export const timeScale = new TimeScale(region.eras);
 /** Seconds for the whole story at speed 1. */
 const FULL_RUN = 150;
 
@@ -26,11 +25,15 @@ export class Engine {
   static instance: Engine | null = null;
   readonly stage: Stage3D;
   readonly nav: Navigator;
-  readonly town: Town;
-  readonly terrain: Terrain;
-  readonly scenery: Scenery;
+  region!: Region;
+  timeScale!: TimeScale;
+  land!: Land;
+  town!: Town;
+  terrain!: Terrain;
+  scenery!: Scenery;
   readonly street = new Street();
-  private townWorld: Walkable;
+  private townWorld!: Walkable;
+  private treeCount: number;
   private raycaster = new THREE.Raycaster();
   private last = performance.now();
   private raf = 0;
@@ -70,28 +73,12 @@ export class Engine {
       maxPixelRatio: low ? 1 : touch ? 1.5 : 2,
     });
     const { scene, camera } = this.stage;
+    this.treeCount = low ? 500 : touch || small ? 1100 : 2200;
+    scene.add(this.street.group);
 
-    this.terrain = new Terrain();
-    this.town = new Town(region);
-    this.scenery = new Scenery(region, { treeCount: low ? 500 : touch || small ? 1100 : 2200 });
-    scene.add(this.terrain.group, this.town.group, this.scenery.group, this.street.group);
-
-    const town = this.town;
-    this.townWorld = {
-      centre: new THREE.Vector3(WORLD_CENTRE.x, 0, WORLD_CENTRE.z),
-      radius: WORLD_RADIUS,
-      minDistance: 12,
-      maxDistance: 620,
-      groundHeight(x, z) {
-        let h = baseHeight(x, z);
-        for (const d of town.decks()) h = Math.max(h, deckHeightAt(d, x, z));
-        return h;
-      },
-      colliders: () => town.colliders(),
-    };
-
+    this.buildWorld(REGIONS[useApp.getState().regionId] ?? Object.values(REGIONS)[0]);
     this.nav = new Navigator(camera, canvas, () => (useApp.getState().street ? this.street : this.townWorld));
-    this.nav.setOrbit(new THREE.Vector3(0, 4, 18), 215, 0.62, 0.98);
+    this.frameRegion();
     this.nav.onPick = (ndc) => this.pick(ndc);
     this.nav.onHover = (ndc) => this.hover(ndc);
     this.nav.onLockChange = (locked) => useApp.setState({ locked });
@@ -108,25 +95,8 @@ export class Engine {
     this.ring.renderOrder = 5;
     scene.add(this.ring);
 
-    // a name tag over each of the principal plots, so it is clear what can be clicked
-    for (const p of this.town.plots) {
-      if (!p.plot.hero) continue;
-      const el = document.createElement('button');
-      el.className = 'plot-label';
-      el.textContent = p.lineage.name.replace(/^The /, '');
-      el.addEventListener('click', () => {
-        useApp.setState({ intro: false });
-        useApp.getState().select(p.plot.id, true);
-      });
-      this.overlay.appendChild(el);
-      this.plotLabels.push({ el, plot: p, world: new THREE.Vector3() });
-    }
-
-    this.town.onSwap = (p) => {
-      if (p.plot.id === useApp.getState().selected) this.calloutKey = STALE;
-    };
-
     this.unsub = useApp.subscribe((s, prev) => {
+      if (s.regionId !== prev.regionId && REGIONS[s.regionId]) this.loadRegion(REGIONS[s.regionId]);
       if (s.mode !== prev.mode) this.nav.setMode(s.mode);
       if (s.street !== prev.street) this.switchView(s.street, prev.street);
       if (s.focusTick !== prev.focusTick) this.focusPending = 3;
@@ -142,6 +112,75 @@ export class Engine {
   }
 
   private onResize = () => this.stage.resize();
+
+  /** Swap to another region's town. */
+  private loadRegion(region: Region) {
+    if (this.street.lineage) this.switchView(null, null);
+    this.buildWorld(region);
+    this.nav.setMode('orbit', { instant: true });
+    this.nav.applyWorldLimits();
+    this.frameRegion();
+  }
+
+  /** Put the camera where the region asks to be seen from first. */
+  private frameRegion() {
+    const v = this.region.site.view ?? { target: [0, 4, 0] as [number, number, number], distance: 215, azimuth: 0.62, polar: 0.98 };
+    this.nav.setOrbit(new THREE.Vector3(...v.target), v.distance, v.azimuth, v.polar);
+    this.savedOrbit = null;
+  }
+
+  /** Build a region's town, taking down whichever one was standing. */
+  private buildWorld(region: Region) {
+    const { scene } = this.stage;
+    if (this.town) {
+      scene.remove(this.terrain.group, this.town.group, this.scenery.group);
+      this.terrain.dispose();
+      this.town.dispose();
+      this.scenery.dispose();
+      for (const l of this.plotLabels) l.el.remove();
+      this.plotLabels = [];
+    }
+    this.region = region;
+    this.timeScale = scaleOf(region);
+    this.land = new Land(region.site);
+    this.terrain = new Terrain(this.land);
+    this.town = new Town(region);
+    this.scenery = new Scenery(region, this.land, { treeCount: this.treeCount });
+    scene.add(this.terrain.group, this.town.group, this.scenery.group);
+
+    const town = this.town;
+    const land = this.land;
+    this.townWorld = {
+      centre: new THREE.Vector3(region.site.centre[0], 0, region.site.centre[1]),
+      radius: region.site.radius,
+      minDistance: 12,
+      maxDistance: 620,
+      groundHeight(x, z) {
+        let h = land.height(x, z);
+        for (const d of town.decks()) h = Math.max(h, deckHeightAt(d, x, z));
+        return h;
+      },
+      colliders: () => town.colliders(),
+    };
+    // a name tag over each of the principal plots, so it is clear what can be clicked
+    for (const p of this.town.plots) {
+      if (!p.plot.hero) continue;
+      const el = document.createElement('button');
+      el.className = 'plot-label';
+      el.textContent = p.lineage.name.replace(/^The /, '');
+      el.addEventListener('click', () => {
+        useApp.setState({ intro: false });
+        useApp.getState().select(p.plot.id, true);
+      });
+      this.overlay.appendChild(el);
+      this.plotLabels.push({ el, plot: p, world: new THREE.Vector3() });
+    }
+    this.town.onSwap = (p) => {
+      if (p.plot.id === useApp.getState().selected) this.calloutKey = STALE;
+    };
+    this.calloutKey = STALE;
+    this.first = true;
+  }
 
   // ------------------------------------------------------------------ input
 
@@ -192,15 +231,15 @@ export class Engine {
         break;
       case 'BracketLeft':
       case 'BracketRight': {
-        const t = timeScale.toT(s.year) + (e.code === 'BracketRight' ? 1 : -1) * (e.shiftKey ? 0.02 : 0.004);
-        useApp.setState({ year: Math.round(timeScale.toYear(t)), playing: false, intro: false });
+        const t = this.timeScale.toT(s.year) + (e.code === 'BracketRight' ? 1 : -1) * (e.shiftKey ? 0.02 : 0.004);
+        useApp.setState({ year: Math.round(this.timeScale.toYear(t)), playing: false, intro: false });
         break;
       }
       case 'PageDown':
       case 'PageUp': {
         e.preventDefault();
-        const i = timeScale.eraIndex(s.year) + (e.code === 'PageDown' ? 1 : -1);
-        const era = region.eras[Math.max(0, Math.min(region.eras.length - 1, i))];
+        const i = this.timeScale.eraIndex(s.year) + (e.code === 'PageDown' ? 1 : -1);
+        const era = this.region.eras[Math.max(0, Math.min(this.region.eras.length - 1, i))];
         s.jumpTo(era.from);
         break;
       }
@@ -332,6 +371,7 @@ export class Engine {
 
   private switchView(street: { lineageId: string; plotId: string } | null, prev: { lineageId: string; plotId: string } | null) {
     const { scene } = this.stage;
+    const region = this.region;
     for (const l of this.labels) l.el.remove();
     this.labels = [];
     this.calloutKey = STALE;
@@ -505,16 +545,18 @@ export class Engine {
     let year = s.year;
 
     if (s.playing) {
-      const t = timeScale.toT(year) + (dt * s.speed) / FULL_RUN;
-      year = timeScale.toYear(t);
-      if (t >= 1) useApp.setState({ year: region.end, playing: false });
+      // the bar on screen sets the pace: it may span two regions when comparing
+      const scale = activeTimeline(s).scale;
+      const t = scale.toT(year) + (dt * s.speed) / FULL_RUN;
+      year = scale.toYear(t);
+      if (t >= 1) useApp.setState({ year: scale.end, playing: false });
       else useApp.setState({ year });
     }
 
     // a full-screen view (library, viewer, compare) covers the town: keep time running, draw nothing
     if (s.screen.kind !== 'town') return;
 
-    const era = timeScale.era(year);
+    const era = this.timeScale.era(year);
     if (!s.street) {
       this.terrain.setEra(era, year, this.first);
       this.scenery.setEra(era, year, this.first);
@@ -551,7 +593,7 @@ export class Engine {
 
   /** Lineage info for the UI. */
   lineage(id: string): Lineage | undefined {
-    return region.lineages.find((l) => l.id === id);
+    return this.region.lineages.find((l) => l.id === id);
   }
 
   plotState(id: string): PlotState | undefined {

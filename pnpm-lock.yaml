@@ -23,6 +23,9 @@ importers:
       '@ah/england':
         specifier: workspace:*
         version: link:../../packages/region-england
+      '@ah/italy':
+        specifier: workspace:*
+        version: link:../../packages/region-italy
       '@ah/kit':
         specifier: workspace:*
         version: link:../../packages/kit

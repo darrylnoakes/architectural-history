@@ -1,30 +1,14 @@
-import { P, type Lineage } from '@ah/kit';
+import type { Lineage } from '@ah/kit';
+import { romanesqueDuomo } from './06-romanesque-duomo';
+import { gothicDuomo } from './07-gothic-duomo';
 
-// PLACEHOLDER: replaced by the real lineage.
 const lineage: Lineage = {
   id: 'duomo',
   name: 'The Temple and the Cathedral',
   kind: 'worship',
   role: 'Placeholder',
   plotSize: [32, 60],
-  stages: [
-    {
-      from: -750,
-      def: {
-        id: 'duomo-placeholder',
-        name: 'The Temple and the Cathedral',
-        style: 'Placeholder',
-        date: 'n/a',
-        summary: 'Placeholder building.',
-        materials: [],
-        lookFor: [],
-        build(b) {
-          b.box(16.0, 4, 30.0, P.intonacoOchre);
-          b.gable(16.0, 30.0, 2, P.coppi, { at: [0, 4, 0], overhang: 0.3 });
-        },
-      },
-    },
-  ],
+  stages: [{ from: 1120, def: romanesqueDuomo }, { from: 1310, def: gothicDuomo }],
 };
 
 export default lineage;

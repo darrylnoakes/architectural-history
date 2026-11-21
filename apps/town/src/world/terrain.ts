@@ -1,18 +1,6 @@
 import * as THREE from 'three';
-import { P, type Era } from '@ah/kit';
-import {
-  RIVER_HALF,
-  SQUARE,
-  STREET_STYLES,
-  WATER_Y,
-  WORLD_CENTRE,
-  baseHeight,
-  hash2,
-  riverZ,
-  roads,
-  smoothstep,
-  valueNoise,
-} from './layout';
+import { P, hash2, smoothstep, valueNoise, type Era } from '@ah/kit';
+import { STREET_STYLES, WATER_Y, type Land } from './land';
 
 // Heights of the street layers above the ground. They must stack in this order: the depth offsets on
 // their materials only settle ties at a distance and cannot be relied on to reorder them close up.
@@ -34,27 +22,9 @@ const c2 = new THREE.Color();
 const c3 = new THREE.Color();
 const hex = (h: number, into: THREE.Color) => into.setHex(h, THREE.SRGBColorSpace);
 
-/** Field pattern: [cell width, cell length] in metres, by era. Strips in the open-field centuries. */
-function fieldCell(era: Era): [number, number] {
-  switch (era.id) {
-    case 'iron-age':
-      return [34, 30];
-    case 'roman':
-      return [48, 44];
-    case 'anglo-saxon':
-    case 'norman':
-    case 'gothic':
-      return [13, 120];
-    case 'tudor':
-      return [22, 120];
-    default:
-      return [78, 62];
-  }
-}
-
-function groundColour(x: number, z: number, h: number, era: Era, out: THREE.Color) {
-  const d = Math.abs(z - riverZ(x));
-  const r = Math.hypot(x - WORLD_CENTRE.x, z - WORLD_CENTRE.z);
+function groundColour(land: Land, x: number, z: number, h: number, era: Era, out: THREE.Color) {
+  const d = land.riverDist(x, z);
+  const r = Math.hypot(x - land.site.centre[0], z - land.site.centre[1]);
   const env = era.env;
   const nz = valueNoise(x * 0.02, z * 0.02);
 
@@ -62,7 +32,7 @@ function groundColour(x: number, z: number, h: number, era: Era, out: THREE.Colo
   const a = 0.35;
   const u = x * Math.cos(a) + z * Math.sin(a);
   const v = -x * Math.sin(a) + z * Math.cos(a);
-  const [cw, cl] = fieldCell(era);
+  const [cw, cl] = env.fieldSize ?? [78, 62];
   // alternate the strip direction block by block so the open fields look like furlongs
   const block = hash2(Math.floor(u / 130) + 7, Math.floor(v / 130) - 3) > 0.5;
   const fu = Math.floor((block ? u : v) / cw);
@@ -89,14 +59,16 @@ function groundColour(x: number, z: number, h: number, era: Era, out: THREE.Colo
   c2.lerp(c1, smoothstep(5, 34, h) * 0.6);
 
   // river bed and banks
-  if (d < 11) {
+  const half = land.riverHalf;
+  if (d < half + 3) {
     hex(0x7a7458, c1);
-    c2.lerp(c1, 1 - smoothstep(6.5, 11, d));
+    c2.lerp(c1, 1 - smoothstep(half - 1.5, half + 3, d));
   }
   out.copy(c2);
 }
 
 function ribbon(
+  land: Land,
   pts: [number, number][],
   width: number,
   lift: number,
@@ -128,7 +100,7 @@ function ribbon(
     for (const s of [-1, 1]) {
       const px = x + (nx * s * width) / 2;
       const pz = z + (nzz * s * width) / 2;
-      const y = Math.max(flatUntil, baseHeight(px, pz)) + lift;
+      const y = Math.max(flatUntil, land.height(px, pz)) + lift;
       out.pos.push(px, y, pz);
     }
   }
@@ -169,15 +141,16 @@ export class Terrain {
   private eraId = '';
   private roadKey = '';
 
-  constructor() {
+  constructor(private land: Land) {
+    const [cx, cz] = land.site.centre;
     const pos = new Float32Array((N + 1) * (N + 1) * 3);
     for (let j = 0; j <= N; j++) {
       for (let i = 0; i <= N; i++) {
-        const x = warp((i / N) * 2 - 1) + WORLD_CENTRE.x;
-        const z = warp((j / N) * 2 - 1) + WORLD_CENTRE.z;
+        const x = warp((i / N) * 2 - 1) + cx;
+        const z = warp((j / N) * 2 - 1) + cz;
         const k = (j * (N + 1) + i) * 3;
         pos[k] = x;
-        pos[k + 1] = baseHeight(x, z);
+        pos[k + 1] = land.height(x, z);
         pos[k + 2] = z;
       }
     }
@@ -207,15 +180,16 @@ export class Terrain {
 
     // river surface: a ribbon a little wider than the channel
     const w = { pos: [] as number[], idx: [] as number[] };
-    const pts: [number, number][] = [];
-    for (let x = -1500; x <= 1500; x += 20) pts.push([x, riverZ(x)]);
-    const base = 0;
-    for (const [x, z] of pts) {
-      w.pos.push(x, WATER_Y, z - RIVER_HALF - 3.5, x, WATER_Y, z + RIVER_HALF + 3.5);
-    }
-    for (let i = 0; i < pts.length - 1; i++) {
-      const a = base + i * 2;
-      w.idx.push(a, a + 1, a + 2, a + 1, a + 3, a + 2);
+    if (land.site.river) {
+      const pts: [number, number][] = [];
+      for (let x = -1500; x <= 1500; x += 20) pts.push([x, land.riverZ(x)]);
+      for (const [x, z] of pts) {
+        w.pos.push(x, WATER_Y, z - land.riverHalf - 3.5, x, WATER_Y, z + land.riverHalf + 3.5);
+      }
+      for (let i = 0; i < pts.length - 1; i++) {
+        const a = i * 2;
+        w.idx.push(a, a + 1, a + 2, a + 1, a + 3, a + 2);
+      }
     }
     this.water = meshFrom(
       w,
@@ -233,8 +207,9 @@ export class Terrain {
 
   /** Repaint the land and relay the streets for an era. `year` decides which lanes exist yet. */
   setEra(era: Era, year: number, instant: boolean) {
-    const lanes = roads.filter((r) => (r.since ?? -Infinity) <= year).map((r) => r.id).join(',');
-    const key = era.id + '|' + lanes;
+    const squares = this.land.site.squares.filter((q) => (q.since ?? -Infinity) <= year).length;
+    const lanes = this.land.roadsAt(year).map((r) => r.id).join(',');
+    const key = era.id + '|' + lanes + '|' + squares;
     if (key !== this.roadKey) {
       this.roadKey = key;
       this.buildRoads(era, year);
@@ -247,7 +222,7 @@ export class Terrain {
     this.colFrom.set(col.array as Float32Array);
     const c = new THREE.Color();
     for (let i = 0; i < pos.count; i++) {
-      groundColour(pos.getX(i), pos.getZ(i), pos.getY(i), era, c);
+      groundColour(this.land, pos.getX(i), pos.getZ(i), pos.getY(i), era, c);
       this.colTo[i * 3] = c.r;
       this.colTo[i * 3 + 1] = c.g;
       this.colTo[i * 3 + 2] = c.b;
@@ -270,12 +245,12 @@ export class Terrain {
     const road = { pos: [] as number[], idx: [] as number[] };
     const pave = { pos: [] as number[], idx: [] as number[] };
     const lines = { pos: [] as number[], idx: [] as number[] };
-    for (const r of roads) {
-      if ((r.since ?? -Infinity) > year) continue;
+    const land = this.land;
+    for (const r of land.roadsAt(year)) {
       const w = r.kind === 'main' ? st.main : st.lane;
       // the carriageway lies above the pavement strip it runs along, so near or far it is what you see
-      if (st.pavement) ribbon(r.pts, w + st.pavement * 2, PAVE_Y, pave);
-      ribbon(r.pts, w, ROAD_Y, road);
+      if (st.pavement) ribbon(land, r.pts, w + st.pavement * 2, PAVE_Y, pave);
+      ribbon(land, r.pts, w, ROAD_Y, road);
       if (st.lines && r.kind === 'main') {
         // dashed centre line
         for (let i = 0; i < r.pts.length - 1; i++) {
@@ -287,6 +262,7 @@ export class Terrain {
             const t0 = (k * 9 + 2) / len;
             const t1 = (k * 9 + 5) / len;
             ribbon(
+              land,
               [
                 [ax + (bx - ax) * t0, az + (bz - az) * t0],
                 [ax + (bx - ax) * t1, az + (bz - az) * t1],
@@ -299,11 +275,13 @@ export class Terrain {
         }
       }
     }
-    // the market square, and the bridge approaches
-    const sq = SQUARE;
-    // once streets have pavements the square is flagged over rather than left as carriageway
-    if (st.pavement) quad(sq.x0 - 1, sq.z0 - 1, sq.x1 + 1, sq.z1 + 1, SQUARE_Y, pave);
-    else quad(sq.x0, sq.z0, sq.x1, sq.z1, ROAD_Y, road);
+    // the squares: once streets have pavements they are flagged over rather than left as carriageway
+    for (const sq of land.site.squares) {
+      if ((sq.since ?? -Infinity) > year) continue;
+      const y = land.height((sq.x0 + sq.x1) / 2, (sq.z0 + sq.z1) / 2);
+      if (st.pavement) quad(sq.x0 - 1, sq.z0 - 1, sq.x1 + 1, sq.z1 + 1, y + SQUARE_Y, pave);
+      else quad(sq.x0, sq.z0, sq.x1, sq.z1, y + ROAD_Y, road);
+    }
     if (road.idx.length) this.roadGroup.add(meshFrom(road, this.roadMat));
     if (pave.idx.length) this.roadGroup.add(meshFrom(pave, this.paveMat));
     if (lines.idx.length) this.roadGroup.add(meshFrom(lines, this.lineMat));
@@ -317,6 +295,11 @@ export class Terrain {
     this.lineMat.polygonOffset = true;
     this.lineMat.polygonOffsetFactor = -3;
     this.lineMat.polygonOffsetUnits = -3;
+  }
+
+  dispose() {
+    this.group.traverse((o) => (o as THREE.Mesh).geometry?.dispose());
+    for (const m of [this.roadMat, this.paveMat, this.lineMat, this.ground.material, this.water.material]) (m as THREE.Material).dispose();
   }
 
   update(dt: number) {

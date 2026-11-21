@@ -1,7 +1,8 @@
 import { formatYear } from '@ah/engine';
 import type { BuildingDef, Lineage, StageEnd } from '@ah/kit';
 import { useApp } from '../state';
-import { Engine, region } from '../world/engine';
+import { Engine } from '../world/engine';
+import { useRegion } from './useRegion';
 import { IconClose, IconLeft, IconLibrary, IconRight, IconStreet } from './icons';
 import { InfluenceIcon, influenceVerb } from './Timeline';
 
@@ -74,7 +75,7 @@ function useCurrent(): Current | null {
       plotId: p.plot.id,
       kind: 'open',
       def: lastStage?.def ?? null,
-      from: last ? last.to : region.start,
+      from: last ? last.to : eng.region.start,
       to: st.after >= 0 ? p.schedule[st.after].from : Infinity,
       end: lastStage?.end,
       prev: step(st.before),
@@ -99,6 +100,7 @@ function useCurrent(): Current | null {
 
 export function Card() {
   const cur = useCurrent();
+  const { region } = useRegion();
   const street = useApp((s) => s.street);
   const hover = useApp((s) => s.hoverFeature);
   const jumpTo = useApp((s) => s.jumpTo);

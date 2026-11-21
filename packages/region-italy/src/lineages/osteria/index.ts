@@ -1,30 +1,17 @@
-import { P, type Lineage } from '@ah/kit';
+import type { Lineage } from '@ah/kit';
+import { hearthHut } from './01-hearth-hut';
+import { caupona } from './02-caupona';
+import { thermopolium } from './03-thermopolium';
+import { xenodochium } from './04-xenodochium';
+import { pilgrimHospital } from './05-pilgrim-hospital';
 
-// PLACEHOLDER: replaced by the real lineage.
 const lineage: Lineage = {
   id: 'osteria',
   name: 'The Osteria',
   kind: 'hospitality',
-  role: 'Placeholder',
+  role: 'Food, drink and a bed.',
   plotSize: [22, 22],
-  stages: [
-    {
-      from: -750,
-      def: {
-        id: 'osteria-placeholder',
-        name: 'The Osteria',
-        style: 'Placeholder',
-        date: 'n/a',
-        summary: 'Placeholder building.',
-        materials: [],
-        lookFor: [],
-        build(b) {
-          b.box(11.0, 4, 11.0, P.intonacoOchre);
-          b.gable(11.0, 11.0, 2, P.coppi, { at: [0, 4, 0], overhang: 0.3 });
-        },
-      },
-    },
-  ],
+  stages: [{ from: -750, def: hearthHut }, { from: -200, def: caupona }, { from: 60, def: thermopolium }, { from: 500, def: xenodochium }, { from: 1050, def: pilgrimHospital }],
 };
 
 export default lineage;

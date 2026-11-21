@@ -2,6 +2,7 @@ import type { Region } from '@ah/kit';
 import { eras } from './eras';
 import { influences } from './influences';
 import { plots } from './plots';
+import { site } from './site';
 import home from './lineages/home';
 import cottage from './lineages/cottage';
 import merchant from './lineages/merchant';
@@ -27,6 +28,7 @@ export const england: Region = {
   influences,
   lineages: [home, cottage, merchant, worship, power, market, work, crossing, culture, inn, chapel, farm],
   plots,
+  site,
 };
 
 export default england;

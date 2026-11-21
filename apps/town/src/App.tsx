@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { useApp } from './state';
-import { Engine, timeScale } from './world/engine';
+import { Engine } from './world/engine';
+import { REGIONS, scaleOf } from './regions';
 import { Brand, Crosshair, Help, Intro, ModeSwitch, StreetBanner, TouchControls } from './ui/Chrome';
 import { Card } from './ui/Card';
 import { EraPanel } from './ui/EraPanel';
@@ -16,7 +17,7 @@ function hexToCss(n: number) {
 export function App() {
   const canvas = useRef<HTMLCanvasElement>(null);
   const overlay = useRef<HTMLDivElement>(null);
-  const eraColor = useApp((s) => timeScale.era(s.year).color);
+  const eraColor = useApp((s) => scaleOf(REGIONS[s.regionId]).era(s.year).color);
   const mode = useApp((s) => s.mode);
   const street = useApp((s) => s.street);
 

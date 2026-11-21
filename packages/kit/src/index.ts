@@ -2,6 +2,8 @@ export * from './types';
 export * from './palette';
 export * from './rng';
 export * from './builder';
+export * from './noise';
+export * from './props';
 
 import { Builder, type Built } from './builder';
 import type { BuildingDef } from './types';
