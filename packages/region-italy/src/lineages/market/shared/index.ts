@@ -1,6 +1,8 @@
 import { P, tint, type Builder, type Facing, type Vec3 } from '@ah/kit';
 import * as THREE from 'three';
 
+// Local helpers for the market lineage.
+
 /** Points of a semicircle of radius r centred on (cx, cy), from the left springing over to the right. */
 export function semi(r: number, cx = 0, cy = 0, n = 12): [number, number][] {
   const pts: [number, number][] = [];
@@ -284,4 +286,31 @@ export function archPanel(b: Builder, w: number, h: number, color: number, at: V
   b.group({ at, rotY: faceAngle(facing) }, () => {
     b.extrude(archOutline(w, h, shape, n), depth, color, { at: [0, 0, depth / 2], jitter: false, mat });
   });
+}
+
+/**
+ * Rows of coppi on all four faces of a hipped roof made with b.hip(w, d, h, …, { at, overhang }).
+ * `n` is the spacing of the rows in metres. Only works for w >= d (ridge along X).
+ */
+export function hipRibs(b: Builder, w: number, d: number, h: number, at: Vec3, overhang: number, color: number, n = 0.6): void {
+  const L = w + 2 * overhang;
+  const S = d + 2 * overhang;
+  const drop = overhang > 0 ? (overhang * h) / (S / 2) : 0;
+  const y0 = at[1] - drop + 0.04;
+  const r = (L - S) / 2;
+  const hl = S / 2;
+  // front and back faces
+  for (let x = -L / 2 + n / 2; x < L / 2; x += n) {
+    const zTop = Math.abs(x) <= r ? 0 : ((Math.abs(x) - r) / (L / 2 - r)) * hl;
+    if (hl - zTop < 0.4) continue;
+    const yTop = y0 + h * (1 - zTop / hl);
+    for (const s of [-1, 1]) b.beam([at[0] + x, y0 + 0.05, at[2] + s * hl], [at[0] + x, yTop + 0.03, at[2] + s * zTop], 0.12, 0.08, color);
+  }
+  // the hipped ends
+  for (let z = -hl + n / 2; z < hl; z += n) {
+    const xTop = r + (Math.abs(z) / hl) * (L / 2 - r);
+    if (L / 2 - xTop < 0.4) continue;
+    const yTop = y0 + h * (1 - (xTop - r) / (L / 2 - r));
+    for (const s of [-1, 1]) b.beam([at[0] + s * L / 2, y0 + 0.05, at[2] + z], [at[0] + s * xTop, yTop + 0.03, at[2] + z], 0.12, 0.08, color);
+  }
 }

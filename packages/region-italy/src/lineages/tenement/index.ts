@@ -8,6 +8,9 @@ import { caseTerrinee } from './05-case-terrinee';
 import { workersRow } from './06-workers-row';
 import { raisedRow } from './07-raised-row';
 import { casaDiRinghiera } from './08-casa-di-ringhiera';
+import { casePopolari } from './09-case-popolari';
+import { inaCasa } from './10-ina-casa';
+import { megastructure } from './11-megastructure';
 
 const lineage: Lineage = {
   id: 'tenement',
@@ -24,6 +27,9 @@ const lineage: Lineage = {
     { from: 1250, builtUntil: 1345, def: workersRow },
     { from: 1580, builtUntil: 1750, def: raisedRow },
     { from: 1880, builtUntil: 1914, def: casaDiRinghiera },
+    { from: 1926, builtUntil: 1940, def: casePopolari },
+    { from: 1954, builtUntil: 1963, def: inaCasa },
+    { from: 1978, builtUntil: 1985, def: megastructure },
   ],
 };
 

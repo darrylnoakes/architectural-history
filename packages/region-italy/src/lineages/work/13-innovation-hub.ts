@@ -154,7 +154,7 @@ export const innovationHub: BuildingDef = {
     }
     car(b, 'modern', P.cladWhite, [-12, 0, 10.0], Math.PI / 2);
     car(b, 'modern', P.cladGrey, [-7, 0, 10.0], Math.PI / 2);
-    b.tree(11, { at: [-17, 0, -1], kind: 'pine' });
+    b.tree(8, { at: [-14.8, 0, -1.6], kind: 'pine' });
     b.tree(10, { at: [3.5, 0, -8], kind: 'pine' });
     b.tree(5, { at: [16.5, 0, 1], kind: 'round' });
 

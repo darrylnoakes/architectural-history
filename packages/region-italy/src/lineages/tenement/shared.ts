@@ -123,7 +123,7 @@ export function shuttered(
   const leaf = w / 2;
   const slats = (cx: number, push: number) => {
     if (!o.louvred) return;
-    for (let k = 1; k < 5; k++) b.panel(leaf - 0.1, 0.03, tint(sh, -0.1), { at: at(cx, (h * k) / 5, push), facing, depth: 0.02 });
+    for (let k = 1; k < 4; k++) b.panel(leaf - 0.1, 0.03, tint(sh, -0.1), { at: at(cx, (h * k) / 4, push), facing, depth: 0.02 });
   };
   if (o.open) {
     for (const s of [-1, 1]) {

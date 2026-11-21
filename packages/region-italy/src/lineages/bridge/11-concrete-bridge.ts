@@ -5,14 +5,14 @@ import { END, FOOT, hump, band, steps } from './shared';
 /**
  * One bay of the shell between two feet at za and zb (heights ya, yb), rising to touch the deck
  * underside (yc) at mid-bay. It is wide where it lands and narrow at the crest, arched across as
- * well as along, and opened by an oval hole on each flank.
+ * well as along, and opened by an oval hole on each flank near each foot.
  */
 function shellBay(b: Builder, o: { za: number; zb: number; ya: number; yb: number; yc: number; wFoot: number; wCrest: number; color: number }): void {
-  const NU = 30;
-  const c = 0.6;
-  const h0 = 0.24;
-  const uHalf = 0.27;
-  const holeH = (u: number) => h0 * Math.sqrt(Math.max(0, 1 - ((u - 0.5) / uHalf) ** 2));
+  const NU = 40;
+  const c = 0.56;
+  const h0 = 0.26;
+  const uHalf = 0.14;
+  const holeH = (u: number) => Math.max(...[0.24, 0.76].map((uc) => h0 * Math.sqrt(Math.max(0, 1 - ((u - uc) / uHalf) ** 2))));
   const vSamples = (u: number): { v: number; hole: boolean }[] => {
     const h = holeH(u);
     const out: { v: number; hole: boolean }[] = [];
@@ -33,7 +33,7 @@ function shellBay(b: Builder, o: { za: number; zb: number; ya: number; yb: numbe
     const s = Math.sin(Math.PI * u);
     const Y = u <= 0.5 ? o.ya + (o.yc - o.ya) * s : o.yb + (o.yc - o.yb) * s;
     const half = o.wCrest + (o.wFoot - o.wCrest) * Math.cos(Math.PI * u) ** 2;
-    const y = yBase + (Y - yBase) * (1 - 0.42 * v * v);
+    const y = yBase + (Y - yBase) * (1 - 0.3 * v * v);
     return [v * half, y, z];
   };
   // sample u more finely near the ends of the holes
@@ -48,7 +48,7 @@ function shellBay(b: Builder, o: { za: number; zb: number; ya: number; yb: numbe
     const ub = us[i + 1];
     const A = vSamples(ua);
     const B = vSamples(ub);
-    const open = holeH(ua) > 0 && holeH(ub) > 0;
+    const open = holeH(ua) > 1e-4 && holeH(ub) > 1e-4;
     for (let j = 0; j < A.length - 1; j++) {
       if (A[j].hole && open) continue;
       const p00 = point(ua, A[j].v);
@@ -71,23 +71,22 @@ export const concreteBridge: BuildingDef = {
   date: 'c. 1972',
   summary:
     'Downstream, a new road bridge for the traffic of the boom years is carried not on arches or beams but on one continuous shell of reinforced concrete, about 30 cm thick, that rises from the ground in curved sheets and touches the underside of the road only at a few points. ' +
-    'Its shape was not drawn but found: the engineer Sergio Musmeci worked it out with mathematics and with stretched rubber and soap-film models, looking for the form in which the concrete is everywhere in compression, as in an arch, so it can be as thin as possible. ' +
-    'Italian engineers such as Nervi, Morandi and Musmeci made reinforced concrete expressive in these years; Musmeci’s bridge over the Basento at Potenza, designed in 1967 and built in the early 1970s, is the boldest of all.',
+    'Its shape was not drawn but found: the engineer Sergio Musmeci worked it out with mathematics and with models of stretched rubber, looking for the form in which the concrete is everywhere in compression, as in an arch, so it can be as thin as possible. ' +
+    'Italian engineers such as Nervi, Morandi and Musmeci made reinforced concrete expressive in these years; Musmeci’s bridge over the Basento at Potenza, designed in 1967 and built from 1971 to 1976, is among the most daring of them.',
   materials: ['reinforced concrete', 'prestressed concrete deck', 'asphalt', 'steel railings'],
   modelledOn: 'Sergio Musmeci’s bridge over the Basento, Potenza (designed 1967, built 1971 to 1976)',
   lookFor: [
-    { label: 'Concrete membrane', note: 'A single thin curved sheet carries the whole road, shaped so it works in compression everywhere.', at: [2.4, 0.0, -3.0] },
-    { label: 'Point supports', note: 'The shell rises to meet the deck at only a few crests, so the road seems to float on it.', at: [1.0, 1.05, 6.5] },
-    { label: 'Oval openings', note: 'Where the material is not needed the shell opens, which makes it lighter and lets you see through it.', at: [3.0, 0.2, -6.5] },
-    { label: 'Splayed feet', note: 'The shell spreads wide where it lands on its foundations, gathering the load into the ground.', at: [4.6, -0.8, 0] },
-    { label: 'Box-girder deck', note: 'A hollow concrete beam carries the roadway from crest to crest.', at: [4.0, 1.4, 11.5] },
+    { label: 'Concrete membrane', note: 'A single thin curved sheet carries the whole road, shaped so it works in compression everywhere.', at: [2.6, 0.4, -1.8] },
+    { label: 'Point supports', note: 'The shell rises to meet the deck at only a few crests, so the road seems to float on it.', at: [1.2, 1.45, 6.6] },
+    { label: 'Oval openings', note: 'Where the material is not needed the shell opens, which makes it lighter and lets you see through it.', at: [2.6, 0.8, -10.0] },
+    { label: 'Splayed feet', note: 'The shell spreads wide where it lands on its foundations, gathering the load into the ground.', at: [4.8, -0.9, 0] },
+    { label: 'Box-girder deck', note: 'A hollow concrete beam carries the roadway from crest to crest.', at: [3.8, 1.1, 11.5] },
   ],
-  influences: ['nervi-export'],
   build(b) {
     b.noCollide();
-    const crown = 2.2;
+    const crown = 2.6;
     const f = hump(crown);
-    const W = 8.2;
+    const W = 7.4;
     b.deck(W - 0.8, 34, crown, { yEnds: 0 });
     const shell = P.concreteWhite;
     const conc = P.concrete;
@@ -98,13 +97,13 @@ export const concreteBridge: BuildingDef = {
     const zFoot = 13.2;
     const yBank = -0.15;
     const yRiver = -1.0;
-    shellBay(b, { za: -zFoot, zb: 0, ya: yBank, yb: yRiver, yc: under(-zFoot / 2) + 0.02, wFoot: 4.6, wCrest: 1.5, color: shell });
-    shellBay(b, { za: 0, zb: zFoot, ya: yRiver, yb: yBank, yc: under(zFoot / 2) + 0.02, wFoot: 4.6, wCrest: 1.5, color: shell });
+    shellBay(b, { za: -zFoot, zb: 0, ya: yBank, yb: yRiver, yc: under(-zFoot / 2) + 0.02, wFoot: 5.2, wCrest: 2.3, color: shell });
+    shellBay(b, { za: 0, zb: zFoot, ya: yRiver, yb: yBank, yc: under(zFoot / 2) + 0.02, wFoot: 5.2, wCrest: 2.3, color: shell });
     // foundation in the river and on the banks
-    b.box(9.6, yRiver - FOOT, 2.0, tint(conc, -0.05), { at: [0, FOOT, 0] });
-    for (const s of [-1, 1]) b.box(9.6, 0.6, 2.0, tint(conc, -0.05), { at: [0, -0.6, s * zFoot] });
+    b.box(10.8, yRiver - FOOT, 2.0, tint(conc, -0.05), { at: [0, FOOT, 0] });
+    for (const s of [-1, 1]) b.box(10.8, 0.6, 2.0, tint(conc, -0.05), { at: [0, -0.6, s * zFoot] });
     // bearings where the crests meet the deck
-    for (const z of [-zFoot / 2, zFoot / 2]) b.box(2.4, 0.08, 1.2, P.castIron, { at: [0, under(z) - 0.02, z] });
+    for (const z of [-zFoot / 2, zFoot / 2]) b.box(3.4, 0.08, 1.2, P.castIron, { at: [0, under(z) - 0.02, z] });
 
     // hollow box-girder deck, a thin cantilevered slab edge, asphalt and pavements
     band(b, 0, W - 2.0, -END + 0.4, END - 0.4, under, (z) => f(z) - 0.2, conc, 34);

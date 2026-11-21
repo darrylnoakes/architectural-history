@@ -71,9 +71,10 @@ export function baroqueChapel(b: Builder) {
 
 /** Statues of saints set up along the old front: on the cornice over the doors and on the gables. */
 export function frontStatues(b: Builder) {
-  const s = 2.3;
-  for (const x of [-7.6, -4.3, 4.3, 7.6]) statue(b, [x, 10.75, FF + 0.1], s, P.marble);
-  for (const x of [-7.6, 7.6]) statue(b, [x, 19.1, FF + 0.1], s * 0.85, P.marble);
+  const s = 2.6;
+  const stone = tint(P.limestoneWarm, -0.12);
+  for (const x of [-7.6, -4.3, 4.3, 7.6]) statue(b, [x, 10.75, FF + 0.12], s, stone);
+  for (const x of [-7.6, 7.6]) statue(b, [x, 19.1, FF + 0.1], s * 0.85, stone);
 }
 
 export const baroqueDuomo: BuildingDef = {

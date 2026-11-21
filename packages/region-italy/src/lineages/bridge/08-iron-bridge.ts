@@ -13,11 +13,11 @@ export const ironBridge: BuildingDef = {
     'Bridges like this crossed rivers all over Italy after unification, and many of them were blown up in the Second World War.',
   materials: ['wrought iron', 'cast iron', 'rusticated stone', 'stone setts'],
   lookFor: [
-    { label: 'Lattice girder', note: 'Crossing diagonal bars riveted between top and bottom flanges: a beam made light by leaving out everything that does not carry load.', at: [4.7, 0.2, -8.0] },
-    { label: 'Rivets', note: 'Heads of red-hot rivets hammered over, joining every plate and bar; the girders were assembled this way on site.', at: [4.7, -0.15, 1.0] },
-    { label: 'Masonry pier', note: 'Stone piers with cutwaters carry the iron; the girders sit on bearings on top so they can expand in the sun.', at: [-5.4, -0.6, 4.2] },
-    { label: 'Tram rails', note: 'Rails set in the stone setts for the horse tram to the new quarters; electric trams followed from the 1890s.', at: [0.7, 1.2, 6.0] },
-    { label: 'Gas lamp', note: 'Cast-iron lamp standards over the piers light the bridge at night.', at: [4.3, 4.4, -4.2] },
+    { label: 'Lattice girder', note: 'Crossing diagonal bars riveted between top and bottom flanges: a beam made light by leaving out everything that does not carry load.', at: [4.0, 0.0, -8.0] },
+    { label: 'Rivets', note: 'Heads of red-hot rivets hammered over, joining every plate and bar; the girders were assembled this way on site.', at: [4.0, -0.4, 1.0] },
+    { label: 'Masonry pier', note: 'Stone piers with cutwaters carry the iron; the girders sit on bearings on top so they can expand in the sun.', at: [-4.4, -1.0, 4.2] },
+    { label: 'Tram rails', note: 'Rails set in the stone setts for the horse tram to the new quarters; electric trams followed from the 1890s.', at: [0.7, 0.85, 6.0] },
+    { label: 'Gas lamp', note: 'Cast-iron lamp standards over the piers light the bridge at night.', at: [4.45, 4.5, -4.2] },
   ],
   influences: ['iron-and-glass'],
   build(b) {

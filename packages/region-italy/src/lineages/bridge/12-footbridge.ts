@@ -29,16 +29,16 @@ export const footbridge: BuildingDef = {
   materials: ['painted steel', 'toughened glass', 'Istrian stone', 'bronze'],
   modelledOn: 'The Ponte della Costituzione, Venice (Santiago Calatrava, 2008)',
   lookFor: [
-    { label: 'Flat steel arch', note: 'One very shallow arch, its span about sixteen times its rise, crosses the whole river with no pier.', at: [3.3, 0.6, 0] },
-    { label: 'Spine and ribs', note: 'Curved ribs branch from a central steel box like the bones of a fish and carry the two side tubes.', at: [2.4, 0.4, -6.0] },
-    { label: 'Glass steps', note: 'Treads of glass alternate with stone: beautiful, but slippery when wet.', at: [0, 2.0, 3.0] },
-    { label: 'Glass parapet', note: 'Clear glass panels keep the view open, with a bronze handrail that lights up at night.', at: [-3.2, 2.9, 0] },
-    { label: 'Stone abutment', note: 'Each end lands on a stone platform that takes the thrust of the arch into the ground.', at: [2.8, 0.4, -15.5] },
+    { label: 'Flat steel arch', note: 'One very shallow arch, its span about sixteen times its rise, crosses the whole river with no pier.', at: [3.3, 1.9, 0] },
+    { label: 'Spine and ribs', note: 'Curved ribs branch from a central steel box like the bones of a fish and carry the two side tubes.', at: [1.8, 1.2, -6.0] },
+    { label: 'Glass steps', note: 'Treads of glass alternate with stone: beautiful, but slippery when wet.', at: [0, 2.45, 3.0] },
+    { label: 'Glass parapet', note: 'Clear glass panels keep the view open, with a bronze handrail that lights up at night.', at: [-3.1, 3.0, 0] },
+    { label: 'Stone abutment', note: 'Each end lands on a stone platform that takes the thrust of the arch into the ground.', at: [3.7, 0.3, -14.0] },
   ],
   influences: ['star-architects'],
   build(b) {
     b.noCollide();
-    const crown = 1.8;
+    const crown = 2.4;
     const f = hump(crown);
     b.deck(4.2, 34, crown, { yEnds: 0 });
     const red = mix(P.cladRed, P.terracottaPainted, 0.4);
@@ -47,7 +47,7 @@ export const footbridge: BuildingDef = {
     const span = 13.6;
     const half = (z: number) => 2.25 + 1.05 * (1 - (z / END) ** 2);
     const under = (z: number) => f(z) - 0.28;
-    const spineD = (z: number) => 0.55 + 0.75 * (z / span) ** 2;
+    const spineD = (z: number) => 0.7 + 1.1 * (z / span) ** 2;
 
     // stone abutments on both banks
     b.sym((s) => {

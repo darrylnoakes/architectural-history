@@ -186,6 +186,28 @@ export function flatArch(
   b.group({ at: o.at ?? [0, 0, 0], rotY: facingAngle(o.facing) }, () => b.add(g, color, { jitter: false, mat: o.mat }));
 }
 
+/**
+ * A flat U-shaped band round an opening that runs down to the ground (voussoirs and jambs picked out
+ * in another stone), leaving the opening itself clear.
+ */
+export function archRing(
+  b: Builder,
+  wo: number,
+  ho: number,
+  wi: number,
+  hi: number,
+  color: number,
+  o: { at?: V3; facing?: Facing; shape?: Shape; off?: number; n?: number },
+): void {
+  const shape = o.shape ?? 'round';
+  const outer = archOutline(wo, ho, shape, o.n ?? 3).slice(2);
+  const inner = archOutline(wi, hi, shape, o.n ?? 3).slice(2).reverse();
+  const pts = [[wo / 2, 0], ...outer, [-wo / 2, 0], [-wi / 2, 0], ...inner, [wi / 2, 0]].map(([x, y]) => new THREE.Vector2(x, y));
+  const g = new THREE.ShapeGeometry(new THREE.Shape(pts), 1);
+  g.translate(0, 0, o.off ?? 0.04);
+  b.group({ at: o.at ?? [0, 0, 0], rotY: facingAngle(o.facing) }, () => b.add(g, color, { jitter: false }));
+}
+
 /** A cheap arched window: stone frame and dark glazing. */
 export function archWindow(
   b: Builder,
@@ -463,13 +485,13 @@ export function palazzoPubblico(b: Builder, o: PalaceOpts): void {
     for (let y = g; y < p.top - 1; y += s) b.box(w + 0.08, 0.22, d + 0.08, stone, { at: [xc, y, zcc], jitter: false });
     // machicolated crown: corbels carrying a projecting battlemented parapet
     const T = p.top;
-    corbels(b, [p.a + 0.2, ff], [p.b - 0.2, ff], T - 0.2, 0.45, stone, { pitch: 1.0, h: 0.8 });
-    corbels(b, [p.b - 0.2, zb], [p.a + 0.2, zb], T - 0.2, 0.45, stone, { pitch: 1.0, h: 0.8 });
+    corbels(b, [p.a + 0.2, ff], [p.b - 0.2, ff], T - 0.2, 0.45, stone, { pitch: 1.3, h: 0.8 });
+    corbels(b, [p.b - 0.2, zb], [p.a + 0.2, zb], T - 0.2, 0.45, stone, { pitch: 1.3, h: 0.8 });
     b.box(w + 0.9, 0.9, 0.45, brick, { at: [xc, T + 0.6, ff + 0.25] });
     b.box(w + 0.9, 0.9, 0.45, brick, { at: [xc, T + 0.6, zb - 0.25] });
     b.box(w, 0.5, d, stoneDark, { at: [xc, T, zcc], jitter: false });
-    merlons(b, [p.a - 0.2, ff + 0.25], [p.b + 0.2, ff + 0.25], T + 1.5, brick, { w: 0.75, h: 0.95 });
-    merlons(b, [p.a - 0.2, zb - 0.25], [p.b + 0.2, zb - 0.25], T + 1.5, brick, { w: 0.75, h: 0.95 });
+    merlons(b, [p.a - 0.2, ff + 0.25], [p.b + 0.2, ff + 0.25], T + 1.5, brick, { w: 0.85, h: 0.95 });
+    merlons(b, [p.a - 0.2, zb - 0.25], [p.b + 0.2, zb - 0.25], T + 1.5, brick, { w: 0.85, h: 0.95 });
     // low hipped roof of coppi behind the parapet
     b.hip(w - 0.4, d - 0.6, 1.6, P.coppi, { at: [xc, T + 0.5, zcc] });
 
@@ -495,9 +517,9 @@ export function palazzoPubblico(b: Builder, o: PalaceOpts): void {
   // the end walls: windows on the sides
   b.sym((sd) => {
     const ex = sd > 0 ? x1 : x0;
-    corbels(b, [ex, zf], [ex, zb], WING_TOP - 0.2, 0.45, stone, { pitch: 1.0, h: 0.8, side: sd > 0 ? 1 : -1 });
+    corbels(b, [ex, zf], [ex, zb], WING_TOP - 0.2, 0.45, stone, { pitch: 1.3, h: 0.8, side: sd > 0 ? 1 : -1 });
     b.box(0.45, 0.9, D + 0.9, brick, { at: [ex + sd * 0.25, WING_TOP + 0.6, zc] });
-    merlons(b, [ex + sd * 0.25, zf], [ex + sd * 0.25, zb], WING_TOP + 1.5, brick, { w: 0.75, h: 0.95 });
+    merlons(b, [ex + sd * 0.25, zf], [ex + sd * 0.25, zb], WING_TOP + 1.5, brick, { w: 0.85, h: 0.95 });
     for (let fl = 0; fl < 2; fl++) {
       for (const z of spread(2, zb + 2.6, zf - 2.6)) {
         if (sd < 0 && z > zc) continue; // the tower stands against this end
@@ -509,9 +531,9 @@ export function palazzoPubblico(b: Builder, o: PalaceOpts): void {
   // centre block side faces above the wings
   b.sym((sd) => {
     const ex = sd > 0 ? cx1 : cx0;
-    corbels(b, [ex, zf + 0.25], [ex, zb], CENTRE_TOP - 0.2, 0.45, stone, { pitch: 1.0, h: 0.8, side: sd > 0 ? 1 : -1 });
+    corbels(b, [ex, zf + 0.25], [ex, zb], CENTRE_TOP - 0.2, 0.45, stone, { pitch: 1.3, h: 0.8, side: sd > 0 ? 1 : -1 });
     b.box(0.45, 0.9, D + 1.15, brick, { at: [ex + sd * 0.25, CENTRE_TOP + 0.6, zc + 0.12] });
-    merlons(b, [ex + sd * 0.25, zf + 0.25], [ex + sd * 0.25, zb], CENTRE_TOP + 1.5, brick, { w: 0.75, h: 0.95 });
+    merlons(b, [ex + sd * 0.25, zf + 0.25], [ex + sd * 0.25, zb], CENTRE_TOP + 1.5, brick, { w: 0.85, h: 0.95 });
   });
 
   // the main portal: a great Sienese arch, wider than the rest; from 1480 it leads through to the courtyard

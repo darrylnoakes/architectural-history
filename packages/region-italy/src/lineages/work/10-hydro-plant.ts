@@ -32,7 +32,7 @@ export const hydroPlant: BuildingDef = {
   style: 'Eclectic (neo-medieval)',
   date: 'c. 1905',
   summary:
-    'Italy had little coal, but it had rivers, and from the 1890s it built hydroelectric stations faster than almost any country in Europe: they called it white coal (carbone bianco). ' +
+    'Italy had little coal, but it had rivers and Alpine and Apennine streams, and from the 1890s it became one of Europe’s leaders in hydroelectric power: Italians called it white coal (carbone bianco). ' +
     'Water from a canal upstream drops through steel penstocks onto turbines, which spin the generators in the great hall, and the current goes out by overhead lines to factories, trams and street lights. ' +
     'Because a power station was a proud civic monument, its architects dressed it as a castle, with towers, battlements and rows of tall arched windows, in stone and brick to match the old town. ' +
     'For the first time the plot’s power does not have to be used on the spot: it can be sent miles away.',
@@ -42,7 +42,7 @@ export const hydroPlant: BuildingDef = {
     { label: 'Penstocks', note: 'Steel pipes carry the water down from the forebay to the turbines, building up pressure as they fall.', at: [6.8, 5.0, -4.0] },
     { label: 'Forebay', note: 'A basin at the end of the canal where the water settles, with screens and sluice gates to control the flow.', at: [13.0, 7.8, -6.0] },
     { label: 'Turbine hall', note: 'Tall arched windows light the hall where the turbines turn the generators.', at: [-6, 7.0, 0.4] },
-    { label: 'Battlements and towers', note: 'Castle dress for a machine: the architect matched the medieval castle that stood above the river.', at: [-15.5, 15.4, 1.8] },
+    { label: 'Battlements and towers', note: 'Castle dress for a machine: at Trezzo the architect echoed the ruined Visconti castle on the cliff above the plant.', at: [-15.5, 15.4, 1.8] },
     { label: 'Tailrace arches', note: 'The spent water leaves the turbines through arches in the river wall and rejoins the river.', at: [-6, -0.6, -11.4] },
   ],
   influences: [],
@@ -58,7 +58,7 @@ export const hydroPlant: BuildingDef = {
     for (const x of [-11, -6, -1]) {
       b.panel(2.8, 1.3, P.timberBlack, { at: [x, WATER - 0.2, BANK - 0.2], facing: '-z', shape: 'segmental' });
       b.panel(3.2, 1.5, ashlar, { at: [x, WATER - 0.25, BANK - 0.21], facing: '-z', shape: 'segmental', depth: 0.03 });
-      b.beam([x, WATER + 0.04, BANK - 0.5], [x, WATER + 0.01, BANK - 3.0], 2.2, 0.03, 0xcfe3ea); // the outflow
+      b.beam([x, WATER + 0.03, BANK - 0.5], [x, WATER + 0.01, BANK - 2.6], 2.2, 0.03, 0xdcecf0, { mat: 'glass' }); // the outflow
     }
     b.box(34, 0.04, 20, tint(P.gravel, 0.02), { at: [0, 0, 0], jitter: false });
 
@@ -90,7 +90,7 @@ export const hydroPlant: BuildingDef = {
         [hz - HD / 2, '-z'],
       ] as const) {
         b.panel(2.2, 7.2, ashlar, { at: [x, base + 0.6, z], facing: f, shape: 'round', depth: 0.05 });
-        b.window(1.8, 6.8, { at: [x, base + 0.8, z], facing: f, shape: 'round', frame: P.castIron, glass, bars: [2, 4] });
+        b.window(1.8, 6.8, { at: [x, base + 0.8, z], facing: f, shape: 'round', frame: P.castIron, glass, bars: f === '+z' ? [2, 4] : [2, 2] });
         b.panel(0.9, 1.4, P.timberBlack, { at: [x, 0.9, z], facing: f, shape: 'round' }); // base windows
       }
     }
@@ -146,7 +146,7 @@ export const hydroPlant: BuildingDef = {
     }
     // the penstocks: three steel pipes falling from the forebay wall into the end of the hall
     for (const z of [fz - 2.0, fz, fz + 2.0]) {
-      b.beam([ex - 0.2, fy - 0.4, z], [hx + HW / 2 + 0.2, 1.6, z], 1.1, 1.1, P.iron);
+      b.beam([ex - 0.2, fy - 0.4, z], [hx + HW / 2 + 0.2, 1.6, z], 1.0, 1.0, tint(P.iron, 0.12));
       for (const f of [0.3, 0.65]) {
         const x = ex - 0.2 + (hx + HW / 2 - ex + 0.4) * f;
         const y = fy - 0.4 + (1.6 - fy + 0.4) * f;

@@ -1,5 +1,5 @@
 import { P, tint, type BuildingDef, type Builder, type Facing } from '@ah/kit';
-import { archPanel, archivolt, faceAngle, goods, paving, sack, tileRibs } from './shared';
+import { archPanel, archivolt, faceAngle, goods, hipRibs, paving, sack } from './shared';
 
 /**
  * A two-light Gothic window (bifora): two pointed lights divided by a colonnette, under one
@@ -110,9 +110,7 @@ export const grainLoggia: BuildingDef = {
     }
     b.box(W + 1.2, 0.4, D + 1.2, tint(stone, 0.05), { at: [0, top, 0] });
     b.hip(W + 0.8, D + 0.8, 2.6, P.coppi, { at: [0, top + 0.4, 0], overhang: 0.25 });
-    const ribs = tint(P.coppi, -0.08);
-    tileRibs(b, [-5.4, -4.2, -3, -1.8, -0.6, 0.6, 1.8, 3, 4.2, 5.4], top + 0.32, D / 2 + 0.55, top + 2.9, 0.4, ribs, 0.12);
-    tileRibs(b, [-5.4, -4.2, -3, -1.8, -0.6, 0.6, 1.8, 3, 4.2, 5.4], top + 0.32, -D / 2 - 0.55, top + 2.9, -0.4, ribs, 0.12);
+    hipRibs(b, W + 0.8, D + 0.8, 2.6, [0, top + 0.4, 0], 0.25, tint(P.coppi, -0.08), 0.75);
     // a hoist beam and door in the roof for lifting sacks to the top floor
     b.box(1.6, 1.4, 1.2, stone, { at: [0, top + 0.4, D / 2 - 0.4] });
     b.gable(1.8, 1.4, 0.7, P.coppi, { at: [0, top + 1.8, D / 2 - 0.4], ridge: 'z', overhang: 0.15, wall: stone });

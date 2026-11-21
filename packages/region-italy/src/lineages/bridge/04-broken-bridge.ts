@@ -14,8 +14,8 @@ export const brokenBridge: BuildingDef = {
   lookFor: [
     { label: 'Broken arch', note: 'Only the stubs of the arch ring are left on the piers either side of the gap.', at: [3.3, 0.1, 5.15] },
     { label: 'Timber gap', note: 'Beams laid across the gap on a trestle in the river: quick to build and quick to remove if the enemy comes.', at: [2.4, 0.8, 5.15] },
-    { label: 'Bridgehead tower', note: 'A tower built of blocks taken from ruined buildings guards the southern end, where travellers can be stopped and taxed.', at: [5.2, 5.0, -15.0] },
-    { label: 'Roman piers', note: 'The piers and the other arches survive: Roman masonry was very hard to destroy completely.', at: [-4.6, -0.6, -2.65] },
+    { label: 'Bridgehead tower', note: 'A tower built of blocks taken from ruined buildings guards the southern end, where travellers can be stopped and taxed.', at: [3.0, 5.0, -15.0] },
+    { label: 'Roman piers', note: 'The piers and the other arches survive: Roman masonry was very hard to destroy completely.', at: [-3.9, -0.9, -2.65] },
   ],
   build(b) {
     b.noCollide();

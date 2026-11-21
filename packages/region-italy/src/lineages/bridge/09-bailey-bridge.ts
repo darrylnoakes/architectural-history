@@ -13,11 +13,11 @@ export const baileyBridge: BuildingDef = {
   materials: ['steel panels', 'steel pins', 'timber decking', 'timber cribs', 'stones of the old bridge'],
   modelledOn: 'The Bailey bridges built across the Arno at Florence in 1944',
   lookFor: [
-    { label: 'Bailey panel', note: 'Standard welded steel panels about 3 m long and 1.5 m high, pinned end to end to make the side trusses.', at: [2.2, 1.6, -6.0] },
-    { label: 'Panel pins', note: 'Each panel is joined to the next by steel pins driven through lugs at the corners: no rivets, no welding.', at: [2.2, 0.4, 1.5] },
-    { label: 'Timber crib', note: 'A stack of crossed timbers built up on the stump of a blown pier as a temporary support.', at: [3.4, -0.3, 4.3] },
+    { label: 'Bailey panel', note: 'Standard welded steel panels about 3 m long and 1.5 m high, pinned end to end to make the side trusses.', at: [2.3, 0.5, -6.0] },
+    { label: 'Panel pins', note: 'Each panel is joined to the next by steel pins driven through lugs at the corners: no rivets, no welding.', at: [2.1, -0.25, 0] },
+    { label: 'Timber crib', note: 'A stack of crossed timbers built up on the stump of a blown pier as a temporary support.', at: [2.6, -0.4, 4.4] },
     { label: 'Ruins of the old bridge', note: 'Blocks of the Renaissance arches lie in the river where they fell; many were later dredged up and reused.', at: [-4.4, -1.0, -8.0] },
-    { label: 'Timber deck', note: 'Planks (chesses) laid across steel cross-beams, held down by timber kerbs; one lane, one vehicle at a time.', at: [0, 1.0, 9.0] },
+    { label: 'Timber deck', note: 'Planks (chesses) laid across steel cross-beams, held down by timber kerbs; one lane, one vehicle at a time.', at: [0, 0.35, 9.0] },
   ],
   build(b) {
     b.noCollide();

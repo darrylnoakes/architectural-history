@@ -15,9 +15,9 @@ export const fordAndFerry: BuildingDef = {
   modelledOn: 'The Tiber ford below the Palatine, where Rome grew up beside the cattle market (Forum Boarium)',
   lookFor: [
     { label: 'Ford', note: 'A gravel bar where the water is shallow enough to wade; the banks are worn into gentle ramps by feet and hooves.', at: [-2.0, -0.9, -6.0] },
-    { label: 'Rope ferry', note: 'The raft is pulled along a rope fixed to both banks, so the current cannot carry it away.', at: [4.4, -0.6, 2.0] },
-    { label: 'Log raft', note: 'Logs lashed side by side under cross-pieces: no nails, just rope and pegs.', at: [4.4, -0.7, -2.6] },
-    { label: 'Ferry post', note: 'A stout post driven into each bank anchors the rope and marks the landing.', at: [4.4, 2.2, 13.0] },
+    { label: 'Rope ferry', note: 'The raft is pulled along a rope fixed to both banks, so the current cannot carry it away.', at: [4.4, 0.8, 4.0] },
+    { label: 'Log raft', note: 'Logs lashed side by side under cross-pieces: no nails, just rope and pegs.', at: [3.4, -1.0, -2.6] },
+    { label: 'Ferry post', note: 'A stout post driven into each bank anchors the rope and marks the landing.', at: [4.4, 2.0, 13.0] },
   ],
   influences: ['etruscan-legacy'],
   build(b) {

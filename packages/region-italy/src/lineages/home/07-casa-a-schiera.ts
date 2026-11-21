@@ -54,8 +54,9 @@ export const casaASchiera: BuildingDef = {
     const tile = tint(P.coppi, b.range(-0.05, 0.02));
 
     const house = (cx: number, ours: boolean) => {
-      const stone = tint(b.pick([P.pietraForte, P.travertine, P.tufa]), b.range(-0.03, 0.03));
-      const upper = b.chance(0.5) ? tint(b.pick([P.brickOrange, P.cotto]), b.range(-0.04, 0.02)) : tint(stone, 0.03);
+      const stone = tint(b.pick([P.pietraForte, tint(P.travertine, -0.07), P.tufa]), b.range(-0.03, 0.03));
+      const brickUp = b.chance(0.5);
+      const upper = brickUp ? tint(b.pick([P.brickOrange, P.cotto]), b.range(-0.04, 0.02)) : tint(stone, 0.03);
       const shut = b.pick([P.oak, P.oakDark, P.oakSilver]);
       const zc = (zf + zb) / 2;
       // ground storey of squared stone
@@ -65,6 +66,7 @@ export const casaASchiera: BuildingDef = {
       const zu = (zf + jet + zb) / 2;
       b.box(uw, f1 + f2, zf + jet - zb, upper, { at: [cx, g + 0.25, zu] });
       b.box(uw, 0.25, zf + jet - zb, P.oakDark, { at: [cx, g, zu] }); // the floor and the joist ends
+      if (!brickUp) for (let y = g + 0.75; y < H; y += 0.5) b.box(uw, 0.03, 0.02, tint(upper, -0.12), { at: [cx, y, zf + jet + 0.005] });
       for (const x of spread(11, -uw / 2 + 0.2, uw / 2 - 0.2)) b.box(0.16, 0.18, jet + 0.12, P.oakDark, { at: [cx + x, g - 0.1, zf + (jet + 0.12) / 2] });
       for (const x of [-uw / 2 + 0.5, -uw / 6, uw / 6, uw / 2 - 0.5]) {
         b.beam([cx + x, g - 1.3, zf + 0.04], [cx + x, g - 0.05, zf + jet - 0.08], 0.16, 0.16, P.oakDark);
@@ -88,7 +90,7 @@ export const casaASchiera: BuildingDef = {
       const wares = ours ? [P.cream, P.doorRed, 0x5a6f8a, P.cream, P.ochreWash] : [P.terracotta, P.bronze, P.terracotta, P.iron];
       wares.forEach((c, i) => b.box(0.4, 0.22, 0.32, c, { at: [sx - 1.15 + i * (2.3 / (wares.length - 1)), 0.95, zf + 0.25] }));
       // the night shutters, lifted up and hooked under the arch as an awning
-      b.group({ at: [sx, 3.0, zf + 0.06], rot: [-1.1, 0, 0] }, () => b.box(2.6, 0.06, 0.9, P.oak, { at: [0, 0, 0.45] }));
+      b.group({ at: [sx, 3.15, zf + 0.06], rot: [-1.3, 0, 0] }, () => b.box(2.6, 0.06, 0.9, P.oak, { at: [0, 0, 0.45] }));
       b.panel(1.25, 2.5, tint(stone, 0.06), { at: [dx, 0, zf], facing: '+z', shape: 'round', depth: 0.03 });
       b.panel(0.95, 2.3, ours ? P.doorGreen : P.oakDark, { at: [dx, 0, zf], facing: '+z', shape: 'round', depth: 0.05 });
       b.box(1.3, 0.15, 0.35, P.travertine, { at: [dx, 0, zf + 0.17] });

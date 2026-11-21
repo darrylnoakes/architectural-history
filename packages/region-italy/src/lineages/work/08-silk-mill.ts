@@ -38,7 +38,7 @@ function throwingMachine(b: Builder, x: number, z: number, r: number, h: number,
         { segs: 16 },
       );
     });
-    flatRing(b, r + 0.42, r + 0.28, 0.08, frame, [x, y + th * 0.55 + 0.27, z], 16);
+    flatRing(b, r + 0.42, r + 0.28, 0.08, frame, [x, y + th * 0.55 + 0.27, z], 12);
   }
   // the inner turning cage and its central shaft
   b.cyl(0.18, h + 0.6, P.oakDark, { at: [x, 0, z], segs: 8 });
@@ -47,7 +47,7 @@ function throwingMachine(b: Builder, x: number, z: number, r: number, h: number,
     const a = (i / staves) * Math.PI * 2 + 0.2;
     b.box(0.1, h - 0.4, 0.1, cage, { at: [x + Math.cos(a) * (r - 0.7), 0.2, z + Math.sin(a) * (r - 0.7)] });
   }
-  for (let k = 0; k <= tiers; k++) flatRing(b, r - 0.6, r - 0.8, 0.08, cage, [x, 0.3 + (k * (h - 0.6)) / tiers, z], 16);
+  for (const k of [0, tiers / 2, tiers]) flatRing(b, r - 0.6, r - 0.8, 0.08, cage, [x, 0.3 + (k * (h - 0.6)) / tiers, z], 12);
   for (let i = 0; i < 4; i++) {
     const a = (i / 4) * Math.PI;
     b.beam([x - Math.cos(a) * (r - 0.7), h - 0.3, z - Math.sin(a) * (r - 0.7)], [x + Math.cos(a) * (r - 0.7), h - 0.3, z + Math.sin(a) * (r - 0.7)], 0.1, 0.1, cage);

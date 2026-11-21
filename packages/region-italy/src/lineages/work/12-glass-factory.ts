@@ -134,7 +134,7 @@ export const glassFactory: BuildingDef = {
     b.box(30, 0.05, 2.4, P.paving, { at: [x0, 0, front + 1.6], jitter: false });
     car(b, 'sixties', P.cream, [-12, 0, 10.0], Math.PI / 2);
     car(b, 'sixties', P.doorBlue, [8, 0, 10.0], Math.PI / 2);
-    b.tree(11, { at: [-17, 0, -1], kind: 'pine' });
+    b.tree(8, { at: [-14.8, 0, -1.6], kind: 'pine' });
     b.tree(10, { at: [3.5, 0, -8], kind: 'pine' });
     b.tree(5, { at: [16.5, 0, 1], kind: 'round' });
 

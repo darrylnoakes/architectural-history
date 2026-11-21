@@ -78,8 +78,8 @@ export function buildRenaissanceInn(b: Builder, restored: boolean): void {
   b.panel(gw + 1.0, 4.1, trav, { at: [GX, 0, ZF], facing: '+z', shape: 'round', depth: 0.08 });
   for (let i = 0; i < 7; i++) {
     const a = Math.PI * (i / 6);
-    const r = gw / 2 + 0.25;
-    b.panel(0.45, 0.5, tint(trav, -0.06), { at: [GX + Math.cos(a) * r, 2.1 + Math.sin(a) * r - 0.25, ZF], facing: '+z', depth: 0.12, rot: [0, 0, a - Math.PI / 2] });
+    const r = gw / 2 + 0.02;
+    b.panel(0.45, 0.5, tint(trav, -0.06), { at: [GX + Math.cos(a) * r, 2.1 + Math.sin(a) * r, ZF], facing: '+z', depth: 0.12, rot: [0, 0, a - Math.PI / 2] });
   }
   b.panel(gw, 3.6, restored ? P.glassDark : wood, { at: [GX, 0, ZF], facing: '+z', shape: 'round', depth: 0.1, mat: restored ? 'glass' : 'matte' });
   if (!restored) b.panel(0.05, 3.5, tint(wood, -0.15), { at: [GX, 0, ZF], facing: '+z', depth: 0.13 });

@@ -1,3 +1,4 @@
+import * as THREE from 'three';
 import { P, facingAngle, mix, tint, type Builder, type Facing } from '@ah/kit';
 
 /*
@@ -8,18 +9,44 @@ import { P, facingAngle, mix, tint, type Builder, type Facing } from '@ah/kit';
 export type XY = [number, number];
 export const HX = 20;
 /** Centre lines of the two tracks; trains stand on the first, beside the platform. */
-export const TRACKS = [-8.7, -11.2];
+export const TRACKS = [-8.5, -10.75];
 export const GAUGE = 1.435;
 /** Height of the platform top, and its edge. */
-export const PLAT = { y: 0.55, edge: -7.05 };
+export const PLAT = { y: 0.55, edge: -7.0 };
 
 /** Ballast, sleepers and rails for one track along X. */
-export function track(b: Builder, z: number, x0 = -HX, x1 = HX): void {
+export function track(b: Builder, z: number, x0 = -HX, x1 = HX, o?: { sleeper?: number }): void {
   const L = x1 - x0;
   const xc = (x0 + x1) / 2;
-  b.box(L, 0.18, 2.9, mix(P.gravel, P.concreteDark, 0.3), { at: [xc, 0, z], jitter: false });
-  for (let x = x0 + 0.45; x < x1; x += 0.9) b.box(0.24, 0.1, 2.5, mix(P.oakDark, P.concreteDark, 0.3), { at: [x, 0.18, z], jitter: false });
+  b.box(L, 0.18, 2.3, mix(P.gravel, P.concreteDark, 0.3), { at: [xc, 0, z], jitter: false });
+  // sleepers as a single cheap mesh: top and the two long faces of each
+  const out: number[] = [];
+  const hw = 1.1;
+  for (let x = x0 + 0.4; x < x1; x += 0.8) {
+    const a = x - 0.12;
+    const c = x + 0.12;
+    const y0 = 0.18;
+    const y1 = 0.28;
+    quad(out, [a, y1, z - hw], [c, y1, z - hw], [c, y1, z + hw], [a, y1, z + hw]);
+    quad(out, [a, y0, z - hw], [a, y1, z - hw], [a, y1, z + hw], [a, y0, z + hw]);
+    quad(out, [c, y0, z - hw], [c, y0, z + hw], [c, y1, z + hw], [c, y1, z - hw]);
+  }
+  soup(b, out, o?.sleeper ?? mix(P.oakDark, P.concreteDark, 0.3));
   for (const s of [-1, 1]) b.box(L, 0.15, 0.08, P.steel, { at: [xc, 0.28, z + (s * GAUGE) / 2], jitter: false });
+}
+
+/** Add a triangle soup: `pos` is a flat [x, y, z, ...] list, three vertices per triangle. */
+export function soup(b: Builder, pos: number[], color: number, o?: { mat?: 'matte' | 'glass' }): void {
+  if (!pos.length) return;
+  const g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+  g.computeVertexNormals();
+  b.add(g, color, { mat: o?.mat, jitter: false });
+}
+
+/** Push a quad (a, b, c, d in order round its edge) as two triangles. */
+export function quad(out: number[], a: number[], b: number[], c: number[], d: number[]): void {
+  out.push(...a, ...b, ...c, ...a, ...c, ...d);
 }
 
 /** The platform: a raised paved strip along X with a coping and a white safety line at the edge. */
@@ -43,9 +70,21 @@ export function archPanel(
   w: number,
   h: number,
   color: number,
-  o: { at?: [number, number, number]; facing?: Facing; depth?: number; mat?: 'matte' | 'glass' },
+  o: { at?: [number, number, number]; facing?: Facing; depth?: number; mat?: 'matte' | 'glass'; n?: number },
 ): void {
-  b.panel(w, h, color, { at: o.at, facing: o.facing, shape: 'round', depth: o.depth, mat: o.mat });
+  // a low-poly round-headed outline: straight jambs and an n-segment semicircle
+  const a = w / 2;
+  const hs = Math.max(0, h - a);
+  const n = o.n ?? 5;
+  const pts: XY[] = [[-a, 0], [a, 0]];
+  for (let i = 0; i <= n; i++) {
+    const t = (i / n) * Math.PI;
+    pts.push([a * Math.cos(t), hs + a * Math.sin(t)]);
+  }
+  const depth = o.depth ?? 0.06;
+  b.group({ at: o.at ?? [0, 0, 0], rotY: facingAngle(o.facing) }, () => {
+    b.extrude(pts, depth + 0.03, color, { at: [0, 0, (depth - 0.03) / 2], mat: o.mat, jitter: false });
+  });
 }
 
 /** A wall along X pierced right through by round-arched openings reaching the ground. */
@@ -88,7 +127,7 @@ export function clock(b: Builder, d: number, at: [number, number, number], o?: {
 
 /** A pair of rail wheels on an axle at local x, for a vehicle centred on its track. */
 function wheels(b: Builder, x: number, r: number, color: number): void {
-  for (const s of [-1, 1]) b.log(r, 0.12, color, { at: [x, 0.28, (s * GAUGE) / 2 + s * 0.06], axis: 'z', segs: 10 });
+  for (const s of [-1, 1]) b.log(r, 0.12, color, { at: [x, 0.28, (s * GAUGE) / 2 + s * 0.06], axis: 'z', segs: 8 });
 }
 
 /** A small steam locomotive with its tender and one four-wheeled carriage, facing -X. */
@@ -170,7 +209,7 @@ export function littorina(b: Builder, at: [number, number, number]): void {
     for (const s of [-1, 1]) {
       const f = s > 0 ? '+z' : '-z';
       for (let i = 0; i < 9; i++) b.panel(1.05, 0.72, P.windowDark, { at: [-5.9 + i * 1.48, 2.45, s * 1.38], facing: f, depth: 0.05 });
-      b.panel(0.8, 2.0, tint(chestnut, -0.05), { at: [s * 4.6 > 0 ? 6.4 : -6.4, 1.25, s * 1.38], facing: f, depth: 0.05 });
+      b.panel(0.8, 2.0, tint(chestnut, -0.05), { at: [s * 6.4, 1.25, s * 1.38], facing: f, depth: 0.05 });
     }
     b.sym((s) => {
       for (const a of [-0.5, 0, 0.5]) {

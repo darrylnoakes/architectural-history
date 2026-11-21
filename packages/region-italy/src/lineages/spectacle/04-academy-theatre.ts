@@ -6,6 +6,8 @@ const HX = 16;
 const HZ0 = -8;
 const HZ1 = 12;
 const EAVES = 12;
+/** Height at which the front wall is cut away on the model. */
+const CUT = 8.6;
 const RIDGE = 17.6;
 const RZ = (HZ0 + HZ1) / 2;
 
@@ -41,7 +43,7 @@ export const academyTheatre: BuildingDef = {
     'The town’s learned academy, a club of nobles and scholars devoted to reviving antiquity, built itself a theatre to stage the tragedies of ancient Greece in the Roman manner described by Vitruvius. ' +
     'From outside it is a plain plastered hall squeezed into older buildings. Inside, a half-oval of thirteen wooden tiers, crowned by a colonnade with statues, faces a permanent stage front of two storeys of columns, ' +
     'and through its openings streets of houses recede in forced perspective. It is all timber, brick and stucco painted to look like marble. ' +
-    'On the model the tiles are lifted off half the roof to show the auditorium; the real theatre is fully roofed.',
+    'On the model the roof and the front wall are cut away to show the auditorium; the real theatre is fully roofed.',
   materials: ['plastered brick', 'timber seating and stage', 'stucco painted as marble', 'coppi roof tiles'],
   modelledOn:
     'Teatro Olimpico, Vicenza: designed by Andrea Palladio in 1580 for the Accademia Olimpica, completed after his death by Vincenzo Scamozzi, who added the perspective streets; opened on 3 March 1585 with Oedipus Rex',
@@ -84,9 +86,12 @@ export const academyTheatre: BuildingDef = {
 
     // ------------------------------------------------ the hall: four plain walls, gable ends front and back
     const t = 0.7;
+    // back wall and gable to the ridge; the front wall is shown cut down to show the interior
+    b.box(2 * HX, EAVES, t, plaster, { at: [0, 0, HZ0 + t / 2] });
+    b.extrude([[-HX, EAVES], [HX, EAVES], [0, RIDGE]], t, plaster, { at: [0, 0, HZ0 + t / 2] });
+    b.box(2 * HX, CUT, t, plaster, { at: [0, 0, HZ1 - t / 2] });
+    b.box(2 * HX, 0.06, t + 0.02, P.brickRed, { at: [0, CUT, HZ1 - t / 2] }); // the cut face, in section colour
     b.sym((s) => {
-      b.box(2 * HX, EAVES, t, plaster, { at: [0, 0, s > 0 ? HZ1 - t / 2 : HZ0 + t / 2] });
-      b.extrude([[-HX, EAVES], [HX, EAVES], [0, RIDGE]], t, plaster, { at: [0, 0, s > 0 ? HZ1 - t / 2 : HZ0 + t / 2] });
       b.box(t, EAVES, HZ1 - HZ0, plaster, { at: [s * (HX - t / 2), 0, (HZ0 + HZ1) / 2] });
       // eaves cornice
       b.box(0.5, 0.35, HZ1 - HZ0 + 0.5, tint(plaster, -0.08), { at: [s * (HX + 0.1), EAVES - 0.35, (HZ0 + HZ1) / 2] });
@@ -105,7 +110,7 @@ export const academyTheatre: BuildingDef = {
     // the edges of the roof left on the gables and the eaves, so its pitch still reads
     b.sym((s) => {
       b.beam([s * (HX + 0.5), EAVES - 0.05, HZ0 - 0.4], [s * (HX + 0.5), EAVES - 0.05, HZ1 + 0.4], 1.4, 0.22, roof);
-      for (const z of [HZ0 - 0.1, HZ1 + 0.1]) b.beam([s * (HX + 0.6), EAVES - 0.1, z], [0, RIDGE + 0.12, z], 0.7, 0.24, roof);
+      for (const z of [HZ0 - 0.1]) b.beam([s * (HX + 0.6), EAVES - 0.1, z], [0, RIDGE + 0.12, z], 0.7, 0.24, roof);
     });
 
     // ------------------------------------------------ front range (entrance rooms) with a rusticated portal
@@ -210,7 +215,7 @@ export const academyTheatre: BuildingDef = {
         segs: 16,
       });
       b.lathe([[13.4, topY + 4.6], [13.4, topY + 5.4], [14.2, topY + 5.4], [14.2, topY + 4.6]], stuccoShade, { start: -Math.PI / 2, sweep: Math.PI, segs: 16 });
-      b.lathe([[14.5, 0], [14.5, topY + 5.4]], tint(stuccoShade, -0.1), { start: -Math.PI / 2, sweep: Math.PI, segs: 16 }); // back wall
+      b.lathe([[14.5, 0], [14.5, topY]], tint(stuccoShade, -0.1), { start: -Math.PI / 2, sweep: Math.PI, segs: 16 }); // back wall
     });
     // ends of the seating, closing the section
     b.sym((s) => {

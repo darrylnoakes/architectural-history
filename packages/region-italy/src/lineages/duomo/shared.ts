@@ -279,7 +279,7 @@ export function campanile(b: Builder, ph: Phase) {
   b.group({ at: [x, 0, z] }, () => {
     b.box(s + 0.4, 0.5, s + 0.4, P.travertine);
     b.box(s, h, s, MARBLE, { at: [0, 0.5, 0] });
-    bands(b, s, s, 0.5, h + 0.5, 1.2, 0.3, STRIPE_R, 0, 0);
+    bands(b, s, s, 0.5, h + 0.5, 1.4, 0.32, STRIPE_R, 0, 0);
     // corner pilaster strips and storey cornices
     for (const cx of [-1, 1]) for (const cz of [-1, 1]) b.box(0.55, h, 0.55, MARBLE, { at: [cx * (s / 2 - 0.25), 0.5, cz * (s / 2 - 0.25)], jitter: false });
     const storeys = [10.5, 15.5, 20.5, 25.5];

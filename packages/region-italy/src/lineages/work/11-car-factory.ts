@@ -36,10 +36,10 @@ export const carFactory: BuildingDef = {
   summary:
     'Mass production arrives: a car factory planned on the American model, in which the work flowed upwards floor by floor, from raw materials at the bottom to finished cars on the roof. ' +
     'The whole building is a frame of reinforced concrete, columns and floor slabs filled in with steel-framed windows, so every floor is light and open and can carry heavy machines. ' +
-    'Cars drove down from the roof by a spiral ramp, and the roof itself was a test track with banked curves at the ends, an image of speed that the Futurists and Le Corbusier both celebrated. ' +
+    'Cars drove down from the roof by a spiral ramp, and the roof itself was a test track with banked curves at the ends, an image of the machine age that Le Corbusier published in admiration. ' +
     'Electricity from the river’s power stations now drives the machines; the river itself is only a view.',
   materials: ['reinforced concrete', 'steel windows', 'glass', 'asphalt'],
-  modelledOn: 'The Fiat Lingotto factory, Turin (Giacomo Mattè-Trucco, 1916 to 1923; spiral ramp 1926), much reduced',
+  modelledOn: 'The Fiat Lingotto factory, Turin (Giacomo Mattè-Trucco, 1916 to 1923, with spiral ramps added in the mid-1920s), much reduced',
   lookFor: [
     { label: 'Rooftop test track', note: 'Finished cars were driven round a track on the roof to test them before sale.', at: [-3, 18.6, 8.9] },
     { label: 'Banked curves', note: 'The track tilts up at each end, like a velodrome, so cars could take the bends at speed.', at: [-15.5, 19.6, 3.6] },
@@ -47,7 +47,7 @@ export const carFactory: BuildingDef = {
     { label: 'Concrete frame and big windows', note: 'The walls carry no weight: the concrete columns do, leaving room for windows from pier to pier.', at: [-8, 9.0, 10.2] },
     { label: 'Railway siding', note: 'Steel, coal and parts came in by rail at the back of the works.', at: [-8, 1.4, -10.4] },
   ],
-  influences: ['futurism', 'rationalism'],
+  influences: ['rationalism'],
   build(b) {
     const concrete = b.pick([P.concreteWhite, tint(P.concrete, 0.05), P.cream]);
     const fl = 4.4;
@@ -75,7 +75,7 @@ export const carFactory: BuildingDef = {
       b.panel(1.2, 2.2, P.glassDark, { at: [tx, H + 0.6, z0 + 1.2], facing: '+z' });
     });
     // entrance on the street: a canopy and doors in the middle bays
-    b.box(6, 0.3, 2.4, concrete, { at: [x0, 3.6, z0 + D / 2 + 1.2] });
+    b.box(6, 0.3, 1.4, concrete, { at: [x0, 3.6, z0 + D / 2 + 0.7] });
     b.panel(4.4, 3.2, P.doorBlack, { at: [x0, 0.6, z0 + D / 2 + 0.33], facing: '+z' });
     b.panel(10, 1.2, P.cladWhite, { at: [x0, H - 0.2, z0 + D / 2 + 0.33], facing: '+z' }); // name band
     for (const x of lin(8, x0 - 4.2, x0 + 4.2)) b.panel(0.7, 0.7, P.cladBlue, { at: [x, H + 0.05, z0 + D / 2 + 0.4], facing: '+z', depth: 0.08 });

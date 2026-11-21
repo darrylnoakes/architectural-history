@@ -14,10 +14,10 @@ export const fortifiedBridge: BuildingDef = {
   materials: ['Roman travertine and tufa', 'rubble and brick', 'clay roof tiles (coppi)'],
   modelledOn: 'The Ponte Nomentano over the Aniene, Rome, a Roman bridge with a medieval fortified superstructure',
   lookFor: [
-    { label: 'Gate tower', note: 'The road passes through an arch under the tower, which could be closed with a gate; tolls were collected here.', at: [3.9, 5.5, -7.65] },
-    { label: 'Machicolations', note: 'Openings in the floor of the projecting parapet, between stone brackets, so defenders could drop stones on attackers at the foot of the wall.', at: [3.9, 8.6, -6.0] },
+    { label: 'Gate tower', note: 'The road passes through an arch under the tower, which could be closed with a gate; tolls were collected here.', at: [3.7, 5.5, -7.65] },
+    { label: 'Machicolations', note: 'Openings in the floor of the projecting parapet, between stone brackets, so defenders could drop stones on attackers at the foot of the wall.', at: [1.2, 7.9, -5.5] },
     { label: 'Rebuilt arch', note: 'The arch broken in the Gothic War, rebuilt in rubble with a ring of brick: a patch that still shows.', at: [3.3, 0.2, 5.15] },
-    { label: 'Wayside chapel', note: 'A little chapel at the bridgehead where travellers prayed and gave money towards the bridge.', at: [5.2, 4.2, 14.4] },
+    { label: 'Wayside chapel', note: 'A little chapel at the bridgehead where travellers prayed and gave money towards the bridge.', at: [5.0, 4.0, 14.4] },
   ],
   build(b) {
     b.noCollide();

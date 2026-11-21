@@ -1,5 +1,5 @@
 import { P, mix, spread, tint, type BuildingDef } from '@ah/kit';
-import { archWindow, ashlar, column, lineColliders, merlons, pave, wallSeg, type XZ } from './shared';
+import { arcade, ashlar, column, lineColliders, merlons, pave, wallSeg, type XZ } from './shared';
 
 /** The enclosure wall, clockwise from the right of the gate (outside on the right). */
 const WALL: XZ[] = [
@@ -47,10 +47,9 @@ export const bishopsPalace: BuildingDef = {
       merlons(b, [x0 + nx, z0 + nz], [x1 + nx, z1 + nz], WH, stone, { w: 0.9, h: 1.1, t: 0.4 });
     }
     // the gateway: an arch through a squat gatehouse
-    b.sym((s) => b.box(2.4, 8.5, 4, stone, { at: [s * 3.4, 0, 19] }));
-    b.box(4.4, 2.6, 4, stone, { at: [0, 5.9, 19] });
+    arcade(b, 9.2, 8.5, 4, stone, { at: [0, 0, 19], openings: 1, openW: 4.2, openH: 5.8, shape: 'round', n: 3 });
+    arcade(b, 5.0, 3.6, 0.12, tr, { at: [0, 2.6, 21.02], openings: 1, openW: 4.2, openH: 3.2, shape: 'round', n: 3 });
     b.gable(9.4, 4.4, 1.4, P.coppi, { at: [0, 8.5, 19], overhang: 0.2, wall: stone });
-    archWindow(b, 4.4, 5.9, { at: [0, 0, 21], facing: '+z', frame: tr, glass: mix(P.earth, P.gravel, 0.4), border: 0.4 });
     b.box(1.4, 3.6, 0.15, P.oakDark, { at: [-1.6, 0, 17.4], rotY: -0.6 });
     b.box(1.4, 3.6, 0.15, P.oakDark, { at: [1.6, 0, 17.4], rotY: 0.6 });
 

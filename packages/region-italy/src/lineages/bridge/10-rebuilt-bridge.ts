@@ -16,7 +16,7 @@ export const rebuiltBridge: BuildingDef = {
   lookFor: [
     { label: 'Recovered stones', note: 'Weathered blocks dredged from the river sit among the new ones, a shade darker.', at: [3.9, 0.0, -10.4] },
     { label: 'Flattened arch', note: 'Ammannati’s curve, recovered from photographs and measurements, recut stone by stone.', at: [3.9, -0.4, 0] },
-    { label: 'Statue of Spring', note: 'The statues were recovered from the river and set back on their pedestals; Spring’s head was found only in 1961.', at: [2.8, 3.2, 16.3] },
+    { label: 'Statue of Spring', note: 'The statues were recovered from the river and set back on their pedestals; Spring’s head was found only in 1961.', at: [3.55, 3.0, 16.3] },
     { label: 'Modern roadway', note: 'Asphalt, kerbed pavements and electric lamps: the only signs that this is a post-war bridge.', at: [0, 1.4, 4.0] },
   ],
   build(b) {

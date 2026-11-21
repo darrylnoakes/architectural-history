@@ -386,13 +386,13 @@ export function latialHut(
     // a low stone footing
     b.extrude(ovalPlan(o.a + 0.08, o.c + 0.08, n), 0.25, P.rubble, { at: [0, 0.125, 0], rot: [-Math.PI / 2, 0, 0] });
     // the roof: from an oval eave ring to a ridge along Z
-    const ov = 0.55;
+    const ov = 0.5;
     const eave = ovalPlan(o.a + ov, o.c + ov, n);
-    const ridgeHalf = Math.max(0.2, o.c - o.a * 0.9);
-    const yE = o.wall - 0.25;
+    const ridgeHalf = Math.max(0.3, o.c - o.a * 0.55);
+    const yE = o.wall - 0.1;
     const yR = o.wall + o.roof;
     const pos: number[] = [];
-    const ridgePt = (p: Pt): Vec3 => [0, yR, Math.max(-ridgeHalf, Math.min(ridgeHalf, p[1] * (ridgeHalf / (o.c + ov)) * 1.6))];
+    const ridgePt = (p: Pt): Vec3 => [0, yR, Math.max(-ridgeHalf, Math.min(ridgeHalf, p[1] * (ridgeHalf / (o.c + ov)) * 1.3))];
     for (let i = 0; i < n; i++) {
       const p = eave[i];
       const q = eave[(i + 1) % n];
@@ -416,7 +416,8 @@ export function latialHut(
       for (const s of [-1, 1]) b.beam([s * 0.75, yR - 0.45, z], [-s * 0.45, yR + 0.55, z], 0.09, 0.09, P.oakDark);
     }
     // smoke hole in the front gable end
-    b.panel(0.6, 0.35, P.windowDark, { at: [0, yR - 0.9, ridgeHalf + (o.roof * 0.6 * ov) + 0.35], facing: '+z', depth: 0.02 });
+    const zs = ridgeHalf + (0.9 / (yR - yE)) * (o.c + ov - ridgeHalf);
+    b.box(0.7, 0.45, 0.5, P.windowDark, { at: [0, yR - 1.05, zs - 0.1] });
     // door and porch
     b.panel(0.9, 1.7, P.oakDark, { at: [0, 0.2, o.c - 0.02], facing: '+z', depth: 0.08 });
     if (o.porch) {

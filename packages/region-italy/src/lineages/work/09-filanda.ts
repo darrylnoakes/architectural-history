@@ -7,7 +7,7 @@ export const filanda: BuildingDef = {
   style: 'Neoclassical industrial',
   date: 'c. 1840',
   summary:
-    'In the nineteenth century the silk trade was Italy’s biggest industry, and reeling the silk off the cocoons moved from farmhouse kitchens into long mills called filande. ' +
+    'In the nineteenth century silk was Italy’s leading export, and reeling the silk off the cocoons moved from farmhouse kitchens into long mills called filande. ' +
     'Inside, rows of women and girls sat at basins of hot water, now heated by steam piped from a coal-fired boiler, picking up the ends of the filaments from several cocoons at once and reeling them together into a single thread. ' +
     'The work needed all the daylight it could get, so the building is a long block of big, evenly spaced windows, the cocoons stored and dried on the floors above, with a tall brick chimney for the boiler. ' +
     'The dress is plain Neoclassical: pilasters, a pediment over the centre and a clock to keep the long shifts.',

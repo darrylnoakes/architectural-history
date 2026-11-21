@@ -17,7 +17,7 @@ export const shopBridge: BuildingDef = {
     { label: 'Shops on the bridge', note: 'The commune built and let the shops to pay for the bridge; their wide openings were closed at night with heavy wooden shutters.', at: [-2.3, 1.8, -8.0] },
     { label: 'Back rooms on brackets', note: 'Extra rooms hung out over the river on raking timber struts, added by shopkeepers short of space.', at: [5.6, 1.4, 7.5] },
     { label: 'Open centre', note: 'The middle of the bridge is left free of shops: a small square over the river with arches looking up and down stream.', at: [3.6, 2.4, 0] },
-    { label: 'Cutwater', note: 'The piers end in sharp points facing the current, carried up as buttresses under the shops.', at: [-6.3, -0.4, -4.4] },
+    { label: 'Cutwater', note: 'The piers end in sharp points facing the current, carried up as buttresses under the shops.', at: [-5.6, 0.0, -4.35] },
   ],
   build(b) {
     b.noCollide();
@@ -82,18 +82,23 @@ export const shopBridge: BuildingDef = {
           // small window in the loft
           b.window(0.5, 0.45, { at: [xIn, y0 + 2.65, zc], facing, frame: dress });
           // a back room hung out over the water on raking struts
-          if (b.chance(0.55)) {
+          const out = k > 0 ? '+x' : '-x';
+          if (Math.abs(zc) < 11.4 && b.chance(0.6)) {
             const ow = b.range(0.9, 1.4);
             const ol = cell - b.range(0.1, 0.5);
             const oy = y0 + 0.4;
             const xo = k * (W / 2 + ow / 2);
             b.box(ow, b.range(2.2, 2.7), ol, tint(col, b.range(-0.06, 0.03)), { at: [xo, oy, zc] });
             b.shed(ow + 0.2, ol + 0.1, 0.35, P.coppi, { at: [xo, oy + 2.75, zc], high: k > 0 ? '-x' : '+x' });
-            b.window(0.6, 0.8, { at: [k * (W / 2 + ow), oy + 1.1, zc], facing: k > 0 ? '+x' : '-x', frame: P.oak });
+            b.window(0.6, 0.8, { at: [k * (W / 2 + ow), oy + 1.1, zc], facing: out, frame: P.oak });
             for (const dz of [-ol / 2 + 0.2, ol / 2 - 0.2]) {
               bar(b, [k * (W / 2), oy - 1.6, zc + dz], [k * (W / 2 + ow - 0.1), oy, zc + dz], [0.14, 0.14], P.oakDark);
             }
             b.box(ow + 0.04, 0.16, ol, P.oakDark, { at: [xo, oy - 0.16, zc] });
+          } else {
+            // a shuttered window looking out over the river
+            b.window(0.6, 0.9, { at: [k * (W / 2), y0 + 1.4, zc], facing: out, frame: dress });
+            b.sym((t) => b.panel(0.3, 0.9, P.doorGreen, { at: [k * (W / 2), y0 + 1.4, zc + t * 0.48], facing: out }));
           }
         }
         // one long low roof over the row, falling toward the river

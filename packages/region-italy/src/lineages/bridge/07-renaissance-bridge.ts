@@ -14,10 +14,10 @@ export const renaissanceBridge: BuildingDef = {
   modelledOn: 'The Ponte Santa Trinita, Florence (Bartolomeo Ammannati, 1567 to 1569)',
   lookFor: [
     { label: 'Flattened arch', note: 'The arch starts almost upright at the pier and then runs very flat: far wider and lower than a Roman half-circle.', at: [3.9, -0.4, 0] },
-    { label: 'Cartouche', note: 'A carved shield on the keystone hides the point where the two halves of the curve meet.', at: [3.9, 0.3, 0] },
-    { label: 'Pointed cutwater', note: 'Long, sharp cutwaters capped with sloping stone throw the current aside; the piers are slimmer than Roman ones.', at: [-5.2, -0.6, -4.3] },
-    { label: 'Statues of the Seasons', note: 'Four marble figures, one on each corner of the parapets, added in 1608: Spring, Summer, Autumn and Winter.', at: [2.8, 3.2, 16.3] },
-    { label: 'Cornice', note: 'A single moulded band runs the length of the bridge, drawing one clean, almost level line over the river.', at: [3.9, 0.9, -8.0] },
+    { label: 'Cartouche', note: 'A carved shield on the keystone hides the point where the two halves of the curve meet.', at: [3.95, 0.5, 0] },
+    { label: 'Pointed cutwater', note: 'Long, sharp cutwaters capped with sloping stone throw the current aside; the piers are slimmer than Roman ones.', at: [-4.8, -0.5, -4.4] },
+    { label: 'Statues of the Seasons', note: 'Four marble figures, one on each corner of the parapets, added in 1608: Spring, Summer, Autumn and Winter.', at: [3.55, 3.0, 16.3] },
+    { label: 'Cornice', note: 'A single moulded band runs the length of the bridge, drawing one clean, almost level line over the river.', at: [3.95, 0.65, -8.0] },
   ],
   influences: ['renaissance-birth'],
   build(b) {

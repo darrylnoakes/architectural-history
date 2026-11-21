@@ -1,8 +1,8 @@
 import { P, tint, type BuildingDef, type Builder, type Vec3 } from '@ah/kit';
 import { BANK, WATER, lin, water } from './shared';
 
-/** A Villanovan biconical urn: two cones meeting at a sharp shoulder, with a flared neck. */
-function biconical(b: Builder, at: Vec3, h: number, color: number) {
+/** A Villanovan double-cone urn: two cones meeting at a sharp shoulder, with a flared neck. */
+function doubleCone(b: Builder, at: Vec3, h: number, color: number) {
   b.lathe(
     [
       [h * 0.14, 0],
@@ -46,7 +46,7 @@ export const pottersYard: BuildingDef = {
     { label: 'Updraught kiln', note: 'Fire is lit in the stoke-hole below; the heat rises through a pierced clay floor to the pots stacked above.', at: [6.0, 2.0, -1.5] },
     { label: 'Clay pit', note: 'River clay was dug here, then soaked and trodden in the shallow tank beside it to clean it of stones.', at: [10.5, 0.8, -7.5] },
     { label: 'Bronze-casting hearth', note: 'A charcoal fire in a clay ring, blown hot by leather bag bellows through a clay nozzle, melts bronze in a crucible.', at: [-1.5, 1.0, 6.4] },
-    { label: 'Biconical urns', note: 'The double-cone jar with a small bowl as a lid is the hallmark of the Villanovan culture; many were made to hold the ashes of the dead.', at: [-9.0, 2.0, 0.2] },
+    { label: 'Double-cone urns', note: 'Jars shaped like two cones meeting at a sharp shoulder, capped with a bowl, are the hallmark of the Villanovan culture; many were made to hold the ashes of the dead.', at: [-9.0, 2.0, 0.2] },
     { label: 'Thatched work shelter', note: 'An open-sided shed on posts where pots were shaped and left to dry out of the sun and rain.', at: [-8, 4.6, 2.5] },
   ],
   influences: [],
@@ -89,9 +89,9 @@ export const pottersYard: BuildingDef = {
     for (const x of [rx - 1.6, rx + 1.6]) b.box(0.1, 1.5, 0.1, post, { at: [x, 0, rz] });
     for (const y of [0.55, 1.15]) b.box(3.4, 0.06, 0.55, P.oak, { at: [rx, y, rz] });
     for (const x of lin(5, rx - 1.3, rx + 1.3)) pot(b, [x, 0.61, rz], b.range(0.3, 0.4), clay);
-    for (const x of lin(4, rx - 1.2, rx + 1.2)) biconical(b, [x, 1.21, rz], 0.45, impasto);
+    for (const x of lin(4, rx - 1.2, rx + 1.2)) doubleCone(b, [x, 1.21, rz], 0.45, impasto);
     // finished urns set out on the ground by the shelter
-    for (let i = 0; i < 4; i++) biconical(b, [sx - 2.8 + i * 0.6, 0.05, sz + SD / 2 + 0.6], 0.55, impasto);
+    for (let i = 0; i < 4; i++) doubleCone(b, [sx - 2.8 + i * 0.6, 0.05, sz + SD / 2 + 0.6], 0.55, impasto);
     for (let i = 0; i < 3; i++) b.dome(0.2, impasto, { at: [sx - 2.8 + i * 0.6, 0.6, sz + SD / 2 + 0.6], squash: 0.5, segs: 8 });
 
     // ---- the updraught kiln: a round clay chamber over a firebox, with a stoking pit in front
