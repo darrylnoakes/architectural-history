@@ -28,15 +28,15 @@ export const romanBaths: BuildingDef = {
   date: 'c. AD 110',
   summary:
     'Going to the baths was the daily habit that made a Briton Roman. Bathers undressed, exercised in the colonnaded yard, then moved ' +
-    'through a row of ever hotter rooms: the cold frigidarium, the warm tepidarium and the steaming caldarium. ' +
+    'along a row of rooms that grew hotter, from the warm tepidarium to the steaming caldarium, before a plunge in the cold frigidarium. ' +
     'The hot rooms are vaulted in mortared stone and tile because a timber roof would rot in the steam or catch fire from the furnace, ' +
     'whose heat ran under raised floors and up flues in the walls. Nothing on this plot had been built with mortar, fired tile or window glass before.',
   materials: ['limestone rubble', 'red tile courses', 'Roman roof tile', 'mortar and concrete', 'window glass'],
   lookFor: [
     { label: 'Barrel vaults', note: 'Half-round masonry roofs over the hot rooms, fireproof and able to shrug off the steam.', at: [6.25, 10.8, -8] },
-    { label: 'Apse', note: 'The semicircular end of the caldarium, which held a basin of cool water for splashing the face.', at: [14.3, 4.2, -8] },
-    { label: 'Thermal window', note: 'A semicircular window split by two mullions, filling the end of a vault. Palladio revived it 1,400 years later.', at: [6.25, 8.4, -3.3] },
-    { label: 'Tile bonding courses', note: 'Bands of flat red tile run through the stone walls to level and tie them, a sure sign of Roman work.', at: [-15.1, 2.3, -4.6] },
+    { label: 'Apse', note: 'The semicircular end of the caldarium, which often held a basin of cool water for splashing the face.', at: [14.3, 4.2, -8] },
+    { label: 'Thermal window', note: 'A semicircular window split by two mullions, filling the end of a vault. Palladio revived it in the 16th century.', at: [6.25, 8.4, -3.3] },
+    { label: 'Tile bonding courses', note: 'Bands of flat red tile run through the stone walls to level and tie them, a hallmark of Roman work.', at: [-15.1, 2.3, -4.6] },
     { label: 'Palaestra', note: 'The exercise yard, ringed by a covered colonnade of Tuscan columns, for ball games, wrestling and gossip.', at: [0, 1.2, 4] },
   ],
   influences: ['roman-conquest'],

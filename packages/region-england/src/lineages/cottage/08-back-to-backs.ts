@@ -45,17 +45,17 @@ export const backToBacks: BuildingDef = {
   summary:
     'Factory towns grew faster than anyone could house their workers, and speculative builders answered with the back-to-back: two rows of houses built against a shared spine wall, one row facing the street and the other a court behind. ' +
     'Each family had one room on each floor, and the whole court shared a water pump, a wash-house and a block of privies. ' +
-    'Cheap mass-made brick and Welsh slate, carried by canal and railway, replace local stone and thatch for good. ' +
+    'Cheap mass-made brick and Welsh slate, carried by canal and railway, replace local stone and stone slate for good. ' +
     'Reformers blamed such courts for cholera, and most towns banned new back-to-backs over the following decades, though Leeds went on building them until the 1930s.',
   materials: ['red brick', 'Welsh slate', 'pine sashes', 'cast iron'],
   lookFor: [
     { label: 'Back-to-back houses', note: 'Every street house shares its back wall with a court house behind, so neither has a back window or through draught.', at: [-6.2, 4.2, 6.4] },
     { label: 'Tunnel entry', note: 'A passage through the row, under the upstairs rooms, leading to the court behind.', at: [-2.4, 1.4, 6.4] },
-    { label: 'Shared privies', note: 'One block of earth closets for the whole court, emptied by night-soil men.', at: [-3.5, 2.4, -6.3] },
+    { label: 'Shared privies', note: 'One block of privies over a midden for the whole court, emptied by night-soil men.', at: [-3.5, 2.4, -6.3] },
     { label: 'Corner shop', note: 'The end house is a shop with a big glazed front and a painted fascia, selling food and coal by the pennyworth.', at: [8.8, 3.2, 6.5] },
     { label: 'Spine-wall chimneys', note: 'The stacks rise from the shared central wall, each serving four fireplaces: two front houses and two back.', at: [2.2, 8.8, 2.0] },
   ],
-  influences: ['industrial-export'],
+  influences: [],
   build(b) {
     const brick = b.pick([P.brickRed, tint(P.brickRed, -0.04), P.brickDark, tint(P.brickOrange, -0.06)]);
     const slate = b.pick([P.slate, P.slateBlue]);

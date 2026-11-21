@@ -29,16 +29,16 @@ export const marketPavilion: BuildingDef = {
   summary:
     'The precinct is gone, and the island returns to what it was for most of its history: an open market. ' +
     'A single sweeping roof of laminated timber shelters a glazed hall for the permanent traders and an open end where weekly stalls set up and spill out into the square. ' +
-    'Engineered timber and large sheets of glass are chosen for warmth and low carbon, and the roof is shaped to be noticed, a signature for the regenerated town centre.',
+    'Engineered timber is chosen for its warmth and low carbon, large sheets of glass for openness, and the roof is shaped to be noticed, a signature for the regenerated town centre.',
   materials: ['glued laminated timber (glulam)', 'structural glass', 'standing-seam zinc', 'granite setts'],
   lookFor: [
     { label: 'Sweeping roof', note: 'One continuous curved roof that rises toward the glazed hall: shelter and landmark in one gesture.', at: [5.0, 7.3, 7.1] },
-    { label: 'Glulam ribs', note: 'Thin layers of timber glued together into long curved beams, stronger and straighter than any single tree.', at: [-6.0, 3.5, 2.2] },
+    { label: 'Glulam ribs', note: 'Thin layers of timber glued together into long curved beams, longer and more reliable than any single tree.', at: [-6.0, 3.5, 2.2] },
     { label: 'Tree columns', note: 'Each post branches into two raking struts, shortening the span of the roof.', at: [-2.0, 2.6, 5.4] },
     { label: 'Glazed hall', note: 'A box of full-height glass with slim timber mullions, so the stalls inside stay on show to the square.', at: [5.0, 2.6, 5.6] },
     { label: 'Open stalls', note: 'Under the low end and out on the setts, weekly traders set up as they have on this spot for two thousand years.', at: [-7.6, 2.6, 7.6] },
   ],
-  influences: ['passivhaus'],
+  influences: [],
   build(b) {
     const larch = P.larch;
     const glulam = tint(P.pine, 0.02);

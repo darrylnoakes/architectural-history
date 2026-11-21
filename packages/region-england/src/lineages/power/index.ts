@@ -1,4 +1,5 @@
 import type { Lineage } from '@ah/kit';
+import { romanEnd } from '../../ends';
 import { chieftainsEnclosure } from './01-chieftains-enclosure';
 import { forumBasilica } from './02-forum-basilica';
 import { saxonGreatHall } from './03-saxon-great-hall';
@@ -18,8 +19,8 @@ const lineage: Lineage = {
   plotSize: [44, 44],
   stages: [
     { from: -500, def: chieftainsEnclosure },
-    { from: 75, def: forumBasilica },
-    { from: 470, def: saxonGreatHall },
+    { from: 75, end: romanEnd, def: forumBasilica },
+    { from: 600, def: saxonGreatHall },
     { from: 1068, def: motteAndBailey },
     { from: 1130, def: stoneKeepDef },
     { from: 1290, def: edwardianCastle },

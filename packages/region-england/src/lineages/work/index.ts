@@ -1,4 +1,5 @@
 import type { Lineage } from '@ah/kit';
+import { romanEnd } from '../../ends';
 import { ironAgeSmithy } from './01-iron-age-smithy';
 import { romanGranaryAndKiln } from './02-roman-granary-and-kiln';
 import { saxonWatermill } from './03-saxon-watermill';
@@ -16,9 +17,10 @@ const lineage: Lineage = {
   name: 'The Works',
   role: 'The riverside plot where the town makes things: from a smith’s hearth and a waterwheel to the steam mill, the factory and the maker space.',
   plotSize: [36, 22],
+  river: [-27, -11],
   stages: [
     { from: -500, def: ironAgeSmithy },
-    { from: 100, def: romanGranaryAndKiln },
+    { from: 100, end: romanEnd, def: romanGranaryAndKiln },
     { from: 800, def: saxonWatermill },
     { from: 1090, def: normanWatermill },
     { from: 1320, def: titheBarn },

@@ -34,13 +34,13 @@ export const roadhousePub: BuildingDef = {
     'Between the wars the brewers, pressed by magistrates and temperance campaigners, rebuilt pubs as large, respectable "improved" houses with restaurants, family rooms and car parks for the new motorist. ' +
     'They dressed them in a homely Tudor costume: brick below, black-and-white half-timbering applied to the upper walls and gables, leaded casements and clusters of tall chimneys. ' +
     'The timbering is decoration, not structure: behind it the walls are solid brick.',
-  materials: ['red brick', 'applied oak-stained timber', 'roughcast render', 'clay plain tiles', 'leaded casements'],
+  materials: ['red brick', 'applied timber stained black', 'roughcast render', 'clay plain tiles', 'leaded casements'],
   lookFor: [
     { label: 'Mock half-timbering', note: 'Thin boards fixed over brick or render to look like a medieval frame. Compare the real frame of the galleried inn.', at: [-8, 5.2, WZ1 + 0.5] },
     { label: 'Cross-wing gables', note: 'Two projecting gabled wings either side of the entrance, borrowed from the manor houses of the 1500s.', at: [8, 7.6, WZ1 + 0.4] },
-    { label: 'Clustered chimneys', note: 'Tall octagonal brick shafts in groups, a Tudor fashion. Most serve fireplaces, a few are just for show.', at: [-2.2, 12.2, -6.5] },
+    { label: 'Clustered chimneys', note: 'Tall octagonal brick shafts in groups, a Tudor fashion. Some served fireplaces; others were only for show.', at: [-2.2, 12.2, -6.5] },
     { label: 'Leaded casements', note: 'Side-hung windows with small panes in a lead grid, deliberately old-fashioned in an age of plate glass.', at: [-3.6, 1.6, MZ1 + 0.3] },
-    { label: 'Car park', note: 'The pub was built for motorists: a forecourt of tarmac where the inn yard used to be.', at: [3, 0.4, 5] },
+    { label: 'Car park', note: 'The pub was built for motorists, set back behind a tarmac forecourt where the old pub once stood at the street edge.', at: [3, 0.4, 5] },
   ],
   build(b) {
     const brick = b.pick([P.brickRed, P.brickDark, tint(P.brickRed, -0.04)]);

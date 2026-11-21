@@ -9,24 +9,24 @@ export const romanTimberBridge: BuildingDef = {
   id: 'roman-timber-bridge',
   name: 'Roman bridge',
   style: 'Roman military engineering',
-  date: 'c. AD 60',
+  date: 'c. AD 120',
   summary:
-    'The army drove a metalled road through the ford and bridged it. Squared stone piers with pointed cutwaters stand in the stream, and on them timber trestles carry beams and a plank deck, the usual Roman way of bridging a British river. ' +
+    'The army drove a metalled road through the ford and bridged it. Squared stone piers with pointed cutwaters stand in the stream, and on them timber trestles carry beams and a plank deck, a common Roman way of bridging a large British river. ' +
     'Stone below the flood line and timber above was quick to build and easy to repair; bridges of this kind stood at Chesters on Hadrian’s Wall and at Piercebridge on the Tees. ' +
     'For the first time the crossing no longer depends on the state of the river.',
   materials: ['sandstone ashlar', 'oak', 'iron cramps'],
   lookFor: [
     { label: 'Cutwater', note: 'The pointed upstream end of each pier splits the current and sheds floating debris instead of catching it.', at: [-3.6, -0.6, 2.9] },
     { label: 'Ashlar pier', note: 'Squared, closely fitted blocks; at Chesters they were tied together with iron cramps set in lead.', at: [2.6, -0.2, -2.9] },
-    { label: 'Timber trestle', note: 'A braced frame of posts on top of each pier, with raking struts reaching out to shorten the span of the beams.', at: [2.3, 0.7, 2.9] },
+    { label: 'Timber trestle', note: 'A braced frame of posts on top of each pier, with raking struts reaching out to shorten the span of the beams.', at: [2.3, 0.2, 2.9] },
     { label: 'Stone abutment', note: 'A solid block of masonry holds each bank and takes the end of the deck.', at: [2.7, -0.4, -9.6] },
-    { label: 'Plank deck', note: 'Oak planks laid across lengthwise beams, the stringers; worn planks could be replaced one at a time.', at: [0, 1.9, -6] },
+    { label: 'Plank deck', note: 'Oak planks laid across lengthwise beams, the stringers; worn planks could be replaced one at a time.', at: [0, 1.0, -6] },
   ],
   influences: ['roman-conquest'],
   build(b) {
     b.noCollide();
     const W = 4.6; // deck width
-    const crown = 2.1;
+    const crown = 0.9; // Roman decks ran nearly level
     const f = hump(crown);
     b.deck(W, 26, crown, { yEnds: 0 });
     const stone = b.pick([P.sandstone, tint(P.sandstone, 0.04), P.limestoneWarm]);

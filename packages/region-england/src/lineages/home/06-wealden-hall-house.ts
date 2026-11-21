@@ -30,7 +30,7 @@ export const wealdenHallHouse: BuildingDef = {
     },
     {
       label: 'Hipped roof with gablets',
-      note: 'One roof covers the whole house; little triangular gablets at the top of each hip let out the smoke from the hall hearth.',
+      note: 'One roof covers the whole house; little triangular gablets at the top of each hip probably helped let out the smoke of the hall hearth. Many Wealden roofs were thatched at first.',
       at: [3.4, 8.9, 0.3],
     },
     {

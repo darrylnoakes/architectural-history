@@ -29,8 +29,8 @@ export const gothicRevivalTownHall: BuildingDef = {
   date: '1874',
   summary:
     'The town is now a borough with an elected council, rich on railways and trade, and it replaces the old shire hall with a town hall in the style of Pugin and Ruskin. ' +
-    'Gothic, the style of the medieval free towns, is chosen as an expression of civic pride and Christian virtue against the pagan classical. ' +
-    'Machine-made brick in red, blue and yellow is striped with stone, the ground floor opens in a pointed arcade, the roofs are steep and crested, and a clock tower taller than the church spire marks the seat of local government.',
+    'Gothic, seen as the style of the medieval free towns, is chosen as an expression of civic pride and Christian virtue against the pagan classical. ' +
+    'Machine-made brick in red, blue and yellow is striped with stone, the ground floor opens in a pointed arcade, the roofs are steep and crested, and a clock tower taller than the church tower marks the seat of local government.',
   materials: ['red, blue and yellow brick', 'sandstone dressings', 'Welsh slate', 'cast iron cresting'],
   lookFor: [
     { label: 'Clock tower', note: 'A tall tower with four clock faces, an open belfry and a slate spire: the town\'s new landmark and timekeeper.', at: [TOWER.x - TOWER.w / 2 - 0.4, 30, TOWER.z + 2] },

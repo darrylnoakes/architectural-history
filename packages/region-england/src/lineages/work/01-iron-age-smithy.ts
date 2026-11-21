@@ -23,12 +23,12 @@ export const ironAgeSmithy: BuildingDef = {
   style: 'Iron Age',
   date: 'c. 500 BC',
   summary:
-    'Before there were factories, making things happened in the farmyard. A smith smelted iron from bog ore in a small clay bowl furnace, ' +
+    'Before there were factories, making things happened in the farmyard. A smith smelted iron from bog ore or ironstone in a small clay furnace, ' +
     'then hammered the spongy bloom into tools at a hearth under an open-sided thatched shelter, left open so the smoke could escape. ' +
     'Pots were fired in a clamp, a heap of fuel and turf over the stacked pots, and cloth was woven on an upright loom held taut by clay weights.',
   materials: ['oak posts', 'wattle and daub', 'straw thatch', 'clay'],
   lookFor: [
-    { label: 'Bowl furnace', note: 'A low clay chimney over a bowl in the ground. Charcoal and ore went in the top; bellows blew air in at the base.', at: [-11.3, 1.5, 1] },
+    { label: 'Smelting furnace', note: 'A low clay shaft over a hollow in the ground. Charcoal and ore went in the top; bellows blew air in at the base.', at: [-11.3, 1.5, 1] },
     { label: 'Open-sided shelter', note: 'Just posts and a steep thatched roof, so the smith had light and the smoke and sparks could get out.', at: [-3.0, 2.9, 3.5] },
     { label: 'Clamp kiln', note: 'Pots stacked under fuel and turves and fired in one go. Afterwards the heap was pulled apart, so nothing of it survives but ash.', at: [3.2, 1.3, 7] },
     { label: 'Warp-weighted loom', note: 'The threads hang from a beam and are pulled straight by a row of clay loom weights, which archaeologists find by the dozen.', at: [9, 2.3, 5.1] },

@@ -19,7 +19,7 @@ export const interwarSemi: BuildingDef = {
   style: 'Interwar suburban (Tudorbethan)',
   date: 'c. 1934',
   summary:
-    'Cheap mortgages, low interest rates and new building societies let clerks and shopworkers buy a house for the first time, and ' +
+    'Cheap mortgages, low interest rates and fast-growing building societies let clerks and shopworkers buy a house for the first time, and ' +
     'speculative builders put up semi-detached pairs by the hundred thousand. Each half has a two-storey bow window, a front garden ' +
     'and a back garden, and the look borrows from Tudor cottages, with black-and-white timbering in the gable, because buyers wanted ' +
     'a home that looked old and English, not modern. The terrace was cleared away; the family now owns a car, and the car has a garage.',

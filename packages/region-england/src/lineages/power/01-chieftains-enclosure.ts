@@ -44,16 +44,16 @@ export const chieftainsEnclosure: BuildingDef = {
   id: 'chieftains-enclosure',
   name: "Chieftain's enclosure",
   style: 'Iron Age',
-  date: 'c. 300 BC',
+  date: 'c. 500 BC to AD 75',
   summary:
     'Before towns, power meant a defended farmstead. A chalk-and-earth bank thrown up from a ditch outside it, topped by an oak palisade, ' +
     'rings the household of the leading family, entered through a single timber gate. Inside stands a great roundhouse built of wattle, ' +
-    'daub and thatch, the hall where the chief\'s household lived and feasted, and raised four-post granaries holding the harvest that was the real measure of wealth.',
+    'daub and thatch, the hall where the chief\'s household lived and feasted, and raised four-post granaries holding the harvest on which the household\'s wealth depended.',
   materials: ['earth and chalk', 'oak', 'hazel wattle and daub', 'straw thatch'],
   lookFor: [
     { label: 'Bank and ditch', note: 'Soil dug from the outer ditch was heaped into the bank, so an attacker faced a double climb.', at: [-15.5, 1.8, 9.5] },
     { label: 'Palisade', note: 'A fence of split oak stakes set along the crest of the bank, pointed at the top.', at: [12.2, 4.6, -12.2] },
-    { label: 'Inturned gateway', note: 'The bank ends turn inwards beside the gate, making a corridor that could be defended from above, with a fighting platform over the gate.', at: [0, 6.2, 17.2] },
+    { label: 'Inturned gateway', note: 'The bank ends turn inwards beside the gate, making a corridor that could be defended from above; the fighting platform over the gate follows modern reconstructions.', at: [0, 6.2, 17.2] },
     { label: 'Great roundhouse', note: 'A circular wattle wall under a steep cone of thatch; there is no chimney, and smoke seeps out through the roof.', at: [-2, 7.5, -0.5] },
     { label: 'Four-post granary', note: 'A small store lifted on four posts so air flows underneath and vermin cannot climb in.', at: [10.5, 3.2, -4] },
   ],

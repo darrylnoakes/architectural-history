@@ -1,4 +1,5 @@
 import type { Lineage } from '@ah/kit';
+import { romanEnd } from '../../ends';
 import { feastingHouse } from './01-feasting-house';
 import { romanMansio } from './02-roman-mansio';
 import { saxonAlehouse } from './03-saxon-alehouse';
@@ -17,8 +18,8 @@ const lineage: Lineage = {
   plotSize: [22, 22],
   stages: [
     { from: -500, def: feastingHouse },
-    { from: 70, def: romanMansio },
-    { from: 450, def: saxonAlehouse },
+    { from: 70, end: romanEnd, def: romanMansio },
+    { from: 700, def: saxonAlehouse },
     { from: 1100, def: normanAlehouse },
     { from: 1400, def: galleriedInn },
     { from: 1735, def: georgianCoachingInn },

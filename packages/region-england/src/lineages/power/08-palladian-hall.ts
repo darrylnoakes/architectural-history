@@ -38,15 +38,15 @@ export const palladianHall: BuildingDef = {
   date: 'c. 1735',
   summary:
     'The manor has been sold and pulled down, and the county gentry build a shire hall on its site for the assizes, the quarter sessions and the assembly balls. ' +
-    'It follows the rules of Andrea Palladio as taught by Lord Burlington: a rusticated ground storey as a base, a giant portico with a pediment rising through the two main floors, windows set out by strict proportion and a low hipped roof hidden behind the cornice. ' +
+    'It follows the rules of Andrea Palladio as taught by Lord Burlington: a rusticated ground storey as a base, a giant portico with a pediment rising through the two main floors, windows set out by strict proportion and a low hipped roof above a deep cornice. ' +
     'Where the Elizabethans piled up gables and chimneys, everything here is symmetrical, measured and calm, and power is expressed as law and order rather than lineage.',
-  materials: ['Bath stone ashlar', 'Welsh slate', 'painted sash windows', 'lead cupola'],
+  materials: ['Bath stone ashlar', 'slate', 'painted sash windows', 'lead cupola'],
   lookFor: [
     { label: 'Giant portico and pediment', note: 'Ionic columns two storeys high carry a triangular pediment, the temple front that signals a public building.', at: [0, 17.6, 10.4] },
     { label: 'Rusticated base', note: 'The ground storey is cut into deep horizontal bands so it looks heavy and strong, a plinth for the floors above.', at: [-9, 2.4, 7.2] },
-    { label: 'Venetian window', note: 'A tall arched window flanked by two lower square ones, a Palladian device used on the end walls.', at: [13.2, 8, -1] },
+    { label: 'Venetian window', note: 'A tall arched window flanked by two lower flat-topped ones, a Palladian device used on the end walls.', at: [13.2, 8, -1] },
     { label: 'Hipped roof and cupola', note: 'A low roof sloping on all four sides, crowned by a lantern with a clock: the town looks to it for the time.', at: [0, 21.6, -1] },
-    { label: 'Pedimented windows', note: 'The tall first-floor windows of the courtroom and assembly room wear small pediments, alternately triangular and curved.', at: [-9, 9.6, 7.2] },
+    { label: 'Pedimented windows', note: 'The tall first-floor windows of the courtroom and assembly room wear small pediments, alternately triangular and segmental (curved).', at: [-9, 9.6, 7.2] },
   ],
   influences: ['palladianism'],
   build(b) {

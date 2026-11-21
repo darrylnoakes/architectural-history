@@ -10,7 +10,7 @@ export const romanStripHouse: BuildingDef = {
     'Within a generation of the conquest the new towns were lined with strip houses: long, narrow buildings set end-on to the street ' +
     'so that as many traders as possible had a frontage. The front room was an open shop or workshop, closed at night with ' +
     'shutters, and the family lived in the rooms behind. The walls are still timber and clay, but they stand on stone footings, ' +
-    'the corners are square and the roof is of fired clay tiles: Roman ways of building that had not been seen in Britain before.',
+    'the corners are square and the roof is of fired clay tiles: Roman ways of building that were new to most of Britain.',
   materials: ['timber frame', 'wattle and daub, plastered and limewashed', 'flint and mortar footings', 'fired clay tegulae and imbrices'],
   lookFor: [
     {
@@ -30,7 +30,7 @@ export const romanStripHouse: BuildingDef = {
     },
     {
       label: 'Portico',
-      note: 'A covered walk along the street front, supported on timber posts, kept shoppers dry and joined the frontages into one arcade.',
+      note: 'A covered walk along the street front, supported on timber posts, kept shoppers dry and joined the frontages into one long colonnade.',
       at: [2.9, 2.6, 7.5],
     },
     {

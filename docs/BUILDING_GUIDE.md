@@ -42,7 +42,8 @@ Useful helpers: `b.sym((side) => …)` for mirrored pairs, `b.group({ at, rotY }
 moved or rotated sub-assembly, `spread(n, a, b)` and `linspace(n, a, b)` for evenly spaced items.
 For shapes the primitives do not cover, `b.extrude(points, depth, …)` (any silhouette) and
 `b.lathe(profile, …)` (anything turned) go a long way, and `b.add(threeGeometry, colour)` takes
-any THREE geometry. Write local helper functions freely inside your lineage folder.
+any THREE geometry (region packages depend on `three`, so `import * as THREE from 'three'` works).
+Write local helper functions freely inside your lineage folder.
 
 ## Accuracy
 
@@ -72,7 +73,7 @@ packages/region-england/src/lineages/<lineage>/
 
 ## Preview loop
 
-A dev server is already running at http://127.0.0.1:5173 (do not start, stop or restart it).
+Start the dev server with `pnpm dev` (http://127.0.0.1:5173).
 
 ```
 node tools/shot.mjs <lineage> <buildingId> [views]   # default views: iso,front
@@ -94,5 +95,16 @@ PNGs land in `shots/<lineage>/`. **Open them and look.** Check against this list
 Iterate until each building passes, then shoot the `row` and check the lineage tells its story:
 the sequence should show clear, legible change from stage to stage.
 
-Type-check with `pnpm -C packages/region-england typecheck` (ignore errors in other lineage
-folders; other people are working there).
+Type-check with `pnpm typecheck`.
+
+The dev server reloads the gallery whenever any source file is saved, which spoils a screenshot in
+progress. If several people or agents are editing at once, shoot against a static build instead:
+`pnpm build`, then `pnpm --filter @ah/town preview --port 4173`, then
+`GALLERY_URL=http://127.0.0.1:4173 node tools/shot.mjs …`.
+
+## Timing
+
+A lineage's `index.ts` lists its stages. Besides `from`, a stage can say when its type stopped
+being built (`builtUntil`) and what became of it if nothing replaced it in time (`end`: renewed,
+ruined or cleared). Ruins need no modelling: any building can be shown as its own ruin. The rules
+are set out under "Timing rules" in `docs/LINEAGES.md`.

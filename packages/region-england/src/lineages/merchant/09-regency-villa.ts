@@ -25,14 +25,14 @@ export const regencyVilla: BuildingDef = {
   style: 'Regency',
   date: 'c. 1815',
   summary:
-    'The richest family no longer wants a house in a row but a detached villa in its own garden. ' +
+    'The richest family now wants a villa: a compact house set in its own garden, as if in the country. ' +
     'Brick walls disappear under smooth stucco scored to look like stone, and Welsh slate, cheap to ship by sea and canal, allows a low roof with deep overhanging eaves. ' +
     'Full-height bow windows and cast-iron balconies bring in light and views, and the porch uses the stocky Greek Doric order, fashionable since the buildings of Athens were measured and published.',
   materials: ['stucco over brick', 'Welsh slate', 'cast iron', 'painted timber sashes'],
   lookFor: [
     { label: 'Bow window', note: 'A full-height curved bay, giving the rooms behind it light and views on three sides.', at: [-4.1, 2.6, 12.0] },
     { label: 'Iron balcony', note: 'Light cast-iron railings, made cheaply in quantity by the new ironworks.', at: [4.1, 5.2, 12.2] },
-    { label: 'Greek Doric porch', note: 'Thick fluted columns with no base and a plain cushion capital, copied from Athenian temples.', at: [0.9, 2.2, 12.2] },
+    { label: 'Greek Doric porch', note: 'Stout columns with no base and a plain, cushion-like capital under a square slab, copied from Athenian temples.', at: [0.9, 2.2, 12.2] },
     { label: 'Shallow roof and deep eaves', note: 'Slate can be laid at a low pitch, so the roof nearly disappears behind wide overhanging eaves.', at: [0, 8.4, 11.6] },
     { label: 'Stucco', note: 'Lime render over brick, lined out on the ground floor to imitate courses of stone.', at: [-1.7, 1.4, 10.6] },
   ],
@@ -137,7 +137,7 @@ export const regencyVilla: BuildingDef = {
       b.box(0.55, 1.5, 0.55, trim, { at: [s * 1.6, 0, 11.8] });
       b.sphere(0.25, trim, { at: [s * 1.6, 1.75, 11.8], segs: 8 });
     });
-    const tx = b.variant === 0 ? 5.5 : b.pick([-5.5, 5.5]);
+    const tx = 5.5;
     b.tree(10, { at: [tx, 0, -7.5], kind: 'conifer', color: P.leafDark });
     b.tree(6, { at: [-tx, 0, -9], kind: 'round' });
     b.box(18, 0.04, 9, P.grass, { at: [0, 0, -6.8] });

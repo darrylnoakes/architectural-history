@@ -38,11 +38,11 @@ export const concertHall: BuildingDef = {
     'Three halls, each a separate box built for its own acoustics, sit under one curving shell of stainless steel and glass that was designed and cut by computer. ' +
     'Between the halls and the glass is a public concourse with cafés, open all day. After 2,500 years the plot is once again a place simply to gather.',
   materials: ['stainless steel panels', 'glass', 'steel arches', 'concrete hall boxes'],
-  modelledOn: 'Sage Gateshead (Foster + Partners, 2004), renamed The Glasshouse International Centre for Music in 2024',
+  modelledOn: 'Sage Gateshead (Foster + Partners, 2004), renamed The Glasshouse International Centre for Music in 2023',
   lookFor: [
     { label: 'Curved shell', note: 'A single roof of stainless-steel panels, curved in two directions, wrapping all three halls like a blanket.', at: [-6.2, 18.4, -1] },
     { label: 'Three lobes', note: 'Each hump of the shell covers one hall, so you can count the halls from outside.', at: [12, 12.6, -2.6] },
-    { label: 'Stainless-steel panels', note: 'The shell is clad in some 3,000 stainless-steel panels, with glass only where light is wanted. The seams run in long curves.', at: [0.5, 13.2, 5.5] },
+    { label: 'Stainless-steel panels', note: 'Stainless steel covers the shell, with glass only where light is wanted; at Gateshead there are some 3,000 steel panels.', at: [0.5, 13.2, 5.5] },
     { label: 'Glazed concourse', note: 'A full-height glass wall under the shell\'s overhanging edge, so the foyers face the town and the river.', at: [-6.2, 3, 11.0] },
   ],
   influences: ['high-tech-export'],

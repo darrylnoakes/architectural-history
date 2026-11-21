@@ -7,8 +7,8 @@ export const normanWatermill: BuildingDef = {
   style: 'Norman',
   date: 'c. 1090',
   summary:
-    'Domesday Book counted about 6,000 watermills in England in 1086, nearly every one owned by the lord of the manor, who made his tenants grind their corn there and kept a share as toll. ' +
-    'Instead of the old horizontal wheel this mill has a vertical undershot wheel turned by a fast mill race, and wooden gears inside turn the drive through a right angle to the millstones. ' +
+    'Domesday Book recorded some 5,600 mills in England in 1086, most of them belonging to the lord of the manor, whose tenants were expected to grind their corn there and pay a share of it as toll. ' +
+    'This mill has a vertical undershot wheel, a type already used in Saxon England, turned by a fast mill race, and wooden gears inside turn the drive through a right angle to the millstones. ' +
     'It is larger and sturdier than its Saxon predecessor: a stone ground storey that stands up to damp and flood, with a timber-framed storey and thatched roof above.',
   materials: ['rubble stone', 'oak frame', 'wattle and daub', 'thatch'],
   lookFor: [
@@ -18,7 +18,7 @@ export const normanWatermill: BuildingDef = {
     { label: 'Stone ground storey', note: 'Masonry below, where water and heavy millstones are; lighter timber framing above, where the grain was stored.', at: [-6.6, 1.3, 1.3] },
     { label: 'Worn millstone', note: 'Millstones wore down and were replaced; old ones were left lying about the yard.', at: [3.6, 1.0, 2.2] },
   ],
-  influences: ['norman-romanesque'],
+  influences: [],
   build(b) {
     const stone = b.pick([P.rubble, P.ragstone, tint(P.rubble, 0.03)]);
     const thatch = b.pick([P.thatch, P.thatchOld]);

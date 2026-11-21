@@ -9,7 +9,7 @@ export const timberWorkspace: BuildingDef = {
   summary:
     'When the factory closed, the site was rebuilt for small firms, makers and designers who need a workshop rather than a production line. ' +
     'The frame is engineered timber: glued-laminated (glulam) posts and beams and cross-laminated timber panels, which lock up carbon and go up quickly from factory-made parts. ' +
-    'Its saw-tooth roof deliberately echoes the old north-light sheds, but now the sunny slopes carry solar panels, and after two hundred years of turning its back on the river ' +
+    'Its saw-tooth roof deliberately echoes the old north-light sheds, but now the sunny slopes carry solar panels, and after decades of turning its back on the river ' +
     'the building opens onto it with glass and a public terrace.',
   materials: ['glulam and cross-laminated timber', 'larch cladding', 'glass', 'solar panels', 'zinc'],
   lookFor: [

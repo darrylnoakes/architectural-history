@@ -31,7 +31,7 @@ export const victorianTerrace: BuildingDef = {
     },
     {
       label: 'Chimney pots',
-      note: 'Every room has a coal fire, so the stacks on the party walls carry a row of clay pots, one for each flue.',
+      note: 'Most rooms have a coal fire, so the stacks on the party walls carry a row of clay pots, one for each flue.',
       at: [2.3, 10.0, 1.6],
     },
     {
@@ -40,7 +40,7 @@ export const victorianTerrace: BuildingDef = {
       at: [0.35, 3.5, -4.6],
     },
   ],
-  influences: ['gothic-revival-export'],
+  influences: [],
   build(b) {
     const n = 3;
     const hw = 4.5; // house width

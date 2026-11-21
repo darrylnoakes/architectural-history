@@ -1,4 +1,5 @@
 import type { Lineage } from '@ah/kit';
+import { renewedBy, romanEnd } from '../../ends';
 import { smallRoundhouses } from './01-small-roundhouses';
 import { romanWorkersRow } from './02-roman-workers-row';
 import { saxonHuts } from './03-saxon-huts';
@@ -17,16 +18,16 @@ const lineage: Lineage = {
   role: 'Homes of labourers and the poor, from a huddle of roundhouses to a tower of flats.',
   plotSize: [26, 14],
   stages: [
-    { from: -500, def: smallRoundhouses },
-    { from: 100, def: romanWorkersRow },
-    { from: 450, def: saxonHuts },
-    { from: 1100, def: cobCottages },
-    { from: 1350, def: medievalCottageRow },
-    { from: 1600, def: tudorAlmshouses },
-    { from: 1770, def: weaversCottages },
-    { from: 1850, def: backToBacks },
-    { from: 1921, def: councilCottages },
-    { from: 1966, def: towerBlock },
+    { from: -500, builtUntil: 80, end: renewedBy(180), def: smallRoundhouses },
+    { from: 100, builtUntil: 300, end: romanEnd, def: romanWorkersRow },
+    { from: 450, builtUntil: 1000, end: renewedBy(1150), def: saxonHuts },
+    { from: 1100, builtUntil: 1350, end: renewedBy(1450), def: cobCottages },
+    { from: 1350, builtUntil: 1500, def: medievalCottageRow },
+    { from: 1600, builtUntil: 1700, def: tudorAlmshouses },
+    { from: 1770, builtUntil: 1830, def: weaversCottages },
+    { from: 1850, builtUntil: 1890, end: renewedBy(1970), def: backToBacks },
+    { from: 1921, builtUntil: 1939, def: councilCottages },
+    { from: 1966, builtUntil: 1972, def: towerBlock },
     { from: 2014, def: apartmentBlock },
   ],
 };

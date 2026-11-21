@@ -27,7 +27,7 @@ export const victorianMill: BuildingDef = {
     'and single-storey weaving sheds whose saw-tooth roofs light the looms from the north.',
   materials: ['red brick', 'sandstone dressings', 'cast iron', 'Welsh slate', 'glass'],
   lookFor: [
-    { label: 'Mill chimney', note: 'Up to 40 m tall to create a strong draught for the boilers and carry the smoke clear of the town.', at: [13.4, 28, -0.2] },
+    { label: 'Mill chimney', note: 'Often 40 m tall or more, to create a strong draught for the boilers and carry the smoke clear of the town.', at: [13.4, 28, -0.2] },
     { label: 'Engine house', note: 'Tall and narrow to hold the steam engine and its great flywheel; its round-arched windows mark it out.', at: [5.6, 8.0, -0.6] },
     { label: 'North-light sheds', note: 'Saw-tooth roofs with steep glazed faces turned north, giving even light without sun glare on the looms.', at: [11, 6.2, 9.5] },
     { label: 'Stair and water tower', note: 'The stairs and lavatories went in a tower outside the working floors; the tank on top held water against fire.', at: [-15.4, 22.5, 2.6] },

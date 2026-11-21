@@ -20,14 +20,14 @@ export const saxonMarket: BuildingDef = {
   id: 'saxon-market',
   name: 'Open market with preaching cross',
   style: 'Anglo-Saxon',
-  date: 'c. 900',
+  date: 'c. 750 to 900',
   summary:
     'After Rome the stone market fell to ruin and trade went back to the open ground, now under the eye of the Church and the king’s reeve. ' +
-    'A wooden cross stands on a stepped base where the priest preached and where bargains were sworn. ' +
+    'A tall cross stands on a stepped base, a place to preach from and perhaps to swear bargains. Only stone crosses survive from this period, but many were probably of timber, like this one. ' +
     'Stalls are trestle tables under hide awnings, put up on market day and carried away at night. Everything is timber and wicker again: no tile, no mortar.',
   materials: ['oak', 'hazel wattle', 'cowhide', 'rubble stone'],
   lookFor: [
-    { label: 'Preaching cross', note: 'A tall timber cross marking holy ground. Oaths and sales made at the cross were witnessed before God.', at: [0, 5.4, 0.3] },
+    { label: 'Preaching cross', note: 'A tall timber cross marking holy ground. An oath or a sale made at the cross was made in the sight of God.', at: [0, 5.4, 0.3] },
     { label: 'Stepped base', note: 'Rough stone steps that raise the cross above the crowd, and a place to stand and preach from.', at: [0, 0.8, 1.6] },
     { label: 'Trestle stall', note: 'A loose board on two trestles: a stall that could be set up at dawn and gone by dusk.', at: [-5.6, 1.4, 4.5] },
     { label: 'Hide awning', note: 'A cover of oiled leather on poles keeps rain off the goods.', at: [5.6, 2.5, 4.4] },

@@ -14,7 +14,7 @@ export const forumBasilica: BuildingDef = {
   style: 'Romano-British',
   date: 'c. AD 100',
   summary:
-    'Rome governed Britain through self-run tribal towns, and every one needed a forum: an open square for the market, ringed by colonnaded ranges of shops and offices, ' +
+    'Rome governed much of Britain through self-governing tribal capitals, and every one needed a forum: an open square for the market, ringed by colonnaded ranges of shops and offices, ' +
     'with a basilica across the back where the town council met and the magistrates heard cases. ' +
     'It is built of mortared stone with tile courses and roofed in fired clay tiles, all techniques new to Britain. Where the chief once ruled from a roundhouse behind a palisade, ' +
     'power now sits in a public building designed to a standard plan from the Mediterranean.',

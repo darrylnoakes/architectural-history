@@ -1,6 +1,6 @@
 import * as THREE from 'three';
-import { Builder, P, getMaterials, mulberry32, spread, tint, type Era, type Region } from '@ah/kit';
-import { KNOLL, SQUARE, STREET_STYLES, baseHeight, distToRoad, inSquare, riverZ } from './layout';
+import { Builder, P, getMaterials, mulberry32, tint, type Era, type Region } from '@ah/kit';
+import { KNOLL, SQUARE, baseHeight, distToRoad, inSquare, riverZ } from './layout';
 
 interface TreeInst {
   x: number;
@@ -335,8 +335,6 @@ export class Scenery {
       }
       this.addProp(finishStatic(b), 900, 1935);
     }
-    void spread;
-    void STREET_STYLES;
   }
 
   setEra(era: Era, year: number, instant: boolean) {

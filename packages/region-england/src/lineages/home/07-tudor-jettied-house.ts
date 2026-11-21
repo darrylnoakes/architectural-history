@@ -8,7 +8,7 @@ export const tudorJettiedHouse: BuildingDef = {
   date: 'c. 1560',
   summary:
     'A Tudor shopkeeper lived over his shop. The open hall has gone: a brick chimney stack gives the main rooms fireplaces, so the ' +
-    'house can have two full storeys and an attic, each jettied out over the street to gain a little floor space. Showing off ' +
+    'house can have two full storeys and an attic, each jettied out over the street for a little more floor space and for show. Showing off ' +
     'oak was the fashion, so the front is close studded, with the posts set as tight as they will go. Glass had become ' +
     'cheap enough for a tradesman, so the windows are glazed with small leaded panes instead of being shuttered.',
   materials: ['close-studded oak frame', 'lime plaster infill', 'red brick chimney', 'clay peg tiles', 'leaded glass'],
@@ -30,7 +30,7 @@ export const tudorJettiedHouse: BuildingDef = {
     },
     {
       label: 'Mullioned window with leaded lights',
-      note: 'Rows of lights divided by oak mullions and filled with small panes held in lead strips; the oriel projects to catch light.',
+      note: 'Rows of lights divided by oak mullions and transoms, each glazed with small diamond-shaped panes (quarries) held in lead; the oriel projects to catch light.',
       at: [0.9, 4.2, 5.2],
     },
     {

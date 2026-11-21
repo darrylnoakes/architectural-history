@@ -101,7 +101,7 @@ export const normanStoneHouse: BuildingDef = {
     b.panel(1.45, 2.5, dressed, { at: [W / 2, g + 0.4, zc - 1.25], facing: '+x', shape: 'round', depth: 0.04 });
 
     // ---- the yard: detached timber kitchen (fire risk) and boundary walls
-    const ks = b.variant === 0 ? -1 : b.pick([1, -1] as const);
+    const ks = -1;
     b.group({ at: [ks * 4.2, 0, -6.5] }, () => {
       b.box(5, 2.4, 4, P.daub);
       b.frame(5, 2.4, P.oak, { at: [0, 0, 2], facing: '+z', studs: 3, rails: 1 });

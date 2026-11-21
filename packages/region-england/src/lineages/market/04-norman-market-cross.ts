@@ -26,12 +26,12 @@ function booth(b: Builder, x: number, z: number, rotY: number, kinds: ('basket' 
 export const normanMarketCross: BuildingDef = {
   id: 'norman-market-cross',
   name: 'Market cross with booths and stocks',
-  style: 'Norman (Romanesque)',
-  date: 'c. 1200',
+  style: 'Medieval',
+  date: 'c. 1200 to 1350',
   summary:
-    'The lord of the manor has bought a royal charter for a weekly market, and a tall stone cross now marks the spot where tolls are paid and deals are struck. ' +
+    'The lord of the manor has paid the king for the right to hold a weekly market, and a tall stone cross now marks the spot where tolls are paid and deals are struck. ' +
     'In the market place only the cross is built of stone; the traders work from small thatched booths that have become permanent fixtures. ' +
-    'The stocks stand alongside as a warning: the market court punished short weights and bad ale on the spot.',
+    'The stocks and whipping post stand alongside as a warning: offenders were punished in public, in front of the whole market.',
   materials: ['limestone', 'oak', 'wattle and daub', 'straw thatch'],
   lookFor: [
     { label: 'Market cross', note: 'A tall tapering shaft on a socket stone, set on steps. It marked the market place and reminded traders to deal honestly.', at: [0, 7.6, 0.4] },
@@ -40,7 +40,6 @@ export const normanMarketCross: BuildingDef = {
     { label: 'Stocks', note: 'Wooden boards that locked an offender’s ankles in public view.', at: [5.4, 0.9, 2.4] },
     { label: 'Thatched booths', note: 'Small permanent stalls, the first step from a trestle on market day toward a real shop.', at: [-6.1, 3.2, -4.6] },
   ],
-  influences: ['norman-romanesque'],
   build(b) {
     const stone = b.pick([P.limestone, P.limestoneWarm, P.ragstone]);
     // cobbled square around the cross

@@ -40,7 +40,7 @@ export const gastropub: BuildingDef = {
   summary:
     'Thousands of pubs closed in the 2000s, undercut by supermarket beer and hit by the smoking ban. This one survived by changing trade: food first, and beer brewed on the premises, helped by the lower duty for small brewers introduced in 2002. ' +
     'The 1960s brick shell is kept, painted and reclad, and the car park has become a terrace. ' +
-    'A glazed dining room and a glass-fronted brewhouse put the cooking and the brewing on show, as the alewife’s copper was a thousand years before.',
+    'A glazed dining room and a glass-fronted brewhouse put the cooking and the brewing on show, as brewing was in the medieval alehouse.',
   materials: ['painted brick', 'larch cladding', 'powder-coated aluminium glazing', 'zinc', 'stainless steel'],
   lookFor: [
     { label: 'Brewing tanks', note: 'Stainless-steel fermenters behind glass. Brewing on the premises has returned after a century of beer from big breweries.', at: [3.0, 2.6, EZ1 + 0.3] },

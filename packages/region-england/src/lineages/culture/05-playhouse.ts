@@ -8,7 +8,7 @@ export const playhouse: BuildingDef = {
   date: '1599',
   summary:
     'Henry VIII dissolved the priory in 1539. Its lands were sold and its walls quarried for building stone until only an arch was left standing. ' +
-    'Sixty years later a company of players put up this open-air playhouse beside it: a twenty-sided ring of three-storey, timber-framed galleries ' +
+    'Sixty years later a company of players put up this open-air playhouse beside it: a ring of some twenty sides, with three storeys of timber-framed galleries ' +
     'round an open yard, roofed in thatch. Groundlings paid a penny to stand in the yard, more to sit in the galleries, and the stage ' +
     'thrust out among them. It is a building for paying crowds rather than for God or a lord, framed in oak by house carpenters.',
   materials: ['oak frame', 'lath and lime plaster', 'water-reed thatch', 'brick plinth', 'reused priory stone'],

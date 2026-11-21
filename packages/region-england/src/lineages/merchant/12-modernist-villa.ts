@@ -19,12 +19,12 @@ export const modernistVilla: BuildingDef = {
     'Walls are smooth white render over concrete or brick, the roof is flat and used as a sun terrace, and windows run in long horizontal ribbons in slim steel frames, even turning the corners. ' +
     'The curved glazed stair tower and tubular steel railings borrow from the ocean liner. There is no ornament at all: the look comes from white planes, glass and shadow.',
   materials: ['white render', 'reinforced concrete', 'steel windows', 'tubular steel'],
-  modelledOn: 'The type of High and Over, Amersham (Amyas Connell, 1929–31) and Joldwynds, Surrey (Oliver Hill, 1932–33)',
+  modelledOn: 'The type of High and Over, Amersham (Amyas Connell, 1929–31) and Joldwynds, Surrey (Oliver Hill, 1930–33)',
   lookFor: [
     { label: 'Flat roof terrace', note: 'With no pitched roof the top of the house becomes a sun deck, sheltered by a thin concrete canopy.', at: [1.5, 7.6, 3.5] },
     { label: 'Ribbon windows', note: 'Long horizontal bands of glass in thin steel frames, possible because the walls no longer carry the floors at every point.', at: [2.0, 4.6, 9.2] },
     { label: 'Curved stair tower', note: 'A drum of glass and white render wrapping the staircase, rising to the roof terrace.', at: [-4.2, 6.6, 11.2] },
-    { label: 'Corner window', note: 'Glass carried round the corner with no post, a favourite trick of the new style.', at: [-8.0, 4.6, 9.2] },
+    { label: 'Corner window', note: 'The first-floor window band carries on round the corner on to the side wall, a favourite trick of the new style.', at: [-8.0, 4.6, 9.2] },
     { label: 'Tubular steel railings', note: 'Thin rails like a ship’s deck, round the terraces and balconies.', at: [7.2, 4.2, 7.6] },
   ],
   influences: ['continental-modernism'],
@@ -54,7 +54,7 @@ export const modernistVilla: BuildingDef = {
     // ribbon windows: first floor runs to the left corner and wraps round it
     const ribbon = (x: number, y: number, z: number, w: number, h: number, facing: '+z' | '-z' | '+x' | '-x') =>
       b.window(w, h, { at: [x, y, z], facing, frame, bars: [Math.round(w / 0.9), 2], border: 0.06 });
-    ribbon(-1.3, g + 0.85, zf, 13.4 - 2.0, 1.35, '+z');
+    ribbon(-1.8, g + 0.85, zf, 12.4, 1.35, '+z'); // reaches the corner, where the side band meets it
     ribbon(x0, g + 0.85, zf - 1.6, 3.2, 1.35, '-x');
     ribbon(1.6, 0.8, zf, 6.0, 1.5, '+z');
     ribbon(-6.4, 0.9, zf, 2.8, 1.3, '+z');

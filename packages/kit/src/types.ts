@@ -31,9 +31,30 @@ export interface BuildingDef {
   build(b: Builder): void;
 }
 
+/** What becomes of a building type when its time is up on a plot that has not already replaced it. */
+export interface StageEnd {
+  /** The year it goes out of use. */
+  year: number;
+  /**
+   * ruin = abandoned and left standing roofless until something new is built;
+   * cleared = pulled down, the plot left open until something new is built;
+   * renew = rebuilt at once as the next building in the lineage (no plot keeps it longer than this).
+   */
+  fate: 'ruin' | 'cleared' | 'renew';
+  /** One or two sentences on what happened, shown on the card while the plot stands ruined or empty. */
+  note?: string;
+}
+
 export interface Stage {
-  /** Year this building replaces its predecessor on the plot (negative = BC). */
+  /** Year this building first replaces its predecessor (negative = BC). */
   from: number;
+  /**
+   * The last year buildings of this type were still being put up. Plots that lag behind the fashion
+   * adopt it some way between `from` and this. Defaults to the year the next stage begins.
+   */
+  builtUntil?: number;
+  /** Set when the type did not simply last until it was replaced. Types without it are durable. */
+  end?: StageEnd;
   def: BuildingDef;
 }
 
@@ -104,11 +125,16 @@ export interface Plot {
   since?: number;
   /**
    * How far this plot lags behind the fashion, 0..1: it adopts each new stage this fraction of the
-   * way through that stage's span, so neighbours do not all rebuild in the same year.
+   * way through the years that type was being built, so neighbours do not all rebuild in the same year.
    */
   lag?: number;
-  /** Building id at which this plot stops rebuilding: the survivor that still stands in the modern town. */
+  /**
+   * Building id at which this plot stops rebuilding: the survivor that still stands in the modern town.
+   * Only durable types (stages with no `end`) can be kept.
+   */
   keep?: string;
+  /** Building ids this plot never has: it goes straight from the stage before to the stage after. */
+  skip?: string[];
   /** The plot shown first when the lineage is referred to. */
   hero?: boolean;
 }

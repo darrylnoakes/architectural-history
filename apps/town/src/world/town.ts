@@ -1,8 +1,13 @@
 import * as THREE from 'three';
-import { construct, type Built, type BuildingDef, type Deck, type Lineage, type Plot, type Region } from '@ah/kit';
+import { construct, getRuinMaterials, type Built, type BuildingDef, type Deck, type Lineage, type Plot, type Region, type Stage } from '@ah/kit';
 import { plotSchedule, scheduleAt, type PlotStage, type WorldCollider } from '@ah/engine';
 
 export interface WorldDeck extends Deck {}
+
+export type PlotStatus =
+  | { kind: 'standing' | 'ruin'; entry: PlotStage; scheduleIndex: number; stage: Stage; def: BuildingDef }
+  /** Open ground. `before` and `after` are schedule indices of what stood here last and what comes next (-1 if none). */
+  | { kind: 'open'; before: number; after: number };
 
 export interface PlotState {
   plot: Plot;
@@ -101,12 +106,25 @@ export class Town {
     return this.byId.get(id);
   }
 
-  /** The stage standing on a plot at a year, or null when the plot is empty. */
-  stageAt(p: PlotState, year: number): { entry: PlotStage; def: BuildingDef; scheduleIndex: number } | null {
+  /** What a plot holds at a year: a building in use, a ruin, or open ground (with what came before and after). */
+  status(p: PlotState, year: number): PlotStatus {
     const i = scheduleAt(p.schedule, year);
-    if (i < 0) return null;
-    const entry = p.schedule[i];
-    return { entry, def: p.lineage.stages[entry.index].def, scheduleIndex: i };
+    if (i >= 0) {
+      const entry = p.schedule[i];
+      const stage = p.lineage.stages[entry.index];
+      return { kind: entry.state, entry, scheduleIndex: i, stage, def: stage.def };
+    }
+    let before = -1;
+    for (let k = 0; k < p.schedule.length; k++) if (p.schedule[k].to <= year) before = k;
+    const after = p.schedule.findIndex((e) => e.from > year);
+    return { kind: 'open', before, after };
+  }
+
+  /** Display name of a schedule entry. */
+  entryName(p: PlotState, k: number): string {
+    const e = p.schedule[k];
+    const name = p.lineage.stages[e.index].def.name;
+    return e.state === 'ruin' ? `${name} (in ruins)` : name;
   }
 
   private build(p: PlotState, i: number): Built {
@@ -119,7 +137,17 @@ export class Town {
         console.error(`Failed to build ${def.id}`, err);
         b = { object: new THREE.Group(), bounds: new THREE.Box3(), colliders: [], decks: [], triangles: 0 };
       }
-      b.object.traverse((o) => (o.userData.plotId = p.plot.id));
+      const ruin = p.schedule[i].state === 'ruin' ? getRuinMaterials() : null;
+      b.object.traverse((o) => {
+        o.userData.plotId = p.plot.id;
+        const mesh = o as THREE.Mesh;
+        if (ruin && mesh.isMesh) {
+          mesh.material = ruin.surface;
+          mesh.customDepthMaterial = ruin.depth;
+        }
+      });
+      // nobody walks along the top of a ruin
+      if (ruin) b.decks = [];
       p.cache.set(i, b);
     }
     return b;

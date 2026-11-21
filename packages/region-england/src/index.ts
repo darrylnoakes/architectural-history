@@ -12,13 +12,9 @@ import work from './lineages/work';
 import crossing from './lineages/crossing';
 import culture from './lineages/culture';
 import inn from './lineages/inn';
-import { chapel } from './extras';
+import { chapel, farm } from './extras';
 
 export { eras, influences, plots };
-
-// rivers that cross a plot, in plot-local metres (used by the lineage street and the gallery)
-crossing.river = [-8, 8];
-work.river = [-27, -11];
 
 export const england: Region = {
   id: 'england',
@@ -28,7 +24,7 @@ export const england: Region = {
   end: 2025,
   eras,
   influences,
-  lineages: [home, cottage, merchant, worship, power, market, work, crossing, culture, inn, chapel],
+  lineages: [home, cottage, merchant, worship, power, market, work, crossing, culture, inn, chapel, farm],
   plots,
 };
 

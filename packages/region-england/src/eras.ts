@@ -10,7 +10,7 @@ export const eras: Era[] = [
     summary:
       'Britain before Rome builds in what the land gives: hazel rods, clay, oak posts and straw. Almost everything is round. ' +
       'A family lives in one big circular room under a conical thatch with the hearth in the middle, and a settlement is a loose ' +
-      'cluster of such houses behind a bank, a ditch and a timber palisade. Nothing is meant to last more than a generation, and little does.',
+      'cluster of such houses, often behind a bank, a ditch and a timber palisade. Houses are not built to last much more than a generation, and little survives.',
     traits: ['Circular plans', 'Conical thatched roofs', 'Earth banks and palisades', 'No chimneys, no windows'],
     materials: ['Wattle and daub', 'Oak posts', 'Wheat-straw thatch', 'Turf'],
     color: 0x8a9a5b,
@@ -40,7 +40,7 @@ export const eras: Era[] = [
     summary:
       'When Roman rule ends the towns empty and the skills of mortar and tile are lost within a lifetime. The incoming English are ' +
       'carpenters: they build rectangular timber halls and small sunken-floored huts, and leave the Roman ruins as quarries. ' +
-      'Stone returns only with Christianity after 597, in tall, narrow, small-windowed churches often built from reused Roman brick.',
+      'Stone returns only with Christianity after 597, in tall, narrow, small-windowed churches often built from reused Roman stone and brick.',
     traits: ['Timber halls with steep roofs', 'Sunken-floored huts', 'Tall narrow stone churches', 'Tiny round or triangular-headed windows'],
     materials: ['Oak planks and posts', 'Thatch and shingles', 'Reused Roman stone and brick'],
     color: 0x7f6a4a,
@@ -54,7 +54,7 @@ export const eras: Era[] = [
     tagline: 'Castles and round arches',
     summary:
       'The Conquest replaces the ruling class and then rebuilds the country in its image. Within two generations nearly every ' +
-      'cathedral and most parish churches are rebuilt in the Romanesque style of Normandy, with thick walls, round arches and massive ' +
+      'cathedral and great abbey, and many parish churches, are rebuilt in the Romanesque style of Normandy, with thick walls, round arches and massive ' +
       'piers, while castles, first of earth and timber and then of stone, hold down the towns. It is architecture as a statement of permanence.',
     traits: ['Round arches', 'Thick walls, small windows', 'Square keeps and mottes', 'Zigzag (chevron) carving', 'Flat buttresses'],
     materials: ['Rubble and ashlar stone', 'Caen limestone', 'Oak', 'Thatch and shingle for ordinary houses'],
@@ -68,7 +68,7 @@ export const eras: Era[] = [
     to: 1485,
     tagline: 'Pointed arches, light and height',
     summary:
-      'The pointed arch, the rib vault and the buttress arrive from France and change what stone can do: walls thin out, windows ' +
+      'The pointed arch, the rib vault and the flying buttress, combined into a system in France, change what stone can do: walls thin out, windows ' +
       'grow, and churches climb. English masons then take the style their own way, through Early English lancets and Decorated tracery ' +
       'to the great glass grids of the Perpendicular. Meanwhile wool money pays for timber-framed halls, guildhalls, stone bridges and market crosses.',
     traits: ['Pointed arches', 'Buttresses and pinnacles', 'Window tracery and spires', 'Timber-framed open halls', 'Jettied upper floors'],
@@ -85,7 +85,7 @@ export const eras: Era[] = [
     summary:
       'Peace, the sale of monastery lands and cheaper brick and glass shift building from the church to the house. The open hall with a ' +
       'central hearth gives way to chimneys and upper floors, so houses grow tall, glazed and comfortable. Timber framing reaches its ' +
-      'showiest, and Renaissance ornament arrives second-hand from Italy by way of Flanders, applied to buildings that are still Gothic underneath.',
+      'showiest, and Renaissance ornament arrives mostly second-hand from Italy by way of France and Flanders, applied to buildings that are still Gothic underneath.',
     traits: ['Tall brick chimney stacks', 'Close-studded and patterned timber framing', 'Mullioned windows', 'Jetties and gables', 'Symmetrical show fronts'],
     materials: ['Oak frame with plaster or brick infill', 'Red brick', 'Clay tile', 'Leaded glass'],
     color: 0x8f4f3a,
@@ -128,9 +128,9 @@ export const eras: Era[] = [
     to: 1945,
     tagline: 'Suburbs, Arts and Crafts, Art Deco',
     summary:
-      'A reaction against the machine produces the Arts and Crafts house and the garden suburb, and between the wars four million ' +
-      'new homes are built, most of them semi-detached with a nod to the Tudor past. Alongside them come two imports: the glamour of ' +
-      'Art Deco for cinemas and factories, and the white flat-roofed Modernism brought by architects fleeing the Continent.',
+      'The Arts and Crafts reaction against the machine reaches its height in the Edwardian house and the garden suburb, and between the wars ' +
+      'some four million new homes are built, many of them semi-detached with a nod to the Tudor past. Alongside them come two imports: the glamour of ' +
+      'Art Deco for cinemas and factories, and the white flat-roofed Modernism brought in part by architects leaving the Continent.',
     traits: ['Semi-detached houses with bay windows', 'Mock-Tudor gables', 'Streamlined Art Deco fronts', 'Steel frames behind stone', 'Flat roofs and strip windows'],
     materials: ['Brick and pebbledash', 'Steel frame', 'Faience tiles', 'Reinforced concrete', 'Crittall steel windows'],
     color: 0xb9a36a,

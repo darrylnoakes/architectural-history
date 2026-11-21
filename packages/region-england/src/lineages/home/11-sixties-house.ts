@@ -9,7 +9,7 @@ export const sixtiesHouse: BuildingDef = {
     'Developers such as Span, with the architect Eric Lyons, set out to sell modern design to the middle classes: simple boxes with ' +
     'big windows, open-plan living rooms and shared, unfenced landscaping instead of walls and privet. The house is framed between ' +
     'brick cross walls, the walls between them are filled with glass, timber boarding and a band of clay tile-hanging, and the roof ' +
-    'is a shallow single slope. The garage has shrunk to an open carport, and the mock-Tudor of the semi has gone entirely.',
+    'is a shallow single slope. The garage has shrunk to an open carport, and the mock-Tudor of the 1930s semi has gone entirely.',
   materials: ['buff brick cross walls', 'clay tile-hanging', 'western red cedar boarding', 'large timber-framed windows', 'felted roof'],
   lookFor: [
     {

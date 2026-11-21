@@ -33,9 +33,9 @@ export const saxonHuts: BuildingDef = {
   materials: ['oak posts and split planks', 'thatch', 'wattle'],
   lookFor: [
     { label: 'Earth-fast posts', note: 'Each wall post was set straight into a hole in the ground; archaeologists find these buildings as rows of post holes.', at: [-8.5, 1.2, 2.65] },
-    { label: 'Doors in the middle of the long walls', note: 'The hall had opposed doorways halfway along each side, a habit brought from the Continent.', at: [-4, 1.0, 2.6] },
+    { label: 'Doors in the middle of the long walls', note: 'The hall had opposed doorways halfway along each long side, the usual Anglo-Saxon arrangement.', at: [-4, 1.0, 2.6] },
     { label: 'Sunken-featured building', note: 'A hut built over a shallow pit with a tent-like roof almost to the ground. Loom weights are often found in them.', at: [5.6, 1.8, 3.4] },
-    { label: 'Fenced toft', note: 'A wattle fence enclosed the family plot (the toft) with its buildings, garden and animals.', at: [12.5, 1.0, 2] },
+    { label: 'Fenced enclosure', note: 'A wattle fence encloses the family plot with its buildings, garden and animals; many early settlements were open, but fenced yards became common later.', at: [12.5, 1.0, 2] },
     { label: 'Ruined Roman wall', note: 'Settlers rarely reused Roman buildings; their crumbling walls stood as quarries and curiosities.', at: [-10.4, 1.6, -5.55] },
   ],
   influences: [],

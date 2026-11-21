@@ -14,13 +14,13 @@ export const feastingHouse: BuildingDef = {
   summary:
     'Before there were inns, hospitality was a duty of the household, and the biggest house in the settlement was where guests ate and slept. ' +
     'This is a large roundhouse of wattle and daub under a steep cone of thatch, with no chimney: smoke from the central hearth simply seeped out through the roof. ' +
-    'Feasts were cooked outside in a fire pit, and meat, fish and hides hung on racks to dry and smoke.',
+    'Big feasts were probably cooked outside in a fire pit, and meat, fish and hides hung on racks to dry and smoke.',
   materials: ['wattle and daub', 'oak posts', 'wheat straw thatch', 'hazel rods'],
   lookFor: [
     { label: 'Conical thatched roof', note: 'A steep cone, about 45 degrees, so that rain runs off the straw before it can soak in.', at: [RX + 2.6, 5.2, RZ + 2.6] },
-    { label: 'Wattle-and-daub wall', note: 'Woven hazel rods plastered with clay, dung and straw, low enough that the roof does most of the work.', at: [RX - R - 0.1, 1.0, RZ] },
+    { label: 'Wattle-and-daub wall', note: 'Woven hazel rods plastered with clay, dung and straw, kept low under the deep eaves of the roof.', at: [RX - R - 0.1, 1.0, RZ] },
     { label: 'Porch', note: 'The only opening. Most roundhouse doors faced east or south-east, towards the rising sun and away from the wind.', at: [RX, 2.2, RZ + R + 1.6] },
-    { label: 'Cooking pit', note: 'Feasts were cooked outdoors over a fire pit, with a cauldron hung from a tripod and meat roasted on a spit.', at: [5.2, 1.4, 4.8] },
+    { label: 'Cooking pit', note: 'Feasts were probably cooked outdoors over a fire pit, with a cauldron hung from a tripod and meat roasted on a spit.', at: [5.2, 1.4, 4.8] },
     { label: 'Drying rack', note: 'A frame of poles for drying and smoking meat, fish and hides through the winter.', at: [6.6, 2.4, -4.2] },
   ],
   build(b) {

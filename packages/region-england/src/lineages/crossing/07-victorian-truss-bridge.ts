@@ -30,14 +30,14 @@ export const victorianTrussBridge: BuildingDef = {
   style: 'Victorian engineering',
   date: '1885',
   summary:
-    'The growing town needed a crossing wide and level enough for heavy carts, buses and a horse tram, so the narrow humped stone bridge was pulled down. ' +
+    'The growing town needed a crossing wide and level enough for heavy carts, horse buses and a horse tram, so the narrow, steeply humped iron bridge was pulled down. ' +
     'Two wrought-iron lattice girders, made of flat bars riveted into a criss-cross web between top and bottom booms, span from the abutments to stone piers in the river. ' +
-    'Wrought iron is strong in tension as well as compression, which cast iron is not, so a straight beam can now do the work of an arch; the railways had built thousands of bridges like this. ' +
+    'Wrought iron is strong in tension as well as compression, which cast iron is not, so a straight beam can now do the work of an arch; the railways had already built many bridges like this. ' +
     'Gas lamps and cast-iron railings give the engineering a civic face.',
   materials: ['wrought iron', 'cast iron', 'granite and sandstone', 'granite setts'],
   lookFor: [
     { label: 'Lattice girder', note: 'Two sets of diagonal flat bars crossing each other between the top and bottom booms, riveted at every crossing.', at: [-4.2, 2.0, -6.0] },
-    { label: 'Stone pier', note: 'Rusticated masonry piers with cutwaters carry the girders mid-river, so each span is short and the girders shallow.', at: [-6.9, -0.3, 3.8] },
+    { label: 'Stone pier', note: 'Masonry piers with cutwaters carry the girders mid-river, so each span is short and the girders shallow.', at: [-6.9, -0.3, 3.8] },
     { label: 'Tram rails', note: 'Rails set flush in the setts for a horse tram; electric trams would follow around 1900.', at: [0, 1.3, 2.0] },
     { label: 'Lamp standard', note: 'Ornate cast-iron gas lamp with a fluted shaft and two lanterns, made by a foundry that sold them from a catalogue.', at: [6.1, 5.3, -9.05] },
     { label: 'Cantilevered footway', note: 'Pavements carried outside the girders on iron brackets, keeping walkers away from the traffic.', at: [5.2, 0.6, 6.2] },

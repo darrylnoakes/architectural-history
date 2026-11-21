@@ -41,12 +41,12 @@ export const greatRoundhouse: BuildingDef = {
   lookFor: [
     { label: 'Conical thatched roof', note: 'Pitched at about 45 degrees so rain runs off fast. There is no chimney: smoke escapes through the thatch.', at: [-1.5, 6.4, 1.5] },
     { label: 'Porch', note: 'A short entrance passage. Doorways usually faced east or south-east, toward the rising sun and away from the wind.', at: [1.2, 2.5, 9.1] },
-    { label: 'Wattle and daub wall', note: 'Woven hazel rods plastered with clay, dung and straw. The wall is low because the roof carries itself.', at: [-6.2, 1.0, 3.0] },
-    { label: 'Four-post granary', note: 'Seed corn kept off the ground on stilts, away from damp and rats.', at: [-5.6, 3.0, -7.6] },
+    { label: 'Wattle and daub wall', note: 'Woven hazel rods plastered with clay, dung and straw. The wall is kept low, with the deep eaves of the roof brought down close over it to throw off the rain.', at: [-6.2, 1.0, 3.0] },
+    { label: 'Four-post granary', note: 'Probably a store for seed corn, kept off the ground on stilts, away from damp and rats.', at: [-5.6, 3.0, -7.6] },
     { label: 'Hurdle fence', note: 'Panels of woven hazel between posts, enclosing the yard and keeping the animals in.', at: [8.6, 1.2, -3] },
   ],
   build(b) {
-    const side = b.variant === 0 ? 1 : b.pick([1, -1] as const);
+    const side = 1;
     const thatch = b.pick([P.thatch, tint(P.thatch, -0.03), P.reed]);
     const r = b.range(6.0, 6.4);
 

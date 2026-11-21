@@ -66,38 +66,70 @@ export function formatYear(year: number): string {
 export interface PlotStage {
   /** Index into lineage.stages. */
   index: number;
-  /** Year this plot actually adopts the stage (after the plot's lag). */
+  /** Year this state begins on this plot. */
   from: number;
-  /** Year it is replaced on this plot (Infinity if it survives to the end). */
+  /** Year it ends (Infinity if it lasts to the end of the story). */
   to: number;
+  /** standing = in use; ruin = abandoned and roofless, waiting for whatever comes next. */
+  state: 'standing' | 'ruin';
 }
 
 /**
- * The schedule of one plot: when each stage of its lineage actually stands there. A plot can lag
- * behind the fashion (`lag` 0..1 of each stage's span), appear late (`since`), or stop rebuilding
- * altogether at one stage (`keep`), which is how old buildings come to survive in a modern town.
+ * The schedule of one plot: what stands on it, and when. Every entry is something that could really
+ * have been there in those years:
+ *  - a plot that lags behind the fashion (`lag` 0..1) adopts each type part-way through the years
+ *    that type was actually being built (`from` to `builtUntil`), never after;
+ *  - a type with an `end` does not outlive it: it is renewed as the next stage, falls into ruin, or
+ *    is cleared, leaving a gap in the schedule;
+ *  - a plot can pass over a type altogether (`skip`), appear late (`since`), or stop rebuilding at one durable type (`keep`), which is how
+ *    old buildings come to survive in a modern town.
  */
 export function plotSchedule(plot: Plot, lineage: Lineage, regionEnd: number): PlotStage[] {
-  const out: PlotStage[] = [];
   const stages = lineage.stages;
   const lag = plot.lag ?? 0;
   const keepIndex = plot.keep ? stages.findIndex((s) => s.def.id === plot.keep) : -1;
+  if (plot.keep && keepIndex < 0) console.warn(`Plot ${plot.id}: no stage "${plot.keep}" to keep`);
+  if (keepIndex >= 0 && stages[keepIndex].end) console.warn(`Plot ${plot.id}: "${plot.keep}" is not durable and cannot be kept`);
+
+  // when this plot takes up each type
+  const adopted: { index: number; from: number }[] = [];
   for (let i = 0; i < stages.length; i++) {
-    const next = i + 1 < stages.length ? stages[i + 1].from : regionEnd;
-    let from = stages[i].from + (i === 0 ? 0 : lag * (next - stages[i].from));
-    from = Math.round(from);
-    out.push({ index: i, from, to: Infinity });
+    const st = stages[i];
+    if (plot.skip?.includes(st.def.id)) continue;
+    const window = (st.builtUntil ?? stages[i + 1]?.from ?? regionEnd) - st.from;
+    let from = Math.round(st.from + (i === 0 && plot.since === undefined ? 0 : lag * Math.max(0, window)));
+    if (plot.since !== undefined && from < plot.since) continue; // not built on yet
+    const prev = adopted[adopted.length - 1];
+    if (prev) {
+      // a type that is renewed when its time is up pulls its successor forward
+      const end = stages[prev.index].end;
+      if (end?.fate === 'renew') from = Math.min(from, end.year);
+      if (from <= prev.from) continue;
+    }
+    // too late: this type had already had its day before the plot would have adopted it
+    if (st.end && st.end.fate !== 'renew' && st.end.year <= from) continue;
+    adopted.push({ index: i, from });
     if (i === keepIndex) break;
   }
-  for (let i = 0; i < out.length - 1; i++) out[i].to = out[i + 1].from;
-  const since = plot.since;
-  if (since === undefined) return out;
-  // the plot is open ground until the first building type that comes into use after `since`
-  return out.filter((s) => s.from >= since);
+
+  const out: PlotStage[] = [];
+  adopted.forEach((a, k) => {
+    const next = adopted[k + 1]?.from ?? Infinity;
+    const end = stages[a.index].end;
+    if (end && end.fate !== 'renew' && end.year < next) {
+      out.push({ index: a.index, from: a.from, to: end.year, state: 'standing' });
+      if (end.fate === 'ruin') out.push({ index: a.index, from: end.year, to: next, state: 'ruin' });
+    } else {
+      out.push({ index: a.index, from: a.from, to: next, state: 'standing' });
+    }
+  });
+  return out;
 }
 
-/** Which entry of a schedule stands at `year`, or -1 if the plot is still empty. */
+/** Which entry of a schedule covers `year`, or -1 if the plot is open ground then. */
 export function scheduleAt(schedule: PlotStage[], year: number): number {
-  for (let i = schedule.length - 1; i >= 0; i--) if (year >= schedule[i].from) return i;
+  for (let i = schedule.length - 1; i >= 0; i--) {
+    if (year >= schedule[i].from) return year < schedule[i].to ? i : -1;
+  }
   return -1;
 }

@@ -9,9 +9,9 @@ export const saxonPlankBridge: BuildingDef = {
   style: 'Late Anglo-Saxon',
   date: 'c. 950',
   summary:
-    'Late Saxon kings rebuilt the network of fortified burhs and the roads and bridges that linked them. Bridge-work was one of the three common burdens every landholder owed the king, along with army service and repairing fortifications. ' +
+    'From Alfred’s time, late Saxon kings built a network of fortified towns, or burhs, and kept up the roads and bridges that linked them. Bridge-work was one of the three common burdens every landholder owed the king, along with army service and repairing fortifications. ' +
     'This bridge is all oak: rows of piles driven into the riverbed, each row capped by a beam, with lengthwise beams and a plank deck on top. ' +
-    'No stone is used, so it is quick to build but rots and needs constant renewal; remains of bridges like it have been dug up at Hemington on the Trent.',
+    'No stone is used, so it is quick to build but rots and needs constant renewal; remains of timber bridges have been dug up on the Trent, at Cromwell (8th century) and at Hemington (about 1100).',
   materials: ['oak piles', 'split oak planks', 'iron spikes'],
   lookFor: [
     { label: 'Pile trestle', note: 'A row of oak piles driven into the riverbed with a mallet or drop weight, braced across with diagonals.', at: [1.8, -0.4, 3] },

@@ -18,9 +18,9 @@ export const ruinedTemple: BuildingDef = {
   id: 'ruined-temple',
   name: 'Ruined temple',
   style: 'Post-Roman ruin',
-  date: 'c. 410 to 650',
+  date: 'c. 410 to 680',
   summary:
-    'When Roman government ended in Britain around 410 the money and the priests went too, and Christianity was already the official religion of the empire. ' +
+    'Christianity had been the official religion of the empire since 380, and when Roman government ended in Britain around 410 the money that kept temples going went too. ' +
     'The roof was stripped for its tiles and timber, the walls were quarried for building stone, and saplings took root in the ambulatory. ' +
     'Yet the place was not forgotten: a few people were buried here, laid east to west, perhaps already as Christians.',
   materials: ['robbed flint and mortar', 'broken tile', 'grass'],

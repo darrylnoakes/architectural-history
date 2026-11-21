@@ -8,11 +8,11 @@ export const arkwrightMill: BuildingDef = {
   date: 'c. 1785',
   summary:
     'Richard Arkwright’s water frame spun cotton thread by machine, and his mills at Cromford and Masson in Derbyshire set the pattern for the factory: ' +
-    'one waterwheel driving hundreds of spindles on every floor, through shafts and belts running the length of the building. ' +
+    'one waterwheel driving hundreds of spindles on every floor, through upright and horizontal shafts running the height and length of the building. ' +
     'The result is a long, narrow, tall brick box, narrow so that daylight from the rows of identical windows reaches the machines in the middle. ' +
     'Hands worked set shifts, called in by the bell in the cupola on the roof.',
-  materials: ['red brick', 'Welsh slate', 'timber floors', 'cast iron'],
-  modelledOn: 'Masson Mill, Cromford, Derbyshire (1783)',
+  materials: ['red brick', 'slate', 'timber floors', 'cast iron'],
+  modelledOn: 'Masson Mill, Matlock Bath, Derbyshire (1783), simplified',
   lookFor: [
     { label: 'Rows of identical windows', note: 'Five storeys of small, evenly spaced windows: every floor the same, every bay the same, like the machines inside.', at: [-9.6, 9.0, 0.3] },
     { label: 'Bell cupola', note: 'The bell called the workers in at the start of each shift. Factory time replaced the farmer’s day.', at: [-3, 19.5, -4.6] },

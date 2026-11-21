@@ -25,11 +25,11 @@ export const artsAndCraftsHouse: BuildingDef = {
   summary:
     'Turning away from machine-made Victorian ornament, architects such as C. F. A. Voysey looked back to the farmhouses and cottages of the English countryside. ' +
     'The house is long and low, its walls coated in white roughcast and braced by sloping buttresses, its big plain roof brought down over the upper windows and swept low over the porch. ' +
-    'Windows are long rows of small leaded casements in stone mullions. Decoration is limited to good craftsmanship: hand-forged iron brackets, oak doors, green-painted woodwork.',
+    'Windows are long rows of small leaded casements in stone mullions. Decoration is limited to good craftsmanship: hand-forged iron brackets, plank doors on long strap hinges, green-painted woodwork.',
   materials: ['roughcast render', 'green slate', 'Bath stone dressings', 'wrought iron', 'oak'],
-  modelledOn: 'The houses of C. F. A. Voysey, such as Broadleys, Windermere (1898) and The Orchard, Chorleywood (1899)',
+  modelledOn: 'The houses of C. F. A. Voysey, such as Broadleys, Windermere (1898) and The Orchard, Chorleywood (1899–1900)',
   lookFor: [
-    { label: 'Roughcast walls', note: 'Lime render thrown on with gravel in it and whitewashed: cheap, weatherproof and plain.', at: [-6.5, 1.6, 9.1] },
+    { label: 'Roughcast walls', note: 'Render with small stones mixed in, thrown on wet and limewashed white: cheap, weatherproof and plain.', at: [-6.5, 1.6, 9.1] },
     { label: 'Battered buttresses', note: 'Buttresses that slope inward as they rise, giving the low house a sturdy, rooted look.', at: [-8.0, 1.4, 9.8] },
     { label: 'Bands of casements', note: 'Long rows of small leaded casement windows between stone mullions, tucked up under the eaves.', at: [-5.4, 4.0, 9.3] },
     { label: 'Sweeping roof and catslide', note: 'The roof dominates, coming down low over the walls and sweeping down further over the porch.', at: [-1.5, 4.0, 11.0] },

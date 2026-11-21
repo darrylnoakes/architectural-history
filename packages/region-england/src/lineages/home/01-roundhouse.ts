@@ -20,7 +20,7 @@ export const roundhouse: BuildingDef = {
     },
     {
       label: 'Wattle-and-daub wall',
-      note: 'Hazel rods woven between upright stakes, then daubed with clay; the low wall only keeps out draughts, the roof does the real work.',
+      note: 'Hazel rods woven between upright stakes, then daubed with clay; the low wall carries the feet of the rafters, and the deep eaves keep the rain off it.',
       at: [-3.6, 1.0, 3.5],
     },
     {
@@ -30,7 +30,7 @@ export const roundhouse: BuildingDef = {
     },
     {
       label: 'Four-post store',
-      note: 'A small granary raised on four posts to keep seed corn dry and away from rats; their postholes are found on every Iron Age site.',
+      note: 'A small store raised on four posts, usually taken to be a granary keeping seed corn dry and away from mice; their postholes are found on many Iron Age sites.',
       at: [-4.3, 2.4, -5.6],
     },
   ],

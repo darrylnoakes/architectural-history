@@ -16,7 +16,7 @@ export const millenniumFootbridge: BuildingDef = {
     { label: 'Raked mast', note: 'An A-shaped steel mast leaning back from the river, balancing the pull of the cables that hold up the span.', at: [6.0, 11.0, 12.0] },
     { label: 'Cable stays', note: 'Each straight cable carries a slice of the deck straight back to the mast, so no piers are needed in the river.', at: [6.0, 5.5, 3.5] },
     { label: 'Backstay', note: 'Cables from the mast head down to a concrete anchor block in the bank, tying the mast back.', at: [6.0, 4.0, 14.0] },
-    { label: 'Steel box deck', note: 'A shallow welded steel box, stiff enough against twisting to need cables only at its edges.', at: [7.0, 0.4, -4.0] },
+    { label: 'Steel box deck', note: 'A shallow welded steel box girder, light and stiff, hung from the cables along both edges.', at: [7.0, 0.4, -4.0] },
     { label: 'The 1936 bridge', note: 'Kept and repaired rather than replaced, as more and more old bridges now are.', at: [-4.6, 2.8, 0] },
   ],
   influences: ['high-tech-export'],

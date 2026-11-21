@@ -9,7 +9,7 @@ export const tudorMerchantsHouse: BuildingDef = {
   summary:
     'The cloth trade made the town’s leading clothier rich enough to build three storeys high, each one jettied out over the one below. ' +
     'Oak was still plentiful and he spent it as display: close studding sets the posts far nearer together than the frame needs. ' +
-    'Cheaper glass let windows grow into projecting oriels, and a brick chimney stack replaced the open hearth, so the hall could be floored over. ' +
+    'Glass, now within a rich merchant’s reach, let windows grow into projecting oriels, and a brick chimney stack replaced the open hearth, so the hall could be floored over. ' +
     'The oak was left to weather to silver-brown; black-and-white paintwork is mostly a Victorian taste.',
   materials: ['oak frame', 'lime plaster infill', 'clay tile', 'brick chimney', 'leaded glass'],
   lookFor: [

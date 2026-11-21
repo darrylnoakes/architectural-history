@@ -14,9 +14,9 @@ export const brutalistCivicCentre: BuildingDef = {
   style: 'Brutalist',
   date: '1967',
   summary:
-    'Local government has grown into a large employer, and the cramped Victorian town hall is pulled down for a civic centre; after a public outcry its clock tower alone is spared. ' +
+    'Local government has grown into a large employer, and the cramped Victorian town hall is pulled down for a civic centre. In this town, protests from the townspeople save its clock tower alone. ' +
     'Offices go in a long slab lifted on pilotis, the councillors meet in a drum-shaped chamber, and both stand on a raised plaza that keeps people above the traffic. ' +
-    'Everything is cast in raw concrete that still shows the grain of the timber boards it was poured against, an honest material for a confident welfare state.',
+    'Everything is cast in raw concrete that still shows the grain of the timber boards it was poured against, seen by its architects as an honest material for a confident welfare state.',
   materials: ['board-marked in-situ concrete', 'precast concrete fins', 'aluminium-framed glazing', 'asphalt roofs'],
   lookFor: [
     { label: 'Pilotis', note: 'The office slab stands on rows of concrete stilts, leaving the ground beneath open, an idea taken from Le Corbusier.', at: [-6, 3.6, -9.6] },

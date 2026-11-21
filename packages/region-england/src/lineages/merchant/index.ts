@@ -1,4 +1,5 @@
 import type { Lineage } from '@ah/kit';
+import { renewedBy, romanEnd } from '../../ends';
 import { greatRoundhouse } from './01-great-roundhouse';
 import { romanTownhouse } from './02-roman-townhouse';
 import { saxonThegnsHall } from './03-saxon-thegns-hall';
@@ -19,18 +20,18 @@ const lineage: Lineage = {
   role: 'The home of the richest household in town, where each new fashion in building arrives first.',
   plotSize: [20, 24],
   stages: [
-    { from: -500, def: greatRoundhouse },
-    { from: 120, def: romanTownhouse },
-    { from: 450, def: saxonThegnsHall },
-    { from: 1150, def: normanStoneHouse },
-    { from: 1330, def: merchantsHall },
-    { from: 1500, def: tudorMerchantsHouse },
-    { from: 1630, def: jacobeanBrickHouse },
-    { from: 1700, def: queenAnneHouse },
-    { from: 1790, def: regencyVilla },
-    { from: 1865, def: victorianVilla },
-    { from: 1905, def: artsAndCraftsHouse },
-    { from: 1936, def: modernistVilla },
+    { from: -500, builtUntil: 80, end: renewedBy(160), def: greatRoundhouse },
+    { from: 120, builtUntil: 330, end: romanEnd, def: romanTownhouse },
+    { from: 650, builtUntil: 1050, end: renewedBy(1170), def: saxonThegnsHall },
+    { from: 1150, builtUntil: 1250, def: normanStoneHouse },
+    { from: 1330, builtUntil: 1480, def: merchantsHall },
+    { from: 1500, builtUntil: 1600, def: tudorMerchantsHouse },
+    { from: 1630, builtUntil: 1680, def: jacobeanBrickHouse },
+    { from: 1700, builtUntil: 1740, def: queenAnneHouse },
+    { from: 1790, builtUntil: 1840, def: regencyVilla },
+    { from: 1865, builtUntil: 1895, def: victorianVilla },
+    { from: 1905, builtUntil: 1914, def: artsAndCraftsHouse },
+    { from: 1936, builtUntil: 1939, def: modernistVilla },
     { from: 1998, def: glassHouse },
   ],
 };

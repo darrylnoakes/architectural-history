@@ -10,7 +10,7 @@ export const georgianChapel: BuildingDef = {
   style: 'Georgian classical',
   date: 'c. 1790',
   summary:
-    'Methodists, Baptists and Quakers were shut out of the parish church, so they built meeting houses of their own. ' +
+    'Baptists, Independents and Quakers would not conform to the Church of England, and since 1689 the law had let them build meeting houses of their own; by the 1790s the Methodists were building chapels too. ' +
     'This one is a plain brick preaching box: no tower, no chancel, no carving. All the money went on a wide, well-lit ' +
     'room where everyone could hear the sermon, and its only gesture of grandeur is a temple-front pediment borrowed from the classical pattern books.',
   materials: ['red brick', 'Welsh slate', 'painted timber'],

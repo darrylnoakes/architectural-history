@@ -33,17 +33,17 @@ export const victorianRestoration: BuildingDef = {
   style: 'Victorian Gothic Revival restoration',
   date: '1868',
   summary:
-    'Inspired by the Oxford Movement and Pugin, Victorian restorers set out to return churches to what they thought was their proper medieval state. ' +
+    'Inspired by the Oxford Movement, Pugin and the Cambridge Camden Society, Victorian restorers set out to return churches to what they thought was their proper medieval state. ' +
     'Here the shallow lead roof of the nave gave way to a steep new slated one rising behind the old battlements, the chancel was re-roofed in slate, a vestry for robes and registers was added on the north side, and a clock went on the tower. ' +
-    'Outside, the churchyard filled with carved headstones, yews and a lychgate; inside, box pews and galleries were torn out. ' +
+    'Outside, the churchyard filled with carved headstones, yews were planted and a lychgate was built; inside, box pews and galleries were torn out. ' +
     'Underneath it all the Norman doorway, the Early English chancel and the Perpendicular tower still stand.',
   materials: ['limestone', 'Welsh slate', 'oak', 'cast iron'],
   lookFor: [
-    { label: 'Steep new roofs', note: 'Restorers thought a steep pitch the true Gothic form, so the nave now has a high slate roof rising behind its old battlements.', at: [0, 13.5, 4] },
-    { label: 'Tower clock', note: 'A public clock, paid for by subscription: railway time had made accurate hours matter to everyone.', at: [0, 15.7, 21.3] },
+    { label: 'Steep new roofs', note: 'Many restorers thought a steep pitch the true Gothic form, so the nave now has a high slate roof rising behind its old battlements.', at: [0, 13.5, 4] },
+    { label: 'Tower clock', note: 'A public clock, often paid for by subscription: railway timetables had made accurate hours matter to everyone.', at: [0, 15.7, 21.3] },
     { label: 'Vestry', note: 'A small new room off the chancel for the clergy and choir to robe in, with its own chimney for a stove.', at: [-5.6, 3.5, -12] },
     { label: 'Lychgate', note: 'A roofed gate where the coffin waited for the priest at the start of a funeral.', at: [9.2, 3.4, 22.2] },
-    { label: 'Headstones and yews', note: 'Carved stone grave markers spread across the churchyard in the 18th and 19th centuries; yews are its oldest residents.', at: [11.2, 1.2, -6] },
+    { label: 'Headstones and yews', note: 'Carved stone grave markers spread across churchyards in the 18th and 19th centuries; evergreen yews have long been the churchyard tree.', at: [11.2, 1.2, -6] },
   ],
   build(b) {
     church(b, perpChurchSpec({

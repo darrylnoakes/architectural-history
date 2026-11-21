@@ -22,15 +22,15 @@ export const assemblyRooms: BuildingDef = {
   style: 'Georgian Palladian',
   date: '1771',
   summary:
-    'The playhouse is long gone. In its place the gentry of the town and county built rooms for balls, concerts, card parties and tea, ' +
+    'The playhouse is long gone. On the open ground where it stood, the gentry of the town and county built rooms for balls, concerts, card parties and tea, ' +
     'paid for by subscribers and run by a master of ceremonies who made the introductions. ' +
-    'The design comes from the Palladian rulebook: a symmetrical block of smooth ashlar, a temple portico in the middle, ' +
-    'and lower wings either side for the tea room and card room. Behind the tall windows of the upper storey is a ballroom two storeys high.',
+    'The design comes from the Palladian rulebook: a symmetrical block of ashlar, a temple portico in the middle, ' +
+    'and lower wings either side for the tea room and card room. Behind the tall windows of the upper storey is a lofty ballroom.',
   materials: ['Bath stone ashlar', 'Welsh slate', 'painted timber sashes', 'wrought iron railings'],
-  modelledOn: 'Upper Assembly Rooms, Bath (John Wood the Younger, 1769-71)',
+  modelledOn: 'Upper Assembly Rooms, Bath (John Wood the Younger, 1769-71), for its uses and date; the giant portico is a generic Palladian front, which Bath lacks',
   lookFor: [
     { label: 'Portico', note: 'Four giant Ionic columns and a pediment: the front of a Roman temple applied to a building for dancing.', at: [0, 12.6, 10.6] },
-    { label: 'Venetian window', note: 'An arched light between two lower square-headed ones. Palladio popularised it, and Georgian Britain used it everywhere.', at: [12.75, 4.8, 5.4] },
+    { label: 'Venetian window', note: 'An arched light between two lower square-headed ones. Published by Serlio and used by Palladio, it became a Georgian favourite.', at: [12.75, 4.8, 5.4] },
     { label: 'Ballroom windows', note: 'Tall sashes set high in the upper storey to flood the ballroom with light while leaving the walls clear for seating.', at: [-6.6, 8.2, 7.2] },
     { label: 'Rustication', note: 'The ground storey is cut into deep horizontal grooves so it looks heavier and stronger than the smooth walls above.', at: [-5.5, 2.2, 7.3] },
     { label: 'Balustrade', note: 'A parapet of turned stone balusters that hides the roof, so the building ends in a clean classical line.', at: [-13, 8.4, 5.4] },

@@ -29,14 +29,14 @@ export const jacobeanBrickHouse: BuildingDef = {
   style: 'Jacobean',
   date: 'c. 1630',
   summary:
-    'Brick, still a rarity in a town a century before, is now the fashionable material for anyone who can afford it, and timber is growing scarce. ' +
+    'Brick, still a rarity in a town a century before, is now the fashionable material for anyone who can afford it, and good oak is growing dearer. ' +
     'The front has become symmetrical, an E of two gabled wings and a central porch, and the gables are shaped into curves copied from the Low Countries. ' +
     'Columns and flat, interlaced strapwork, learned second-hand from Flemish pattern books, are applied to the porch, but the house is still tall, gabled and mullioned like its medieval forebears.',
   materials: ['red brick', 'limestone dressings', 'clay tile', 'leaded glass'],
   lookFor: [
     { label: 'Shaped (Dutch) gable', note: 'The gable wall rises above the roof in curved shoulders to a little pediment, a fashion from Flanders and Holland.', at: [6.7, 11.0, 11.9] },
     { label: 'Mullion-and-transom window', note: 'Stone uprights (mullions) and a crossbar (transom) divide the window into leaded lights. Sashes have not arrived yet.', at: [-6.7, 2.2, 11.8] },
-    { label: 'Strapwork porch', note: 'Paired columns and flat, interlaced bands of carved stone like cut leather: Renaissance ornament reached England through Flemish pattern books.', at: [0, 3.8, 12.0] },
+    { label: 'Strapwork porch', note: 'Doric columns frame the door, and the pierced panel above it stands for strapwork, flat interlaced bands of carved stone like cut leather that reached England through Flemish pattern books.', at: [0, 3.8, 12.0] },
     { label: 'Diagonal chimney shafts', note: 'Square brick shafts set corner-on, grouped on a single base.', at: [-3, 12.6, 5.5] },
     { label: 'Symmetry', note: 'Wing, porch, wing: the front now mirrors about its centre, though the house behind is still a medieval plan.', at: [0, 9.2, 11.6] },
   ],

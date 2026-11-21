@@ -9,8 +9,8 @@ export const cruckHouse: BuildingDef = {
   summary:
     'By the thirteenth century a better-off peasant or craftsman could afford a house carried on crucks: pairs of great curved oak ' +
     'blades, each pair often cut from one split tree, rising from the ground to meet at the ridge. The crucks carry the whole roof, so ' +
-    'the low walls between them are only a light frame of wattle and daub. The animals have moved out to their own sheds, but there is ' +
-    'still an open hearth, with the smoke let out through a louvre on the ridge.',
+    'the low walls between them are only a light frame of wattle and daub. The frame now stands on a low stone sill ' +
+    'instead of posts sunk in the earth, so it does not rot at the foot, but there is still an open hearth, with the smoke let out through a louvre on the ridge.',
   materials: ['oak crucks and framing', 'wattle and daub, limewashed', 'straw thatch', 'rubble sill wall'],
   lookFor: [
     {

@@ -29,14 +29,14 @@ export const shoppingPrecinct: BuildingDef = {
   style: 'Post-war Modernist',
   date: 'c. 1964',
   summary:
-    'After the war the council cleared the old store and built a precinct, a modern range of standard shop units in reinforced concrete with offices and more shops above. ' +
+    'In the post-war rebuilding of town centres the council cleared the old store and built a precinct, a modern range of standard shop units in reinforced concrete with offices and more shops above. ' +
     'Planners wanted to separate people from traffic, so the upper shops open onto a walkway reached by an open stair, and its slab doubles as a canopy over the shop windows below. ' +
     'Ornament has gone, apart from one concession to civic pride: a mosaic mural on the end wall and a clock on a concrete pylon.',
   materials: ['reinforced concrete', 'precast panels', 'aluminium shopfronts', 'glass mosaic'],
   lookFor: [
     { label: 'Upper walkway', note: 'A deck-access gallery for the first-floor shops, keeping shoppers above and away from the delivery vans.', at: [-3.0, 4.6, 6.6] },
     { label: 'Canopy', note: 'The walkway slab and a cantilevered canopy at the back shelter the shop windows; the shopfronts are standard units with fascia signs.', at: [3.0, 3.2, -5.6] },
-    { label: 'Mosaic panel', note: 'A mural of small glass and ceramic tiles, the favourite decoration of the 1960s new towns and precincts.', at: [-8.7, 4.0, 0] },
+    { label: 'Mosaic panel', note: 'A mural of small glass and ceramic tiles, a favourite decoration of the 1960s new towns and precincts.', at: [-8.7, 4.0, 0] },
     { label: 'Clock pylon', note: 'A slender concrete tower with clock faces, the precinct’s replacement for the old market cross.', at: [-9.6, 8.4, 6.9] },
     { label: 'Exposed concrete frame', note: 'Columns and floor slabs left plain and repeated bay after bay.', at: [8.4, 1.8, 6.9] },
   ],

@@ -78,15 +78,15 @@ export const stoneKeepDef: BuildingDef = {
   style: 'Norman Romanesque',
   date: 'c. 1130',
   summary:
-    'Once the conquest was secure, lords rebuilt their timber castles in stone. A square great tower, the keep, now crowns the old motte, as at Norwich and Guildford, and a stone curtain wall replaces the palisade around the bailey. ' +
-    'Its walls are three or four metres thick, with flat buttresses and turrets at the corners. The door is on the first floor, reached by a stair through a forebuilding, and the windows grow larger as they rise, up to the great hall in the top storeys.',
+    'Once the conquest was secure, many lords rebuilt their timber castles in stone. A square great tower, the keep, now crowns the old motte, as at Norwich and Guildford, and a stone curtain wall replaces the palisade around the bailey. ' +
+    'Its walls are three or four metres thick, with flat buttresses and turrets at the corners. The door is on the first floor, reached by a stair through a forebuilding, and the windows grow larger as they rise, up to the great hall in the upper storeys.',
   materials: ['limestone ashlar', 'flint and rubble core', 'lead roof', 'oak floors'],
   lookFor: [
     { label: 'Keep', note: 'A square tower of stone, the lord\'s residence and last line of defence, here raised on the old earth motte.', at: [MOTTE.x - 4.8, 18, MOTTE.z + 5.2] },
     { label: 'Corner turrets', note: 'The corners rise above the battlements as small towers, strengthening the weakest point of a square building.', at: [MOTTE.x + 4.3, 29.8, MOTTE.z + 4.3] },
     { label: 'Pilaster buttresses', note: 'Broad, shallow strips of stone running up each face: a Norman way of stiffening a wall.', at: [MOTTE.x, 14, MOTTE.z + 5.3] },
-    { label: 'Forebuilding', note: 'A lower tower against one side, guarding the stair to the first-floor entrance; no door was put at ground level.', at: [MOTTE.x + 8.6, 15.8, MOTTE.z - 0.8] },
-    { label: 'Round-headed windows', note: 'Romanesque semicircular arches, narrow slits low down and wider paired lights to the hall at the top.', at: [MOTTE.x + 2.4, 20, MOTTE.z + 5.4] },
+    { label: 'Forebuilding', note: 'A lower tower against one side, guarding the stair to the first-floor entrance; there was usually no door at ground level.', at: [MOTTE.x + 8.6, 15.8, MOTTE.z - 0.8] },
+    { label: 'Round-headed windows', note: 'Romanesque semicircular arches, narrow slits low down and large two-light windows to the hall above.', at: [MOTTE.x + 2.4, 20, MOTTE.z + 5.4] },
   ],
   modelledOn: 'Hedingham Castle, Essex (c. 1140) and Rochester Castle keep (1127); set on a motte like Norwich and Guildford',
   influences: ['norman-romanesque'],

@@ -76,15 +76,15 @@ export const saxonGreatHall: BuildingDef = {
   date: 'c. 600',
   summary:
     'After Rome left, the stone forum fell into ruin and was robbed for building stone. Power returned to timber: a king or lord ruled from a great hall where he feasted his warriors and gave out gifts, as in the poem Beowulf. ' +
-    'This one follows the royal hall excavated at Yeavering in Northumberland, about 25 metres long, with slightly bowed walls of heavy planks, sloping posts propping them from outside and a steep roof of oak shingles. ' +
-    'Around it stand lesser halls, a sunken hut and a timber grandstand for assemblies, all inside a fence.',
-  materials: ['oak planks and posts', 'oak shingles', 'wattle fencing'],
+    'This one follows the largest royal hall excavated at Yeavering in Northumberland, about 25 metres long, with walls of heavy upright planks and sloping posts propping them from outside; the slightly bowed walls and the roof of oak shingles follow modern reconstructions. ' +
+    'Around it stand a lesser hall, a sunken hut and a timber grandstand for assemblies, all inside a fence.',
+  materials: ['oak planks and posts', 'oak shingles', 'wattle', 'thatch'],
   lookFor: [
-    { label: 'Bowed walls', note: 'The long walls bulge gently outwards in the middle, so the hall is a little wider at its centre than at its ends.', at: [6, 2.2, -0.4] },
+    { label: 'Bowed walls', note: 'The long walls bulge gently outwards in the middle, a shape known from later Saxon halls such as Cheddar; Yeavering\'s own walls were less regular.', at: [6, 2.2, -0.4] },
     { label: 'Raking buttress posts', note: 'Sloping posts set in the ground outside the wall help take the outward push of the heavy roof.', at: [-8, 1.5, 3.4] },
     { label: 'Shingled roof', note: 'Split oak tiles, called shingles, laid in overlapping rows on a steep roof that sheds rain fast.', at: [-4, 8.2, -3.4] },
-    { label: 'Carved gable horns', note: 'The bargeboards cross at the ridge and run on into horn-like points; the hall in Beowulf is called Heorot, the hart, perhaps for such horns.', at: [-15, 11, -4] },
-    { label: 'Grandstand', note: 'Tiered timber seats facing a speaker, like the one dug up at Yeavering, where the king met his people.', at: [-12, 2.4, 12] },
+    { label: 'Carved gable horns', note: 'The bargeboards cross at the ridge and run on into horn-like points, as reconstructions often show; Beowulf calls its hall Heorot, the hart, and describes it as horn-gabled.', at: [-15, 11, -4] },
+    { label: 'Grandstand', note: 'Tiered timber seats facing a speaker, like the one excavated at Yeavering, where the king met his people.', at: [-12, 2.4, 12] },
   ],
   modelledOn: 'The royal township of Yeavering (Ad Gefrin), Northumberland, 7th century',
   build(b) {

@@ -16,10 +16,10 @@ export const apartmentBlock: BuildingDef = {
   style: 'Contemporary (new London vernacular)',
   date: 'c. 2014',
   summary:
-    'The tower came down and the plot was rebuilt at the scale of a street again: six storeys of flats over a shop, built by a housing association and a developer together, with some homes for social rent and the rest for sale. ' +
+    'The tower came down and the plot was rebuilt at the scale of a street again: five storeys of flats over a shop, built by a housing association and a developer together, with some homes for social rent and the rest for sale. ' +
     'Behind the brick is a concrete or timber frame; the brick is a thin skin chosen to fit in with the older town, and the top floor is set back and clad in metal so the block looks lower from the pavement. ' +
-    'Balconies are cut into the building rather than hung off it, and the roof becomes a shared terrace. ' +
-    'It houses as many people as the tower did, in a form that meets the street.',
+    'On the street front the balconies are cut into the building rather than hung off it, and the roof becomes a shared terrace. ' +
+    'Blocks like this can house as many people to the hectare as the towers did, in a form that meets the street.',
   materials: ['brick slips and facing brick', 'zinc and anodised aluminium cladding', 'glass', 'concrete frame'],
   lookFor: [
     { label: 'Inset balconies', note: 'Recessed into the facade rather than bolted on, they are more private and keep the brick front flat and calm.', at: [-2, GF + FH + 1.0, ZF - 0.6] },
@@ -28,7 +28,7 @@ export const apartmentBlock: BuildingDef = {
     { label: 'Roof terrace', note: 'The roof in front of the top floor is a shared garden with planting and a glass balustrade.', at: [-8, GF + FH * UP + 1.0, ZF - 1.0] },
     { label: 'Tall windows', note: 'Vertical windows in a steady grid give the plain brick front the rhythm of a Georgian terrace, a deliberate nod to the older town.', at: [6, GF + FH * 2 + 1.5, ZF + 0.05] },
   ],
-  influences: ['passivhaus'],
+  influences: [],
   build(b) {
     const brick = b.pick([P.brickBuff, P.brickYellow, tint(P.brickRed, -0.02), P.brickBuff]);
     const metal = b.pick([P.zinc, P.cladGrey, P.bronze]);

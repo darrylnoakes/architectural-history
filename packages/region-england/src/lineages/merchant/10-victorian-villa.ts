@@ -19,11 +19,11 @@ export const victorianVilla: BuildingDef = {
     'The calm, symmetrical Georgian box has been thrown over for the picturesque and the medieval.',
   materials: ['red, yellow and blue brick', 'Welsh slate', 'plate glass', 'cast iron', 'stone dressings'],
   lookFor: [
-    { label: 'Tower', note: 'A tall entrance tower with a steep pyramid roof and iron cresting, there for show rather than use.', at: [3.5, 15.2, 11.4] },
+    { label: 'Tower', note: 'A tall entrance tower with a steep pyramid roof and an iron finial, there for show rather than use.', at: [3.5, 15.2, 11.4] },
     { label: 'Polychrome brickwork', note: 'Bands and arches of yellow and blue brick against red: the ‘structural polychromy’ that Ruskin admired in Italy.', at: [-1.0, 4.6, 10.2] },
     { label: 'Canted bay window', note: 'A bay with angled sides rising through two storeys, letting light into the best rooms.', at: [-3.75, 2.4, 12.6] },
-    { label: 'Fretted bargeboards', note: 'Cut and pierced boards along the gable edge, machine-made and sold from catalogues.', at: [-3.75, 10.9, 12.2] },
-    { label: 'Conservatory', note: 'A glasshouse of cast iron and plate glass for ferns and palms, possible since the glass tax ended in 1845.', at: [7.0, 3.6, 4.0] },
+    { label: 'Bargeboards', note: 'Shaped boards along the gable edge, by now often machine-cut and bought from catalogues.', at: [-3.75, 10.9, 12.2] },
+    { label: 'Conservatory', note: 'A glasshouse of cast iron and plate glass for ferns and palms, made affordable once the glass tax was abolished in 1845.', at: [7.0, 3.6, 4.0] },
   ],
   influences: ['gothic-revival-export', 'industrial-export'],
   build(b) {

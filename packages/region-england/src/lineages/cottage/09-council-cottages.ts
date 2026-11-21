@@ -18,11 +18,11 @@ export const councilCottages: BuildingDef = {
     'After the First World War the government promised "homes fit for heroes", and the 1919 Housing Act made councils build them with a state subsidy. ' +
     'They followed the Tudor Walters Report of 1918, much shaped by Raymond Unwin of the garden city movement: no more than twelve houses to the acre, wide fronts so every main room got sun, a bathroom, and gardens front and back. ' +
     'The result looks like a village cottage, a block of four under one big roof, and for many families it was the first home with a bath and a garden. ' +
-    'For the first time the cheapest housing on the plot was built by the public, not by a landlord or a charity.',
+    'For the first time the cheapest housing on the plot was built by the council, not by a landlord or a charity.',
   materials: ['roughcast render over brick', 'clay plain tile', 'painted timber casements'],
   lookFor: [
     { label: 'Block of four', note: 'Four houses under one roof, with the end houses marked by gables, so the group reads as one big cottage rather than a terrace.', at: [-8.7, 6.5, 3.95] },
-    { label: 'Wide frontage', note: 'Each house is wider than it is deep, so the living room and the bedrooms all have windows to the sun.', at: [-2.9, 1.5, 3.45] },
+    { label: 'Wide frontage', note: 'Each house is far wider than a Victorian terraced house, so more of its rooms get windows and sunlight.', at: [-2.9, 1.5, 3.45] },
     { label: 'Small-paned casements', note: 'Cottage-style windows with many panes, set high under the deep eaves.', at: [2.3, 4.0, 3.45] },
     { label: 'Big hipped roof and chimneys', note: 'A steep plain-tile roof and massive stacks: the comfortable look of the Arts and Crafts country house, done cheaply.', at: [-3, 8.2, 1.2] },
     { label: 'Front garden and hedge', note: 'Tudor Walters asked for gardens front and back; the privet hedge became a council estate trademark.', at: [6, 1.0, 6.6] },

@@ -34,15 +34,15 @@ function pit(b: Builder, x: number, z: number, sealed: boolean): void {
 export const tradingGround: BuildingDef = {
   id: 'trading-ground',
   name: 'Trading ground',
-  style: 'Late Iron Age',
-  date: 'c. 100 BC',
+  style: 'Iron Age',
+  date: 'c. 500 BC to AD 50',
   summary:
     'Before there was a town there was a gathering place: a patch of trodden ground where farmers met to swap grain, livestock, salt, pots and iron. ' +
     'Nothing here is a shop. Grain is kept in small storehouses raised on four posts, away from damp and rats, or sealed in pits in the chalk. ' +
     'Pens and windbreaks are woven hazel hurdles, the same panels used for walls and fences on every farm.',
   materials: ['oak posts', 'hazel wattle', 'daub', 'straw thatch'],
   lookFor: [
-    { label: 'Four-post granary', note: 'A tiny store lifted on four posts so air moves under the floor and rodents cannot climb in. Archaeologists find them as a square of four post-holes.', at: [-6.2, 2.4, -3.2] },
+    { label: 'Four-post granary', note: 'A tiny store lifted on four posts so air moves under the floor and rodents find it harder to get in. Archaeologists find them as a square of four post-holes.', at: [-6.2, 2.4, -3.2] },
     { label: 'Storage pit', note: 'Grain kept for seed was sealed in a pit under a clay cap. Starved of air it kept through the winter.', at: [3.6, 0.5, -5.2] },
     { label: 'Wattle hurdles', note: 'Hazel rods woven between upright stakes: a light, portable panel for pens, windbreaks and the walls of houses.', at: [6.4, 1.1, 3.2] },
     { label: 'Notched-log ladder', note: 'A single log with steps cut into it, the usual way up to a raised floor.', at: [-6.2, 0.9, -1.4] },

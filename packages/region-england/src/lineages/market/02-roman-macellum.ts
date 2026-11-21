@@ -33,7 +33,7 @@ export const romanMacellum: BuildingDef = {
     { label: 'Tabernae', note: 'One-room shops open to the walk by day and closed at night with wooden shutters.', at: [0, 1.5, 3.9] },
     { label: 'Tegulae and imbrices', note: 'Flat clay tiles with raised edges, the joints covered by half-round tiles: the ribbed Roman roof.', at: [4, 6.0, 1.4] },
   ],
-  modelledOn: 'The macellum at Verulamium (St Albans), simplified',
+  modelledOn: 'Loosely after the macellum at Verulamium (St Albans); the layout is simplified',
   influences: ['roman-conquest'],
   build(b) {
     const BW = 16; // shop block

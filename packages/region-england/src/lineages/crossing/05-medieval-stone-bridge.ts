@@ -5,9 +5,9 @@ export const medievalStoneBridge: BuildingDef = {
   id: 'medieval-stone-bridge',
   name: 'Stone bridge with chapel',
   style: 'Gothic',
-  date: 'c. 1250, chapel 14th century',
+  date: '13th century, chapel 14th century',
   summary:
-    'From about 1200 English towns rebuilt their timber bridges in stone, paid for by tolls, gifts and indulgences: helping to mend a bridge was counted a pious work. ' +
+    'From about 1200 many English towns rebuilt their timber bridges in stone, paid for by tolls, gifts and indulgences: helping to mend a bridge was counted a pious work. ' +
     'The arches are pointed, which throws less sideways thrust on the piers than a round arch of the same span, and the piers have triangular cutwaters carried up to the road as refuges where people on foot could step aside from carts. ' +
     'A little chapel stands on one pier, where a priest prayed for travellers and for the benefactors who paid for the bridge.',
   materials: ['coursed limestone', 'ashlar dressings', 'lead'],
@@ -16,7 +16,7 @@ export const medievalStoneBridge: BuildingDef = {
     { label: 'Pointed arch', note: 'Each arch is two arcs meeting at a point, the Gothic arch used in churches of the same years.', at: [0, 1.8, -6.1] },
     { label: 'Cutwater', note: 'The triangular end of a pier, pointing into the current so floods part around it.', at: [-3.4, 0.2, -3.1] },
     { label: 'Pedestrian refuge', note: 'The cutwater is carried up to the road, making a recess in the parapet where walkers can wait for a cart to pass.', at: [-2.6, 3.4, -3.1] },
-    { label: 'Bridge chapel', note: 'A chantry chapel on the pier; the priest also collected alms and tolls for the upkeep of the bridge.', at: [4.4, 7.4, 3.1] },
+    { label: 'Bridge chapel', note: 'A chantry chapel on the pier; the priest also collected alms from travellers for the upkeep of the bridge.', at: [4.4, 7.4, 3.1] },
     { label: 'Arch ring', note: 'Dressed stone voussoirs, wedge-shaped blocks, form the ring of each arch; the walls around it are rougher coursed rubble.', at: [-2.1, 1.0, 1.9] },
   ],
   influences: ['french-gothic'],

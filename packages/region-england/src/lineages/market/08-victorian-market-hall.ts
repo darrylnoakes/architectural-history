@@ -18,12 +18,12 @@ function voussoirs(b: Builder, r: number, springY: number, colors: number[], n =
 export const victorianMarketHall: BuildingDef = {
   id: 'victorian-market-hall',
   name: 'Covered market hall',
-  style: 'Victorian High Gothic polychromy',
+  style: 'Victorian polychrome brick',
   date: 'c. 1865',
   summary:
-    'The railway has made the town a regional centre, and the council replaces its little market house with a covered hall big enough for hundreds of stalls. ' +
+    'The railway has made the town a regional centre, and the council replaces its little market house with a covered hall big enough for dozens of stalls. ' +
     'The trading floor sits under a roof of cast iron and glass, the technology of railway stations, so it is light inside whatever the weather. ' +
-    'The ends facing the square are dressed up in striped and patterned brick, a fashion spread by John Ruskin’s writing on the buildings of Venice and Verona.',
+    'The ends facing the square are dressed up in striped and patterned brick, a fashion encouraged by John Ruskin’s writing on the buildings of Venice and Verona.',
   materials: ['red, yellow and blue brick', 'cast iron', 'glass', 'stone dressings'],
   lookFor: [
     { label: 'Polychrome brickwork', note: 'Bands and arches in different coloured bricks: structural colour rather than paint.', at: [-6.5, 5.0, 8.15] },
@@ -32,7 +32,7 @@ export const victorianMarketHall: BuildingDef = {
     { label: 'Entrance arch', note: 'A huge round arch with striped voussoirs and an iron fanlight, wide enough for carts.', at: [0, 6.2, 8.4] },
     { label: 'Screen gable', note: 'The brick front rises above the glass roof behind it, giving the hall a civic face.', at: [3.2, 11.4, 8.1] },
   ],
-  influences: ['industrial-export', 'gothic-revival-export'],
+  influences: ['industrial-export'],
   build(b) {
     const W = 19;
     const D = 16;

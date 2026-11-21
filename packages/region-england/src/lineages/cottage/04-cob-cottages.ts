@@ -37,9 +37,9 @@ export const cobCottages: BuildingDef = {
   style: 'Norman-period peasant vernacular',
   date: 'c. 1100',
   summary:
-    'After the Conquest the plot held two one-room cottages for families who worked the lord’s land in return for a strip of their own. ' +
+    'After the Conquest the plot held two one-room cottages for families who worked the lord’s land in return for a few acres of their own. ' +
     'Their walls are cob, clay mixed with straw and trodden up in layers on a stone plinth, so the corners come out rounded and the openings stay small. ' +
-    'A fire burned on an open hearth in the middle of the floor and the smoke found its way out through the thatch and the holes at each end of the ridge: chimneys were still for castles and the rich. ' +
+    'A fire burned on an open hearth in the middle of the floor and the smoke found its way out through the thatch and the holes at each end of the ridge: the few chimneys were in castles and great houses. ' +
     'Unlike the post-built halls before them, these walls were meant to last if kept capped and dry.',
   materials: ['cob (clay and straw)', 'rubble stone plinth', 'straw thatch', 'oak'],
   lookFor: [

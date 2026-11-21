@@ -60,15 +60,15 @@ export const elizabethanManor: BuildingDef = {
   style: 'Elizabethan',
   date: 'c. 1575',
   summary:
-    'Under strong Tudor government, and with cannon able to batter walls down, castles lost their point; this one was left to decay and quarried for its stone. The new lord builds a house to be seen rather than to hold: an E-shaped plan of fashionable brick, two wings and a central porch, ' +
+    'Under strong Tudor government, and with cannon able to batter walls down, castles lost much of their point; this one was left to decay and quarried for its stone. The new lord builds a house to be seen rather than to hold: an E-shaped plan of fashionable brick, two wings and a central porch, ' +
     'with walls of glass in huge mullioned and transomed windows and tall clustered chimneys announcing many warm rooms. ' +
-    'The old motte survives as a garden mount, a spiral walk to its top for a view over the knot garden, and a broken stretch of the castle wall is kept as a reminder of the family\'s ancient lineage.',
+    'The old motte survives as a garden mount, a spiral walk to its top for a view over the knot garden, and a broken stretch of the castle wall is kept, perhaps as a reminder of the family\'s ancient lineage.',
   materials: ['red brick with blue diaper', 'limestone dressings', 'clay plain tiles', 'leaded glass'],
   lookFor: [
     { label: 'E-plan', note: 'Two wings project forward at the ends and a porch in the middle, so the plan reads as a letter E; it is often said, probably wrongly, to honour the Queen.', at: [0, 11.6, 17.8] },
     { label: 'Mullioned and transomed windows', note: 'Great windows divided by upright stone mullions and horizontal transoms, filled with small leaded panes; glass itself was a display of wealth.', at: [-6.5, 6.5, 12.3] },
     { label: 'Clustered chimneys', note: 'Several tall brick shafts grouped on one base, each serving a fireplace in a different room.', at: [9, 18.2, 6.8] },
-    { label: 'Porch of the orders', note: 'The central porch carries classical columns, a Renaissance motif learned from books and applied to a still-medieval house.', at: [0, 4.4, 16.6] },
+    { label: 'Porch of the orders', note: 'The central porch carries classical columns stacked in their proper order, Doric, Ionic, then Corinthian, a Renaissance motif learned from books and applied to a still-medieval house.', at: [0, 4.4, 16.6] },
     { label: 'Castle ruin and garden mount', note: 'A ruined fragment of the medieval curtain wall kept in the garden, and the old motte reused as a mount with a spiral path.', at: [15.6, 9.4, -16] },
   ],
   influences: ['flemish-brick', 'italian-renaissance'],

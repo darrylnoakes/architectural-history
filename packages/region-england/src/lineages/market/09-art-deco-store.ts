@@ -44,7 +44,7 @@ export const artDecoStore: BuildingDef = {
     'Glazed cream faience tiles keep it clean in a smoky town, and a stepped central tower with a projecting sign makes sure it is seen from every street into the square.',
   materials: ['steel frame', 'glazed faience', 'metal (Crittall) windows', 'plate glass', 'bronze'],
   lookFor: [
-    { label: 'Faience cladding', note: 'Glazed, machine-made ceramic blocks: bright, washable and cheap to mould into ornament.', at: [-6.0, 4.9, 7.3] },
+    { label: 'Faience cladding', note: 'Glazed ceramic blocks pressed in moulds: bright, washable and cheap to repeat as ornament.', at: [-6.0, 4.9, 7.3] },
     { label: 'Ribbon windows', note: 'Continuous horizontal bands of steel-framed windows, possible because the frame, not the wall, holds the building up.', at: [-4.0, 6.6, 7.3] },
     { label: 'Rounded corner', note: 'The bands wrap round a curved corner, the streamlined look of liners and express trains.', at: [-8.7, 8.0, 6.4] },
     { label: 'Fin sign', note: 'A vertical blade carrying the store’s name, meant to be read from far down the street.', at: [9.6, 9.5, 7.3] },

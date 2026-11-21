@@ -8,11 +8,11 @@ export const saxonWatermill: BuildingDef = {
   date: 'c. 850',
   summary:
     'Grinding grain by hand in a quern took hours every day; a watermill did it for a whole settlement. ' +
-    'Early English mills like the one excavated at Tamworth used a horizontal wheel: a jet of water from a steep wooden chute struck paddles on a vertical shaft, ' +
+    'Some early English mills, like the one excavated at Tamworth, used a horizontal wheel: a jet of water from a steep wooden chute struck paddles on a vertical shaft, ' +
     'which turned the upper millstone directly in the room above, with no gears at all. The mill is small, timber-built and thatched, ' +
     'but behind it is real engineering: an embanked millpond to store a head of water, and a sluice to let it go.',
   materials: ['oak planks', 'straw thatch', 'earth banks', 'millstones'],
-  modelledOn: 'The excavated 9th-century mill at Tamworth, Staffordshire',
+  modelledOn: 'Loosely after the excavated 9th-century mill at Tamworth, Staffordshire; the layout is simplified',
   lookFor: [
     { label: 'Horizontal wheel', note: 'Paddles round a vertical shaft, spinning flat like a top beneath the floor. The shaft drives the millstone directly.', at: [2.4, -0.4, -12.2] },
     { label: 'Chute (flume)', note: 'A steep wooden trough that narrows the water into a fast jet aimed at the paddles.', at: [6.5, 0.6, -12.3] },

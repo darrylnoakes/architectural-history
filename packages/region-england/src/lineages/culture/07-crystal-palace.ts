@@ -18,11 +18,11 @@ export const crystalPalace: BuildingDef = {
   id: 'crystal-palace',
   name: 'Exhibition hall and winter garden',
   style: 'Victorian iron and glass',
-  date: 'c. 1851',
+  date: 'c. 1870',
   summary:
     "Joseph Paxton's Crystal Palace for the Great Exhibition of 1851 showed that a vast building could be bolted together from a kit of identical, " +
     'factory-made parts: cast-iron columns and girders on a fixed grid, timber glazing bars and hundreds of thousands of panes of sheet glass. ' +
-    'This town hall of exhibitions and palms is a small relative, built on the same system. Where the assembly rooms were carved stone for a few subscribers, ' +
+    'This town’s hall of exhibitions and palms, put up some twenty years later, is a small relative built on the same system. Where the assembly rooms were carved stone for a few subscribers, ' +
     'this is light, cheap and quick to build, made for crowds who came by railway to see machines, plants and wonders.',
   materials: ['cast iron', 'wrought iron', 'sheet glass', 'timber glazing bars', 'painted boarding'],
   modelledOn: 'The Crystal Palace, Hyde Park, London (Joseph Paxton, 1851)',

@@ -19,7 +19,7 @@ const lineage: Lineage = {
     { from: 120, def: romanoCelticTemple },
     { from: 410, def: ruinedTemple },
     { from: 680, def: saxonChurch },
-    { from: 1090, def: normanChurch },
+    { from: 1120, def: normanChurch },
     { from: 1240, def: earlyEnglishChurch },
     { from: 1340, def: decoratedChurch },
     { from: 1470, def: perpendicularChurch },

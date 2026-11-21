@@ -8,7 +8,7 @@ export const georgianTownhouse: BuildingDef = {
   date: 'c. 1740',
   summary:
     'The timber house was taken down and replaced in brick, in a style learned from pattern books that spread Palladian rules of ' +
-    'proportion to every builder in the country. The front is flat and symmetrical: three bays, a central door and sash windows that ' +
+    'proportion to builders across the country. The front is flat and symmetrical: three bays, a central door and sash windows that ' +
     'are tallest on the main first floor and smaller on the floor above. The roof is hidden behind a parapet, and all the ornament is ' +
     'gathered round the front door. Brick was now a sign of respectability, and after the great town fires many towns encouraged it.',
   materials: ['red brick', 'rubbed brick arches', 'painted timber sashes', 'Portland stone dressings', 'clay tiles'],

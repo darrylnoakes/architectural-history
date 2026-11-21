@@ -36,12 +36,12 @@ export const brutalistArtsCentre: BuildingDef = {
     'It is built in raw, board-marked concrete: wide terraces stacked like geological strata and cantilevered out over glazed foyers, ' +
     'with the two fly towers of the stages rising above. The terraces are meant as public outdoor rooms, open whether or not there is a show.',
   materials: ['board-marked in-situ concrete', 'precast concrete', 'bronze-tinted glass'],
-  modelledOn: 'National Theatre, South Bank, London (Denys Lasdun, 1967-76)',
+  modelledOn: 'National Theatre, South Bank, London (Denys Lasdun, designed from 1967, built 1969-76)',
   lookFor: [
     { label: 'Strata', note: 'Deep horizontal terraces at different levels, stepping back like layers of rock. Lasdun called them his strata.', at: [-13.5, 6, 9.6] },
     { label: 'Fly towers', note: 'The tall blind boxes above each stage, high enough to lift whole sets out of sight of the audience.', at: [-4, 27.4, -7] },
     { label: 'Board-marked concrete', note: 'Concrete poured into timber shuttering keeps the grain and joints of the boards on its face.', at: [11.2, 12, -4.4] },
-    { label: 'Cantilever', note: 'The terraces reach out several metres beyond the glass beneath them, held by the concrete frame, with nothing underneath.', at: [10, 3.3, 9.4] },
+    { label: 'Cantilever', note: 'The terraces reach out beyond the glass beneath them, carried by the concrete frame on only a few slim piers.', at: [10, 3.3, 9.4] },
     { label: 'Glazed foyers', note: 'Glass walls set well back under the terraces, so the foyers open to the town but stay in shadow.', at: [-6, 2, 8.0] },
   ],
   influences: ['corbusian-brutalism'],

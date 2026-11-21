@@ -74,17 +74,17 @@ export const saxonThegnsHall: BuildingDef = {
   id: 'saxon-thegns-hall',
   name: "Thegn's hall",
   style: 'Anglo-Saxon',
-  date: 'c. 600 to 1050',
+  date: 'c. 650 to 1050',
   summary:
-    'When the Roman towns emptied, building in mortar and tile was forgotten and the leading household went back to timber. ' +
-    'Its home was a long rectangular hall of split oak planks set upright in trenches, under a steep roof of oak shingles with a louvre over the central hearth. ' +
+    'When the Roman towns emptied, building in mortar and tile died out, and even after the Church brought stone back for its churches the leading household lived in timber. ' +
+    'Its home was a long rectangular hall of split oak planks set upright in trenches, under a steep roof (shown here in oak shingles, though thatch was as likely) with a louvre over the central hearth. ' +
     'The hall was for feasting, business and sleeping; the lord’s family withdrew to a separate bower. ' +
-    'By the 10th century a landholder of this rank was called a thegn.',
+    'By the 9th and 10th centuries a landholder of this rank was called a thegn.',
   materials: ['split oak planks', 'oak shingles', 'earth-fast posts', 'wattle fencing'],
   lookFor: [
     { label: 'Opposed doorways', note: 'A door in the middle of each long wall, facing each other: the classic Anglo-Saxon hall plan.', at: [0, 2.7, 5.0] },
     { label: 'Plank walls', note: 'Oak trunks split into planks and set upright, side by side, in a trench in the ground.', at: [-4.5, 1.4, 5.0] },
-    { label: 'Shingled roof and louvre', note: 'Oak shingles laid in overlapping courses; the little hooded louvre on the ridge let out the hearth smoke.', at: [0, 7.6, 1.5] },
+    { label: 'Shingled roof and louvre', note: 'Oak shingles laid in overlapping courses. The hooded louvre on the ridge is a reconstruction: smoke may simply have escaped through the roof or the gables.', at: [0, 7.6, 1.5] },
     { label: 'Raking buttresses', note: 'Angled posts outside the wall, propping it against the outward push of the heavy roof.', at: [5.6, 1.4, 5.9] },
     { label: 'Bower', note: 'A smaller detached building for the lord’s family: the ‘bur’ of Old English poems, a place for privacy.', at: [5.6, 4.6, -7.4] },
   ],
@@ -100,7 +100,7 @@ export const saxonThegnsHall: BuildingDef = {
     b.box(1.6, 0.12, 0.9, P.gravel, { at: [0, 0, 5.3] });
 
     // the bower behind, its door facing the hall
-    const bs = b.variant === 0 ? 1 : b.pick([1, -1] as const);
+    const bs = 1;
     b.group({ at: [5.6 * bs, 0, -7.4], rotY: Math.PI }, () =>
       plankBuilding(b, 5.6, 4.2, 2.3, 2.6, { plank: tint(plank, 0.03), shingle, doors: 'front' }),
     );

@@ -19,12 +19,6 @@ const extraModules = import.meta.glob<Record<string, BuildingDef>>(
   '../../../packages/region-england/src/extras/*.ts',
 );
 
-/** Where the river runs relative to a plot, as a [z0, z1] band in plot-local metres. */
-const RIVER_BAND: Record<string, [number, number]> = {
-  crossing: [-8, 8],
-  work: [-27, -11],
-};
-
 const q = new URLSearchParams(location.search);
 const info = document.getElementById('info')!;
 const errBox = document.getElementById('err')!;
@@ -64,7 +58,7 @@ async function main() {
     if (!key) return fail(`No lineage folder "${lineageId}". Found: ${Object.keys(lineageModules).join(', ')}`);
     const lineage = (await lineageModules[key]()).default;
     plot = lineage.plotSize;
-    band = RIVER_BAND[lineageId] ?? null;
+    band = lineage.river ?? null;
     defs = lineage.stages.map((s) => ({ def: s.def, from: s.from }));
     if (id) {
       defs = defs.filter((d) => d.def.id === id);

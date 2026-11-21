@@ -39,16 +39,16 @@ export const romanMansio: BuildingDef = {
   style: 'Romano-British',
   date: 'c. AD 100',
   summary:
-    'The Roman state ran an official posting service, the cursus publicus, and every day’s journey along its roads ended at a mansio, where officials with a travel warrant could eat, sleep, bathe and change horses. ' +
+    'The Roman state ran an official posting service, the cursus publicus, and roughly every day’s journey along its roads ended at a mansio, where officials with a travel warrant could eat, sleep, bathe and change horses. ' +
     'It is a Mediterranean courtyard house transplanted to Britain: mortared masonry walls, rendered and painted, under low-pitched roofs of fired clay tile, all quite new to the island. ' +
-    'Guest rooms open off a portico round the yard, the stables fill the back range and a small bath suite projects at one side.',
+    'Guest rooms open off porticoes along the yard, the stables fill the back range and a small bath suite projects at one side.',
   materials: ['mortared stone', 'lime render', 'fired clay roof tile', 'oak'],
   lookFor: [
     { label: 'Courtyard plan', note: 'Four ranges turn their backs to the road and open onto a private yard, the plan of a Roman town house.', at: [0, 0.6, -0.5] },
     { label: 'Tegulae and imbrices', note: 'Flat tiles with raised edges (tegulae), their joints capped by half-round tiles (imbrices) that make the ribbed stripes.', at: [-5, 4.6, 7.2] },
     { label: 'Portico', note: 'A covered walk on columns along the street front, giving shade, shelter and a dignified face to the road.', at: [4.4, 2.3, 10.6] },
     { label: 'Stable range', note: 'Fresh horses for the imperial post were kept here, with wide doors opening onto the yard.', at: [-2.5, 1.6, ZB + DEP + 0.2] },
-    { label: 'Bath suite', note: 'Even a roadside inn had heated baths. The apse held a hot plunge bath over a hypocaust, an underfloor heating system fed by a furnace.', at: [X1 + 1.3, 2.0, -0.6] },
+    { label: 'Bath suite', note: 'Many mansiones had their own heated baths. The apse held a hot plunge bath over a hypocaust, an underfloor heating system fed by a furnace.', at: [X1 + 1.3, 2.0, -0.6] },
   ],
   influences: ['roman-conquest'],
   build(b) {

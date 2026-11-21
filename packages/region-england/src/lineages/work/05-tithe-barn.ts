@@ -16,19 +16,19 @@ export const titheBarn: BuildingDef = {
   style: 'Medieval (Decorated period)',
   date: 'c. 1320',
   summary:
-    'Barns like this are usually called tithe barns, after the tenth of every harvest that was owed to the Church, but most were built by abbeys to store the corn of their own great estates. ' +
+    'Barns like this are usually called tithe barns, after the tenth of every harvest that was owed to the Church, but most of the great stone ones were built by abbeys to store the corn of their own great estates. ' +
     'It is a vast single space under one roof, with thick stone walls held up by buttresses and narrow slits for air. ' +
     'Laden wagons drove in through the tall porches and out of smaller doors opposite, and the cross-draught between them was used for winnowing the threshed grain. ' +
-    'The manor mill still stands by the river, now rebuilt in stone.',
+    'The mill still stands by the river, now rebuilt wholly in stone.',
   materials: ['limestone rubble', 'ashlar dressings', 'stone slates', 'oak roof trusses'],
   lookFor: [
     { label: 'Cart porch', note: 'Projecting wings with doors tall enough for a wagon piled high with sheaves.', at: [-10, 6.0, 10.4] },
     { label: 'Buttresses', note: 'Stepped stone props that resist the outward thrust of the huge roof.', at: [-4.2, 3.4, 6.6] },
     { label: 'Ventilation slits', note: 'Narrow openings keep the stored grain aired while keeping out thieves and birds.', at: [5.0, 3.0, 6.2] },
     { label: 'Steep stone-slate roof', note: 'Split limestone slates hung on oak pegs, laid in courses that get smaller toward the ridge.', at: [-4, 10.5, 0] },
-    { label: 'Undershot wheel', note: 'The manor mill, rebuilt in stone, with its wheel turning in the river below.', at: [13.5, 2.6, -12.6] },
+    { label: 'Undershot wheel', note: 'The mill, now wholly of stone, with its wheel turning in the river below.', at: [13.5, 2.6, -12.6] },
   ],
-  influences: ['french-gothic'],
+  influences: [],
   build(b) {
     const stone = b.pick([P.limestoneWarm, P.limestone, tint(P.limestoneWarm, -0.04)]);
     const dress = tint(stone, 0.06);

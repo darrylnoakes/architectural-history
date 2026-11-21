@@ -9,7 +9,7 @@ export const roundBarrow: BuildingDef = {
   summary:
     'A bowl barrow: an earth mound heaped over a burial or cremation, with the ditch round its foot dug to supply the soil. ' +
     'It was raised around 2000 BC, so to the Iron Age farmers who grazed sheep on this common it was already some fifteen centuries old, ' +
-    'a monument of the ancestors that nobody living had built. The standing stone near it is older still, or about as old. ' +
+    'a monument of the ancestors that nobody living had built. The standing stone near it may be older still, or about as old. ' +
     'Nothing here is a building in the later sense, but it is the first deliberate, lasting mark on the plot.',
   materials: ['earth and turf', 'chalk rubble', 'sarsen stone'],
   lookFor: [

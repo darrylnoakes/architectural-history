@@ -46,7 +46,7 @@ export const romanWorkersRow: BuildingDef = {
   style: 'Romano-British vernacular',
   date: 'c. AD 100',
   summary:
-    'Within a generation of the conquest the town had straight streets, and along them ran narrow "strip buildings" set end-on to the road. ' +
+    'Within a few decades of the conquest the town had straight streets, and along them ran narrow "strip buildings" set end-on to the road. ' +
     'Each was a timber frame on a sill beam and stone footing, its walls filled with wattle or clay and plastered: a shop or workshop open to the street at the front, a room or two to live in behind. ' +
     'What is new since the roundhouse is the rectangle, the street line and, on some roofs, fired clay tiles, though thatch stayed common on cheaper buildings.',
   materials: ['timber frame', 'wattle and daub, plastered', 'clay roof tile', 'thatch', 'stone footings'],

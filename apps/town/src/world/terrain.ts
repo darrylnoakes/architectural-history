@@ -1,7 +1,6 @@
 import * as THREE from 'three';
 import { P, type Era } from '@ah/kit';
 import {
-  BRIDGE,
   RIVER_HALF,
   SQUARE,
   STREET_STYLES,
@@ -297,7 +296,6 @@ export class Terrain {
     // once streets have pavements the square is flagged over rather than left as carriageway
     if (st.pavement) quad(sq.x0 - 1, sq.z0 - 1, sq.x1 + 1, sq.z1 + 1, 0.055, pave);
     else quad(sq.x0, sq.z0, sq.x1, sq.z1, 0.062, road);
-    void BRIDGE;
     if (road.idx.length) this.roadGroup.add(meshFrom(road, this.roadMat));
     if (pave.idx.length) this.roadGroup.add(meshFrom(pave, this.paveMat));
     if (lines.idx.length) this.roadGroup.add(meshFrom(lines, this.lineMat));

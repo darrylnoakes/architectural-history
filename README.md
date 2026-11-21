@@ -6,7 +6,9 @@ in the manner of each age, so you can watch a family home go from Iron Age round
 timber house without leaving the spot.
 
 - **Scrub or play through time.** Buildings rebuild in place; woodland retreats; tracks become
-  Roman paving, cobbles and tarmac; the town spreads across the river.
+  Roman paving, cobbles and tarmac; the town spreads across the river. Nothing stands in a year
+  when it could not have: the Roman town falls into ruin after 420, the priory after 1539, and only
+  durable buildings survive as old neighbours in the modern town.
 - **Three ways to move.** Turn the model like a diorama, walk the streets in first person, or fly a drone.
   Touch screens get an on-screen stick.
 - **Click any building** for what it is, why it looks that way and what to look for, with the named
@@ -27,7 +29,7 @@ apps/
 packages/
   kit/               Procedural low-poly building kit: the Builder, the palette, shared types.
   engine/            Renderer set-up, sky and sun, camera modes (model / walk / fly), the time scale.
-  region-england/    The content: eras, cross-pollination, the town plan, and 108 buildings in
+  region-england/    The content: eras, cross-pollination, the town plan, and 109 buildings in
                      ten lineages (plus one-off extras), each a generator function plus its card text.
 docs/
   BUILDING_GUIDE.md  How to write a building.
@@ -53,7 +55,8 @@ pnpm typecheck
 `/gallery.html?lineage=home` shows a whole lineage in a row; `?lineage=home&id=roundhouse` shows one
 building. `node tools/shot.mjs home roundhouse` screenshots it (needs the dev server running).
 
-Handy URL parameter: `/?y=1350` opens the town in a given year and skips the introduction.
+Handy URL parameters: `/?y=1350` opens the town in a given year and skips the introduction;
+`?q=low` turns off shadows and thins the trees for weak devices.
 
 ## Ideas for later
 

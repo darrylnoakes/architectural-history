@@ -5,7 +5,7 @@ export const saxonGrubenhaus: BuildingDef = {
   id: 'saxon-grubenhaus',
   name: 'Sunken-featured building and hall',
   style: 'Early Anglo-Saxon',
-  date: 'c. 430',
+  date: 'c. 450',
   summary:
     'When Roman rule ended the towns emptied, and the settlers who came from northern Germany and Denmark built in timber, thatch ' +
     'and earth as they had at home. A family farmstead had a rectangular hall on earth-fast posts and one or more small huts built ' +
@@ -20,8 +20,8 @@ export const saxonGrubenhaus: BuildingDef = {
       at: [4.9, 1.6, 4.2],
     },
     {
-      label: 'Sunken floor',
-      note: 'The hut stands over a pit about half a metre deep, so its low door steps down; the dug earth is banked round the edge.',
+      label: 'Sunken pit',
+      note: 'The hut stands over a pit about half a metre deep, with the dug earth banked round the edge; here the low door steps down into it.',
       at: [3.4, 0.6, 5.8],
     },
     {

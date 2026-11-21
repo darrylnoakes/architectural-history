@@ -8,17 +8,17 @@ export const queenAnneHouse: BuildingDef = {
   date: 'c. 1705',
   summary:
     'The fashionable house is now a calm, symmetrical box of red brick on the Dutch model: seven equal bays, a hipped roof with dormers lighting the servants’ attics, and a deep wooden cornice at the eaves. ' +
-    'The sliding sash window, perfected in England in the 1670s and 1680s, has replaced the mullioned casement, and the windows line up in strict rows. ' +
-    'Ornament is saved for the front door, under a carved shell hood. Gables, jetties and visible timber have gone for good.',
+    'The sliding sash window, developed in the 1670s and 1680s, has replaced the mullioned casement, and the windows line up in strict rows. ' +
+    'Ornament is kept for the cornice, the corners and above all the front door, under a carved shell hood. Gables, jetties and visible timber have gone out of fashion.',
   materials: ['red brick', 'rubbed brick dressings', 'stone quoins', 'clay tile', 'painted timber'],
   lookFor: [
     { label: 'Hipped roof with dormers', note: 'The roof slopes down on all four sides; little gabled dormers light the attic rooms.', at: [0, 11.2, 7.6] },
     { label: 'Modillion cornice', note: 'A deep timber cornice carried on a row of small carved brackets called modillions.', at: [-5.5, 7.6, 11.7] },
-    { label: 'Shell hood', note: 'A carved hood shaped like a scallop shell, on scrolled brackets, shelters the front door.', at: [0, 4.4, 11.9] },
-    { label: 'Sash windows', note: 'Tall windows of two sliding halves with thin glazing bars, set in seven even bays.', at: [5.0, 5.4, 11.1] },
+    { label: 'Shell hood', note: 'A hood shaped like a half-dome scallop shell, on carved brackets, shelters the front door.', at: [0, 4.4, 11.9] },
+    { label: 'Sash windows', note: 'Tall windows of two sliding halves, divided by wooden glazing bars into small panes, set in seven even bays.', at: [5.0, 5.4, 11.1] },
     { label: 'Tall chimney stacks', note: 'Massive panelled stacks rise from the roof, each serving several fireplaces.', at: [5.6, 14.8, 6.4] },
   ],
-  influences: ['dutch-classicism', 'baroque'],
+  influences: ['dutch-classicism'],
   build(b) {
     const brick = b.pick([P.brickRed, tint(P.brickRed, 0.03), P.brickOrange]);
     const rubbed = tint(brick, 0.12);

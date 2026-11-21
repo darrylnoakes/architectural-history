@@ -40,16 +40,15 @@ export const decoratedChurch: BuildingDef = {
   summary:
     'Prosperity in the early fourteenth century paid for wider aisles with much bigger windows, whose stone tracery now fills the head of each window with circles, curves and ogees. ' +
     'A great five-light east window was cut into the Early English chancel, a porch was built over the south door, and the tower was raised a stage to carry a taller spire behind a pinnacled parapet. ' +
-    'The Norman nave walls, the zigzag doorway and the chancel lancets all survive inside the new work. Within a decade the Black Death of 1348 to 1349 would halt work like this across England.',
+    'The Norman nave walls and tower, the zigzag doorway and the chancel lancets all survive alongside the new work. Within a decade the Black Death of 1348 to 1349 would bring much work like this to a halt across England.',
   materials: ['ragstone', 'limestone tracery and dressings', 'clay tile', 'lead'],
   lookFor: [
-    { label: 'Geometric tracery', note: 'Two pointed lights with a foiled circle above: the window is now a stone pattern, not just a hole.', at: [9.4, 3.4, -2.7] },
-    { label: 'Reticulated east window', note: 'Five lights with S-curved ogee heads and a net of ogee shapes above, the peak of Decorated design.', at: [0, 5.8, -17.4] },
+    { label: 'Geometric tracery', note: 'Two pointed lights with a foiled circle above, the earlier Decorated pattern: the window is now a stone pattern, not just a hole.', at: [9.4, 3.4, -2.7] },
+    { label: 'Reticulated east window', note: 'Five lights with S-curved ogee heads and a net of ogee shapes above, typical of the mature Decorated style.', at: [0, 5.8, -17.4] },
     { label: 'South porch', note: 'Shelter for the main entrance, where weddings and parts of baptisms took place.', at: [12.8, 3.0, DOOR_Z] },
     { label: 'Ballflower', note: 'A small three-petalled ball, repeated along cornices and window arches; the hallmark ornament of c. 1310 to 1340.', at: [9.3, 4.2, 11.5] },
     { label: 'Spire with pinnacles', note: 'A taller spire set back behind a parapet, with a pinnacle at each corner and gabled spire lights.', at: [2.6, 19.6, 19.6] },
   ],
-  influences: ['french-gothic'],
   build(b) {
     church(b, {
       wall: NORMAN_WALL,

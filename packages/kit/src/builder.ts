@@ -87,6 +87,68 @@ export function getMaterials(): Record<MatKind, THREE.Material> {
   return _materials;
 }
 
+const RUIN_GLSL = /* glsl */ `
+float ruinHash(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
+float ruinNoise(vec2 p) {
+  vec2 i = floor(p); vec2 f = fract(p); f = f * f * (3.0 - 2.0 * f);
+  return mix(mix(ruinHash(i), ruinHash(i + vec2(1.0, 0.0)), f.x), mix(ruinHash(i + vec2(0.0, 1.0)), ruinHash(i + vec2(1.0, 1.0)), f.x), f.y);
+}
+// the height to which the walls still stand at a point on the ground: mostly low, with the odd tall fragment
+float ruinHeight(vec3 p) {
+  float n = ruinNoise(p.xz * 0.42) * 0.65 + ruinNoise(p.xz * 1.9) * 0.35;
+  return 0.4 + n * n * 4.8;
+}`;
+
+function ruinVertex(shader: { vertexShader: string }) {
+  shader.vertexShader = shader.vertexShader
+    .replace('#include <common>', '#include <common>\nvarying vec3 vRuinPos;')
+    .replace('#include <begin_vertex>', '#include <begin_vertex>\nvRuinPos = (modelMatrix * vec4(transformed, 1.0)).xyz;');
+}
+
+let _ruin: { surface: THREE.Material; depth: THREE.Material } | null = null;
+
+/**
+ * Materials that turn any building into its own ruin: everything above a ragged height is cut away,
+ * so roofs go and walls stand to uneven heights, and what is left is weathered and mossed. Swap them
+ * onto a built mesh (`mesh.material` and `mesh.customDepthMaterial`) to show it abandoned.
+ */
+export function getRuinMaterials(): { surface: THREE.Material; depth: THREE.Material } {
+  if (!_ruin) {
+    const surface = new THREE.MeshStandardMaterial({
+      vertexColors: true,
+      flatShading: true,
+      roughness: 1,
+      metalness: 0,
+      side: THREE.DoubleSide,
+    });
+    surface.onBeforeCompile = (shader) => {
+      ruinVertex(shader);
+      shader.fragmentShader = shader.fragmentShader
+        .replace('#include <common>', `#include <common>\nvarying vec3 vRuinPos;\n${RUIN_GLSL}`)
+        .replace(
+          '#include <color_fragment>',
+          `#include <color_fragment>
+          float ruinTop = ruinHeight(vRuinPos);
+          if (vRuinPos.y > ruinTop) discard;
+          float ruinLum = dot(diffuseColor.rgb, vec3(0.3, 0.55, 0.15));
+          diffuseColor.rgb = mix(diffuseColor.rgb, vec3(ruinLum) * vec3(0.96, 0.98, 0.9), 0.55) * 0.9;
+          diffuseColor.rgb = mix(diffuseColor.rgb, vec3(0.17, 0.24, 0.11), smoothstep(0.55, 0.0, ruinTop - vRuinPos.y) * 0.65);`,
+        );
+    };
+    surface.customProgramCacheKey = () => 'ruin-surface';
+    const depth = new THREE.MeshDepthMaterial({ depthPacking: THREE.RGBADepthPacking, side: THREE.DoubleSide });
+    depth.onBeforeCompile = (shader) => {
+      ruinVertex(shader);
+      shader.fragmentShader = shader.fragmentShader
+        .replace('#include <common>', `#include <common>\nvarying vec3 vRuinPos;\n${RUIN_GLSL}`)
+        .replace('void main() {', 'void main() {\n  if (vRuinPos.y > ruinHeight(vRuinPos)) discard;');
+    };
+    depth.customProgramCacheKey = () => 'ruin-depth';
+    _ruin = { surface, depth };
+  }
+  return _ruin;
+}
+
 /** Trace an opening (door or window outline) on a path, left jamb up, over the head, right jamb down. */
 function traceOpening(
   path: THREE.Path,

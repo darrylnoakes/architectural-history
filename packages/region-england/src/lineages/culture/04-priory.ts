@@ -26,13 +26,13 @@ export const priory: BuildingDef = {
   style: 'Norman (Romanesque)',
   date: 'c. 1140',
   summary:
-    'A small house of a dozen or so monks, a daughter of a great abbey, given land here by a Norman lord. It is laid out like every monastery in ' +
+    'A small house of a dozen or so monks, a daughter of a great abbey, given land here by a Norman lord. It is laid out like almost every monastery in ' +
     'western Europe: the church on one side of a square cloister, the chapter house and dormitory along the east range, the refectory opposite the church. ' +
     'Norman masons built in thick walls of coursed stone with round arches, small high windows and flat pilaster buttresses. ' +
     'It is the first great stone building on the plot since the Roman baths, some of whose stone it probably reuses.',
   materials: ['coursed limestone', 'reused Roman stone and tile', 'stone slate', 'oak'],
   lookFor: [
-    { label: 'Round arches', note: 'Every door, window and arcade is a semicircle: the surest sign of Norman (Romanesque) work.', at: [-16.4, 4.6, 11] },
+    { label: 'Round arches', note: 'Every door, window and arcade is a semicircle: the hallmark of Norman (Romanesque) work.', at: [-16.4, 4.6, 11] },
     { label: 'Cloister arcade', note: 'Covered walks round an open square, the garth, linking church, chapter house and refectory.', at: [-7, 2.6, 5.4] },
     { label: 'Chapter house', note: 'Where the monks met each morning to hear a chapter of their Rule and confess faults. Its apse projects east.', at: [15.6, 4.2, 0] },
     { label: 'Pilaster buttresses', note: 'Shallow flat strips up the walls: Norman walls were so thick they needed little more.', at: [-6.6, 5, 14.3] },

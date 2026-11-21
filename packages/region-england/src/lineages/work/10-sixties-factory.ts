@@ -31,7 +31,7 @@ export const sixtiesFactory: BuildingDef = {
     { label: 'Saw-tooth north-light roof', note: 'Steep glazed faces turned north light the factory floor evenly, as in the weaving sheds a century before.', at: [6, 8.6, 1.6] },
     { label: 'Curtain wall', note: 'A skin of glass and coloured panels hung on the front of the frame, carrying no weight but its own.', at: [-10, 4.2, 10.3] },
     { label: 'Loading bays', note: 'Roller-shutter doors under a canopy, at the height of a lorry bed.', at: [3.5, 4.6, 3.2] },
-    { label: 'Steel flue', note: 'One slim steel chimney for an oil-fired boiler replaces the tall brick mill chimney.', at: [15.2, 14, -7.2] },
+    { label: 'Steel flue', note: 'One slim steel chimney for an oil-fired boiler, in place of the tall brick chimneys of the steam age.', at: [15.2, 14, -7.2] },
   ],
   influences: ['continental-modernism'],
   build(b) {

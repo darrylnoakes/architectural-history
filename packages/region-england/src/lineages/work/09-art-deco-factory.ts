@@ -11,7 +11,7 @@ export const artDecoFactory: BuildingDef = {
     'moved out to the new arterial roads around London. Their fronts were advertisements, built to be seen from passing cars: long and white, with a showy central entrance, ' +
     'bands of coloured faience and metal windows in long strips. Behind the front, the works themselves are plain single-storey sheds.',
   materials: ['rendered concrete', 'coloured faience tiles', 'steel windows', 'glass'],
-  modelledOn: 'The Hoover Building, Western Avenue, Perivale (Wallis, Gilbert and Partners, 1932 to 1935)',
+  modelledOn: 'The Hoover Building, Western Avenue, Perivale (Wallis, Gilbert and Partners, 1932 to 1935), simplified',
   lookFor: [
     { label: 'Central entrance tower', note: 'Taller than the rest and stepped back at the top, framing a grand doorway like an Egyptian temple gate.', at: [0, 12.5, 9.2] },
     { label: 'Sunburst', note: 'The rising sun, a favourite Art Deco motif, in the fanlight over the entrance.', at: [0, 4.6, 9.3] },

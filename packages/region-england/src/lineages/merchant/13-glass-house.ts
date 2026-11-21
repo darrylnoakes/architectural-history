@@ -50,7 +50,7 @@ export const glassHouse: BuildingDef = {
     { label: 'Frameless glazing', note: 'Huge panes joined edge to edge with silicone, with no visible frames, so the wall almost disappears.', at: [-2.5, 1.6, 7.4] },
     { label: 'Sedum roof', note: 'A living roof of low succulent plants that insulates, soaks up rain and gives wildlife a foothold.', at: [-2.5, 3.8, 3.0] },
     { label: 'Timber cladding', note: 'Untreated larch boards, left to weather to silver-grey rather than painted.', at: [1.5, 5.0, 6.0] },
-    { label: 'Cantilever', note: 'The upper timber box oversails the glass room below, carried on a hidden steel frame.', at: [-2.0, 3.6, 6.1] },
+    { label: 'Floating upper storey', note: 'The timber box sits on the glass room as if floating, carried on a hidden steel frame and slim steel posts rather than walls.', at: [-2.0, 3.6, 6.1] },
     { label: 'Courtyard', note: 'A private outdoor room enclosed by the house and a garden wall, with a reflecting pool.', at: [-3.0, 1.0, -4.5] },
   ],
   influences: ['high-tech-export'],

@@ -49,12 +49,12 @@ export const romanoCelticTemple: BuildingDef = {
   style: 'Romano-British',
   date: 'c. AD 120',
   summary:
-    'Under Roman rule the old shrine was rebuilt in stone, mortar and tile, but to a plan found only in Britain and Gaul: a tall square tower-like cella, home of the god\'s statue, ringed by a lower covered walkway. ' +
+    'Under Roman rule the old shrine was rebuilt in stone, mortar and tile, but to a plan found only in Britain, Gaul and the Rhineland: a tall square tower-like cella, home of the god\'s statue, ringed by a lower covered walkway. ' +
     'Worshippers did not gather inside. They walked round the ambulatory, left offerings and made vows at the altar outside. ' +
     'The god was probably a local one given a Roman name, and the walled precinct follows the line of the Iron Age enclosure.',
   materials: ['flint and mortar', 'painted plaster', 'clay roof tile', 'limestone columns'],
   lookFor: [
-    { label: 'Cella', note: 'The tall central room that housed the cult statue. Only priests went in.', at: [3.8, 9.0, TZ] },
+    { label: 'Cella', note: 'The tall central room that housed the cult statue. Probably only priests went in.', at: [3.8, 9.0, TZ] },
     { label: 'Ambulatory', note: 'A lower covered walkway round all four sides, open between short columns on a low wall.', at: [7.9, 3.0, TZ + 3] },
     { label: 'Tiled roofs', note: 'Flat tegulae and curved imbrices of fired clay, one of the new materials Rome brought.', at: [0, 12.9, TZ] },
     { label: 'Altar', note: 'Sacrifices and offerings were made in the open air, in front of the temple door.', at: [0, 1.3, -9.5] },

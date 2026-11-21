@@ -21,7 +21,7 @@ export const influences: Influence[] = [
     place: 'Rome and Gaul',
     region: 'rome',
     title: 'The mission brings back stone',
-    text: 'Augustine’s mission from Rome reintroduces building in mortared stone. Masons and glaziers are fetched from Gaul, and the church plan follows the Roman basilica.',
+    text: 'Augustine’s mission from Rome reintroduces building in mortared stone. Later in the 7th century Benedict Biscop fetches masons and glaziers from Gaul for his monastery at Monkwearmouth, and churches such as Brixworth follow the plan of the Roman basilica.',
   },
   {
     id: 'norman-romanesque',
@@ -30,7 +30,7 @@ export const influences: Influence[] = [
     place: 'Normandy',
     region: 'france',
     title: 'Romanesque crosses the Channel',
-    text: 'The Normans import their whole manner of building: the motte-and-bailey castle, the stone keep, and great churches with round arches, cylindrical piers and thick walls, some in stone shipped from Caen.',
+    text: 'Edward the Confessor’s Westminster Abbey had already shown the style, but the Normans import their whole manner of building: the motte-and-bailey castle, the stone keep, and great churches with round arches, cylindrical piers and thick walls, some in stone shipped from Caen.',
   },
   {
     id: 'french-gothic',
@@ -39,7 +39,7 @@ export const influences: Influence[] = [
     place: 'Île-de-France',
     region: 'france',
     title: 'Gothic arrives from France',
-    text: 'After a fire at Canterbury the French mason William of Sens rebuilds the choir with pointed arches, rib vaults and flying buttresses. Within fifty years the round arch is obsolete.',
+    text: 'After a fire at Canterbury the French mason William of Sens rebuilds the choir with pointed arches, rib vaults and flying buttresses. Within fifty years the round arch has largely gone out of use.',
   },
   {
     id: 'crusader-castles',
@@ -47,7 +47,7 @@ export const influences: Influence[] = [
     dir: 'in',
     place: 'The Levant and Savoy',
     title: 'Castle ideas from the Crusades',
-    text: 'Round towers, twin-towered gatehouses and rings of concentric walls, learned from Byzantine and Crusader fortresses and built for Edward I by the Savoyard master James of St George.',
+    text: 'Round towers, twin-towered gatehouses and rings of concentric walls, thought to owe something to Byzantine and Crusader fortresses, built in Wales for Edward I by the Savoyard master James of St George.',
   },
   {
     id: 'perpendicular',
@@ -62,8 +62,8 @@ export const influences: Influence[] = [
     year: 1440,
     dir: 'in',
     place: 'Flanders and the Hanseatic ports',
-    title: 'Brick returns from the Low Countries',
-    text: 'Brickmaking, forgotten since the Romans, comes back through trade with Flanders, along with Flemish craftsmen and their stepped and curved gables.',
+    title: 'Brick from the Low Countries',
+    text: 'Brickmaking had returned to eastern England in the 13th century, but trade with Flanders makes brick fashionable: Flemish brickmakers work at great houses such as Tattershall and Herstmonceux, and stepped gables follow.',
   },
   {
     id: 'italian-renaissance',
@@ -72,7 +72,7 @@ export const influences: Influence[] = [
     place: 'Italy, by way of France and Flanders',
     region: 'italy',
     title: 'Renaissance ornament, second-hand',
-    text: 'Classical columns, symmetry and strapwork reach England through pattern books and Flemish carvers rather than from Italy directly, and are applied as decoration to houses that are still medieval in plan.',
+    text: 'Apart from a few Italian craftsmen at the Tudor court, classical columns, symmetry and strapwork reach England through pattern books and Flemish carvers rather than from Italy directly, and are applied as decoration to houses that are still medieval in plan.',
   },
   {
     id: 'palladianism',
@@ -81,7 +81,7 @@ export const influences: Influence[] = [
     place: 'Vicenza and the Veneto',
     region: 'italy',
     title: 'Palladio, via Inigo Jones',
-    text: 'Inigo Jones returns from Italy with Palladio’s books and builds the Queen’s House at Greenwich. A century later Lord Burlington makes Palladio’s proportions the rule for every polite building in the country.',
+    text: 'Inigo Jones returns from Italy with Palladio’s books and builds the Queen’s House at Greenwich. A century later Colen Campbell and Lord Burlington revive Palladio’s rules, and they become the fashion for polite building across the country.',
   },
   {
     id: 'dutch-classicism',
@@ -89,7 +89,7 @@ export const influences: Influence[] = [
     dir: 'in',
     place: 'The Netherlands',
     title: 'The Dutch brick house',
-    text: 'Exiles returning with Charles II bring the plain, comfortable Dutch town house: red brick, a hipped roof, dormers and a strict symmetrical front. The sash window is perfected in the same decades.',
+    text: 'Exiles returning with Charles II bring the plain, comfortable Dutch town house: red brick, a hipped roof, dormers and a strict symmetrical front. The sash window, whose origin is disputed between England, France and the Netherlands, appears in the same decades.',
   },
   {
     id: 'baroque',
@@ -107,7 +107,7 @@ export const influences: Influence[] = [
     place: 'North America, Ireland, Russia',
     region: 'usa',
     title: 'The Georgian house goes abroad',
-    text: 'English pattern books carry the Palladian house across the Atlantic and beyond. Virginia plantations, Dublin squares and St Petersburg palaces all follow the same rules of proportion.',
+    text: 'English pattern books carry the Palladian house across the Atlantic and beyond. Virginia plantation houses, Dublin squares and some Russian palaces near St Petersburg draw on the same rules of proportion.',
   },
   {
     id: 'greek-revival',
@@ -132,7 +132,7 @@ export const influences: Influence[] = [
     dir: 'out',
     place: 'Europe and North America',
     title: 'The factory and the iron frame',
-    text: 'The water-powered mill, the iron-framed fireproof building, the railway station and prefabricated iron and glass are English inventions that the industrialising world copies.',
+    text: 'The water-powered textile mill, the iron-framed fireproof mill, the railway station and prefabricated iron and glass building were pioneered in Britain, and the industrialising world copies them.',
   },
   {
     id: 'gothic-revival-export',
@@ -140,7 +140,7 @@ export const influences: Influence[] = [
     dir: 'out',
     place: 'The British Empire',
     title: 'Gothic Revival circles the globe',
-    text: 'The Gothic of Pugin, Scott and Street becomes the official style of an empire: the parliament in Ottawa, the railway terminus in Bombay and cathedrals from Melbourne to Shanghai.',
+    text: 'The Gothic of Pugin, Scott and Street becomes a favourite style across the Empire: the parliament in Ottawa, the railway terminus in Bombay and cathedrals from Melbourne to Shanghai.',
   },
   {
     id: 'arts-and-crafts-export',
@@ -158,7 +158,7 @@ export const influences: Influence[] = [
     place: 'Chicago',
     region: 'usa',
     title: 'The steel frame arrives',
-    text: 'The steel skeleton, the lift and the department store come from America. The Ritz hotel (1906) and Selfridges (1909) in London are steel frames dressed in stone.',
+    text: 'The steel skeleton comes from America. The Ritz hotel (1906) and Selfridges (1909), the department store of an American retailer, are London steel frames dressed in stone.',
   },
   {
     id: 'art-deco',
@@ -185,7 +185,7 @@ export const influences: Influence[] = [
     place: 'Marseille',
     region: 'france',
     title: 'Raw concrete',
-    text: 'Le Corbusier’s Unité d’Habitation, a concrete slab of flats on stilts, becomes the model for post-war housing. British critics give the rough-concrete manner its name: Brutalism.',
+    text: 'Le Corbusier’s Unité d’Habitation, a concrete slab of flats on stilts, becomes the model for post-war housing. In Britain the Smithsons and the critic Reyner Banham give the rough-concrete manner its name: the New Brutalism.',
   },
   {
     id: 'high-tech-export',
@@ -193,7 +193,7 @@ export const influences: Influence[] = [
     dir: 'out',
     place: 'Paris, Hong Kong and beyond',
     title: 'British High-Tech',
-    text: 'Rogers, Foster and Grimshaw turn structure, lifts and pipework into the architecture itself. The Pompidou Centre in Paris and the Hongkong Bank tower make it a worldwide style.',
+    text: 'Rogers, Foster and Grimshaw turn structure, lifts and pipework into the architecture itself. The Pompidou Centre in Paris (Rogers with Renzo Piano) and Foster’s Hongkong Bank tower make it a worldwide style.',
   },
   {
     id: 'american-postmodern',
@@ -202,7 +202,7 @@ export const influences: Influence[] = [
     place: 'The United States',
     region: 'usa',
     title: 'Postmodernism and the mall',
-    text: 'From America come the enclosed shopping mall, the glass office atrium and Postmodernism, which brings back colour, columns and jokes after decades of plain concrete.',
+    text: 'Largely from America come the out-of-town shopping mall, the glass atrium and Postmodernism, which brings back colour, columns and jokes after decades of plain concrete.',
   },
   {
     id: 'passivhaus',
@@ -211,6 +211,6 @@ export const influences: Influence[] = [
     place: 'Germany, Austria and Scandinavia',
     region: 'germany',
     title: 'Low-energy building',
-    text: 'The Passivhaus standard from Germany and cross-laminated timber from Austria reshape new buildings around airtightness, thick insulation and engineered wood.',
+    text: 'The Passivhaus standard from Germany and cross-laminated timber from Austria begin to reshape new buildings around airtightness, thick insulation and engineered wood.',
   },
 ];

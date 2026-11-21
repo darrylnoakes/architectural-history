@@ -39,19 +39,19 @@ export const galleriedInn: BuildingDef = {
   id: 'galleried-inn',
   name: 'Galleried inn',
   style: 'Late medieval timber-framed',
-  date: 'c. 1450',
-  modelledOn: 'The New Inn, Gloucester (c. 1450), with the George Inn, Southwark, the last galleried inn in London',
+  date: '15th century',
+  modelledOn: 'The New Inn, Gloucester (c. 1450); the George Inn, Southwark (rebuilt 1677) is London’s last surviving galleried inn',
   summary:
     'Pilgrims, merchants and carriers now travelled in numbers, and the alehouse gave way to a true inn with beds, stabling and meals, often built as an investment by a monastery or a wealthy townsman. ' +
     'Timber-framed ranges with close-set studs enclose a yard reached through a carriage arch from the street. ' +
-    'The guest chambers open off galleries round the yard, so that each room had its own door without a corridor. A century later such yards were often used as stages by travelling players.',
+    'The guest chambers open off galleries round the yard, so that each room had its own door without a corridor. By the 16th century some inn yards were used as stages by travelling players.',
   materials: ['oak frame', 'wattle and daub', 'limewash', 'clay plain tiles'],
   lookFor: [
     { label: 'Open galleries', note: 'Two tiers of open walkways give every chamber its own door. They are often said to have inspired the galleries of Shakespeare’s playhouses.', at: [-XI + GAL + 0.3, 6.4, -1] },
     { label: 'Carriage arch', note: 'A wide gateway through the street range, big enough for a loaded packhorse or wagon to reach the yard.', at: [0, 3.4, ZF + 0.3] },
     { label: 'Close studding', note: 'Upright oak studs set close together, using far more timber than the frame needed: a show of the owner’s wealth.', at: [-6.5, 5.2, ZF + 0.8] },
     { label: 'Jetty', note: 'Each upper storey oversails the one below on the ends of the floor joists, gaining space over the street.', at: [6.5, G + 0.1, ZF + 0.6] },
-    { label: 'Courtyard', note: 'Stables in the back range and chambers on three sides: the plan of the English inn for the next 400 years.', at: [1.5, 0.5, -1.5] },
+    { label: 'Courtyard', note: 'Stables in the back range and chambers on three sides: the plan of the larger English inn for the next four centuries.', at: [1.5, 0.5, -1.5] },
   ],
   build(b) {
     const oak = b.pick([P.oak, tint(P.oak, -0.04), tint(P.oak, 0.04)]);
@@ -120,8 +120,8 @@ export const galleriedInn: BuildingDef = {
     const fRise = (fspan / 2) * PITCH;
     b.gable(2 * XO, fspan, fRise, tile, { at: [0, TOP, (z2 + zf0) / 2], overhang: 0.35, wall: fill });
     b.box(2 * XO + 0.7, 0.18, 0.3, tint(tile, -0.1), { at: [0, TOP + fRise + 0.05, (z2 + zf0) / 2] });
-    // chimney stacks in brick, a newly fashionable luxury
-    b.sym((s) => b.chimney(1.1, 3.0, 0.9, P.brickRed, { at: [s * 6, TOP + fRise - 1.6, (z2 + zf0) / 2 - 0.6], pots: 0 }));
+    // stone chimney stacks (brick ones would be a century too early here)
+    b.sym((s) => b.chimney(1.1, 3.0, 0.9, P.rubble, { at: [s * 6, TOP + fRise - 1.6, (z2 + zf0) / 2 - 0.6], pots: 0 }));
 
     // the inn sign, hung over the street beside the gate
     hangingSign(b, [AW / 2 + 1.4, G + 1.0, z1 + 0.07], '+z', P.doorRed, { out: 0.95, picture: P.gold, bracket: P.oakDark, w: 0.8, h: 1.1 });
@@ -175,7 +175,7 @@ export const galleriedInn: BuildingDef = {
       // the gable end that shows above the stable roof
       b.frame(span - 0.4, TOP - BH, oak, { at: [s * (XO + yardX) / 2, BH, ZBI - 0.02], facing: '-z', studs: 6, rails: 2, brace: 'corner' });
       for (const x of [-1.5, 1.5]) b.window(1.1, 0.9, { at: [s * (XO + yardX) / 2 + x, G + F1 + 0.8, ZBI - 0.02], facing: '-z', frame: oak, bars: [3, 2] });
-      b.chimney(0.9, 2.6, 1.0, P.brickRed, { at: [s * (XO - 1.4), TOP + rise * 0.4, -1.0] });
+      b.chimney(0.9, 2.6, 1.0, P.rubble, { at: [s * (XO - 1.4), TOP + rise * 0.4, -1.0] });
     });
 
     // ---------------- back range: stables with a hayloft over

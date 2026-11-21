@@ -1,4 +1,5 @@
-import { Builder, P, facingAngle, mix, tint, type Facing, type Opts } from '@ah/kit';
+import * as THREE from 'three';
+import { P, facingAngle, mix, tint, type Builder, type Facing, type Opts } from '@ah/kit';
 
 /*
  * Local helpers for the power lineage: raw triangle meshes (partial lathes, serrated palisades,
@@ -6,33 +7,15 @@ import { Builder, P, facingAngle, mix, tint, type Facing, type Opts } from '@ah/
  * palisade, then the curtain walls follow, and the 1874 clock tower that survives to 2008.
  */
 
-type Geo = Parameters<Builder['add']>[0];
 type XZ = [number, number];
 
 // ------------------------------------------------------------------ raw triangles
 
-let template: Geo | null = null;
-/** A geometry instance to clone, taken from a finished Builder (this package cannot import three). */
-function tmpl(): Geo {
-  if (!template) {
-    const built = new Builder(1).box(1, 1, 1, 0).finish();
-    template = (built.object.children[0] as unknown as { geometry: Geo }).geometry;
-  }
-  return template;
-}
-
 /** Add a triangle soup: `pos` is a flat [x, y, z, ...] list, three vertices per triangle. */
 export function soup(b: Builder, pos: number[], color: number, o?: Opts): void {
   if (!pos.length) return;
-  const t = tmpl();
-  const g = t.clone();
-  for (const k of Object.keys(g.attributes)) g.deleteAttribute(k);
-  g.setIndex(null);
-  g.clearGroups();
-  g.boundingBox = null;
-  g.boundingSphere = null;
-  const Attr = t.attributes.position.constructor as new (a: Float32Array, n: number) => never;
-  g.setAttribute('position', new Attr(new Float32Array(pos), 3));
+  const g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
   b.add(g, color, o);
 }
 

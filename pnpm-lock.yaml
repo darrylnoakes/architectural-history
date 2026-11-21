@@ -98,7 +98,13 @@ importers:
       '@ah/kit':
         specifier: workspace:*
         version: link:../kit
+      three:
+        specifier: ^0.187.0
+        version: 0.187.0
     devDependencies:
+      '@types/three':
+        specifier: ^0.187.0
+        version: 0.187.0
       typescript:
         specifier: ^5.7.0
         version: 5.9.3

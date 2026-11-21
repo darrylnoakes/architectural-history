@@ -20,17 +20,17 @@ export const georgianMarketHouse: BuildingDef = {
   date: 'c. 1750',
   summary:
     'Timber framing has gone out of fashion, and the town rebuilds its market hall as a stone temple of commerce. ' +
-    'The old arrangement survives, an open trading floor under a room for the corporation, but now it is ordered by classical rules: an arcade of round arches below, tall sash windows above, a pediment over the centre and a cupola with the town clock. ' +
+    'The old arrangement survives, an open trading floor under a room for the corporation, but now it is ordered by classical rules: an arcade of round arches below, tall sash windows above, a pediment with the town clock over the centre and a cupola on the roof. ' +
     'The upper room has become an assembly room, used for the court, for balls and for the county’s polite society.',
-  materials: ['limestone ashlar', 'Welsh slate', 'lead', 'painted timber sashes'],
+  materials: ['limestone ashlar', 'slate', 'lead', 'painted timber sashes'],
   lookFor: [
     { label: 'Open arcade', note: 'Round arches on square piers, open on all sides, so the market still trades on the ground floor.', at: [0, 2.4, 4.95] },
     { label: 'Pediment', note: 'The low triangular gable of a classical temple, marking the centre of the main fronts. The clock sits in its tympanum.', at: [0, 10.4, 5.2] },
     { label: 'Sash windows', note: 'Tall windows of small panes in sliding timber sashes, evenly spaced to light the assembly room.', at: [-6.1, 6.4, 4.85] },
     { label: 'Cupola', note: 'A small domed lantern on the roof, holding the market bell and giving the building a skyline.', at: [0, 13.6, 0.4] },
-    { label: 'Keystones', note: 'The wedge at the crown of each arch, here enlarged and carved to show it off.', at: [3.2, 4.05, 4.95] },
+    { label: 'Keystones', note: 'The wedge at the crown of each arch, here enlarged and projecting to show it off.', at: [3.2, 4.05, 4.95] },
   ],
-  modelledOn: 'County Hall, Abingdon (1678 to 1682), which set the pattern; details simplified to the mid-Georgian type',
+  modelledOn: 'A typical mid-Georgian market house, in the tradition of County Hall, Abingdon (1678 to 1682)',
   influences: ['palladianism'],
   build(b) {
     const W = 16;

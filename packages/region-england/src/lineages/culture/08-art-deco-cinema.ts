@@ -28,12 +28,12 @@ export const artDecoCinema: BuildingDef = {
   style: 'Art Deco (Streamline Moderne)',
   date: '1936',
   summary:
-    'The glass hall has gone, as the original Crystal Palace went in the fire of 1936. In its place is a picture palace for the talkies, ' +
-    'when most people went to the cinema at least once a week. Cinema chains wanted a building that was its own advertisement: ' +
+    'The glass hall has gone, as Paxton’s Crystal Palace, rebuilt at Sydenham, went in the fire of 1936. In its place is a picture palace for the talkies, ' +
+    'when millions went to the cinema every week. Cinema chains wanted a building that was its own advertisement: ' +
     'a front of cream glazed faience, swept round the corner in streamlined bands, a tall fin to be seen down the street, and the name in lights. ' +
     'Behind the show front, the auditorium is a plain brick box seating well over a thousand.',
   materials: ['cream faience', 'black faience bands', 'brick', 'steel frame', 'neon'],
-  modelledOn: "The Odeon circuit of Oscar Deutsch, designed by Harry Weedon's office (1935-39)",
+  modelledOn: "The Odeon cinemas of Oscar Deutsch's circuit, many of them designed by Harry Weedon's office (1935-39)",
   lookFor: [
     { label: 'Faience', note: 'Glazed terracotta slabs, easy to wash, bright in any weather, and made in standard sizes for a chain of cinemas.', at: [-12.5, 6, 10.2] },
     { label: 'Fin tower', note: 'A slab standing up from the front like a ship\'s funnel or a radio mast: pure advertisement, with nothing inside.', at: [-10.2, 19, 10.4] },

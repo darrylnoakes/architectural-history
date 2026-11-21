@@ -28,7 +28,7 @@ export const fullingMill: BuildingDef = {
     { label: 'Jetty', note: 'The upper floor of the workshop oversails the one below, gaining space and showing off the frame.', at: [9, 3.0, 0.9] },
     { label: 'Long mullioned windows', note: 'Bands of windows light the looms in the upper workshop, where weavers needed all the daylight they could get.', at: [12.5, 4.4, 1.0] },
   ],
-  influences: ['flemish-brick'],
+  influences: [],
   build(b) {
     const plaster = b.pick([P.limewash, P.plaster, P.ochreWash]);
     const oak = b.pick([P.oakDark, P.timberBlack, P.oak]);

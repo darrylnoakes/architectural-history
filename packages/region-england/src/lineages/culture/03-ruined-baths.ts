@@ -8,14 +8,14 @@ export const ruinedBaths: BuildingDef = {
   style: 'Sub-Roman ruin',
   date: 'c. 430',
   summary:
-    'Many town baths had fallen out of use even before Roman rule ended around 410. With no money, no imported goods and no one paid to stoke ' +
+    'Some town baths had fallen out of use in the 4th century, even before Roman rule ended around 410. With no money, no imported goods and no one paid to stoke ' +
     'the furnace or mend the roof, the timber roofs rotted and fell, frost split the vaults, and people carted off the dressed stone and tile to reuse. ' +
     'Saplings rooted in the rubble. A later Anglo-Saxon poem, The Ruin, looks at walls like these and calls them the work of giants.',
   materials: ['limestone rubble', 'red tile', 'fallen roof tile', 'self-seeded trees'],
   lookFor: [
     { label: 'Broken vault', note: 'Half of the tepidarium vault still hangs between its walls; the rest lies in the rubble below.', at: [-2.25, 9.6, -9.6] },
     { label: 'Hypocaust pilae', note: 'With the floor fallen in, the little stacks of tile that held it over the hot air are exposed.', at: [6.25, 1.4, -7.6] },
-    { label: 'Fallen columns', note: 'Drums and shafts from the portico lie where they toppled, capitals still attached.', at: [9.5, 1.0, 6] },
+    { label: 'Fallen columns', note: 'Drums and shafts from the portico lie where they toppled, and only stumps of others still stand.', at: [9.5, 1.0, 6] },
     { label: 'Robbed walls', note: 'The tops are ragged because good squared stone was taken for reuse, leaving the rubble core.', at: [-15.2, 3.0, 2] },
     { label: 'Trees through the floor', note: 'Ash and elder seed into the rubble within a few years of a roof failing.', at: [-10.5, 6.5, -7.6] },
   ],

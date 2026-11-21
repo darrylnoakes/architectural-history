@@ -15,8 +15,8 @@ export const towerBlock: BuildingDef = {
   style: 'Post-war Modernism (Brutalist)',
   date: 'c. 1966',
   summary:
-    'Slum clearance swept away the old terraces, and councils, pushed by government subsidies that paid more for every extra storey, rehoused people in towers of flats. ' +
-    'This one is a slab of reinforced concrete flats on a podium of shops and garages, with its lifts and stairs pulled out into a separate service tower joined by bridges every third floor, an idea taken from Ernő Goldfinger’s Balfron and Trellick towers. ' +
+    'Slum clearance swept away old terraces across the town, and councils, pushed by government subsidies that paid more for every extra storey, rehoused people in towers of flats. ' +
+    'This one is a slab of reinforced concrete flats on a podium of shops and garages, with its lifts and stairs pulled out into a separate service tower joined by bridges every third floor, the arrangement Ernő Goldfinger used at Balfron Tower and later at Trellick Tower. ' +
     'Every flat had hot water, a bathroom and a balcony with a view; the cottage row has become a street stood on end. ' +
     'After the gas explosion at Ronan Point in 1968, and years of poor maintenance, the tower block lost public trust, though many, like Trellick, are now listed and loved.',
   materials: ['reinforced concrete', 'board-marked and bush-hammered concrete', 'steel windows'],

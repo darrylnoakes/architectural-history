@@ -17,9 +17,9 @@ export const medievalCottageRow: BuildingDef = {
     'Town landlords, often a church or a guild, built rows of identical small houses to let: each bay of the frame is one home, with a single room downstairs and one above. ' +
     'The oak frame was made in the carpenter’s yard, numbered, and raised on a low stone sill wall, with the panels filled with wattle and daub. ' +
     'The upper floor is jettied out over the street, gaining a little floor space and showing off the joist ends. ' +
-    'This is the first time the plot is built as a single block of standard dwellings for rent rather than homes built by those who lived in them.',
+    'Here the plot is built as a single block of standard dwellings for rent, not as homes put up by the families who lived in them.',
   materials: ['oak frame', 'wattle and daub', 'clay plain tile', 'stone sill wall'],
-  modelledOn: 'Lady Row, Goodramgate, York (1316), and the rows of Spon Street, Coventry',
+  modelledOn: 'Lady Row, Goodramgate, York (1316)',
   lookFor: [
     { label: 'Jetty', note: 'The upper storey oversails the lower one on the ends of the floor joists.', at: [1.0, 2.38, 3.0] },
     { label: 'Bressumer', note: 'The heavy beam along the front of the jetty that carries the upper wall.', at: [-4.5, 2.55, 3.3] },

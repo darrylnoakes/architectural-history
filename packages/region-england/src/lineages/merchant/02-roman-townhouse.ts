@@ -16,12 +16,12 @@ export const romanTownhouse: BuildingDef = {
     'Within a few generations of the conquest the richest Britons were living like Romans. ' +
     'The house turns its back on the street: ranges of rooms with mortared stone footings, painted plaster and roofs of fired clay tile wrap round a private garden lined with a colonnade. ' +
     'One room is heated by a hypocaust, hot air from a furnace stoked outside passing under the floor and up flues in the walls. ' +
-    'Everything here, from the tile and mortar to the glass in the windows, was new to Britain.',
+    'The mortar, roof tile, painted plaster and window glass were all new to Britain.',
   materials: ['mortared stone footings', 'painted lime plaster', 'fired clay roof tile', 'window glass'],
   lookFor: [
     { label: 'Peristyle garden', note: 'A colonnade on all four sides of a private garden, with a pool at its centre: the heart of the house.', at: [0, 2.0, 0.3] },
     { label: 'Tegulae and imbrices', note: 'Flat tiles with raised edges, their joints covered by half-round tiles, give the roof its ribbed look.', at: [-3, 4.4, 10.2] },
-    { label: 'Stoke-hole and flue', note: 'The furnace for the hypocaust was fed from outside; its hot gases rose through box-tiles in the walls to the flue.', at: [6.8, 1.2, -11.8] },
+    { label: 'Stoke-hole (praefurnium)', note: 'The furnace for the hypocaust was fed from outside; its hot gases ran under the floor and up hollow box-tiles in the walls, venting at the eaves.', at: [6.8, 1.2, -11.8] },
     { label: 'Shops (tabernae)', note: 'The rooms either side of the entrance open to the street and were let as shops.', at: [-5.5, 2.6, 11.2] },
   ],
   influences: ['roman-conquest'],
@@ -80,13 +80,12 @@ export const romanTownhouse: BuildingDef = {
     b.panel(1.2, 2.3, P.oakDark, { at: [-9.5, 0.5, -8.5], facing: '-x' });
     b.window(0.9, 0.9, { at: [9.5, 2.6, -8.5], facing: '+x', frame: plaster, glass: P.glassDark, bars: [2, 2] });
 
-    // ---- hypocaust furnace: stoke-hole under a lean-to at the back of the heated room, flue at the eaves
+    // ---- hypocaust furnace: stoke-hole under a lean-to at the back of the heated room (the hot gases
+    // left through box-tiles in the walls, venting at the eaves, so there is no chimney stack)
     b.archWall(1.8, 1.1, 0.5, P.brickRed, { at: [7, 0, -11.25], facing: '-z', openings: 1, openW: 0.7, openH: 0.8, shape: 'round' });
     b.panel(0.7, 0.8, 0x1d1714, { at: [7, 0, -11.05], facing: '-z', shape: 'round', depth: 0.02 });
     b.sym((s) => b.cyl(0.08, 1.5, P.oak, { at: [7 + s * 1.2, 0, -11.85], segs: 5 }));
     b.shed(2.8, 1.0, 0.45, tile, { at: [7, 1.5, -11.5], high: '+z' });
-    b.box(0.6, 1.4, 0.6, P.brickRed, { at: [8.4, H + 0.3, -10.7] });
-    b.box(0.72, 0.12, 0.72, tint(tile, -0.1), { at: [8.4, H + 1.7, -10.7] });
     for (let i = 0; i < 4; i++) b.log(0.12, 1.1, P.bark, { at: [5.4, i * 0.2, -11.5 - (i % 2) * 0.12], axis: 'x', segs: 6 });
 
     // ---- the colonnaded courtyard

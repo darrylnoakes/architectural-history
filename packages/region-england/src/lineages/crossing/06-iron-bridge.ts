@@ -5,9 +5,10 @@ export const ironBridge: BuildingDef = {
   id: 'iron-bridge',
   name: 'Cast-iron arch bridge',
   style: 'Georgian industrial',
-  date: '1779',
+  date: 'c. 1800',
   summary:
-    'At Coalbrookdale in Shropshire, Abraham Darby III cast the world’s first large iron bridge to a design by the architect Thomas Farnolls Pritchard, and bridges like it soon followed elsewhere. ' +
+    'In 1779, at Coalbrookdale in Shropshire, Abraham Darby III cast the world’s first large iron bridge to a design first drawn by the Shrewsbury architect Thomas Farnolls Pritchard. ' +
+    'Within twenty years other towns were ordering iron bridges of their own, and this is one of them. ' +
     'A single span leaps the whole river, so there are no piers to catch floods or block barges. ' +
     'Five arched ribs, each cast in two halves, are joined with the dovetails, wedges and mortise-and-tenon joints of a carpenter, because nobody yet knew how iron ought to be put together.',
   materials: ['cast iron', 'sandstone', 'gravel road'],

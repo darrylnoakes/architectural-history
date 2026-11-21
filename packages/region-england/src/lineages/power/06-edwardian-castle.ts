@@ -83,7 +83,7 @@ export const edwardianCastle: BuildingDef = {
   style: 'Gothic (Edwardian)',
   date: 'c. 1290',
   summary:
-    'Under Edward I castle design changed fast, using lessons from the Crusades and the king\'s Welsh wars. The old keep is kept, but the curtain wall is rebuilt higher with round towers that let archers shoot along the wall face, and with no square corners to undermine. ' +
+    'By the reign of Edward I castle design had changed a great deal, drawing on ideas often said to come from the Crusades and tested in the king\'s Welsh wars. The old keep is kept, but the curtain wall is rebuilt higher with round towers that let archers shoot along the wall face, and with no square corners to undermine. ' +
     'The weak point, the gate, becomes a fortress of its own: two great towers either side of a passage closed by a portcullis and a drawbridge over a water-filled moat. ' +
     'Inside, comfort grows too: a large hall with tall pointed windows for feasting and courts.',
   materials: ['limestone ashlar and rubble', 'lead and stone slate roofs', 'oak', 'iron portcullis'],
@@ -94,8 +94,8 @@ export const edwardianCastle: BuildingDef = {
     { label: 'Wall-walk', note: 'A path along the top of the curtain wall behind the battlements, linking tower to tower.', at: [-19.5, 7.3, 6.5] },
     { label: 'Great hall', note: 'The setting for feasts and courts: tall pointed two-light windows, buttresses and a steep roof with a louvre over the hearth.', at: [8.5, 7.4, -7.6] },
   ],
-  modelledOn: 'Edwardian works such as the gatehouses of Harlech and Tonbridge, applied to an older castle',
-  influences: ['crusader-castles', 'french-gothic'],
+  modelledOn: 'Later 13th-century gatehouses such as Tonbridge and Harlech, applied to an older castle',
+  influences: ['crusader-castles'],
   build(b) {
     const stone = tint(P.limestone, b.range(-0.03, 0.01));
     const wall = tint(stone, -0.03);

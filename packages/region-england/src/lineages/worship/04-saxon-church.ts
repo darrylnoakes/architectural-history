@@ -13,19 +13,19 @@ export const saxonChurch: BuildingDef = {
   style: 'Anglo-Saxon',
   date: 'c. 680, altered before 1066',
   summary:
-    'After the conversion, a monastery or a local lord built a small stone church on the old sacred site, partly from blocks robbed out of the ruined Roman temple. ' +
-    'It is tall and narrow because Saxon masons spanned short distances with timber and built upwards rather than outwards. ' +
+    'After the conversion, a monastery or a royal patron built a small stone church on the old sacred site, partly from blocks robbed out of the ruined Roman temple. ' +
+    'It is tall and narrow, the proportion early Saxon builders favoured, perhaps because a narrow nave was easy to roof with timber. ' +
     'Windows are tiny and high, and the only way into the box-like chancel is through a narrow arch. ' +
-    'Later Saxon builders added the thin stone strips on the walls; the big corner stones, laid alternately upright and flat, are the surest Saxon mark.',
+    'Later Saxon builders added the thin stone strips on the walls; the big corner stones, laid alternately upright and flat, are the clearest Saxon mark.',
   materials: ['reused Roman stone', 'sandstone rubble', 'stone slate'],
   lookFor: [
     { label: 'Long-and-short quoins', note: 'Corner stones set alternately upright and flat: a technique found almost only in Anglo-Saxon work.', at: [3.1, 3.0, 10.7] },
     { label: 'Tall, narrow nave', note: 'The walls are higher than the nave is wide: Saxon churches are strikingly lofty for their size.', at: [-3.1, 6.8, 4] },
     { label: 'Tiny high windows', note: 'Small round-headed openings, splayed on the inside, set well above head height.', at: [3.0, 5.2, 0.3] },
     { label: 'Pilaster strips', note: 'Thin upright strips of stone on the wall face, a late Saxon fashion seen at its richest at Earls Barton.', at: [3.1, 2.0, 2.6] },
-    { label: 'Sundial', note: 'A carved stone dial on the south wall, its lines marking the times of the monks\' daily services.', at: [3.1, 4.7, DOOR_Z] },
+    { label: 'Sundial', note: 'A carved stone dial on the south wall, its lines marking the times of the daily services.', at: [3.1, 4.7, DOOR_Z] },
   ],
-  modelledOn: 'St John the Evangelist, Escomb, County Durham (late 7th century)',
+  modelledOn: 'St John the Evangelist, Escomb, County Durham (late 7th century), with late Saxon pilaster strips added',
   influences: ['roman-christianity'],
   build(b) {
     church(b, {

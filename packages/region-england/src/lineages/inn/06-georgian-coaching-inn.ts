@@ -37,8 +37,8 @@ export const georgianCoachingInn: BuildingDef = {
   date: 'c. 1750',
   summary:
     'Turnpike roads and scheduled stagecoaches made the market-town inn a busy staging post, where coaches changed horses and passengers dined while they waited. ' +
-    'Prosperous innkeepers refronted the old timber ranges in fashionable brick with tall sash windows, a parapet and a classical cornice, keeping the medieval plan of a yard behind. ' +
-    'The carriage arch grew tall enough for a coach with luggage and passengers on the roof, and stables for dozens of horses filled the yard.',
+    'Prosperous innkeepers rebuilt or refronted the old timber ranges in fashionable brick with tall sash windows, a parapet and a classical cornice, keeping the medieval plan of a yard behind. ' +
+    'The carriage arch grew tall enough for a coach with luggage and passengers on the roof, and stables for dozens of horses lined the yard.',
   materials: ['red brick', 'stone dressings', 'clay roof tiles', 'painted timber sashes'],
   lookFor: [
     { label: 'Carriage arch', note: 'Tall and wide enough for a loaded stagecoach with passengers riding on the roof.', at: [0, 4.7, ZF + 0.3] },

@@ -14,7 +14,7 @@ export const romanGranaryAndKiln: BuildingDef = {
   summary:
     'Rome brought industry on a new scale: grain was taxed, stored and shipped, and pottery was made in thousands for the market rather than at home. ' +
     'The granary (horreum) is built of mortared stone with buttresses to hold its walls against the outward push of the grain, and its floor is lifted off the ground ' +
-    'on low walls so that air flows underneath and keeps the grain dry and the rats out. Beside it a potter fires jars in an updraught kiln fed through a stokehole, ' +
+    'on low walls so that air flows underneath and helps keep the grain dry and the rats out. Beside it a potter fires jars in an updraught kiln fed through a stokehole, ' +
     'and the riverbank becomes a timber quay for barges.',
   materials: ['limestone', 'lime mortar', 'Roman tile', 'oak', 'clay'],
   lookFor: [
@@ -22,7 +22,7 @@ export const romanGranaryAndKiln: BuildingDef = {
     { label: 'Raised floor and vents', note: 'The floor sits on low walls with openings between them, so air moves under the grain store.', at: [-4.8, 0.5, -1.4] },
     { label: 'Loading platform', note: 'Carts backed up to the raised doorway, so sacks could be lifted straight in.', at: [3.1, 1.6, -6] },
     { label: 'Updraught kiln', note: 'Fire in the stokehole sends heat up through a perforated floor to the stacked pots inside the clay chamber.', at: [9.5, 1.6, 5.2] },
-    { label: 'Tegula and imbrex roof', note: 'Flat flanged tiles laid with half-round tiles over the joints: a Roman invention, at the low pitch of a Mediterranean roof.', at: [-7, 7.6, -5.8] },
+    { label: 'Tegula and imbrex roof', note: 'Flat flanged tiles laid with half-round tiles over the joints: brought to Britain by the Romans, at the low pitch of a Mediterranean roof.', at: [-7, 7.6, -5.8] },
   ],
   influences: ['roman-conquest'],
   build(b) {

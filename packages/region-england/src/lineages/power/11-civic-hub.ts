@@ -18,7 +18,7 @@ export const civicHub: BuildingDef = {
     { label: 'Retained clock tower', note: 'The 1874 tower survives a second rebuilding and is now the landmark of the new hub.', at: [TOWER.x - TOWER.w / 2 - 0.3, 22, TOWER.z] },
     { label: 'Cantilevered upper floors', note: 'The upper floors oversail the glazed ground floor, sheltering the entrance with no columns in the way.', at: [8, 4.4, 11.5] },
   ],
-  influences: ['passivhaus', 'high-tech-export'],
+  influences: ['passivhaus'],
   build(b) {
     const larch = tint(P.larch, b.range(-0.03, 0.03));
     const glass = mix(P.glass, P.glassDark, 0.35);

@@ -63,7 +63,7 @@ export const perpendicularChurch: BuildingDef = {
   date: 'c. 1470',
   summary:
     'Rich from the wool and cloth trade, the town\'s merchants rebuilt their church to show it off, in the uniquely English Perpendicular style. ' +
-    'The nave walls were raised to take a clerestory, a row of windows above the aisle roofs, and every roof was lowered to a shallow pitch of lead hidden behind battlements. ' +
+    'The nave walls were raised to take a clerestory, a row of windows above the aisle roofs, and the nave and aisle roofs were lowered to a shallow pitch of lead hidden behind battlements. ' +
     'Windows grew huge, divided into upright panels by straight mullions, so the church became a lantern of glass. ' +
     'The old spire was taken down and replaced by a tall new west tower with pinnacles, built in fine ashlar. The steep Early English chancel roof and the Decorated east window were left alone.',
   materials: ['limestone ashlar', 'ragstone', 'rubble stone', 'lead', 'clay tile'],
@@ -72,7 +72,7 @@ export const perpendicularChurch: BuildingDef = {
     { label: 'Panel tracery', note: 'Straight vertical mullions run right up into the arch, dividing the glass into tall panels.', at: [9.4, 3.2, -2.7] },
     { label: 'Battlements', note: 'Low lead roofs are hidden behind battlemented parapets: the roofline turns flat and horizontal.', at: [9.0, 5.6, 0.9] },
     { label: 'West tower with pinnacles', note: 'A tall ashlar tower with diagonal buttresses, a great west window and a crown of battlements and pinnacles.', at: [3.2, 26.6, 20.8] },
-    { label: 'Two-storey porch', note: 'The porch gained an upper room, the parvise, used as a school, a store or a priest\'s lodging.', at: [12.8, 5.3, DOOR_Z] },
+    { label: 'Two-storey porch', note: 'The porch was rebuilt with an upper room, often called the parvise, used as a school, a store or a priest\'s lodging.', at: [12.8, 5.3, DOOR_Z] },
   ],
   influences: ['perpendicular'],
   build(b) {

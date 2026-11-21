@@ -13,16 +13,16 @@ export const saxonAlehouse: BuildingDef = {
   style: 'Anglo-Saxon',
   date: 'c. 700',
   summary:
-    'When Roman rule ended, so did Roman building: the mansio fell into ruin and the newcomers built in timber, as they had at home. ' +
+    'When Roman rule ended, so did Roman building: the mansio was left to fall into ruin, and the Anglo-Saxon newcomers built in timber, as they had at home. ' +
     'Ale was brewed in ordinary households, and a house that sold it was an ealu-hus, an alehouse. ' +
-    'This one is a small rectangular hall of upright planks set straight into the ground, under a hipped roof of thatch, with a sunken hut beside it for brewing. ' +
-    'A pole with a bush tied to the end told passers-by that a fresh brew was ready: the custom is recorded later in the Middle Ages and was probably much older.',
+    'This one is a small rectangular hall of upright planks set straight into the ground, under a hipped roof of thatch, with a sunken-floored hut beside it, shown here as the brewhouse. ' +
+    'A pole with a bush tied to the end told passers-by that a fresh brew was ready: the custom is only recorded later in the Middle Ages, though it may well be older.',
   materials: ['oak planks and posts', 'thatch', 'wattle'],
   lookFor: [
-    { label: 'Ale-stake', note: 'A pole with a bush on the end, hung out when a new brew was ready: the oldest kind of English inn sign.', at: [HX + 1.7, 2.7, HZ + D / 2 + 2.9] },
+    { label: 'Ale-stake', note: 'A pole with a bush on the end, hung out when a new brew was ready: often called the ancestor of the English inn sign.', at: [HX + 1.7, 2.7, HZ + D / 2 + 2.9] },
     { label: 'Earthfast plank walls', note: 'Split oak planks and posts dug straight into the ground. Quick to build, but they rot at the foot within a generation.', at: [HX - 3, 1.1, HZ + D / 2 + 0.1] },
     { label: 'Hipped thatched roof', note: 'Sloping down at the ends as well as the sides, steep enough to shed rain from the straw.', at: [HX - 4.4, 3.5, HZ] },
-    { label: 'Sunken-featured building', note: 'A small hut over a pit, the commonest building of the period, used here as the brewhouse.', at: [6.2, 1.8, -5.4] },
+    { label: 'Sunken-featured building', note: 'A small hut over a pit, the commonest building found on early Anglo-Saxon sites. What such huts were used for is debated; here it is the brewhouse.', at: [6.2, 1.8, -5.4] },
     { label: 'Trestle table', note: 'Drinking went on outside in fine weather, on benches and boards that could be packed away.', at: [3.2, 1.2, 4.6] },
   ],
   build(b) {

@@ -111,8 +111,8 @@ export const concreteArchBridge: BuildingDef = {
   materials: ['reinforced concrete', 'Portland stone facing', 'bronze', 'tarmac'],
   lookFor: [
     { label: 'Open spandrels', note: 'Between the arch and the deck there are only columns, not solid walls: the arch ribs do the work.', at: [4.4, 1.0, -5.6] },
-    { label: 'Arch rib', note: 'Four parallel ribs of reinforced concrete, with a rise of only about one eighth of the span.', at: [4.4, -0.3, 6.4] },
-    { label: 'Pylon', note: 'Stepped and fluted end pylons crowned with lanterns, the Art Deco signature of bridges such as Twickenham Bridge (1933).', at: [4.6, 4.6, 12.3] },
+    { label: 'Arch rib', note: 'Four parallel ribs of reinforced concrete, with a rise of only about a seventh of the span.', at: [4.4, -0.3, 6.4] },
+    { label: 'Pylon', note: 'Stepped and fluted pylons crowned with lanterns mark the ends of the bridge in the Art Deco manner.', at: [4.6, 4.6, 12.3] },
     { label: 'Deco lamp', note: 'Slim bronze lamp posts with tall glass lanterns, lit by electricity rather than gas.', at: [4.4, 5.6, 5.0] },
     { label: 'Kerbed footway', note: 'Raised pavements either side of a tarmac carriageway with a white centre line, laid out for motor traffic.', at: [-3.8, 1.8, -2.0] },
   ],

@@ -52,7 +52,7 @@ export const ironAgeShrine: BuildingDef = {
     { label: 'Ditch and bank', note: 'The earthwork boundary that marked the sacred enclosure off from ordinary land.', at: [10.4, 0.6, 4] },
     { label: 'Rectangular shrine', note: 'A small timber building with straight walls and corners, when every house was round.', at: [2.4, 2.2, -1] },
     { label: 'Carved posts', note: 'Oak posts carved with heads, like the rare wooden figures that have survived in waterlogged ground.', at: [-2.4, 4.4, -12.6] },
-    { label: 'Entrance to the east', note: 'The only way in faces the rising sun, as the doors of most Iron Age houses did.', at: [0, 1.5, -14.6] },
+    { label: 'Entrance to the east', note: 'The only way in faces the rising sun, as the doors of most Iron Age round houses faced east or south-east.', at: [0, 1.5, -14.6] },
     { label: 'Offering pit', note: 'Objects were broken or buried here as gifts to the gods, not thrown away.', at: [1.6, 0.4, -6.0] },
   ],
   build(b) {

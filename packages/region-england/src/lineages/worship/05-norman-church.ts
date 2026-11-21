@@ -13,19 +13,19 @@ export const normanChurch: BuildingDef = {
   id: 'norman-church',
   name: 'Norman parish church',
   style: 'Norman (English Romanesque)',
-  date: 'c. 1090',
+  date: 'c. 1120',
   summary:
-    'Within a generation of the Conquest the new Norman lord pulled down the cramped Saxon church and rebuilt it wider, longer and stronger on the same spot. ' +
+    'Two generations after the Conquest the Norman lord pulled down the cramped Saxon church and rebuilt it wider, longer and stronger on the same spot. ' +
     'Everything is round-arched: small windows set high in thick rubble walls, a chancel ending in a semicircular apse, and a squat west tower to hang the bells. ' +
     'The walls are so thick they barely need buttresses; the shallow strips on them are more pattern than prop. ' +
-    'All the carving money went on the south doorway, ringed with zigzag.',
+    'Zigzag carving had just become the fashion, and the carving money went on the south doorway, which is ringed with it.',
   materials: ['rubble stone', 'Caen-type limestone dressings', 'stone slate'],
   lookFor: [
     { label: 'Chevron doorway', note: 'Rings of round arches carved with zigzag, on little shafts with cushion capitals: the Norman signature.', at: [4.6, 3.2, 8.1] },
     { label: 'Round-headed windows', note: 'Small and set high, with a deep splay inside to spread the light through a thick wall.', at: [4.1, 4.6, 1.7] },
-    { label: 'Apse', note: 'The chancel ends in a semicircle, as in the Roman basilicas the Normans admired.', at: [0, 4.0, -15.4] },
+    { label: 'Apse', note: 'The chancel ends in a semicircle, a form that goes back to the Roman basilica.', at: [0, 4.0, -15.4] },
     { label: 'Pilaster buttresses', note: 'Broad, flat strips of masonry: the thick wall does the work, so they hardly project.', at: [4.3, 2.5, -1.0] },
-    { label: 'Corbel table', note: 'A row of carved blocks under the eaves, often with grotesque heads.', at: [4.3, 6.2, 12.6] },
+    { label: 'Corbel table', note: 'A row of projecting stone blocks under the eaves, often carved with heads or beasts.', at: [4.3, 6.2, 12.6] },
     { label: 'Squat west tower', note: 'Low and massive, with paired belfry openings divided by a shaft and a low pyramid cap.', at: [3.2, 11.2, 17] },
   ],
   influences: ['norman-romanesque'],

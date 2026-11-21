@@ -1,4 +1,5 @@
 import type { Lineage } from '@ah/kit';
+import { romanEnd } from '../../ends';
 import { tradingGround } from './01-trading-ground';
 import { romanMacellum } from './02-roman-macellum';
 import { saxonMarket } from './03-saxon-market';
@@ -18,10 +19,10 @@ const lineage: Lineage = {
   plotSize: [22, 18],
   stages: [
     { from: -500, def: tradingGround },
-    { from: 90, def: romanMacellum },
-    { from: 450, def: saxonMarket },
-    { from: 1100, def: normanMarketCross },
-    { from: 1380, def: gothicButtercross },
+    { from: 90, end: romanEnd, def: romanMacellum },
+    { from: 750, def: saxonMarket },
+    { from: 1200, def: normanMarketCross },
+    { from: 1480, def: gothicButtercross },
     { from: 1590, def: tudorMarketHall },
     { from: 1750, def: georgianMarketHouse },
     { from: 1865, def: victorianMarketHall },

@@ -15,15 +15,8 @@ export const timeScale = new TimeScale(region.eras);
 const FULL_RUN = 150;
 
 const _p = new THREE.Vector3();
-
-/** What is standing on a plot at a year, with the years it stands there. */
-export function describePlot(plotId: string, year: number) {
-  const eng = Engine.instance;
-  const p = eng?.town.get(plotId);
-  if (!eng || !p) return null;
-  const st = eng.town.stageAt(p, year);
-  return { plot: p, stage: st };
-}
+/** Marks the feature pins as needing a rebuild (distinct from '', which means there are none to show). */
+const STALE = '\u0000stale';
 
 /**
  * Owns the 3D world and keeps it in step with the app state: the year, the camera mode, the
@@ -45,7 +38,7 @@ export class Engine {
   private ring: THREE.Mesh;
   private unsub: () => void;
   private callouts: { el: HTMLElement; world: THREE.Vector3 }[] = [];
-  private calloutKey = '';
+  private calloutKey = STALE;
   private labels: { el: HTMLElement; world: THREE.Vector3; stageIndex: number }[] = [];
   private plotLabels: { el: HTMLElement; plot: PlotState; world: THREE.Vector3 }[] = [];
   private savedOrbit: { pos: THREE.Vector3; target: THREE.Vector3 } | null = null;
@@ -123,14 +116,14 @@ export class Engine {
     }
 
     this.town.onSwap = (p) => {
-      if (p.plot.id === useApp.getState().selected) this.calloutKey = '';
+      if (p.plot.id === useApp.getState().selected) this.calloutKey = STALE;
     };
 
     this.unsub = useApp.subscribe((s, prev) => {
       if (s.mode !== prev.mode) this.nav.setMode(s.mode);
       if (s.street !== prev.street) this.switchView(s.street, prev.street);
       if (s.focusTick !== prev.focusTick) this.focusSelection();
-      if (s.selected !== prev.selected) this.calloutKey = '';
+      if (s.selected !== prev.selected) this.calloutKey = STALE;
       if (s.intro !== prev.intro) this.nav.orbit.autoRotate = s.intro;
     });
     this.nav.orbit.autoRotate = useApp.getState().intro;
@@ -259,7 +252,7 @@ export class Engine {
     const { scene } = this.stage;
     for (const l of this.labels) l.el.remove();
     this.labels = [];
-    this.calloutKey = '';
+    this.calloutKey = STALE;
     if (street) {
       const p = this.town.get(street.plotId);
       const lineage = region.lineages.find((l) => l.id === street.lineageId);
@@ -320,7 +313,8 @@ export class Engine {
     }
     if (!s.selected) return null;
     const p = this.town.get(s.selected);
-    if (!p || p.shown < 0) return null;
+    // a ruin keeps its card but not its feature pins: most of what they point at has fallen
+    if (!p || p.shown < 0 || p.schedule[p.shown].state === 'ruin') return null;
     const def = p.lineage.stages[p.schedule[p.shown].index].def;
     return { def, key: `town:${p.plot.id}:${p.shown}`, toWorld: (at, out) => this.town.localToWorld(p, at, out) };
   }

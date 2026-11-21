@@ -1,16 +1,16 @@
 import { P, tint, spread, type BuildingDef } from '@ah/kit';
-import { cow, hipGablet, hurdle } from './shared';
+import { cow, hipGablet, hurdle } from '../lineages/home/shared';
 
 export const longhouse: BuildingDef = {
   id: 'longhouse',
   name: 'Longhouse',
   style: 'Medieval peasant vernacular',
-  date: 'c. 1100',
+  date: 'c. 1200',
   summary:
     'A peasant family and its cattle lived under one long, low roof, the people at the upper end round an open hearth and the ' +
-    'beasts at the lower end, whose warmth helped heat the house. A cross passage between two opposite doors divided them. ' +
+    'beasts at the lower end, whose warmth probably helped heat the house. A cross passage between two opposite doors divided them. ' +
     'The thick walls are of cob, clay and straw trodden in layers on a stone footing, and with no chimney the smoke drifts up to ' +
-    'a hole at the top of the hipped thatch. Excavated deserted villages, such as Hound Tor on Dartmoor, show houses of this kind.',
+    'a small gablet at the top of the hipped thatch. The plan is known from excavated deserted villages such as Hound Tor on Dartmoor, though there the walls were of granite.',
   materials: ['cob on a rubble footing', 'oak and ash roof timbers', 'straw thatch', 'wattle hurdles'],
   lookFor: [
     {
@@ -24,8 +24,8 @@ export const longhouse: BuildingDef = {
       at: [6.1, 0.5, 0.4],
     },
     {
-      label: 'Smoke hole',
-      note: 'A small opening at the top of the hipped end let out the smoke of the open hearth; there was no chimney.',
+      label: 'Smoke gablet',
+      note: 'A small triangular opening at the top of the hipped end, probably to let out the smoke of the open hearth; there was no chimney.',
       at: [-4.7, 4.6, 0.3],
     },
     {

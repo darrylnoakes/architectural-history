@@ -36,7 +36,7 @@ export const tudorAlmshouses: BuildingDef = {
   style: 'Late Tudor and Jacobean',
   date: 'c. 1600',
   summary:
-    'A local merchant left money in his will to house six poor elderly people of the parish, each with a room, a fireplace and a small allowance, in return for good conduct and prayers for the founder. ' +
+    'A local merchant left money in his will to house six poor elderly people of the parish, each with a room, a fireplace and a small allowance, in return for good conduct and regular attendance at church. ' +
     'The row is built in brick, now the fashionable material, with stone dressings: mullioned windows, hood moulds and a central gable bearing the founder’s arms. ' +
     'The great change from the medieval row is the chimney: every room has its own fireplace, and the stacks are made tall and decorative to show it.',
   materials: ['red brick', 'limestone dressings', 'clay plain tile'],
@@ -45,7 +45,7 @@ export const tudorAlmshouses: BuildingDef = {
     { label: 'Founder’s plaque', note: 'A carved stone panel in the central gable with the benefactor’s arms and the date, so no one forgot whose charity this was.', at: [0, 4.4, 2.65] },
     { label: 'Mullioned windows with hood moulds', note: 'Stone uprights divide each window into lights; the projecting hood mould above throws rainwater clear.', at: [-7.15, 1.6, 1.75] },
     { label: 'A door for each almsperson', note: 'Each resident had their own front door and room, opening off the shared garden.', at: [-8.85, 1.1, 1.75] },
-    { label: 'Coped gable', note: 'The end walls rise above the roof and are capped with stone coping, a fashion brought with brick from the Low Countries.', at: [11.1, 5.0, -1.2] },
+    { label: 'Coped gable', note: 'The end walls rise above the roof and are capped with stone coping, which protects the top of the wall and the edge of the tiles.', at: [11.1, 5.0, -1.2] },
   ],
   influences: ['flemish-brick'],
   build(b) {
@@ -87,8 +87,8 @@ export const tudorAlmshouses: BuildingDef = {
     bar(b, [MID / 2 + 0.1, WALL + 0.2, pz - 0.15], [0, WALL + rh + 0.4, pz - 0.15], 0.36, stone);
     b.cone(0.2, 0.6, stone, { at: [0, WALL + rh + 0.45, pz - 0.15], segs: 4 });
     // arched doorway with stone surround
-    b.panel(1.9, 2.75, stone, { at: [0, 0.4, pz], facing: '+z', shape: 'pointed', depth: 0.08 });
-    b.panel(1.4, 2.45, P.oakDark, { at: [0, 0.4, pz], facing: '+z', shape: 'pointed', depth: 0.11 });
+    b.panel(1.9, 2.75, stone, { at: [0, 0.4, pz], facing: '+z', shape: 'segmental', depth: 0.08 });
+    b.panel(1.4, 2.45, P.oakDark, { at: [0, 0.4, pz], facing: '+z', shape: 'segmental', depth: 0.11 });
     // plaque: stone panel, shield of arms, date line
     b.panel(1.7, 1.15, stone, { at: [0, WALL + 0.7, pz], facing: '+z', depth: 0.1 });
     b.panel(0.55, 0.62, P.doorBlue, { at: [0, WALL + 0.95, pz + 0.04], facing: '+z', shape: 'round', depth: 0.1 });
