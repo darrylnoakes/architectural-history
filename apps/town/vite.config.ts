@@ -14,5 +14,7 @@ export default defineConfig({
       },
     },
   },
-  server: { port: 5173, strictPort: true },
+  // NO_HMR=1 serves the gallery for screenshots: files are still read fresh on every load, but a save
+  // elsewhere in the repo no longer reloads a page that is in the middle of being photographed
+  server: { port: 5173, strictPort: true, hmr: process.env.NO_HMR ? false : undefined },
 });

@@ -2,7 +2,9 @@
 
 How to write the procedural buildings that fill a region. Read this, then read the exemplar
 `packages/region-england/src/extras/georgian-chapel.ts` and the primitives in
-`packages/kit/src/builder.ts` (the doc comment on each method is the API reference).
+`packages/kit/src/builder.ts` (the doc comment on each method is the API reference). The finished
+England lineages in `packages/region-england/src/lineages/` are worked examples of every kind of
+building; each region's brief is `docs/LINEAGES.md` (England) or `docs/LINEAGES-<region>.md`.
 
 ## What a building is
 
@@ -38,7 +40,9 @@ the named features up close on foot.
   floor or separate blocks, call `b.collider(w, d, { at })` per solid block instead, or
   `b.noCollide()` for things you can wander through. Use `b.deck(...)` for walkable raised surfaces.
 
-Useful helpers: `b.sym((side) => …)` for mirrored pairs, `b.group({ at, rotY }, () => …)` for a
+Useful helpers: `b.beam(p0, p1, w, h, colour)` for any bar between two points (rafters, braces,
+struts, cables, railings), `b.lathe(profile, colour, { start, sweep })` for part of a turn (an apse,
+a bow front), `b.sym((side) => …)` for mirrored pairs, `b.group({ at, rotY }, () => …)` for a
 moved or rotated sub-assembly, `spread(n, a, b)` and `linspace(n, a, b)` for evenly spaced items.
 For shapes the primitives do not cover, `b.extrude(points, depth, …)` (any silhouette) and
 `b.lathe(profile, …)` (anything turned) go a long way, and `b.add(threeGeometry, colour)` takes
@@ -47,7 +51,8 @@ Write local helper functions freely inside your lineage folder.
 
 ## Accuracy
 
-This is a learning tool. Dates, terms and claims on the card must be right for **England**.
+This is a learning tool. Dates, terms and claims on the card must be right for **the region**:
+what was true of Florence in 1450 was not true of York.
 
 - Model the *typical* building of its type and decade, not a fantasy version. Proportions matter
   more than ornament: storey heights, roof pitch (thatch is steep, about 50°; slate can be 30°;
@@ -58,13 +63,14 @@ This is a learning tool. Dates, terms and claims on the card must be right for *
 - `lookFor`: three to five features a beginner can find on the model, each with the correct term
   as `label`, a one-sentence `note`, and an `at` anchor placed on or just outside that feature
   (the gallery shows anchors as pink dots; check they sit where they should).
-- `influences`: ids from `packages/region-england/src/influences.ts` where one clearly applies.
+- `influences`: ids from the region's `influences.ts` where one clearly applies. Leave it out
+  rather than cite a loose fit.
 - Writing style: British spelling, no em dashes, no exclamation marks, no "iconic".
 
 ## Files
 
 ```
-packages/region-england/src/lineages/<lineage>/
+packages/region-<region>/src/lineages/<lineage>/
   index.ts            default export: the Lineage (id, name, role, plotSize, stages)
   01-<building>.ts    one file per building, exporting a BuildingDef
   02-<building>.ts
@@ -80,9 +86,13 @@ node tools/shot.mjs <lineage> <buildingId> [views]   # default views: iso,front
 node tools/shot.mjs <lineage> <buildingId> iso,back,eye,top,side
 node tools/shot.mjs <lineage> all                     # every stage
 node tools/shot.mjs <lineage> row                     # the whole lineage side by side
+node tools/shot.mjs italy/<lineage> <buildingId>      # a lineage of another region
 ```
 
-PNGs land in `shots/<lineage>/`. **Open them and look.** Check against this list:
+PNGs land in `shots/<lineage>/` (or `shots/<region>/<lineage>/`). The tool queues itself: at most
+three screenshots run at a time however many people are calling it, so a shot can take a minute
+when the machine is busy. If an image comes back blank or shows an error from someone else's
+file, run it again. **Open them and look.** Check against this list:
 
 1. Does it read instantly as the building type and period? Would it be confused with its neighbours
    in the lineage?
@@ -98,9 +108,10 @@ the sequence should show clear, legible change from stage to stage.
 Type-check with `pnpm typecheck`.
 
 The dev server reloads the gallery whenever any source file is saved, which spoils a screenshot in
-progress. If several people or agents are editing at once, shoot against a static build instead:
-`pnpm build`, then `pnpm --filter @ah/town preview --port 4173`, then
-`GALLERY_URL=http://127.0.0.1:4173 node tools/shot.mjs …`.
+progress. If several people or agents are editing at once, run a second server with reloading off
+(`NO_HMR=1 pnpm --filter @ah/town exec vite --port 5174`) and point the tool at it:
+`GALLERY_URL=http://127.0.0.1:5174 node tools/shot.mjs …`. It still reads every file fresh on each
+shot.
 
 ## Timing
 

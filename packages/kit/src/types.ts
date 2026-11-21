@@ -73,7 +73,9 @@ export type BuildingKind =
   | 'crossing'
   | 'culture'
   | 'hospitality'
-  | 'farm';
+  | 'farm'
+  | 'defence'
+  | 'transport';
 
 export const KINDS: Record<BuildingKind, { label: string; blurb: string }> = {
   home: { label: 'Family home', blurb: 'The house of an ordinary, middling household' },
@@ -87,6 +89,8 @@ export const KINDS: Record<BuildingKind, { label: string; blurb: string }> = {
   culture: { label: 'Leisure and learning', blurb: 'Baths, theatres, halls and the like' },
   hospitality: { label: 'Inn', blurb: 'Food, drink and a bed for the night' },
   farm: { label: 'Farm', blurb: 'Rural buildings at the edge of the town' },
+  defence: { label: 'Walls and gates', blurb: 'What kept the town safe, and marked where it ended' },
+  transport: { label: 'Station', blurb: 'Where the railway and its successors arrive' },
 };
 
 export interface Lineage {

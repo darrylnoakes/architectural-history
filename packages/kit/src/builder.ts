@@ -494,14 +494,37 @@ export class Builder {
 
   /**
    * Spin a profile around the vertical axis. `profile` is [radius, height] pairs from bottom to top.
-   * Use it for spires, turned columns, domes, cupolas, chimneys, cooling towers.
+   * Use it for spires, turned columns, domes, cupolas, chimneys, cooling towers. `start` and `sweep`
+   * (radians) make only part of the turn: an apse, an exedra, a curved bank or a bow front.
    */
-  lathe(profile: [number, number][], color: number, o?: Opts & { segs?: number }): this {
+  lathe(profile: [number, number][], color: number, o?: Opts & { segs?: number; start?: number; sweep?: number }): this {
     const g = new THREE.LatheGeometry(
       profile.map(([r, y]) => new THREE.Vector2(Math.max(0.0001, r), y)),
       o?.segs ?? 12,
+      o?.start ?? 0,
+      o?.sweep ?? Math.PI * 2,
     );
     return this.add(g, color, o);
+  }
+
+  /**
+   * A straight bar of any cross-section w × h running from p0 to p1 (both [x, y, z]): rafters, braces,
+   * struts, flying buttresses, cables, railings, anything that is not upright or level.
+   */
+  beam(p0: Vec3, p1: Vec3, w: number, h: number, color: number, o?: { mat?: MatKind; jitter?: boolean }): this {
+    const dx = p1[0] - p0[0];
+    const dy = p1[1] - p0[1];
+    const dz = p1[2] - p0[2];
+    const len = Math.hypot(dx, dy, dz);
+    if (len < 1e-6) return this;
+    const yaw = Math.atan2(dx, dz);
+    const pitch = Math.atan2(dy, Math.hypot(dx, dz));
+    const mid: Vec3 = [(p0[0] + p1[0]) / 2, (p0[1] + p1[1]) / 2, (p0[2] + p1[2]) / 2];
+    this.group({ at: mid, rotY: yaw, rot: [-pitch, 0, 0] }, () => {
+      const g = new THREE.BoxGeometry(w, h, len);
+      this.add(g, color, o);
+    });
+    return this;
   }
 
   // ---------------------------------------------------------------- wall details
@@ -801,10 +824,18 @@ export class Builder {
     return this;
   }
 
-  /** A simple tree of total height h standing on `at`. kind: 'round', 'conifer', 'poplar', 'bush'. */
-  tree(h: number, o?: Opts & { kind?: 'round' | 'conifer' | 'poplar' | 'bush'; color?: number }): this {
+  /**
+   * A simple tree of total height h standing on `at`. kind: 'round', 'conifer', 'poplar', 'bush',
+   * and for the Mediterranean 'cypress' (a dark spindle), 'pine' (an umbrella pine) and 'olive'.
+   */
+  tree(
+    h: number,
+    o?: Opts & { kind?: 'round' | 'conifer' | 'poplar' | 'bush' | 'cypress' | 'pine' | 'olive'; color?: number },
+  ): this {
     const kind = o?.kind ?? 'round';
-    const col = o?.color ?? (kind === 'conifer' ? P.leafDark : P.leaf);
+    const col =
+      o?.color ??
+      (kind === 'conifer' ? P.leafDark : kind === 'cypress' ? P.cypress : kind === 'pine' ? P.leafDark : kind === 'olive' ? P.olive : P.leaf);
     this.group({ at: o?.at, rotY: this.rng() * 6.28 }, () => {
       if (kind === 'bush') {
         this.blob(h * 0.6, col, { at: [0, h * 0.45, 0], stretch: [1.2, 0.8, 1.2] });
@@ -815,6 +846,22 @@ export class Builder {
         this.cone(h * 0.24, h * 0.5, col, { at: [0, h * 0.2, 0], segs: 7 });
         this.cone(h * 0.18, h * 0.42, col, { at: [0, h * 0.45, 0], segs: 7 });
         this.cone(h * 0.11, h * 0.3, col, { at: [0, h * 0.7, 0], segs: 7 });
+        return;
+      }
+      if (kind === 'cypress') {
+        this.cyl(h * 0.025, h * 0.14, P.bark, { segs: 5 });
+        this.blob(h * 0.11, col, { at: [0, h * 0.55, 0], stretch: [1, 4.1, 1] });
+        return;
+      }
+      if (kind === 'pine') {
+        this.cyl(h * 0.04, h * 0.78, P.bark, { segs: 5, rTop: h * 0.028 });
+        this.blob(h * 0.34, col, { at: [0, h * 0.86, 0], stretch: [1.25, 0.42, 1.25] });
+        return;
+      }
+      if (kind === 'olive') {
+        this.cyl(h * 0.07, h * 0.4, 0x7a6a58, { segs: 5, rTop: h * 0.05 });
+        this.blob(h * 0.36, col, { at: [0, h * 0.64, 0], stretch: [1.2, 0.8, 1.2] });
+        this.blob(h * 0.22, col, { at: [-h * 0.2, h * 0.52, h * 0.08] });
         return;
       }
       if (kind === 'poplar') {

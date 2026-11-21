@@ -1,7 +1,7 @@
 /**
  * Building gallery: a bare preview of one building (or a whole lineage in a row), used while authoring.
  *
- *   /gallery.html?lineage=home&id=roundhouse&view=iso
+ *   /gallery.html?lineage=home&id=roundhouse&view=iso        (add &region=italy for another region)
  *   /gallery.html?lineage=home            (every stage side by side)
  *   /gallery.html?extra=georgian-chapel
  *
@@ -12,12 +12,8 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { Builder, P, construct, type BuildingDef, type Lineage } from '@ah/kit';
 import { createStage } from '@ah/engine';
 
-const lineageModules = import.meta.glob<{ default: Lineage }>(
-  '../../../packages/region-england/src/lineages/*/index.ts',
-);
-const extraModules = import.meta.glob<Record<string, BuildingDef>>(
-  '../../../packages/region-england/src/extras/*.ts',
-);
+const lineageModules = import.meta.glob<{ default: Lineage }>('../../../packages/region-*/src/lineages/*/index.ts');
+const extraModules = import.meta.glob<Record<string, BuildingDef>>('../../../packages/region-*/src/extras/*.ts');
 
 const q = new URLSearchParams(location.search);
 const info = document.getElementById('info')!;
@@ -37,6 +33,7 @@ async function main() {
   const { scene, camera, renderer } = stage;
   scene.fog = null;
 
+  const regionId = q.get('region') ?? 'england';
   const lineageId = q.get('lineage');
   const id = q.get('id');
   const view = q.get('view') ?? 'iso';
@@ -54,7 +51,7 @@ async function main() {
     }
     if (!defs.length) return fail(`No extra building with id "${q.get('extra')}"`);
   } else if (lineageId) {
-    const key = Object.keys(lineageModules).find((k) => k.includes(`/lineages/${lineageId}/`));
+    const key = Object.keys(lineageModules).find((k) => k.includes(`/region-${regionId}/`) && k.includes(`/lineages/${lineageId}/`));
     if (!key) return fail(`No lineage folder "${lineageId}". Found: ${Object.keys(lineageModules).join(', ')}`);
     const lineage = (await lineageModules[key]()).default;
     plot = lineage.plotSize;
