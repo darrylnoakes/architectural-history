@@ -4,6 +4,7 @@ import { cattleMarket } from './01-cattle-market';
 import { forumShops } from './02-forum-shops';
 import { macellum } from './03-macellum';
 import { stallsInTheRuins } from './04-stalls-in-the-ruins';
+import { grainLoggia } from './05-grain-loggia';
 
 const lineage: Lineage = {
   id: 'market',
@@ -16,6 +17,7 @@ const lineage: Lineage = {
     { from: -200, end: gothicWar, def: forumShops },
     { from: 60, end: gothicWar, def: macellum },
     { from: 950, end: renewedBy(1350), def: stallsInTheRuins },
+    { from: 1290, def: grainLoggia },
   ],
 };
 

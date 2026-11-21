@@ -5,6 +5,7 @@ import { archaicHouse } from './02-archaic-house';
 import { atriumHouse } from './03-atrium-house';
 import { gardenApartment } from './04-garden-apartment';
 import { houseInRuins } from './05-house-in-ruins';
+import { domusSolarata } from './06-domus-solarata';
 
 const lineage: Lineage = {
   id: 'home',
@@ -18,6 +19,7 @@ const lineage: Lineage = {
     { from: -200, builtUntil: 50, def: atriumHouse },
     { from: 100, builtUntil: 250, def: gardenApartment },
     { from: 480, builtUntil: 600, def: houseInRuins },
+    { from: 800, builtUntil: 1100, end: renewedBy(1300), def: domusSolarata },
   ],
 };
 

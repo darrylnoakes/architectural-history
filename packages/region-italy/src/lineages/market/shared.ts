@@ -244,3 +244,44 @@ export function ringRoof(b: Builder, ow: number, od: number, iw: number, id: num
   g.computeVertexNormals();
   b.add(g, color, { at });
 }
+
+const FACE: Record<string, number> = { '+z': 0, '+x': Math.PI / 2, '-z': Math.PI, '-x': -Math.PI / 2 };
+/** Facing as an angle. */
+export const faceAngle = (f: Facing): number => (typeof f === 'number' ? f : FACE[f]);
+
+/** Outline of an opening w wide and h tall (to the apex), as few points as will read: 'round' or 'pointed' head. */
+export function archOutline(w: number, h: number, shape: 'round' | 'pointed' | 'rect', n = 4): [number, number][] {
+  const a = w / 2;
+  if (shape === 'rect') return [[-a, 0], [a, 0], [a, h], [-a, h]];
+  if (shape === 'round') {
+    const hs = Math.max(0, h - a);
+    const pts: [number, number][] = [[-a, 0], [a, 0]];
+    for (let i = 0; i <= 2 * n; i++) {
+      const t = (i / (2 * n)) * Math.PI;
+      pts.push([Math.cos(t) * a, hs + Math.sin(t) * a]);
+    }
+    return pts;
+  }
+  // pointed: two arcs of radius w (equilateral), springing at h - rise
+  const rise = Math.min(h * 0.6, w * 0.866);
+  const hs = h - rise;
+  const R = (a * a + rise * rise) / (2 * a);
+  const pts: [number, number][] = [[-a, 0], [a, 0]];
+  const phi = Math.atan2(rise, R - a);
+  for (let i = 0; i <= n; i++) {
+    const t = (i / n) * phi;
+    pts.push([a - R + R * Math.cos(t), hs + R * Math.sin(t)]);
+  }
+  for (let i = n - 1; i >= 0; i--) {
+    const t = (i / n) * phi;
+    pts.push([-(a - R + R * Math.cos(t)), hs + R * Math.sin(t)]);
+  }
+  return pts;
+}
+
+/** A cheap low-poly arched panel on a wall: like b.panel but with few facets. `at` is its bottom centre on the wall. */
+export function archPanel(b: Builder, w: number, h: number, color: number, at: Vec3, facing: Facing, shape: 'round' | 'pointed' | 'rect' = 'round', depth = 0.06, mat?: 'glass', n = 3): void {
+  b.group({ at, rotY: faceAngle(facing) }, () => {
+    b.extrude(archOutline(w, h, shape, n), depth, color, { at: [0, 0, depth / 2], jitter: false, mat });
+  });
+}

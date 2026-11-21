@@ -320,3 +320,9 @@ export function arcadeBelt(b: Builder, y: number, h: number, color: number, prou
     color,
   );
 }
+
+/** A standing statue of h metres on `at`: a draped body and a head. */
+export function statue(b: Builder, at: Vec3, h: number, color: number): void {
+  b.cyl(h * 0.13, h * 0.78, color, { at, rTop: h * 0.09, segs: 5, jitter: false });
+  b.sphere(h * 0.08, color, { at: [at[0], at[1] + h * 0.87, at[2]], segs: 5, jitter: false });
+}

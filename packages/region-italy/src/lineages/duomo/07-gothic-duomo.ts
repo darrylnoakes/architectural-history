@@ -1,5 +1,5 @@
 import { P, tint, type BuildingDef, type Builder } from '@ah/kit';
-import { cathedral, archPts, archHead, circlePts, pinnacle, statue, opening, FZ, FF, NW, MARBLE, RECESS, GOTHIC, type Pt } from './shared';
+import { cathedral, archPts, archHead, circlePts, pinnacle, opening, FZ, FF, NW, MARBLE, RECESS, GOTHIC, type Pt } from './shared';
 
 const FW = 10.2; // half-width of the front
 const PINK = tint(P.marbleRed, 0.28);
@@ -19,21 +19,20 @@ function portal(b: Builder, x: number, w: number, h: number) {
   const gb = y0 + h + 0.9;
   const gw = w / 2 + 0.9;
   const gh = gw * 1.45;
-  b.extrude([[x - gw, gb], [x + gw, gb], [x, gb + gh]], 0.4, MARBLE, { at: [0, 0, z + 0.3] });
-  b.extrude([[x - gw + 0.45, gb + 0.25], [x + gw - 0.45, gb + 0.25], [x, gb + gh - 0.5]], 0.06, P.gold, { at: [0, 0, z + 0.52], jitter: false });
-  b.box(gw * 2 + 0.2, 0.3, 0.7, MARBLE, { at: [x, gb - 0.3, z + 0.3], jitter: false });
+  b.extrude([[x - gw, gb], [x + gw, gb], [x, gb + gh]], 0.4, MARBLE, { at: [0, 0, z + 0.62] });
+  b.extrude([[x - gw + 0.45, gb + 0.25], [x + gw - 0.45, gb + 0.25], [x, gb + gh - 0.5]], 0.06, P.gold, { at: [0, 0, z + 0.84], jitter: false });
+  b.box(gw * 2 + 0.2, 0.3, 0.9, MARBLE, { at: [x, gb - 0.3, z + 0.45], jitter: false });
 }
 
 /** A plate-tracery rose: a white wheel pierced by a ring of circles, over a dark glazed disc. */
 export function rose(b: Builder, x: number, y: number, r: number, z: number, frame = MARBLE) {
-  const holes: Pt[][] = [circlePts(x, y, r * 0.24, 10)];
+  const holes: Pt[][] = [circlePts(x, y, r * 0.24, 8)];
   for (let i = 0; i < 12; i++) {
     const t = (i / 12) * Math.PI * 2;
-    holes.push(circlePts(x + r * 0.63 * Math.cos(t), y + r * 0.63 * Math.sin(t), r * 0.16, 8));
+    holes.push(circlePts(x + r * 0.63 * Math.cos(t), y + r * 0.63 * Math.sin(t), r * 0.16, 6));
   }
-  b.extrude(circlePts(x, y, r * 0.98, 24), 0.06, P.windowDark, { at: [0, 0, z + 0.03], jitter: false });
-  b.extrude(circlePts(x, y, r, 24), 0.22, frame, { at: [0, 0, z + 0.12], holes, jitter: false });
-  b.extrude(circlePts(x, y, r + 0.35, 24), 0.12, frame, { at: [0, 0, z + 0.05], holes: [circlePts(x, y, r - 0.05, 24)], jitter: false });
+  b.extrude(circlePts(x, y, r * 0.98, 16), 0.06, P.windowDark, { at: [0, 0, z + 0.03], jitter: false });
+  b.extrude(circlePts(x, y, r + 0.3, 20), 0.22, frame, { at: [0, 0, z + 0.12], holes, jitter: false });
 }
 
 /**
@@ -50,22 +49,17 @@ export function gothicFacade(b: Builder) {
   b.box(NW * 2, 9.6, t, MARBLE, { at: [0, 10.4, zc] });
   // a plinth band of pink marble and a cornice over the portals
   b.box(FW * 2 + 0.1, 0.6, t + 0.1, PINK, { at: [0, 0.6, zc], jitter: false });
-  b.box(FW * 2 + 0.4, 0.35, t + 0.9, MARBLE, { at: [0, 10.4, zc + 0.45], jitter: false });
+  b.box(FW * 2 + 0.4, 0.35, 0.9, MARBLE, { at: [0, 10.4, FF], jitter: false });
 
-  portal(b, 0, 3.0, 7.0);
+  portal(b, 0, 3.0, 6.3);
   b.sym((s) => portal(b, s * 7.6, 2.0, 5.0));
 
-  // the rose window in its square frame, with gold mosaic in the corners and a row of niches above
+  // the rose window in its square frame, with gold mosaic in the corners
   b.box(6.6, 6.6, 0.12, P.gold, { at: [0, 11.6, FF + 0.06], jitter: false });
   for (const [w, h, x, y] of [[6.9, 0.3, 0, 11.4], [6.9, 0.3, 0, 18.2], [0.3, 7.1, -3.45, 11.4], [0.3, 7.1, 3.45, 11.4]] as const) {
     b.box(w, h, 0.3, PINK, { at: [x, y, FF + 0.15], jitter: false });
   }
   rose(b, 0, 14.9, 2.75, FF + 0.1);
-  for (let i = 0; i < 9; i++) {
-    const x = -4.0 + i;
-    opening(b, 'pointed', 0.6, 1.25, [x, 18.75, FF], '+z', RECESS, 0.06);
-    statue(b, [x, 18.75, FF + 0.12], 1.05, MARBLE);
-  }
   // side bays: tall mosaic panels over the side portals, then gables
   b.sym((s) => {
     b.box(2.4, 3.0, 0.12, P.gold, { at: [s * 7.6, 10.95, FF + 0.06], jitter: false });

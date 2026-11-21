@@ -7,6 +7,7 @@ import { porticoShacks } from './04-portico-shacks';
 import { caseTerrinee } from './05-case-terrinee';
 import { workersRow } from './06-workers-row';
 import { raisedRow } from './07-raised-row';
+import { casaDiRinghiera } from './08-casa-di-ringhiera';
 
 const lineage: Lineage = {
   id: 'tenement',
@@ -22,6 +23,7 @@ const lineage: Lineage = {
     { from: 850, builtUntil: 1150, end: renewedBy(1300), def: caseTerrinee },
     { from: 1250, builtUntil: 1345, def: workersRow },
     { from: 1580, builtUntil: 1750, def: raisedRow },
+    { from: 1880, builtUntil: 1914, def: casaDiRinghiera },
   ],
 };
 

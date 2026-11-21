@@ -23,8 +23,9 @@ function win(f: number): [number, number] {
 }
 
 /** A flat brick arch with a relieving arch above an opening of width w whose head is at y (in a wall frame). */
-function brickArches(b: Builder, x: number, y: number, w: number, brick: number, wall: number): void {
+function brickArches(b: Builder, x: number, y: number, w: number, brick: number, wall: number, relieving = true): void {
   b.panel(w + 0.24, 0.3, tint(brick, -0.08), { at: [x, y, 0], depth: 0.03 });
+  if (!relieving) return;
   b.panel(w + 0.5, 0.75, tint(brick, -0.1), { at: [x, y + 0.34, 0], shape: 'segmental', depth: 0.02 });
   b.panel(w + 0.1, 0.55, wall, { at: [x, y + 0.34, 0], shape: 'segmental', depth: 0.025 });
 }
@@ -134,8 +135,8 @@ export function ostiaBlock(b: Builder, ruin: boolean): void {
       for (const x of axes) {
         const open = !ruin || fits(fTops, W, x, 0.6, y0 + h);
         if (!ruin) {
-          b.window(1.2, h, { at: [x, y0, 0], frame: shut, glass, bars: [2, 3] });
-          brickArches(b, x, y0 + h, 1.2, brick, brick);
+          b.window(1.2, h, { at: [x, y0, 0], frame: shut, glass, bars: [2, 2] });
+          brickArches(b, x, y0 + h, 1.2, brick, brick, f === 1);
         } else if (open) {
           brickArches(b, x, y0 + h, 1.2, brick, brick);
           // putlog holes of the lost floor beams beside each opening
@@ -161,7 +162,7 @@ export function ostiaBlock(b: Builder, ruin: boolean): void {
       b.box(12.6, 0.18, 0.95, tint(brick, -0.04), { at: [0, by, 0.47] });
       b.box(12.6, 0.08, 0.1, P.oakDark, { at: [0, by + 1.0, 0.88] });
       b.box(12.6, 0.08, 0.08, P.oakDark, { at: [0, by + 0.45, 0.88] });
-      for (const x of spread(42, -6.25, 6.25)) b.box(0.05, 1.0, 0.05, P.oak, { at: [x, by + 0.18, 0.88], jitter: false });
+      for (const x of spread(28, -6.25, 6.25)) b.box(0.05, 1.0, 0.05, P.oak, { at: [x, by + 0.18, 0.88], jitter: false });
       b.sym((s) => b.box(0.08, 1.0, 0.9, P.oakDark, { at: [s * 6.26, by + 0.18, 0.45] }));
       // flowers on the balcony
       for (const x of [-4.0, 1.3, 5.6]) {
@@ -208,8 +209,8 @@ export function ostiaBlock(b: Builder, ruin: boolean): void {
       for (let f = 1; f <= 3; f++) {
         const [y0, h] = win(f);
         for (const x of axes) {
-          b.window(1.2, h, { at: [x, y0, 0], frame: shut, glass, bars: [2, 3] });
-          brickArches(b, x, y0 + h, 1.2, brick, brick);
+          b.window(1.2, h, { at: [x, y0, 0], frame: shut, glass, bars: [2, 2] });
+          brickArches(b, x, y0 + h, 1.2, brick, brick, false);
         }
       }
       b.panel(1.4, 2.6, P.oakDark, { at: [0, 0, 0], depth: 0.05 });

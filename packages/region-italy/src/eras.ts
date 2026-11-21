@@ -14,7 +14,7 @@ export const eras: Era[] = [
     traits: ['Oval huts of wattle and thatch', 'Temples on a high podium with a deep porch', 'Painted terracotta roof ornaments', 'The first tiled roofs', 'Walls of great squared blocks'],
     materials: ['Wattle and daub', 'Mudbrick on stone footings', 'Tufa blocks', 'Terracotta'],
     color: 0x9a7a4a,
-    env: { streets: 'track', treeCover: 0.85, ground: P.earth, fields: P.meadow, extent: 80 },
+    env: { streets: 'track', treeCover: 0.85, ground: P.earth, fields: P.meadow, extent: 80, fieldSize: [30, 34] },
   },
   {
     id: 'republic',
@@ -29,7 +29,7 @@ export const eras: Era[] = [
     traits: ['The atrium house', 'Round arches of cut stone', 'Concrete faced with small stones', 'Greek columns on Italian podiums', 'A forum with a basilica'],
     materials: ['Tufa and travertine', 'Concrete (opus caementicium)', 'Stucco imitating marble', 'Terracotta tile'],
     color: 0xb5734f,
-    env: { streets: 'paved', treeCover: 0.6, ground: P.gravel, fields: P.crop, extent: 105 },
+    env: { streets: 'paved', treeCover: 0.6, ground: P.gravel, fields: P.crop, extent: 105, fieldSize: [56, 56] },
   },
   {
     id: 'empire',
@@ -44,7 +44,7 @@ export const eras: Era[] = [
     traits: ['Brick-faced concrete', 'Barrel vaults and domes', 'Apartment blocks over shops', 'Marble columns and veneers', 'Arcades framed by columns'],
     materials: ['Fired brick', 'Concrete with pozzolana', 'Marble', 'Travertine', 'Window glass'],
     color: 0xc46f4a,
-    env: { streets: 'paved', treeCover: 0.45, ground: P.gravel, fields: P.crop, extent: 130 },
+    env: { streets: 'paved', treeCover: 0.45, ground: P.gravel, fields: P.crop, extent: 130, fieldSize: [56, 56] },
   },
   {
     id: 'late-antique',
@@ -59,7 +59,7 @@ export const eras: Era[] = [
     traits: ['The basilica church with apse and atrium', 'Octagonal baptisteries', 'Columns reused from older buildings (spolia)', 'Mosaic', 'City walls with towers'],
     materials: ['Reused brick and marble', 'Timber roof trusses', 'Mosaic', 'Thin brick'],
     color: 0x9a8f6a,
-    env: { streets: 'paved', treeCover: 0.5, ground: P.gravel, fields: P.meadow, extent: 115 },
+    env: { streets: 'paved', treeCover: 0.5, ground: P.gravel, fields: P.meadow, extent: 115, fieldSize: [56, 56] },
   },
   {
     id: 'early-medieval',
@@ -74,7 +74,7 @@ export const eras: Era[] = [
     traits: ['Houses patched from Roman fragments', 'Two-storey houses with an outside stair', 'Small plain churches', 'Gardens and orchards inside the walls'],
     materials: ['Reused brick and tufa', 'Timber and clay', 'Thatch and reused tile'],
     color: 0x7f6a4a,
-    env: { streets: 'mud', treeCover: 0.65, ground: P.earth, fields: P.meadow, extent: 85 },
+    env: { streets: 'mud', treeCover: 0.65, ground: P.earth, fields: P.meadow, extent: 85, fieldSize: [24, 40] },
   },
   {
     id: 'romanesque',
@@ -89,7 +89,7 @@ export const eras: Era[] = [
     traits: ['Round arches in tiers of arcades', 'Striped marble', 'A freestanding bell tower', 'Family tower houses', 'An open loggia under the council hall'],
     materials: ['Marble and local stone', 'Brick', 'Timber roofs', 'Clay tiles (coppi)'],
     color: 0xa58a5c,
-    env: { streets: 'cobble', treeCover: 0.45, ground: P.earth, fields: P.crop, extent: 110 },
+    env: { streets: 'cobble', treeCover: 0.45, ground: P.earth, fields: P.crop, extent: 110, fieldSize: [20, 46] },
   },
   {
     id: 'gothic',
@@ -104,7 +104,7 @@ export const eras: Era[] = [
     traits: ['Pointed arches on broad, plain walls', 'Gabled façades with mosaic and a rose window', 'Battlemented civic palaces with tall towers', 'Two-light windows under one arch', 'Open market loggias'],
     materials: ['Brick', 'Marble in coloured bands', 'Pietra forte and local stone', 'Fresco'],
     color: 0x6f86a8,
-    env: { streets: 'cobble', treeCover: 0.35, ground: P.cobble, fields: P.crop, extent: 135 },
+    env: { streets: 'cobble', treeCover: 0.35, ground: P.cobble, fields: P.crop, extent: 135, fieldSize: [20, 46] },
   },
   {
     id: 'renaissance',
@@ -120,7 +120,7 @@ export const eras: Era[] = [
     traits: ['Round arches on classical columns', 'Symmetry and simple proportions', 'Rusticated palace fronts with a great cornice', 'The dome', 'Arcaded courtyards and loggias'],
     materials: ['Pietra serena against white plaster', 'Rusticated stone', 'Travertine', 'Brick and stucco'],
     color: 0xb8894a,
-    env: { streets: 'cobble', treeCover: 0.3, ground: P.cobble, fields: P.crop, extent: 145 },
+    env: { streets: 'cobble', treeCover: 0.3, ground: P.cobble, fields: P.crop, extent: 145, fieldSize: [24, 54] },
   },
   {
     id: 'baroque',
@@ -135,7 +135,7 @@ export const eras: Era[] = [
     traits: ['Curved and broken façades', 'Giant columns and pilasters', 'Scrolls, broken pediments and sculpture', 'Oval plans and domes', 'Fountains and grand staircases'],
     materials: ['Travertine', 'Stucco', 'Coloured marbles', 'Painted plaster in ochres'],
     color: 0xa5524a,
-    env: { streets: 'cobble', treeCover: 0.28, ground: P.cobble, fields: P.crop, extent: 150 },
+    env: { streets: 'cobble', treeCover: 0.28, ground: P.cobble, fields: P.crop, extent: 150, fieldSize: [24, 54] },
   },
   {
     id: 'unification',
@@ -150,7 +150,7 @@ export const eras: Era[] = [
     traits: ['Temple fronts and plain walls', 'The horseshoe opera house', 'Iron and glass arcades', 'Stuccoed apartment blocks with iron balconies', 'Boulevards in place of the walls'],
     materials: ['Stucco over brick', 'Cast and wrought iron', 'Glass', 'Travertine and marble for show'],
     color: 0x7a5a6a,
-    env: { streets: 'setts', treeCover: 0.24, ground: P.cobble, fields: P.meadow, extent: 175 },
+    env: { streets: 'setts', treeCover: 0.24, ground: P.cobble, fields: P.meadow, extent: 175, fieldSize: [28, 60] },
   },
   {
     id: 'liberty-fascist',
@@ -165,7 +165,7 @@ export const eras: Era[] = [
     traits: ['Whiplash ironwork and floral ceramics', 'Reinforced concrete frames', 'Stripped classical arcades in travertine', 'White rational grids', 'Party headquarters, post offices and stations'],
     materials: ['Reinforced concrete', 'Travertine and marble cladding', 'Glass block', 'Wrought iron and ceramic'],
     color: 0xb9a36a,
-    env: { streets: 'macadam', treeCover: 0.22, ground: P.paving, fields: P.meadow, extent: 205 },
+    env: { streets: 'macadam', treeCover: 0.22, ground: P.paving, fields: P.meadow, extent: 205, fieldSize: [34, 64] },
   },
   {
     id: 'postwar',
@@ -180,7 +180,7 @@ export const eras: Era[] = [
     traits: ['Ribbed concrete domes and shells', 'The palazzina: a small block of flats with balconies', 'Roller shutters and strip balconies', 'Low-rise public housing with pitched roofs', 'Large housing megastructures'],
     materials: ['Reinforced and prestressed concrete', 'Brick infill', 'Travertine and klinker cladding', 'Aluminium and glass'],
     color: 0x8e8b84,
-    env: { streets: 'tarmac', treeCover: 0.2, ground: P.paving, fields: P.meadow, extent: 225 },
+    env: { streets: 'tarmac', treeCover: 0.2, ground: P.paving, fields: P.meadow, extent: 225, fieldSize: [58, 70] },
   },
   {
     id: 'contemporary',

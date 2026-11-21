@@ -260,10 +260,16 @@ export function slab(b: Builder, plan: XY[], y0: number, y1: number, color: numb
  * where d is measured inward from the outer foot line (the side given by `inward`, a unit plan vector).
  * The section must be convex; ends are capped.
  */
-export function run(b: Builder, p: XY, q: XY, inward: XY, section: XY[], color: number, o?: Opts): void {
+export function run(b: Builder, p: XY, q: XY, inward: XY, section: XY[], color: number, o?: Opts & { clipQ?: boolean }): void {
   const out: number[] = [];
+  const L = Math.hypot(q[0] - p[0], q[1] - p[1]) || 1;
+  const u: XY = [(q[0] - p[0]) / L, (q[1] - p[1]) / L];
   const P0 = (d: number, y: number) => [p[0] + inward[0] * d, y, p[1] + inward[1] * d];
-  const P1 = (d: number, y: number) => [q[0] + inward[0] * d, y, q[1] + inward[1] * d];
+  // with clipQ the far end is cut square to X (x stays at q's x) instead of square to the run
+  const P1 = (d: number, y: number) => {
+    const t = o?.clipQ && Math.abs(u[0]) > 1e-6 ? -(inward[0] * d) / u[0] : 0;
+    return [q[0] + inward[0] * d + u[0] * t, y, q[1] + inward[1] * d + u[1] * t];
+  };
   for (let i = 0; i < section.length - 1; i++) {
     const [d0, y0] = section[i];
     const [d1, y1] = section[i + 1];
@@ -273,7 +279,7 @@ export function run(b: Builder, p: XY, q: XY, inward: XY, section: XY[], color: 
     out.push(...P0(...section[0]), ...P0(...section[i]), ...P0(...section[i + 1]));
     out.push(...P1(...section[0]), ...P1(...section[i + 1]), ...P1(...section[i]));
   }
-  soup(b, out, color, o);
+  soup(b, out, color, { at: o?.at, rotY: o?.rotY, mat: o?.mat, jitter: o?.jitter });
 }
 
 /** Unit vector at right angles to p→q, chosen to point toward `toward`. */

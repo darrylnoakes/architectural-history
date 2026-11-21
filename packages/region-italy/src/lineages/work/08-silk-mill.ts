@@ -63,11 +63,11 @@ export const silkMill: BuildingDef = {
     'In the sixteenth century silk overtook wool as the luxury trade, and the most advanced machine in Europe was the Bolognese silk-throwing mill. ' +
     'A waterwheel in the basement turned a great round wooden machine, several storeys high, whose turning inner cage drove hundreds of spindles at once, twisting raw silk filaments into strong thread and winding it onto reels. ' +
     'One mill did the work of hundreds of hand spinners, and Bologna guarded the design as a state secret; when Thomas Lombe built England’s first silk mill at Derby in 1721 it was copied from machines his half-brother John had studied in Piedmont. ' +
-    'The building itself is a plain, tall, plastered block with rows of windows, a portico on the street and a big coppi roof, here shown with its end wall cut away to reveal the machine.',
+    'The building itself is a plain, tall, plastered block with rows of windows, a portico on the street and a big coppi roof, here shown with one corner cut away to reveal the machine.',
   materials: ['brick', 'lime plaster', 'pietra serena', 'coppi roof tiles', 'oak and elm machinery'],
   modelledOn: 'The Bolognese silk-throwing mill (filatoio alla bolognese), as shown in Vittorio Zonca’s book of machines (1607), simplified',
   lookFor: [
-    { label: 'Circular throwing machine', note: 'A turning wooden cage inside a fixed frame drives tier upon tier of spindles; seen here through the cut-away end wall.', at: [11.5, 7.6, -3.8] },
+    { label: 'Circular throwing machine', note: 'A turning wooden cage inside a fixed frame drives tier upon tier of spindles; seen here through the cut-away corner of the building.', at: [11.5, 7.6, -3.8] },
     { label: 'Spindles and reels', note: 'Each spindle twisted a thread of silk, which was drawn up and wound onto the reels (aspi) on the tier above.', at: [12.5, 3.6, -1.6] },
     { label: 'Waterwheel in the wheel-pit', note: 'Below the building a wheel in a stone channel turned the upright shaft of the machine through wooden gears.', at: [8.5, 2.4, -14.0] },
     { label: 'Street portico', note: 'An arcade along the front, as on the streets of Bologna, gave shelter to the door and the carts unloading raw silk.', at: [-4, 3.6, 3.6] },
@@ -100,14 +100,14 @@ export const silkMill: BuildingDef = {
     const bw = x0 + W / 2 - cutX;
     const bx = (cutX + x0 + W / 2) / 2;
     b.box(bw, H, 0.5, plaster, { at: [bx, 0, z0 - D / 2 + 0.25] });
-    b.box(bw, H, 0.5, plaster, { at: [bx, 0, z0 + D / 2 - 0.25] });
+    b.box(bw, 1.0, 0.5, tint(plaster, -0.08), { at: [bx, 0, z0 + D / 2 - 0.25] }); // the cut line of the front wall
     b.box(0.5, 1.0, D, tint(plaster, -0.08), { at: [x0 + W / 2 - 0.25, 0, z0] }); // the cut line of the end wall
     for (const zz of [z0 - D / 2 + 0.25, z0 + D / 2 - 0.25]) b.box(0.52, H, 0.52, tint(plaster, -0.12), { at: [x0 + W / 2 - 0.25, 0, zz] });
-    b.box(bw, 0.3, D, tint(timber, 0.05), { at: [bx, 3 * fl, z0] }); // top floor
+    b.box(bw, 0.3, D, P.pine, { at: [bx, 3 * fl, z0] }); // top floor
     for (const k of [1, 2]) {
       // floors with a round well cut for the machine: drawn as two strips either side
-      b.box(bw, 0.25, 1.3, tint(timber, -0.1), { at: [bx, k * fl, z0 - D / 2 + 1.1] });
-      b.box(bw, 0.25, 1.3, tint(timber, -0.1), { at: [bx, k * fl, z0 + D / 2 - 1.1] });
+      b.box(bw, 0.25, 1.3, P.pine, { at: [bx, k * fl, z0 - D / 2 + 1.1] });
+      b.box(bw, 0.25, 1.3, P.pine, { at: [bx, k * fl, z0 + D / 2 - 1.1] });
     }
     b.box(bw, 0.12, D, tint(P.paving, -0.05), { at: [bx, 0, z0] });
     throwingMachine(b, bx, z0, 2.9, 3 * fl - 0.4, 4);
@@ -123,7 +123,7 @@ export const silkMill: BuildingDef = {
       const wh = k === 0 ? 1.4 : 1.7;
       for (const x of lin(8, x0 - W / 2 + 1.4, x0 + W / 2 - 1.4)) {
         if (k === 0 && x > -11 && x < 7) continue; // the portico covers the ground floor here
-        b.window(0.95, wh, { at: [x, y, z0 + D / 2], facing: '+z', frame: stone, glass: P.windowDark, bars: [2, 1] });
+        if (x < cutX) b.window(0.95, wh, { at: [x, y, z0 + D / 2], facing: '+z', frame: stone, glass: P.windowDark, bars: [2, 1] });
         b.window(0.95, wh, { at: [x, y, z0 - D / 2], facing: '-z', frame: stone, glass: P.windowDark });
       }
     }
@@ -155,10 +155,10 @@ export const silkMill: BuildingDef = {
     b.box(0.1, 1.6, 1.6, P.oakDark, { at: [wx - 1.7, WATER - 0.2, wz] });
 
     // ---- the street yard: a wall with a gate, mulberry trees for the silkworms, bales of raw silk
-    b.box(16, 2.6, 0.5, plaster, { at: [-9, 0, 10.4] });
-    b.box(16.2, 0.18, 0.7, P.coppi, { at: [-9, 2.6, 10.4] });
-    b.box(9, 2.6, 0.5, plaster, { at: [13, 0, 10.4] });
-    b.box(9.2, 0.18, 0.7, P.coppi, { at: [13, 2.6, 10.4] });
+    b.box(18.2, 2.6, 0.5, plaster, { at: [-7.9, 0, 10.4] });
+    b.box(18.4, 0.18, 0.7, P.coppi, { at: [-7.9, 2.6, 10.4] });
+    b.box(11.7, 2.6, 0.5, plaster, { at: [11.65, 0, 10.4] });
+    b.box(11.9, 0.18, 0.7, P.coppi, { at: [11.65, 2.6, 10.4] });
     b.sym((s) => b.box(0.7, 3.2, 0.7, stone, { at: [3.5 + s * 2.3, 0, 10.4] }));
     for (const x of [-14, -6.5]) b.tree(5, { at: [x, 0, 7.2], kind: 'round', color: P.leafDark });
     for (let i = 0; i < 4; i++) b.box(0.8, 0.6, 0.8, P.cream, { at: [7 + (i % 2) * 0.9, Math.floor(i / 2) * 0.6, 4.5] });

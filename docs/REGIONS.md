@@ -1,7 +1,7 @@
 # Regions: plan
 
-England is the first region. This is the plan for adding others, and for what has to change in the
-platform before the second one can be switched to.
+England was the first region and Italy is the second. This is how regions fit into the platform, and
+the plan for adding more.
 
 ## What already works across regions
 
@@ -17,20 +17,20 @@ platform before the second one can be switched to.
   the globe (`at`). The region picker draws these as arcs. Once both ends exist, an influence can
   become a link: "Gothic arrives from France" opens France in 1175.
 
-## What is still England-only
+## The site
 
-The town itself. The river, the relief, the roads, the square and the incidental scenery (stone
-circle, viaduct, lamps, cars) live in `apps/town/src/world/layout.ts` and `scenery.ts`, not in the
-region. Before a second town can be shown:
+Each region also owns the ground its town stands on (`Region.site`, in the region's `site.ts`): the
+river, the relief, the roads and squares with the years they appear, the mix of trees, and the
+incidental scenery of each age (an aqueduct, a railway, street lamps, parked cars). The app turns
+that into terrain, streets and woodland; nothing about any one town is written into the app. Field
+patterns and street surfaces come from the region's eras.
 
-1. Move the site into the region as data (`Region.site`: river course or coastline, relief, roads
-   with the years they appear, the square, scenery props with their years).
-2. Make the engine take a region instead of importing England, and rebuild when the region changes.
-3. Give the timeline a scale that can hold two regions with different eras (for compare across
-   regions it currently uses the first region's eras).
+The region picker switches between built regions, keeping the year where the two stories overlap.
+A region joins the app when its town plan (`plots.ts`) has plots in it; until then its buildings
+can be written and reviewed in the gallery without appearing anywhere.
 
-None of this is needed to start writing a region's buildings: they can be authored and reviewed in
-the gallery and seen in the library and compare view first.
+When two regions are compared, the timeline is one bar for both: each region's eras are drawn on
+their own row, and a year sits at the average of where each region's own bar would put it.
 
 ## How a region gets built
 
@@ -46,7 +46,8 @@ The England process, which worked and should be repeated:
 4. **Timing.** Build windows, endings and survivors (`builtUntil`, `end`, `keep`), so no year shows
    anything that could not have stood.
 5. **Fact-check.** An independent pass over all card text, era summaries and influences.
-6. **Town plan.** Plots, roads and scenery, once the site is data (above).
+6. **Site and town plan.** `site.ts` (river, relief, roads, squares, scenery) and `plots.ts`
+   (which lineage stands where, which plots stop rebuilding and survive, which appear late).
 
 ## Kit work other traditions will need
 
@@ -68,11 +69,11 @@ Suggested, with reasons. Each is a town followed through time, like England.
 
 | Order | Region | Why here |
 |---|---|---|
-| 1 | **Italy**: a city on a river, 750 BC to today | The source of half of what arrives in England: the Roman town, the Renaissance, Palladio, the Baroque. The strongest single comparison, and it needs no new kit primitives. |
-| 2 | **France**: a cathedral town | The birthplace of Gothic, and England's nearest neighbour in every century. With Italy it completes the main European exchanges already named in England's influences. |
-| 3 | **United States**: a town that becomes a city | The other end of England's exports (the Georgian house, the factory) and the source of the steel frame, the suburb and the mall. A short timeline, so a smaller build. |
-| 4 | **China**: a walled town on a canal | The first tradition that owes nothing to Rome: timber frame, courtyard plan, the roof as the main event. Needs the curved-roof and bracket work above. |
-| 5 | **Japan**, **the Islamic world**, **India** | Each a distinct tradition with its own logic; order by interest. |
+| built | **Italy**: a city on a river, 750 BC to today | The source of half of what arrives in England: the Roman town, the Renaissance, Palladio, the Baroque. The strongest single comparison, and it needed no new kit primitives. |
+| 1 | **France**: a cathedral town | The birthplace of Gothic, and England's nearest neighbour in every century. With Italy it completes the main European exchanges already named in England's influences. |
+| 2 | **United States**: a town that becomes a city | The other end of England's exports (the Georgian house, the factory) and the source of the steel frame, the suburb and the mall. A short timeline, so a smaller build. |
+| 3 | **China**: a walled town on a canal | The first tradition that owes nothing to Rome: timber frame, courtyard plan, the roof as the main event. Needs the curved-roof and bracket work above. |
+| 4 | **Japan**, **the Islamic world**, **India** | Each a distinct tradition with its own logic; order by interest. |
 | later | **Greece**, **Germany**, **Mesoamerica** | Greece could instead be folded into Italy's early stages; Germany overlaps France and England more than the others. |
 
 A region does not have to be complete to be useful. A first pass with five or six lineages (home,

@@ -134,7 +134,7 @@ export const bastionGate: BuildingDef = {
       b.box(0.45, 1.1, 8 - 3.2, brick, { at: [s * 2.5, 0, (8 + 3.2) / 2] });
       b.box(0.55, 0.12, 8 - 3.2, trav, { at: [s * 2.5, 1.1, (8 + 3.2) / 2] });
       // the lifting beams of the drawbridge
-      b.beam([s * 1.9, 0.5, 3.0], [s * 1.9, 5.6, GATE.front + 0.2], 0.2, 0.2, P.oakDark);
+      b.beam([s * 1.9, 0.5, 3.0], [s * 1.9, 5.4, GATE.front + 0.25], 0.07, 0.07, P.iron);
     });
     b.box(4.2, 0.3, 3.2 - GATE.front, P.oak, { at: [0, 0.15, (3.2 + GATE.front) / 2] });
     for (let z = GATE.front + 0.3; z < 3.2; z += 0.5) b.box(4.2, 0.02, 0.05, P.oakDark, { at: [0, 0.45, z], jitter: false });
@@ -151,13 +151,16 @@ export const bastionGate: BuildingDef = {
       ];
       for (const [p, q] of runs) {
         const n = inwardOf(p, q, inside);
-        run(b, p, q, n, SECTION, brick);
+        const clipQ = Math.abs(q[0]) === HALF;
+        run(b, p, q, n, SECTION, brick, { clipQ });
         // the travertine cordon at the top of the scarp
         const c0: [number, number, number] = [p[0] + n[0] * 1.0, 5.9, p[1] + n[1] * 1.0];
         const c1: [number, number, number] = [q[0] + n[0] * 1.0, 5.9, q[1] + n[1] * 1.0];
-        b.beam([c0[0] - n[0] * 0.15, c0[1] + 0.2, c0[2] - n[1] * 0.15], [c1[0] - n[0] * 0.15, c1[1] + 0.2, c1[2] - n[1] * 0.15], 0.45, 0.45, trav);
+        const c1x = clipQ ? q[0] - s * 0.25 : c1[0] - n[0] * 0.15;
+        const c1z = clipQ ? c1[2] - n[1] * 0.15 + (c1x - (c1[0] - n[0] * 0.15)) * ((q[1] - p[1]) / (q[0] - p[0])) : c1[2] - n[1] * 0.15;
+        b.beam([c0[0] - n[0] * 0.15, c0[1] + 0.2, c0[2] - n[1] * 0.15], [c1x, c1[1] + 0.2, c1z], 0.45, 0.45, trav);
         // the earth parapet top in turf
-        run(b, p, q, n, [[1.6, 7.92], [1.9, 7.93], [3.9, 7.58], [4.3, 6.9]], grass);
+        run(b, p, q, n, [[1.6, 7.92], [1.9, 7.93], [3.9, 7.58], [4.3, 6.9]], grass, { clipQ });
       }
       // the terreplein: one solid fill behind the parapets
       slab(b, [X([GATE.w / 2, -1.5]), X([FX + 1, -1.5]), X([FX + 1, SH - 0.4]), X([HALF, 6.0]), X([HALF, -6.0]), X([GATE.w / 2, -6.0])], 0, TOP, grass);

@@ -15,7 +15,7 @@ export const raisedRow: BuildingDef = {
   materials: ['medieval stone below', 'brick, plastered and limewashed in ochre and rose', 'pietra serena or travertine window frames', 'coppi roof tiles'],
   lookFor: [
     { label: 'Added storeys', note: 'Plastered brick storeys built on top of the medieval stone ones: you can see the line where the old wall stops.', at: [rowX(0), ROW.top + 0.15, ROW.zf + 0.2] },
-    { label: 'Uneven roofline', note: 'Each house was raised separately, so every roof is at its own height.', at: [rowX(2) + 2.4, ROW.top + FH * 2 + 0.6, ROW.zf - 0.6] },
+    { label: 'Uneven roofline', note: 'Each house was raised separately, so the roofs step up and down and the side walls of the taller houses stand bare above their neighbours.', at: [rowX(1) - ROW.hw / 2 + 0.1, ROW.top + FH * 1.6, ROW.zf - 1.2] },
     { label: 'Washing lines', note: 'Lines strung across the front from window to window: in a crowded house there was nowhere else to dry clothes.', at: [rowX(3), ROW.top + FH + 1.2, ROW.zf + 0.5] },
     { label: 'Shared well', note: 'The strips of yard behind have become one shared courtyard, with a well for all the families.', at: [rowX(2), 1.4, -5.2] },
     { label: 'Old profferlo', note: 'The medieval outside stair still serves the first floor; the floors above are reached from inside.', at: [rowX(1) + 0.4, 2.2, ROW.zf + 1.1] },
@@ -30,10 +30,10 @@ export const raisedRow: BuildingDef = {
     const D = ROW.zf - ROW.zb;
     const plasters = [P.intonacoOchre, P.intonacoRose, P.intonacoCream, P.intonacoSienna, tint(P.intonacoOchre, 0.06), P.plaster];
     const frameStone = b.pick([P.pietraSerena, P.travertine]);
-    const shutter = b.pick([P.oak, P.oakDark, tint(P.doorGreen, 0.05)]);
+    const shutter = b.pick([P.oak, P.oakDark, tint(P.oak, 0.06)]);
 
     patch(b, PW, 8 - ROW.zf, mix(P.cobble, P.paving, 0.4), [0, (ROW.zf + 8) / 2], 0.05);
-    patch(b, PW, 8 + ROW.zb, tint(P.paving, -0.06), [0, (ROW.zb - 8) / 2], 0.04);
+    patch(b, PW, 8 + ROW.zb, mix(P.brickRed, P.paving, 0.55), [0, (ROW.zb - 8) / 2], 0.04);
 
     const stairs = [true, true, b.chance(0.7), true, b.chance(0.5)];
     medievalRow(b, stone, { stairs, shield: b.pick([P.terracottaPainted, P.doorBlue]) });

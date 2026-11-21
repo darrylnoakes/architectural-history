@@ -83,7 +83,7 @@ export const ironBridge: BuildingDef = {
       // stiffeners over the supports and at the ends
       for (const z of [za, ...piers, zb]) b.box(0.12, depth - 0.2, 0.3, ironL, { at: [x, gBot(z) + 0.1, z] });
       // rows of rivet heads along the flanges
-      for (const z of steps(Math.round((zb - za) / 0.5), za, zb)) {
+      for (const z of steps(Math.round((zb - za) / 0.95), za + 0.47, zb - 0.47)) {
         for (const y of [gTop(z) - 0.05, gBot(z) + 0.05]) b.box(0.42, 0.04, 0.04, tint(iron, 0.2), { at: [x, y - 0.02, z], jitter: false });
       }
     }

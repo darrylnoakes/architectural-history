@@ -135,16 +135,11 @@ export function framed(b: Builder, kind: Arch, w: number, h: number, at: Vec3, f
 /** A two-light pointed Gothic window: dark lights with a central mullion and a small circle above. */
 export function gothicWindow(b: Builder, w: number, h: number, at: Vec3, facing: Facing, frame: number) {
   onWall(b, at, facing, () => {
-    const a = w / 2;
-    b.extrude(archPts('pointed', w + 0.3, h + 0.2, 0, -0.1), 0.06, frame, { at: [0, 0, 0.02], jitter: false });
-    const lw = (w - 0.12) / 2;
-    const holes: Pt[][] = [archPts('pointed', lw - 0.05, h * 0.62, -(lw / 2 + 0.06), 0.02), archPts('pointed', lw - 0.05, h * 0.62, lw / 2 + 0.06, 0.02)];
-    const ys = h - rise('pointed', a);
-    const cy = Math.max(h * 0.62 + 0.25, (ys + h) / 2);
-    const r = Math.min(lw * 0.45, (h - cy) * 0.6);
-    if (r > 0.06) holes.push(circlePts(0, cy, r, 8));
-    b.extrude(archPts('pointed', w, h), 0.06, P.windowDark, { at: [0, 0, 0.05], jitter: false });
-    b.extrude(archPts('pointed', w, h), 0.04, frame, { at: [0, 0, 0.09], holes, jitter: false });
+    b.extrude(archPts('pointed', w + 0.3, h + 0.2, 0, -0.1, 2), 0.06, frame, { at: [0, 0, 0.02], jitter: false });
+    b.extrude(archPts('pointed', w, h, 0, 0, 2), 0.06, P.windowDark, { at: [0, 0, 0.05], jitter: false });
+    // central mullion and a small roundel in the head
+    b.box(0.12, h * 0.68, 0.06, frame, { at: [0, 0, 0.09], jitter: false });
+    b.box(w * 0.36, w * 0.36, 0.06, frame, { at: [0, h * 0.68, 0.09], rot: [0, 0, Math.PI / 4], jitter: false });
   });
 }
 
@@ -161,7 +156,7 @@ export function blindArcade(
   const ow = pitch - (o.pier ?? 0.4);
   const base = o.y0 + 0.3;
   const holes: Pt[][] = [];
-  for (let i = 0; i < o.n; i++) holes.push(archPts(kind, ow, o.archTop - base, -o.len / 2 + pitch * (i + 0.5), base));
+  for (let i = 0; i < o.n; i++) holes.push(archPts(kind, ow, o.archTop - base, -o.len / 2 + pitch * (i + 0.5), base, 2));
   const depth = o.depth ?? 0.16;
   onWall(b, o.at, o.facing, () => {
     b.extrude([[-o.len / 2, o.y0], [o.len / 2, o.y0], [o.len / 2, o.y1], [-o.len / 2, o.y1]], depth, o.color, {
@@ -202,10 +197,9 @@ export function gallery(b: Builder, o: { x0: number; x1: number; y0: number; h: 
 /** A standing statue on a small pedestal: robe, shoulders and head. */
 export function statue(b: Builder, at: Vec3, h: number, color: number, rotY = 0) {
   b.group({ at, rotY }, () => {
-    b.box(h * 0.32, h * 0.12, h * 0.32, color, { jitter: false });
-    b.cyl(h * 0.13, h * 0.66, color, { at: [0, h * 0.12, 0], rTop: h * 0.1, segs: 6, jitter: false });
-    b.box(h * 0.3, h * 0.08, h * 0.15, color, { at: [0, h * 0.72, 0], jitter: false });
-    b.sphere(h * 0.075, color, { at: [0, h * 0.88, 0], segs: 5, jitter: false });
+    b.box(h * 0.3, h * 0.12, h * 0.3, color, { jitter: false });
+    b.cyl(h * 0.13, h * 0.72, color, { at: [0, h * 0.12, 0], rTop: h * 0.1, segs: 5, jitter: false });
+    b.box(h * 0.13, h * 0.15, h * 0.13, color, { at: [0, h * 0.84, 0], jitter: false });
   });
 }
 
