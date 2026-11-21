@@ -43,7 +43,7 @@ export const victorianTerrace: BuildingDef = {
   influences: ['gothic-revival-export'],
   build(b) {
     const n = 3;
-    const hw = 4.6; // house width
+    const hw = 4.5; // house width
     const W = hw * n;
     const zf = 5.6;
     const D = 8.0;

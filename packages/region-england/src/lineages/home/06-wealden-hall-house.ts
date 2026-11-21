@@ -31,7 +31,7 @@ export const wealdenHallHouse: BuildingDef = {
     {
       label: 'Hipped roof with gablets',
       note: 'One roof covers the whole house; little triangular gablets at the top of each hip let out the smoke from the hall hearth.',
-      at: [5.0, 8.4, 0.3],
+      at: [3.4, 8.9, 0.3],
     },
     {
       label: 'Arched doorhead',
@@ -43,7 +43,7 @@ export const wealdenHallHouse: BuildingDef = {
     const L = b.pick([12, 12.4]);
     const D = 6.4;
     const zf = D / 2;
-    const jet = 0.55;
+    const jet = 0.65;
     const g1 = 2.6; // ground storey
     const fl = 0.28; // floor zone
     const H = 5.2; // wall plate
@@ -57,7 +57,7 @@ export const wealdenHallHouse: BuildingDef = {
 
     // hall: full height, front flush with the ground storey of the ends
     b.box(hw, H - 0.25, D, daub, { at: [0, 0.25, 0] });
-    b.frame(hw, H - 0.25, oak, { at: [0, 0.25, zf], facing: '+z', studs: 7, rails: 2, beam: 0.16 });
+    b.frame(hw, H - 0.25, oak, { at: [0, 0.25, zf], facing: '+z', studs: 3, rails: 1, beam: 0.2 });
 
     b.sym((s) => {
       const x = s * (L / 2 - bw / 2);

@@ -42,7 +42,7 @@ export const tudorJettiedHouse: BuildingDef = {
   build(b) {
     const W = 7.2;
     const zf = 4.0;
-    const L = b.pick([10.5, 11]);
+    const L = b.pick([10, 10.5]);
     const zb = zf - L;
     const j1 = 0.5;
     const j2 = 0.35;
@@ -143,8 +143,8 @@ export const tudorJettiedHouse: BuildingDef = {
     b.box(0.95, 0.12, 1.2, brick, { at: [cx, stackTop - 0.05, cz] });
 
     // yard behind: a well and a paled boundary
-    b.cyl(0.55, 0.75, P.brickRed, { at: [-3.4, 0, zb - 2.2], segs: 10 });
-    b.cyl(0.4, 0.77, P.windowDark, { at: [-3.4, 0, zb - 2.2], segs: 10 });
+    b.cyl(0.55, 0.75, P.brickRed, { at: [-3.4, 0, zb - 1.4], segs: 10 });
+    b.cyl(0.4, 0.77, P.windowDark, { at: [-3.4, 0, zb - 1.4], segs: 10 });
     paling(b, -6.8, -8.8, 6.8, -8.8, 1.6, P.oakSilver, 0.16);
     b.box(1.4, 2.0, 1.2, P.oakSilver, { at: [5.6, 0, -8.0] });
     b.shed(1.6, 1.4, 0.3, tile, { at: [5.6, 2.0, -8.0], high: '-z' });

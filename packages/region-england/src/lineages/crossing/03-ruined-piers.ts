@@ -13,7 +13,7 @@ export const ruinedPiers: BuildingDef = {
     'The skill of building in mortared stone would not return for centuries.',
   materials: ['ruined sandstone', 'oak', 'hemp rope'],
   lookFor: [
-    { label: 'Broken pier', note: 'The stump of a Roman pier, its upper courses fallen or carried off for reuse elsewhere.', at: [2.2, -0.2, 2.9] },
+    { label: 'Broken pier', note: 'The stump of a Roman pier, its upper courses fallen or carried off for reuse elsewhere.', at: [2.4, 0.4, 2.9] },
     { label: 'Fallen ashlar', note: 'Squared blocks lying in the riverbed where the masonry collapsed.', at: [1.2, -0.7, -0.8] },
     { label: 'Rope ferry', note: 'A flat-bottomed boat pulled across hand over hand along a fixed rope, so the current cannot carry it downstream.', at: [-5.2, -0.3, -2.0] },
     { label: 'Ferry post', note: 'A stout post on each bank holds the ferry rope taut across the river.', at: [-6.0, 2.4, 9.6] },
@@ -38,24 +38,25 @@ export const ruinedPiers: BuildingDef = {
       b.tree(1.4, { kind: 'bush', at: [s * 1.6, 0, s * (BANK + 0.9)] });
     });
 
-    // the pier stumps, broken off at different heights with a few loose blocks on top
-    const heights = [-0.55, -0.05];
+    // the pier stumps: the cutwater footings survive just above the water, with a few ragged
+    // courses of ashlar still standing on them
     ROMAN_PIERS.forEach((z, i) => {
       const { len, thick, nose } = ROMAN_PIER;
       cutwaterPier(b, { z, len: len + 0.3, thick: thick + 0.3, nose: nose + 0.15, y0: BED - 0.1, h: 0.5, color: tint(stone, -0.05) });
-      const h = heights[i] - BED - 0.4;
-      cutwaterPier(b, { z, len, thick, nose, y0: BED + 0.4, h, color: stone });
-      const top = BED + 0.4 + h;
-      // ragged top: a stepped remnant of the next courses
-      const n = 4;
-      for (let k = 0; k < n; k++) {
-        const x = -len / 2 + 0.5 + k * ((len - 1) / (n - 1));
-        if (b.chance(0.35)) continue;
-        const hh = b.range(0.25, 0.6);
-        b.box(b.range(0.6, 1.0), hh, b.range(0.7, 1.2), k % 2 ? stone : moss, { at: [x, top, z + b.range(-0.3, 0.3)], rotY: b.range(-0.1, 0.1) });
-      }
+      const top = WATER + 0.3 + i * 0.15;
+      cutwaterPier(b, { z, len, thick, nose, y0: BED + 0.4, h: top - BED - 0.4, color: tint(stone, -0.02) });
+      const courses = i === 0 ? [7, 4, 2] : [8, 6, 3, 1];
+      const bw = len / 6;
+      courses.forEach((n, k) => {
+        const first = i === 0 ? 0 : 1 + k * 0.5; // broken back from one end
+        for (let j = 0; j < n && first + j < 7; j++) {
+          if (k > 0 && b.chance(0.2)) continue;
+          const x = -len / 2 + bw * (first + j) - bw * 0.5 + b.range(-0.04, 0.04);
+          b.box(bw - 0.06, 0.42, thick - 0.1 - k * 0.12, k % 2 ? moss : stone, { at: [Math.min(x, len / 2 - bw / 2), top + k * 0.44, z + b.range(-0.06, 0.06)], rotY: b.range(-0.05, 0.05) });
+        }
+      });
       // a rotted timber post stump left on one pier
-      if (i === 1) b.cyl(0.15, 0.7, P.oakSilver, { at: [-1.4, top, z], segs: 6, rTop: 0.1 });
+      if (i === 1) b.cyl(0.15, 0.7, P.oakSilver, { at: [len / 2 - 0.4, top + 0.44, z], segs: 6, rTop: 0.1 });
     });
 
     // fallen ashlar in the bed and the shallows

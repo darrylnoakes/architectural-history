@@ -23,7 +23,7 @@ function houseFront(b: Builder, x: number, w: number, zw: number, facing: '+z' |
   // ground-floor sash under a segmental brick arch, stone sill
   const sash = (sx: number, y: number, ww: number, hh: number) => {
     b.panel(ww + 0.25, hh + 0.2, arch, { at: [sx, y, zw], facing, shape: 'segmental', depth: 0.03 });
-    b.window(ww, hh, { at: [sx, y, zw], facing, frame: P.white, bars: [2, 2], border: 0.08, shape: 'segmental' });
+    b.window(ww, hh, { at: [sx, y, zw], facing, frame: P.white, bars: [2, 2], border: 0.08 });
     b.box(ww + 0.2, 0.1, 0.16, sill, { at: [sx, y - 0.1, zw + s * 0.06] });
   };
   sash(wx, PL + 0.85, 1.05, 1.45);
@@ -102,14 +102,14 @@ export const backToBacks: BuildingDef = {
         b.panel(bay.w - 1.2, 0.26, P.cream, { at: [x, 2.62, ZF + 0.28], facing: '+z' });
         b.sym((k) => b.box(0.24, 3.05, 0.34, tint(sf, -0.08), { at: [x + k * (bay.w / 2 - 0.12), 0, ZF + 0.12] }));
         // upstairs of the shop and its back house
-        b.window(1.05, 1.35, { at: [x - 0.9, PL + G + 0.5, ZF], facing: '+z', frame: P.white, bars: [2, 2], shape: 'segmental' });
-        b.window(1.05, 1.35, { at: [x + 0.9, PL + G + 0.5, ZF], facing: '+z', frame: P.white, bars: [2, 2], shape: 'segmental' });
+        b.window(1.05, 1.35, { at: [x - 0.9, PL + G + 0.5, ZF], facing: '+z', frame: P.white, bars: [2, 2] });
+        b.window(1.05, 1.35, { at: [x + 0.9, PL + G + 0.5, ZF], facing: '+z', frame: P.white, bars: [2, 2] });
         houseFront(b, x, bay.w, ZB, '-z', 1, brick, b.pick(doors), false);
         // shop window round the corner and an enamel advertising sign
         b.window(1.6, 1.6, { at: [L / 2, 0.75, ZF - 1.4], facing: '+x', frame: sf, bars: [2, 2], mat: 'glass', glass: P.glassDark });
         b.panel(1.1, 0.75, P.cladBlue, { at: [L / 2, 2.0, ZF - 3.2], facing: '+x', depth: 0.04 });
         b.panel(0.9, 0.22, P.cream, { at: [L / 2, 2.3, ZF - 3.2], facing: '+x', depth: 0.06 });
-        b.window(1.05, 1.35, { at: [L / 2, PL + G + 0.5, ZF - 2.2], facing: '+x', frame: P.white, bars: [2, 2], shape: 'segmental' });
+        b.window(1.05, 1.35, { at: [L / 2, PL + G + 0.5, ZF - 2.2], facing: '+x', frame: P.white, bars: [2, 2] });
       } else {
         const side: 1 | -1 = houseNo % 2 === 0 ? -1 : 1;
         houseFront(b, x, bay.w, ZF, '+z', side, brick, b.pick(doors), true);

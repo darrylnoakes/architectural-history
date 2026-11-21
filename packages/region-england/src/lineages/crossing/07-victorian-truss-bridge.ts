@@ -39,7 +39,7 @@ export const victorianTrussBridge: BuildingDef = {
     { label: 'Lattice girder', note: 'Two sets of diagonal flat bars crossing each other between the top and bottom booms, riveted at every crossing.', at: [-4.2, 2.0, -6.0] },
     { label: 'Stone pier', note: 'Rusticated masonry piers with cutwaters carry the girders mid-river, so each span is short and the girders shallow.', at: [-6.9, -0.3, 3.8] },
     { label: 'Tram rails', note: 'Rails set flush in the setts for a horse tram; electric trams would follow around 1900.', at: [0, 1.3, 2.0] },
-    { label: 'Lamp standard', note: 'Ornate cast-iron gas lamp with a fluted shaft and two lanterns, made by a foundry that sold them from a catalogue.', at: [6.0, 4.9, -9.0] },
+    { label: 'Lamp standard', note: 'Ornate cast-iron gas lamp with a fluted shaft and two lanterns, made by a foundry that sold them from a catalogue.', at: [6.1, 5.3, -9.05] },
     { label: 'Cantilevered footway', note: 'Pavements carried outside the girders on iron brackets, keeping walkers away from the traffic.', at: [5.2, 0.6, 6.2] },
   ],
   influences: ['industrial-export'],
@@ -83,7 +83,7 @@ export const victorianTrussBridge: BuildingDef = {
       band(b, x + s * 0.02, 0.52, -gEnd, gEnd, (z) => gHi(z), (z) => gHi(z) + 0.06, tint(iron, 0.06), 24); // capping plate
       // lattice web: two families of diagonals at about 45 degrees
       const h = 1.65 + 0.55 - boom * 2;
-      for (let z = -gEnd + 0.15; z <= gEnd - h - 0.1; z += 0.55) {
+      for (let z = -gEnd + 0.15; z <= gEnd - h - 0.1; z += 0.75) {
         bar(b, [x, gLo(z) + boom, z], [x, gHi(z + h) - boom, z + h], [0.08, 0.15], iron);
         bar(b, [x, gHi(z) - boom, z], [x, gLo(z + h) + boom, z + h], [0.08, 0.15], iron);
       }
@@ -105,10 +105,10 @@ export const victorianTrussBridge: BuildingDef = {
       }
       // outer cast-iron railing
       const rx = s * (W / 2 - 0.12);
-      for (const z of steps(56, -END + 0.8, END - 0.8)) b.box(0.04, 1.0, 0.04, cast, { at: [rx, f(z) + 0.1, z], jitter: false });
+      for (const z of steps(36, -END + 0.8, END - 0.8)) b.box(0.04, 1.0, 0.04, cast, { at: [rx, f(z) + 0.1, z], jitter: false });
       band(b, rx, 0.09, -END + 0.8, END - 0.8, (z) => f(z) + 1.05, (z) => f(z) + 1.15, cast, 26);
       band(b, rx, 0.06, -END + 0.8, END - 0.8, (z) => f(z) + 0.25, (z) => f(z) + 0.3, cast, 26);
-      // granite end pedestals carrying lamps, and lamps over the piers
+      // granite end pedestals carrying lamps
       b.sym((t) => {
         const z = t * (gEnd + 0.15);
         b.box(0.8, 1.4, 0.8, tint(stone, 0.05), { at: [rx, f(z), z] });
@@ -116,7 +116,6 @@ export const victorianTrussBridge: BuildingDef = {
         lamp(b, rx, f(z) + 1.55, z, cast);
         b.box(0.5, 0.4, 0.5, tint(stone, 0.05), { at: [rx, f(t * END) , t * (END - 0.4)] });
       });
-      for (const z of piers) lamp(b, rx, f(z) + 0.12, z, cast);
     });
   },
 };

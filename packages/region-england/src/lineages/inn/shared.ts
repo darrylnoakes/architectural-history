@@ -36,8 +36,8 @@ export function aleStake(b: Builder, at: Vec3, facing: Facing, len = 2.6, rise =
   const a = facingAngle(facing);
   const end: Vec3 = [at[0] + Math.sin(a) * len, at[1] + rise, at[2] + Math.cos(a) * len];
   pole(b, at, end, 0.06, P.oakDark);
-  b.blob(0.45, P.leafDark, { at: [end[0], end[1] - 0.35, end[2]], stretch: [1, 1.2, 1], detail: 0 });
-  b.blob(0.3, P.leaf, { at: [end[0], end[1] - 0.7, end[2]], detail: 0 });
+  b.blob(0.6, P.leafDark, { at: [end[0], end[1] - 0.4, end[2]], stretch: [1, 1.2, 1], detail: 0 });
+  b.blob(0.42, P.leaf, { at: [end[0], end[1] - 0.85, end[2]], detail: 0 });
 }
 
 /**

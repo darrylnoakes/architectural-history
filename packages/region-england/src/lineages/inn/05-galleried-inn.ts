@@ -24,7 +24,7 @@ function gallery(b: Builder, len: number, y: number, h: number, timber: number) 
   const posts = spread(Math.max(3, Math.round(len / 2.0) + 1), -len / 2 + 0.1, len / 2 - 0.1);
   posts.forEach((x, i) => {
     b.box(0.16, h, 0.16, timber, { at: [x, y, GAL - 0.1] });
-    if (i % 2 === 0) b.box(0.12, 0.7, 0.12, timber, { at: [x, y - 0.75, 0.45], rot: [0.75, 0, 0] });
+    if (i % 2 === 0) b.box(0.12, 1.0, 0.12, timber, { at: [x, y - 0.95, 0.05], rot: [0.75, 0, 0] });
   });
   b.box(len, 0.12, 0.14, timber, { at: [0, y + 0.95, GAL - 0.1] });
   b.box(len, 0.1, 0.12, timber, { at: [0, y + 0.05, GAL - 0.1] });

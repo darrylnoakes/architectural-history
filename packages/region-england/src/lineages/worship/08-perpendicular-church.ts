@@ -21,7 +21,7 @@ export const perpTower: TowerSpec = {
   dress: PERP_DRESS,
   corners: 'diagonal',
   courses: [5.2, 11.6, 17.8],
-  belfry: { spec: { kind: 'drop', w: 1.75, h: 3.4, sill: 19.6, tracery: 'panel', lights: 2, hood: 'arch' }, n: 2 },
+  belfry: { spec: { kind: 'drop', w: 2.6, h: 3.6, sill: 19.4, tracery: 'panel', lights: 3, hood: 'arch' }, n: 1 },
   lower: [{ kind: 'tudor', w: 1.3, h: 1.5, sill: 13.4, tracery: 'panel', lights: 2, hood: 'square' }],
   westDoor: 'tudor',
   westWin: { kind: 'drop', w: 3.1, h: 4.9, sill: 4.9, tracery: 'panel', lights: 4, hood: 'arch' },

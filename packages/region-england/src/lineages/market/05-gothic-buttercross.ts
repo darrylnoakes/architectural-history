@@ -7,14 +7,6 @@ const K = Math.PI / 4;
 function pinnacle(b: Builder, x: number, y: number, z: number, h: number, w: number, color: number): void {
   b.box(w, h * 0.45, w, color, { at: [x, y, z], rotY: Math.PI / 4 });
   b.cone(w * 0.72, h * 0.55, color, { at: [x, y + h * 0.45, z], segs: 4 });
-  for (let i = 1; i <= 2; i++) {
-    const yy = y + h * 0.45 + h * 0.55 * (i / 3);
-    const rr = w * 0.72 * (1 - i / 3);
-    for (let k = 0; k < 4; k++) {
-      const a = (k * Math.PI) / 2;
-      b.box(0.07, 0.07, 0.07, color, { at: [x + Math.sin(a) * (rr + 0.03), yy, z + Math.cos(a) * (rr + 0.03)] });
-    }
-  }
   b.sphere(0.07, color, { at: [x, y + h + 0.04, z], segs: 5 });
 }
 
@@ -83,7 +75,7 @@ export const gothicButtercross: BuildingDef = {
     // blind panelling on the parapet
     for (let k = 0; k < 8; k++) {
       const th = k * K;
-      for (const off of [-0.9, -0.3, 0.3, 0.9]) {
+      for (const off of [-0.75, 0, 0.75]) {
         const px = Math.sin(th) * a + Math.cos(th) * off;
         const pz = Math.cos(th) * a - Math.sin(th) * off;
         b.panel(0.42, 0.6, dark, { at: [px, yC + 0.32, pz], facing: th, shape: 'pointed', depth: 0.03 });
@@ -135,9 +127,9 @@ export const gothicButtercross: BuildingDef = {
         const r = r0 + (r1 - r0) * t;
         // underside sags in a curve below the straight top line
         const yTop = yL + 1.7 + (F + 4.95 - (yL + 1.7)) * t;
-        under.push([r, yTop - 0.25 - Math.sin(t * Math.PI) * 0.55]);
+        under.push([r, yTop - 0.18 - Math.sin(t * Math.PI) * 0.4]);
       }
-      b.extrude([...top, ...under], 0.16, stone, { rotY: th - Math.PI / 2 });
+      b.extrude([...top, ...under], 0.14, stone, { rotY: th - Math.PI / 2 });
     }
 
     // a few traders under and around the cross

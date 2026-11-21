@@ -48,7 +48,7 @@ export const chieftainsEnclosure: BuildingDef = {
   summary:
     'Before towns, power meant a defended farmstead. A chalk-and-earth bank thrown up from a ditch outside it, topped by an oak palisade, ' +
     'rings the household of the leading family, entered through a single timber gate. Inside stands a great roundhouse built of wattle, ' +
-    'daub and thatch, the hall where the chief lived, feasted and gave judgement, and raised four-post granaries holding the harvest that was the real measure of wealth.',
+    'daub and thatch, the hall where the chief\'s household lived and feasted, and raised four-post granaries holding the harvest that was the real measure of wealth.',
   materials: ['earth and chalk', 'oak', 'hazel wattle and daub', 'straw thatch'],
   lookFor: [
     { label: 'Bank and ditch', note: 'Soil dug from the outer ditch was heaped into the bank, so an attacker faced a double climb.', at: [-15.5, 1.8, 9.5] },

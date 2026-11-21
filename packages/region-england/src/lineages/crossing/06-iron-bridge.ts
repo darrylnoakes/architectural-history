@@ -28,7 +28,7 @@ export const ironBridge: BuildingDef = {
     const deckT = 0.35;
     const under = (z: number) => f(z) - deckT;
     b.deck(W - 0.5, 26, crown, { yEnds: 0 });
-    const iron = mix(P.castIron, P.brickDark, 0.45); // the iron-oxide red-brown found to be the original paint
+    const iron = tint(mix(P.castIron, P.brickDark, 0.55), 0.06); // the iron-oxide red-brown found to be the original paint
     const stone = b.pick([P.sandstone, tint(P.sandstone, 0.03)]);
     const ribs = [-2.4, -1.2, 0, 1.2, 2.4];
 
@@ -71,9 +71,9 @@ export const ironBridge: BuildingDef = {
     };
     const R2 = R + 0.75;
     const R3 = R + 1.6;
-    const mainCurve = main(28);
-    const mid = arc(R2);
-    const outer = arc(R3, 10);
+    const mainCurve = main(20);
+    const mid = arc(R2, 12);
+    const outer = arc(R3, 6);
     for (const x of ribs) {
       archRing(b, mainCurve, 0.32, 0.16, iron, x);
       b.sym((s) => {
@@ -84,15 +84,16 @@ export const ironBridge: BuildingDef = {
         // upright standard at the abutment end of the frame
         b.box(0.12, under(A) - spring - 0.3, 0.2, iron, { at: [x, spring + 0.3, s * (A + 0.08)] });
       });
-      // radial ties between the main and middle ribs
-      for (const z of [-5.0, -3.6, 3.6, 5.0]) {
+      // radial ties between the main and middle ribs (face frames only, to keep the elevation legible)
+      if (Math.abs(x) > 2) for (const z of [-5.0, -3.6, 3.6, 5.0]) {
         const y0 = circle(R, z) + 0.3;
         const y1 = circle(R2, z);
         if (y1 > y0 + 0.05) b.box(0.1, y1 - y0, 0.1, iron, { at: [x, y0, z] });
       }
     }
     // the face ribs carry the ornament: rings and ogees (one set per face, visible in elevation)
-    for (const x of [ribs[0], ribs[4]]) {
+    const orn = tint(iron, 0.12);
+    for (const x of [ribs[0] - 0.02, ribs[4] + 0.02]) {
       b.sym((s) => {
         // ring in the corner between outer rib, upright and deck
         const zc = s * 6.05;
@@ -102,12 +103,12 @@ export const ironBridge: BuildingDef = {
         const yc = (yLo + yHi) / 2;
         const ring: ZY[] = [];
         const hole: ZY[] = [];
-        for (let i = 0; i < 16; i++) {
-          const t = (i / 16) * Math.PI * 2;
+        for (let i = 0; i < 14; i++) {
+          const t = (i / 14) * Math.PI * 2;
           ring.push([zc + r * Math.cos(t), yc + r * Math.sin(t)]);
           hole.push([zc + (r - 0.1) * Math.cos(t), yc + (r - 0.1) * Math.sin(t)]);
         }
-        side(b, ring, 0.14, iron, x, [hole]);
+        side(b, ring, 0.16, orn, x, [hole]);
         // ogee arches between the middle rib and the deck near the crown
         for (const zm of [1.3, 2.5]) {
           const z0 = s * zm;
@@ -119,7 +120,7 @@ export const ironBridge: BuildingDef = {
             for (const u of steps(6, 0, 1)) {
               const z = z0 + t * 0.42 * (1 - u);
               const y = base + (top - base) * (3 * u * u - 2 * u * u * u);
-              if (prev) bar(b, [x, prev[1], prev[0]], [x, y, z], 0.07, iron);
+              if (prev) bar(b, [x, prev[1], prev[0]], [x, y, z], 0.08, orn);
               prev = [z, y];
             }
           });
@@ -137,7 +138,7 @@ export const ironBridge: BuildingDef = {
     // cast-iron railings along both sides, on stone end piers
     b.sym((s) => {
       const x = s * (W / 2 - 0.1);
-      const zs = steps(48, -END + 0.7, END - 0.7);
+      const zs = steps(26, -END + 0.7, END - 0.7);
       for (const z of zs) b.box(0.05, 1.05, 0.05, iron, { at: [x, f(z) - 0.02, z], jitter: false });
       band(b, x, 0.1, -END + 0.7, END - 0.7, (z) => f(z) + 1.0, (z) => f(z) + 1.1, iron, 28);
       band(b, x, 0.07, -END + 0.7, END - 0.7, (z) => f(z) + 0.12, (z) => f(z) + 0.18, iron, 28);

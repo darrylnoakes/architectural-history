@@ -2,7 +2,7 @@ import { P, tint, type BuildingDef, type Builder } from '@ah/kit';
 import { BANK, BED, END, hump, band, side, steps, archCurve, archRing, type ZY } from './shared';
 
 export const CONCRETE_W = 8.6;
-export const CONCRETE_CROWN = 1.5;
+export const CONCRETE_CROWN = 1.9;
 
 /** Art Deco lamp: a slim fluted post with a stepped cap and a tall glass lantern. */
 function decoLamp(b: Builder, x: number, y: number, z: number, metal: number): void {
@@ -24,14 +24,15 @@ export function concreteBridge(b: Builder, o: { aged?: boolean } = {}): void {
   const conc = tint(P.concreteWhite, age);
   const face = tint(P.portland, age); // Portland stone dressings on pylons and abutments
   const bronze = P.bronze;
+  const rib = tint(P.concrete, age); // the structure below the deck is plain grey concrete
   b.deck(W - 0.6, 26, CONCRETE_CROWN, { yEnds: 0 });
 
   // shallow segmental arch, rise about one eighth of the span, springing from the abutments
-  const spring = -1.35;
-  const rise = 2.05;
+  const spring = -1.45;
+  const rise = 2.15;
   const intra = archCurve(-BANK, BANK, spring, rise, 'segmental', 24);
   const ribT = 0.5;
-  const ribs = [-3.4, -1.15, 1.15, 3.4];
+  const ribs = [-3.85, -1.3, 1.3, 3.85];
   const slabT = 0.38;
   const under = (z: number) => f(z) - slabT;
   const ribTop = (z: number) => {
@@ -41,18 +42,18 @@ export function concreteBridge(b: Builder, o: { aged?: boolean } = {}): void {
     return cy + Math.sqrt(Math.max(0, R * R - z * z)) + ribT;
   };
   for (const x of ribs) {
-    archRing(b, intra, ribT, 0.75, conc, x);
+    archRing(b, intra, ribT, 0.6, rib, x);
     // open spandrel: slender columns from the rib up to the deck
     for (const z of [-7.0, -5.6, -4.2, -2.8, 2.8, 4.2, 5.6, 7.0]) {
       const y0 = ribTop(z) - 0.1;
       const y1 = under(z);
-      if (y1 - y0 > 0.15) b.box(0.42, y1 - y0, 0.42, conc, { at: [x, y0, z] });
+      if (y1 - y0 > 0.15) b.box(0.5, y1 - y0, 0.5, rib, { at: [x, y0, z] });
     }
   }
   // transverse beams under the deck at each column line, and the deck slab with fascia
   for (const z of [-7.0, -5.6, -4.2, -2.8, 2.8, 4.2, 5.6, 7.0]) b.box(ribs[3] - ribs[0] + 0.7, 0.3, 0.4, conc, { at: [0, under(z) - 0.25, z] });
   band(b, 0, W, -END, END, under, (z) => f(z) - 0.05, conc, 28);
-  b.sym((s) => band(b, s * (W / 2 + 0.05), 0.12, -BANK - 0.5, BANK + 0.5, (z) => under(z) - 0.15, (z) => f(z) + 0.05, tint(conc, 0.03), 28));
+  b.sym((s) => band(b, s * (W / 2 + 0.03), 0.08, -BANK - 0.5, BANK + 0.5, (z) => under(z) - 0.08, (z) => f(z) + 0.05, tint(conc, 0.03), 28));
 
   // abutments: concrete, faced in stone, with a stepped Deco outline
   b.sym((s) => {

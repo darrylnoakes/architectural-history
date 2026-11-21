@@ -19,7 +19,7 @@ export const saxonAlehouse: BuildingDef = {
     'A pole with a bush tied to the end told passers-by that a fresh brew was ready, a custom that lasted for centuries.',
   materials: ['oak planks and posts', 'thatch', 'wattle'],
   lookFor: [
-    { label: 'Ale-stake', note: 'A pole with a bush on the end, hung out when a new brew was ready: the first English inn sign.', at: [HX + 1.6, 2.4, HZ + D / 2 + 2.7] },
+    { label: 'Ale-stake', note: 'A pole with a bush on the end, hung out when a new brew was ready: the first English inn sign.', at: [HX + 1.7, 2.7, HZ + D / 2 + 2.9] },
     { label: 'Earthfast plank walls', note: 'Split oak planks and posts dug straight into the ground. Quick to build, but they rot at the foot within a generation.', at: [HX - 3, 1.1, HZ + D / 2 + 0.1] },
     { label: 'Hipped thatched roof', note: 'Sloping down at the ends as well as the sides, steep enough to shed rain from the straw.', at: [HX - 4.4, 3.5, HZ] },
     { label: 'Sunken-featured building', note: 'A small hut over a pit, the commonest building of the period, used here as the brewhouse.', at: [6.2, 1.8, -5.4] },
@@ -65,7 +65,7 @@ export const saxonAlehouse: BuildingDef = {
     });
 
     // the ale-stake, pushed out over the door
-    aleStake(b, [HX + 0.9, 1.75, HZ + D / 2 + 0.05], 0.25, 2.7, 0.55);
+    aleStake(b, [HX + 0.9, 1.45, HZ + D / 2 + 0.05], 0.25, 3.0, 0.65);
 
     // ---- sunken-featured building (grubenhaus) used as the brewhouse: low gable roof nearly to the ground
     b.group({ at: [6.2, 0, -5.4], rotY: 0.08 }, () => {

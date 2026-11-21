@@ -51,7 +51,7 @@ export const romanTownhouse: BuildingDef = {
     b.sym((s) => b.gable(4, 12.5, 1.0, tile, { at: [s * 7.5, Hw, 0.25], ridge: 'z', overhang: 0.35 }));
     // ribs of cover tiles on the street slope and on the back slope
     imbrices(b, -7, 7, 11.4, H - 0.166, 8.75, H + 1.1, tint(tile, -0.05));
-    b.group({ rotY: Math.PI, at: [2.5, 0, 0] }, () => imbrices(b, -4.6, 4.6, 11.4, H - 0.16, 8.5, H + 1.2, tint(tile, -0.05)));
+    b.group({ rotY: Math.PI, at: [2.5, 0, 0] }, () => imbrices(b, 0.8, 9.2, 11.4, H - 0.16, 8.5, H + 1.2, tint(tile, -0.05)));
     // ridge tiles
     b.box(14.6, 0.14, 0.22, tint(tile, -0.08), { at: [0, H + 1.08, 8.75] });
 

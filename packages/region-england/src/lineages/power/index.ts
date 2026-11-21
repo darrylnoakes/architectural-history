@@ -8,6 +8,8 @@ import { edwardianCastle } from './06-edwardian-castle';
 import { elizabethanManor } from './07-elizabethan-manor';
 import { palladianHall } from './08-palladian-hall';
 import { gothicRevivalTownHall } from './09-gothic-revival-town-hall';
+import { brutalistCivicCentre } from './10-brutalist-civic-centre';
+import { civicHub } from './11-civic-hub';
 
 const lineage: Lineage = {
   id: 'power',
@@ -24,6 +26,8 @@ const lineage: Lineage = {
     { from: 1575, def: elizabethanManor },
     { from: 1735, def: palladianHall },
     { from: 1874, def: gothicRevivalTownHall },
+    { from: 1967, def: brutalistCivicCentre },
+    { from: 2008, def: civicHub },
   ],
 };
 

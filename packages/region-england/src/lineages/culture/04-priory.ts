@@ -44,6 +44,10 @@ export const priory: BuildingDef = {
     const dark = tint(stone, -0.07);
     const roof = b.pick([P.stoneSlate, tint(P.stoneSlate, -0.05)]);
     const N = PRIORY.nave;
+    /** A small round-headed window: a dark opening in a plain stone surround. */
+    const slit = (w: number, h: number, at: [number, number, number], facing: '+z' | '-z' | '+x' | '-x' | number) => {
+      b.panel(w, h, P.windowDark, { at, facing, shape: 'round', depth: 0.05 });
+    };
     const nz = (N.z0 + N.z1) / 2;
     const nw = N.z1 - N.z0;
 
@@ -55,16 +59,16 @@ export const priory: BuildingDef = {
     const bays = spread(5, N.x0, N.x1);
     for (let i = 0; i <= 5; i++) {
       const x = N.x0 + 0.4 + ((N.x1 - N.x0 - 0.8) * i) / 5;
-      for (const s of [1, -1]) b.box(0.8, N.h, 0.25, stone, { at: [x, 0, nz + s * (nw / 2 + 0.12)] });
+      for (const s of [1, -1]) b.box(0.8, N.h - 0.35, 0.25, stone, { at: [x, 0, nz + s * (nw / 2 + 0.12)] });
     }
     for (const x of bays) {
-      b.window(0.8, 1.9, { at: [x, 4.4, N.z1], facing: '+z', shape: 'round', frame: dark });
-      b.window(0.8, 1.7, { at: [x, 5.0, N.z0], facing: '-z', shape: 'round', frame: dark });
+      slit(0.8, 1.9, [x, 4.4, N.z1], '+z');
+      slit(0.8, 1.7, [x, 5.0, N.z0], '-z');
     }
     // west front: recessed doorway, blind arcading, windows, corner turrets
     normanDoor(b, stone, [N.x0, 0, nz], -Math.PI / 2);
     b.archWall(nw - 0.6, 1.8, 0.12, tint(stone, 0.05), { at: [N.x0 - 0.06, 4.7, nz], facing: '-x', openings: 5, openW: 0.75, openH: 1.4, sill: 0.15 });
-    b.sym((s) => b.window(0.8, 1.9, { at: [N.x0, 6.9 - 0.2, nz + s * 1.2], facing: '-x', shape: 'round', frame: dark }));
+    b.sym((s) => slit(0.8, 1.9, [N.x0, 6.9 - 0.2, nz + s * 1.2], '-x'));
     b.window(0.9, 0.9, { at: [N.x0, 8.9, nz], facing: '-x', shape: 'circle', frame: dark });
     b.sym((s) => {
       b.box(1.1, N.h + 1.6, 1.1, stone, { at: [N.x0 + 0.3, 0, nz + s * (nw / 2 - 0.1)] });
@@ -101,9 +105,9 @@ export const priory: BuildingDef = {
     b.cone(cw / 2 + 0.25, 3.0, roof, { at: [cx1, 6.5, nz], segs: 14 });
     for (const i of [2, 3, 4]) {
       const [fx, fz, fa] = facet(i, 14, cw / 2);
-      b.window(0.6, 1.6, { at: [cx1 + fx, 3.6, nz + fz], facing: fa, shape: 'round', frame: dark });
+      slit(0.6, 1.6, [cx1 + fx, 3.6, nz + fz], fa);
     }
-    b.window(0.7, 1.7, { at: [(cx0 + cx1) / 2, 3.4, nz + cw / 2], facing: '+z', shape: 'round', frame: dark });
+    slit(0.7, 1.7, [(cx0 + cx1) / 2, 3.4, nz + cw / 2], '+z');
 
     // ---------------------------------------------------------------- cloister
     const g0 = -12.5;
@@ -122,14 +126,6 @@ export const priory: BuildingDef = {
     b.archWall(g1 - g0 + 0.5, arcH, 0.5, stone, { at: [gc, 0, -gz], facing: '-z', ...arcade });
     b.archWall(gz * 2 - 0.5, arcH, 0.5, stone, { at: [g0, 0, 0], facing: '-x', ...arcade });
     b.archWall(gz * 2 - 0.5, arcH, 0.5, stone, { at: [g1, 0, 0], facing: '+x', ...arcade });
-    // paired shafts on the garth side of each pier
-    const piers = (len: number) => Array.from({ length: 5 }, (_, i) => -len / 2 + ((i + 1) * len) / 6);
-    for (const p of piers(g1 - g0 + 0.5)) {
-      for (const s of [1, -1]) b.cyl(0.11, 2.3, tint(stone, 0.07), { at: [gc + p, 0.6, s * (gz - 0.3)], segs: 5 });
-    }
-    for (const p of piers(gz * 2 - 0.5)) {
-      for (const x of [g0 + 0.3, g1 - 0.3]) b.cyl(0.11, 2.3, tint(stone, 0.07), { at: [x, 0.6, p], segs: 5 });
-    }
     // lean-to roofs over the four walks
     const walk = 2.5;
     b.shed(16, walk + 0.4, 1.3, roof, { at: [-7, arcH, gz + walk / 2 - 0.2], high: '+z' });
@@ -155,11 +151,11 @@ export const priory: BuildingDef = {
     b.sym((s) => b.panel(1.3, 2.4, P.windowDark, { at: [ex0, 0.6, s * 1.7], facing: '-x', shape: 'round' }));
     b.panel(5.2, 3.3, tint(stone, 0.05), { at: [ex0 - 0.01, 0, 0], facing: '-x', depth: 0.03 });
     // dormitory windows, both sides
-    for (const z of spread(8, ez0, ez1)) {
-      b.window(0.6, 1.3, { at: [ex0, 5.3, z], facing: '-x', shape: 'round', frame: dark });
-      if (Math.abs(z) > 3.6) b.window(0.6, 1.3, { at: [ex1, 5.3, z], facing: '+x', shape: 'round', frame: dark });
+    for (const z of spread(6, ez0, ez1)) {
+      slit(0.6, 1.3, [ex0, 5.3, z], '-x');
+      if (Math.abs(z) > 3.6) slit(0.6, 1.3, [ex1, 5.3, z], '+x');
     }
-    b.window(0.8, 1.6, { at: [ex, 4.6, ez0], facing: '-z', shape: 'round', frame: dark });
+    slit(0.8, 1.6, [ex, 4.6, ez0], '-z');
     b.chimney(0.8, 1.6, 0.8, stone, { at: [ex1 - 0.6, 8.6, -10] });
 
     // chapter house itself, projecting east with an apse
@@ -170,9 +166,9 @@ export const priory: BuildingDef = {
     b.cone(3.25, 2.8, roof, { at: [chx1, 6, 0], segs: 14 });
     for (const i of [2, 3, 4]) {
       const [fx, fz, fa] = facet(i, 14, 3);
-      b.window(0.7, 1.8, { at: [chx1 + fx, 2.4, fz], facing: fa, shape: 'round', frame: dark });
+      slit(0.7, 1.8, [chx1 + fx, 2.4, fz], fa);
     }
-    b.sym((s) => b.window(0.7, 1.8, { at: [10, 2.4, s * 3], facing: s > 0 ? '+z' : '-z', shape: 'round', frame: dark }));
+    b.sym((s) => slit(0.7, 1.8, [10, 2.4, s * 3], s > 0 ? '+z' : '-z'));
 
     // ---------------------------------------------------------------- refectory range
     const rz0 = -14;
@@ -181,15 +177,14 @@ export const priory: BuildingDef = {
     b.box(16, 6.6, rz1 - rz0, stone, { at: [-7, 0, rzc] });
     b.gable(16, rz1 - rz0, 3.3, roof, { at: [-7, 6.6, rzc], overhang: 0.3, wall: stone });
     for (const x of spread(5, -15, 1)) {
-      b.window(1.0, 2.6, { at: [x, 2.2, rz0], facing: '-z', shape: 'round', frame: dark });
-      b.window(0.9, 1.4, { at: [x, 4.8, rz1], facing: '+z', shape: 'round', frame: dark });
+      slit(1.0, 2.6, [x, 2.2, rz0], '-z');
+      slit(0.9, 1.4, [x, 4.8, rz1], '+z');
     }
-    b.window(1.0, 2.6, { at: [-15, 2.6, rzc], facing: '-x', shape: 'round', frame: dark });
+    slit(1.0, 2.6, [-15, 2.6, rzc], '-x');
     b.panel(1.4, 2.6, P.oakDark, { at: [-10, 0, rz1], facing: '+z', shape: 'round' });
     b.chimney(1.0, 2.0, 1.0, stone, { at: [-13.5, 7.6, rzc + 1.5] });
 
-    b.tree(6, { at: [15, 0, -10] });
-    b.tree(4.5, { at: [-16, 0, -14.5], kind: 'round', color: P.leafDark });
+    b.tree(6, { at: [14.6, 0, -9.5] });
 
     // ---------------------------------------------------------------- walk collisions
     b.collider(cx1 + cw / 2 - N.x0 + 0.4, nw + 0.6, { at: [(cx1 + cw / 2 + N.x0) / 2, 0, nz] });

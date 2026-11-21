@@ -22,7 +22,7 @@ export const normanAlehouse: BuildingDef = {
     { label: 'Lean-to brewhouse', note: 'A single-slope roof against the gable end, sheltering the copper, the mash tubs and the brewing fire.', at: [HX + W / 2 + 1.8, 2.7, HZ] },
     { label: 'Smoke louvre', note: 'A little hooded vent on the ridge. The hall had an open hearth in the middle of the floor and no chimney.', at: [HX - 1, H + RISE + 0.9, HZ] },
     { label: 'Wattle and daub', note: 'Panels of woven hazel daubed with clay between the oak posts, then limewashed white.', at: [HX - 4.5, 1.4, HZ + D / 2 + 0.1] },
-    { label: 'Ale-stake', note: 'The bush on a pole is still the sign of a new brew, now big enough to be seen across the market.', at: [HX + 1.8, 3.2, HZ + D / 2 + 3.0] },
+    { label: 'Ale-stake', note: 'The bush on a pole is still the sign of a new brew, now big enough to be seen across the market.', at: [HX + 2.9, 2.6, HZ + D / 2 + 3.1] },
     { label: 'Shuttered windows', note: 'Unglazed openings closed with timber shutters. Glass was far too costly for an alehouse.', at: [HX - 3.2, 1.8, HZ + D / 2 + 0.3] },
   ],
   build(b) {
@@ -72,7 +72,7 @@ export const normanAlehouse: BuildingDef = {
       b.cyl(0.08, 1.5, P.rubble, { at: [lx + 1.0, 2.2, -1.0], segs: 6 });
     });
 
-    aleStake(b, [HX + 0.9, 2.5, HZ + D / 2 + 0.02], 0.25, 3.0, 0.55);
+    aleStake(b, [HX + 2.0, 1.85, HZ + D / 2 + 0.02], 0.25, 3.2, 0.6);
 
     // ---- outside: drinkers' benches, barrels, a well and a cart
     trestle(b, [-5.0, 0, 5.2], 0.05);

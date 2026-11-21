@@ -114,9 +114,10 @@ export const saxonThegnsHall: BuildingDef = {
 
     // palisade round the yard with a gateway
     const ring = roundedRing(9.4, 11.4, 30, 4);
-    hurdleFence(b, ring, 1.6, { closed: true, gaps: [0, 29], color: tint(P.oak, 0.06), post: P.oakDark });
-    b.sym((s) => b.box(0.3, 2.6, 0.3, P.oakDark, { at: [s * 1.1, 0, 11.4] }));
-    b.box(2.6, 0.25, 0.35, P.oakDark, { at: [0, 2.6, 11.4] });
+    hurdleFence(b, ring, 1.6, { closed: true, gaps: [0], color: tint(P.oak, 0.06), post: P.oakDark });
+    const [g0, g1] = [ring[0], ring[1]];
+    for (const [x, z] of [g0, g1]) b.box(0.3, 2.7, 0.3, P.oakDark, { at: [x, 0, z] });
+    b.box(Math.hypot(g1[0] - g0[0], g1[1] - g0[1]) + 0.4, 0.25, 0.35, P.oakDark, { at: [(g0[0] + g1[0]) / 2, 2.6, (g0[1] + g1[1]) / 2], rotY: Math.atan2(g1[0] - g0[0], g1[1] - g0[1]) - Math.PI / 2 });
   },
 };
 

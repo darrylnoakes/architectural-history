@@ -34,7 +34,7 @@ export const victorianRestoration: BuildingDef = {
   date: '1868',
   summary:
     'Inspired by the Oxford Movement and Pugin, Victorian restorers set out to return churches to what they thought was their proper medieval state. ' +
-    'Here the shallow lead roofs of the nave and chancel were replaced by steep new slated roofs, a vestry for robes and registers was added on the north side, and a clock went on the tower. ' +
+    'Here the shallow lead roof of the nave gave way to a steep new slated one rising behind the old battlements, the chancel was re-roofed in slate, a vestry for robes and registers was added on the north side, and a clock went on the tower. ' +
     'Outside, the churchyard filled with carved headstones, yews and a lychgate; inside, box pews and galleries were torn out. ' +
     'Underneath it all the Norman doorway, the Early English chancel and the Perpendicular tower still stand.',
   materials: ['limestone', 'Welsh slate', 'oak', 'cast iron'],

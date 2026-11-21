@@ -1,14 +1,16 @@
 import { P, mix, spread, tint, type BuildingDef, type Builder } from '@ah/kit';
-import { TOWER, clockTower } from './shared';
+import { TOWER, arcade, arch, archWindow, clockTower } from './shared';
+
+const octagon = (r: number): [number, number][] =>
+  Array.from({ length: 8 }, (_, i) => [r * Math.cos((i * Math.PI) / 4 + Math.PI / 8), r * Math.sin((i * Math.PI) / 4 + Math.PI / 8)] as [number, number]);
 
 /** A two-light pointed window with a plate-tracery roundel and a stone hood. */
 function gothicWindow(b: Builder, at: [number, number, number], rotY: number, stone: number, w = 2, h = 4) {
   b.group({ at, rotY }, () => {
-    b.panel(w + 0.5, h + 0.4, stone, { at: [0, -0.2, 0], shape: 'pointed', depth: 0.05 });
-    b.panel(w + 0.2, h + 0.1, P.brickYellow, { at: [0, -0.05, 0], shape: 'pointed', depth: 0.07 }); // banded voussoirs
-    b.panel(w, h, stone, { shape: 'pointed', depth: 0.09 });
-    b.sym((s) => b.window(w * 0.38, h * 0.62, { at: [s * w * 0.23, 0.1, 0.05], shape: 'pointed', frame: stone, glass: P.windowDark, border: 0.06 }));
-    b.panel(w * 0.36, w * 0.36, P.windowDark, { at: [0, h * 0.64, 0.07], shape: 'circle', depth: 0.06 });
+    arch(b, w + 0.5, h + 0.4, P.brickYellow, { at: [0, -0.2, 0], depth: 0.05 }); // banded voussoirs
+    arch(b, w, h, stone, { depth: 0.09 });
+    b.sym((s) => arch(b, w * 0.34, h * 0.6, P.windowDark, { at: [s * w * 0.22, 0.15, 0.04], depth: 0.09, n: 2 }));
+    b.extrude(octagon(w * 0.17), 0.12, P.windowDark, { at: [0, h * 0.73, 0.1] }); // plate-tracery roundel
   });
 }
 
@@ -64,7 +66,7 @@ export const gothicRevivalTownHall: BuildingDef = {
       b.box(L + 0.6, 0.18, 0.1, P.slateBlue, { at: [XC, H + 0.25 + y, ZC + (D / 2) * t + 0.12], rot: [Math.atan2(D / 2, RH), 0, 0] });
       b.box(L + 0.6, 0.18, 0.1, P.slateBlue, { at: [XC, H + 0.25 + y, ZC - (D / 2) * t - 0.12], rot: [-Math.atan2(D / 2, RH), 0, 0] });
     }
-    for (const x of spread(26, XL + 0.5, XR - 0.5)) b.box(0.06, 0.6, 0.06, P.castIron, { at: [x, H + 0.25 + RH + 0.1, ZC] });
+    for (const x of spread(14, XL + 0.5, XR - 0.5)) b.box(0.06, 0.6, 0.06, P.castIron, { at: [x, H + 0.25 + RH + 0.1, ZC] });
     b.box(L, 0.06, 0.06, P.castIron, { at: [XC, H + 0.25 + RH + 0.65, ZC] });
     // stone-coped end gables with finials
     b.sym((s) => {
@@ -76,11 +78,11 @@ export const gothicRevivalTownHall: BuildingDef = {
     });
     // gabled dormers on the front and back slopes
     for (const x of [-4.2, 1.5, 7.2, 13]) {
-      for (const side of [1, -1]) {
+      for (const side of x > 6 ? [1] : [1, -1]) {
         b.group({ at: [x, H + 0.25, ZC + side * (D / 2 - 1.0)], rotY: side > 0 ? 0 : Math.PI }, () => {
           b.box(2.2, 2.8, 2, brick, {});
           b.gable(2.2, 2.4, 1.8, P.slate, { at: [0, 2.8, 0.1], ridge: 'z', overhang: 0.15, wall: brick });
-          b.window(1.0, 2.0, { at: [0, 0.4, 1.0], shape: 'pointed', frame: stone, glass: P.windowDark });
+          archWindow(b, 1.0, 2.0, { at: [0, 0.4, 1.0], frame: stone, glass: P.windowDark });
           b.cone(0.16, 0.9, P.castIron, { at: [0, 4.6, 1.1], segs: 4 });
         });
       }
@@ -90,21 +92,20 @@ export const gothicRevivalTownHall: BuildingDef = {
     const AX0 = -6.2;
     const AL = XR - AX0 - 0.6;
     const AXC = AX0 + AL / 2;
-    b.archWall(AL, 4.6, 0.8, stone, { at: [AXC, 0, FZ + 2.6], openings: 8, openW: 2.2, openH: 3.7, shape: 'pointed' });
+    arcade(b, AL, 4.6, 0.8, stone, { at: [AXC, 0, FZ + 2.6], openings: 8, openW: 2.2, openH: 3.7, shape: 'pointed' });
     b.box(AL, 0.15, 2.4, P.paving, { at: [AXC, 0, FZ + 1.3], jitter: false });
     b.box(AL, 0.3, 3.0, stone, { at: [AXC, 4.6, FZ + 1.5] }); // balcony over the arcade
-    for (const x of spread(30, AX0 + 0.3, XR - 0.9)) b.box(0.12, 0.8, 0.12, stone, { at: [x, 4.9, FZ + 2.85] });
-    b.box(AL, 0.16, 0.3, stone, { at: [AXC, 5.7, FZ + 2.85] });
+    b.box(AL, 0.9, 0.3, stone, { at: [AXC, 4.9, FZ + 2.85] }); // balustrade
     // alternating red and yellow voussoirs over the arcade arches
     const pitch = AL / 8;
     for (let i = 0; i < 8; i++) {
       const x = AX0 + (i + 0.5) * pitch;
-      b.panel(2.7, 4.05, yellow, { at: [x, 0, FZ + 3.0], facing: '+z', shape: 'pointed', depth: 0.03 });
-      b.panel(2.3, 3.8, brick, { at: [x, 0, FZ + 3.02], facing: '+z', shape: 'pointed', depth: 0.03 });
-      b.panel(2.2, 3.7, mix(P.windowDark, P.paving, 0.25), { at: [x, 0, FZ + 3.04], facing: '+z', shape: 'pointed', depth: 0.03 });
+      arch(b, 2.7, 4.05, yellow, { at: [x, 0, FZ + 3.0], facing: '+z', depth: 0.03 });
+      arch(b, 2.3, 3.8, brick, { at: [x, 0, FZ + 3.02], facing: '+z', depth: 0.03 });
+      arch(b, 2.2, 3.7, mix(P.windowDark, P.paving, 0.25), { at: [x, 0, FZ + 3.04], facing: '+z', depth: 0.03 });
       // doors and windows behind the arcade
-      if (i % 3 === 1) b.panel(1.5, 3.0, P.oakDark, { at: [x, 0.3, FZ], facing: '+z', shape: 'pointed' });
-      else b.window(1.4, 2.6, { at: [x, 0.9, FZ], facing: '+z', shape: 'pointed', frame: stone });
+      if (i % 3 === 1) arch(b, 1.5, 3.0, P.oakDark, { at: [x, 0.3, FZ], facing: '+z' });
+      else archWindow(b, 1.4, 2.6, { at: [x, 0.9, FZ], facing: '+z', frame: stone });
     }
     // first floor: tall two-light traceried windows of the council chamber
     for (const x of spread(10, XL + 1.6, XR - 1.6)) {
@@ -112,7 +113,7 @@ export const gothicRevivalTownHall: BuildingDef = {
       gothicWindow(b, [x, 5.4, FZ], 0, stone, 2.2, 4.0);
     }
     // ground windows left of the tower (no arcade there)
-    for (const x of [XL + 2, XL + 4.6]) b.window(1.4, 2.6, { at: [x, 1.2, FZ], facing: '+z', shape: 'pointed', frame: stone });
+    for (const x of [XL + 2, XL + 4.6]) archWindow(b, 1.4, 2.6, { at: [x, 1.2, FZ], facing: '+z', frame: stone });
     // corner turret at the right end, with a candle-snuffer roof
     b.group({ at: [XR - 0.4, 0, FZ - 0.4] }, () => {
       b.cyl(1.7, H + 2.6, brick, { segs: 8, rotY: Math.PI / 8 });
@@ -120,7 +121,7 @@ export const gothicRevivalTownHall: BuildingDef = {
       b.cyl(1.9, 0.4, stone, { at: [0, H + 2.6, 0], segs: 8, rotY: Math.PI / 8 });
       b.cone(1.9, 6.4, P.slate, { at: [0, H + 3.0, 0], segs: 8, rotY: Math.PI / 8 });
       b.cyl(0.05, 1.4, P.castIron, { at: [0, H + 9.2, 0], segs: 4 });
-      for (const y of [6, 11]) b.window(0.6, 1.8, { at: [0.6, y, 1.55], facing: 0.4, shape: 'pointed', frame: stone });
+      for (const y of [6, 11]) archWindow(b, 0.6, 1.8, { at: [0.6, y, 1.55], facing: 0.4, frame: stone });
     });
 
     // ---------------------------------------------------------- the clock tower (kept in later stages)
@@ -141,10 +142,10 @@ export const gothicRevivalTownHall: BuildingDef = {
       b.box(HW + 0.06, 0.22, HL + 0.06, yellow, { at: [HX, y + 0.32, HZC], jitter: false });
     }
     b.gable(HW, HL, 8.6, P.slate, { at: [HX, HH, HZC], ridge: 'z', overhang: 0.3, wall: brick });
-    for (const x of spread(14, HZ0 + 0.6, Z0 - 0.4)) b.box(0.06, 0.6, 0.06, P.castIron, { at: [HX, HH + 8.7, x] });
+    for (const x of spread(8, HZ0 + 0.6, Z0 - 0.4)) b.box(0.06, 0.6, 0.06, P.castIron, { at: [HX, HH + 8.7, x] });
     b.box(0.06, 0.06, HL - 1, P.castIron, { at: [HX, HH + 9.25, HZC] });
     b.sym((s) => {
-      for (const z of spread(5, HZ0 + 2, Z0 - 2)) {
+      for (const z of spread(4, HZ0 + 2, Z0 - 2)) {
         b.box(0.7, HH - 1, 0.8, stone, { at: [HX + s * (HW / 2 + 0.35), 0, z - 1.9] });
         gothicWindow(b, [HX + s * (HW / 2), 4.4, z], s > 0 ? Math.PI / 2 : -Math.PI / 2, stone, 1.8, 5.2);
       }
@@ -154,11 +155,11 @@ export const gothicRevivalTownHall: BuildingDef = {
     b.extrude([[-HW / 2 + 0.2, 0], [HW / 2 - 0.2, 0], [0, 8.4]], 0.7, brick, { at: [HX, HH - 0.1, HZ0] });
     b.panel(4.4, 4.4, stone, { at: [HX, HH - 2.6, HZ0 - 0.35], facing: '-z', shape: 'circle', depth: 0.1 });
     b.panel(3.6, 3.6, P.windowDark, { at: [HX, HH - 2.2, HZ0 - 0.45], facing: '-z', shape: 'circle', depth: 0.06 });
-    for (const x of [-2.4, 0, 2.4]) b.window(1.4, 4.4, { at: [HX + x, 2.2, HZ0], facing: '-z', shape: 'pointed', frame: stone });
+    for (const x of [-2.4, 0, 2.4]) archWindow(b, 1.4, 4.4, { at: [HX + x, 2.2, HZ0], facing: '-z', frame: stone });
     b.cone(0.4, 1.8, stone, { at: [HX, HH + 8.9, HZ0], segs: 4 });
     // windows on the back of the front range either side of the hall
-    for (const x of [-17, -13, -9, -5, 9, 13, 17]) {
-      b.window(1.4, 2.6, { at: [x, 1.2, Z0], facing: '-z', shape: 'pointed', frame: stone });
+    for (const x of [-16, -10, 10, 16]) {
+      archWindow(b, 1.4, 2.6, { at: [x, 1.2, Z0], facing: '-z', frame: stone });
       gothicWindow(b, [x, 5.6, Z0], Math.PI, stone, 2, 3.6);
     }
 

@@ -53,7 +53,7 @@ function head(kind: Arch, a: number, ys: number, xc = 0): Pt[] {
     const R = k * a;
     const cx = -a + R;
     const end = Math.acos((a - R) / R);
-    const n = 4;
+    const n = 3;
     const left: Pt[] = [];
     for (let i = 0; i <= n; i++) {
       const t = Math.PI + ((end - Math.PI) * i) / n;
@@ -69,11 +69,11 @@ function head(kind: Arch, a: number, ys: number, xc = 0): Pt[] {
       break;
     case 'round': {
       left = [];
-      for (let i = 0; i <= 4; i++) {
-        const t = Math.PI - (Math.PI / 2) * (i / 4);
+      for (let i = 0; i <= 3; i++) {
+        const t = Math.PI - (Math.PI / 2) * (i / 3);
         left.push([a * Math.cos(t), a * Math.sin(t)]);
       }
-      left[4] = [0, a];
+      left[3] = [0, a];
       break;
     }
     case 'triangle':
@@ -91,15 +91,15 @@ function head(kind: Arch, a: number, ys: number, xc = 0): Pt[] {
     case 'tudor': {
       const r = a * 0.42;
       left = [];
-      for (let i = 0; i <= 3; i++) {
-        const t = Math.PI - (Math.PI / 3) * (i / 3);
+      for (let i = 0; i <= 2; i++) {
+        const t = Math.PI - (Math.PI / 3) * (i / 2);
         left.push([-a + r + r * Math.cos(t), r * Math.sin(t)]);
       }
       left.push([0, a * 0.6]);
       break;
     }
     case 'ogee':
-      left = [[-1, 0], [-0.93, 0.33], [-0.76, 0.62], [-0.5, 0.84], [-0.24, 1.04], [-0.08, 1.27], [0, 1.5]].map(
+      left = [[-1, 0], [-0.86, 0.5], [-0.5, 0.84], [-0.16, 1.12], [0, 1.5]].map(
         ([x, y]) => [x * a, y * a] as Pt,
       );
       break;
@@ -349,15 +349,17 @@ export function door(
  * Norman doorway: a plain tympanum over the door, then two receding orders of round arches on
  * jamb shafts with cushion capitals, the outer order carved with chevron (zigzag).
  */
-export function normanDoor(b: Builder, at: Vec3, facing: Facing, stone: number) {
+export function normanDoor(b: Builder, at: Vec3, facing: Facing, stone: number, projection = true) {
   const dark = tint(stone, -0.3);
   const lite = tint(stone, 0.1);
-  b.group({ at, rotY: facingAngle(facing) }, () => {
-    // the doorway stands in a shallow projection of ashlar, capped by a little gable
-    b.box(3.3, 4.1, 0.34, stone, { at: [0, 0, 0.07] });
-    b.extrude([[-1.75, 0], [1.75, 0], [0, 0.9]], 0.34, stone, { at: [0, 4.1, 0.07] });
-  });
-  b.group({ at, rotY: facingAngle(facing) }, () => b.group({ at: [0, 0, 0.24] }, () => {
+  if (projection) {
+    b.group({ at, rotY: facingAngle(facing) }, () => {
+      // the doorway stands in a shallow projection of ashlar, capped by a little gable
+      b.box(3.3, 4.1, 0.34, stone, { at: [0, 0, 0.07] });
+      b.extrude([[-1.75, 0], [1.75, 0], [0, 0.9]], 0.34, stone, { at: [0, 4.1, 0.07] });
+    });
+  }
+  b.group({ at, rotY: facingAngle(facing) }, () => b.group({ at: [0, 0, projection ? 0.24 : 0] }, () => {
     const a0 = 0.62; // half-width of the door
     const spring = 2.35;
     // shadowed recess of the orders, then the door leaf and tympanum
@@ -459,7 +461,7 @@ export function quoins(b: Builder, x: number, z: number, sx: number, sz: number,
 /** A straight row of merlons (battlements) from (x0, z0) to (x1, z1) on top of a parapet at height y. */
 export function merlons(b: Builder, x0: number, z0: number, x1: number, z1: number, y: number, color: number, t = 0.36) {
   const len = Math.hypot(x1 - x0, z1 - z0);
-  const n = Math.max(2, Math.round(len / 1.2));
+  const n = Math.max(2, Math.round(len / 1.5));
   const ang = Math.atan2(x1 - x0, z1 - z0);
   for (let i = 0; i <= n; i++) {
     const f = i / n;
@@ -623,6 +625,23 @@ function roofZ(b: Builder, cx: number, cz: number, w: number, d: number, y: numb
   }
 }
 
+/**
+ * Lean-to roof over an aisle on side s (+1 south, -1 north): a sloping slab of roofing over a
+ * wedge of wall, so the end triangles read as masonry. High edge against the nave.
+ */
+export function leanTo(b: Builder, s: number, cx: number, cz: number, w: number, len: number, y: number, rise: number, roof: number, wall: number, ov: number) {
+  b.group({ at: [cx, y, cz], rotY: s > 0 ? 0 : Math.PI }, () => {
+    b.shed(w, len, rise, wall, { high: '-x', jitter: false });
+    const k = rise / w;
+    const t = 0.16;
+    b.extrude(
+      [[-w / 2 - 0.05, rise + 0.05 * k], [w / 2 + ov, -ov * k], [w / 2 + ov, -ov * k + t], [-w / 2 - 0.05, rise + 0.05 * k + t]],
+      len + ov * 1.4,
+      roof,
+    );
+  });
+}
+
 export function church(b: Builder, c: ChurchSpec) {
   const { dress } = c;
   const N = c.nave;
@@ -707,12 +726,10 @@ export function church(b: Builder, c: ChurchSpec) {
       if (c.plinth) b.box(A.w + 0.3, 0.45, aLen + 0.3, tint(wall, -0.05), { at: [cx + s * 0.15, 0, aCz] });
       b.box(A.w, A.h, aLen, wall, { at: [cx, 0, aCz] });
       const par = A.roof.parapet ?? 'none';
-      const high = s > 0 ? '-x' : '+x';
       if (par === 'none') {
-        b.shed(A.w + 0.35, aLen + 0.5, A.roof.rise, A.roof.color, { at: [cx + s * 0.17, A.h - 0.08, aCz], high });
-        b.shed(A.w, aLen, A.roof.rise, wall, { at: [cx, A.h - 0.2, aCz], high, jitter: false });
+        leanTo(b, s, cx, aCz, A.w, aLen, A.h, A.roof.rise, A.roof.color, wall, 0.35);
       } else {
-        b.shed(A.w - 0.2, aLen - 0.3, A.roof.rise, A.roof.color, { at: [cx - s * 0.1, A.h + 0.12, aCz], high });
+        leanTo(b, s, cx - s * 0.2, aCz, A.w - 0.4, aLen - 0.4, A.h + 0.1, A.roof.rise, A.roof.color, wall, 0);
         parapet(b, ox - s * 0.19, az0, ox - s * 0.19, az1, A.h, dress, par === 'battle');
         // gabled end walls stepping up to the nave
         for (const z of [az0 + 0.19, az1 - 0.19]) {
@@ -745,7 +762,7 @@ export function church(b: Builder, c: ChurchSpec) {
   wall = c.wall;
   // ---------------- south doorway
   const dx = A ? N.hw + A.w : N.hw;
-  if (c.southDoor === 'norman') normanDoor(b, [dx, 0, DOOR_Z], '+x', dress);
+  if (c.southDoor === 'norman') normanDoor(b, [dx, 0, DOOR_Z], '+x', dress, !A);
   else {
     // Saxon: tall, narrow, round-headed, with massive plain jambs
     door(b, { kind: 'round', w: 0.95, h: 2.9, at: [dx, 0, DOOR_Z], facing: '+x', frame: dress, surround: 0.3, leaf: P.oakDark });

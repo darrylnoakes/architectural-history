@@ -53,7 +53,7 @@ export const interwarSemi: BuildingDef = {
   ],
   influences: ['arts-and-crafts-export'],
   build(b) {
-    const hw = 5.4;
+    const hw = 5.2;
     const pw = hw * 2;
     const px = -1.4; // party wall
     const zf = 3.4;

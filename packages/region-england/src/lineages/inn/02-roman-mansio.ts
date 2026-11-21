@@ -11,19 +11,23 @@ const H = 3.6; // wall height of the guest ranges
 const HS = 3.2; // stable range
 const PITCH = 0.47; // rise per metre of half-span, about 25 degrees
 
-/** Imbrex lines down a tiled roof slope, to show the Roman tegula-and-imbrex covering. */
-function imbrices(b: Builder, len: number, half: number, rise: number, color: number, along: 'x' | 'z', at: [number, number, number]): void {
+/**
+ * Imbrex lines down both slopes of a gable roof, to show the Roman tegula-and-imbrex covering.
+ * `hw` is the half-span at the wall, `ov` the eaves overhang, `at` the roof base centre (wall top).
+ */
+function imbrices(b: Builder, len: number, hw: number, ov: number, rise: number, color: number, along: 'x' | 'z', at: [number, number, number]): void {
   const n = Math.floor(len / 0.9);
-  const slope = Math.hypot(half, rise);
-  const ang = Math.atan2(rise, half);
+  const run = hw + ov;
+  const slope = Math.hypot(run, (rise * run) / hw);
+  const ang = Math.atan2(rise, hw);
+  const off = run / 2;
+  const y = at[1] + rise * (1 - off / hw) + 0.13;
   for (const s of [1, -1]) {
     for (const p of spread(n, -len / 2 + 0.3, len / 2 - 0.3)) {
-      const off = half / 2;
-      const y = at[1] + rise / 2 + 0.12;
       if (along === 'x') {
-        b.box(0.12, 0.07, slope, color, { at: [at[0] + p, y, at[2] + s * off], rot: [s * ang, 0, 0], jitter: false });
+        b.box(0.12, 0.08, slope, color, { at: [at[0] + p, y - 0.04, at[2] + s * off], rot: [s * ang, 0, 0], jitter: false });
       } else {
-        b.box(slope, 0.07, 0.12, color, { at: [at[0] + s * off, y, at[2] + p], rot: [0, 0, -s * ang], jitter: false });
+        b.box(slope, 0.08, 0.12, color, { at: [at[0] + s * off, y - 0.04, at[2] + p], rot: [0, 0, -s * ang], jitter: false });
       }
     }
   }
@@ -92,10 +96,10 @@ export const romanMansio: BuildingDef = {
     b.sym((s) => {
       const x = s > 0 ? X1 - DEP / 2 : X0 + DEP / 2;
       b.gable(DEP, sideLen + DEP, rf, tile, { at: [x, H, zM + DEP / 4], ridge: 'z', overhang: 0.4, wall: render });
-      imbrices(b, sideLen - 1, DEP / 2 + 0.4, rf, imbrex, 'z', [x, H - 0.19, zM]);
+      imbrices(b, sideLen - 1, DEP / 2, 0.4, rf, imbrex, 'z', [x, H, zM]);
     });
-    imbrices(b, X1 - X0, DEP / 2 + 0.4, rf, imbrex, 'x', [0, H - 0.19, ZF - DEP / 2]);
-    imbrices(b, X1 - X0, DEP / 2 + 0.4, rf, imbrex, 'x', [0, HS - 0.19, ZB + DEP / 2]);
+    imbrices(b, X1 - X0, DEP / 2, 0.4, rf, imbrex, 'x', [0, H, ZF - DEP / 2]);
+    imbrices(b, X1 - X0, DEP / 2, 0.4, rf, imbrex, 'x', [0, HS, ZB + DEP / 2]);
     // ridge tiles
     b.box(X1 - X0 + 0.8, 0.14, 0.24, imbrex, { at: [0, H + rf + 0.05, ZF - DEP / 2] });
     b.box(X1 - X0 + 0.8, 0.14, 0.24, imbrex, { at: [0, HS + rf + 0.05, ZB + DEP / 2] });

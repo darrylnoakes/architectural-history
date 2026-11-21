@@ -1,23 +1,23 @@
 import { P, mix, tint, type BuildingDef, type Builder } from '@ah/kit';
-import { BAILEY_LEFT, BAILEY_RIGHT, GATE, MOTTE, curtain, lineColliders, motte, motteY, strip } from './shared';
+import { BAILEY_LEFT, BAILEY_RIGHT, GATE, MOTTE, arcade, arch, archWindow, curtain, lineColliders, motte, motteY, strip } from './shared';
 import { ditchLine, toSummit } from './04-motte-and-bailey';
 import { KEEP, stoneKeep } from './05-stone-keep';
 
 /** A round flanking tower with a battlemented top and arrow loops. */
 export function roundTower(b: Builder, x: number, z: number, r: number, h: number, stone: number, o?: { loops?: boolean }) {
   b.group({ at: [x, 0, z] }, () => {
-    b.cyl(r + 0.5, 1.4, tint(stone, -0.04), { segs: 12, rTop: r }); // spurred base
-    b.cyl(r, h, stone, { segs: 12 });
-    b.cyl(r + 0.25, 0.35, tint(stone, -0.05), { at: [0, h - 0.35, 0], segs: 12 });
-    const n = 8;
+    b.cyl(r + 0.5, 1.4, tint(stone, -0.04), { segs: 10, rTop: r }); // spurred base
+    b.cyl(r, h, stone, { segs: 10 });
+    b.cyl(r + 0.25, 0.35, tint(stone, -0.05), { at: [0, h - 0.35, 0], segs: 10 });
+    const n = 6;
     for (let i = 0; i < n; i++) {
       const a = (i / n) * Math.PI * 2;
       b.box(0.85, 0.95, 0.45, stone, { at: [Math.sin(a) * (r - 0.05), h, Math.cos(a) * (r - 0.05)], rotY: a, jitter: false });
     }
-    b.cyl(r - 0.4, 0.1, P.lead, { at: [0, h - 0.25, 0], segs: 12 });
+    b.cyl(r - 0.4, 0.1, P.lead, { at: [0, h - 0.25, 0], segs: 6 });
     if (o?.loops !== false) {
-      for (const a of [0.4, 1.6, 2.8, 4.0, 5.2]) {
-        for (const y of [3, 6.5]) {
+      for (const a of [0.5, 2.6, 4.7]) {
+        for (const y of [4.5]) {
           b.panel(0.18, 1.5, P.black, { at: [Math.sin(a) * r, y, Math.cos(a) * r], facing: a });
           b.panel(0.55, 0.16, P.black, { at: [Math.sin(a) * r, y + 0.9, Math.cos(a) * r], facing: a });
         }
@@ -39,8 +39,7 @@ export function greatHall(b: Builder, stone: number, roof: number) {
     b.pyramid(1.3, 1.3, 0.8, roof, { at: [1, H + 5.6, 0] });
     for (const s of [1, -1]) {
       for (const x of [-5.6, -1.9, 1.9, 5.6]) {
-        b.window(1.5, 4.6, { at: [x, 2.2, s * (D / 2)], facing: s > 0 ? '+z' : '-z', shape: 'pointed', frame: tint(stone, -0.06), bars: [2, 3] });
-        b.panel(0.18, 0.55, tint(stone, -0.06), { at: [x, 5.4, s * (D / 2) + 0.12], facing: s > 0 ? '+z' : '-z', shape: 'circle' });
+        archWindow(b, 1.5, 4.6, { at: [x, 2.2, s * (D / 2)], facing: s > 0 ? '+z' : '-z', frame: tint(stone, -0.06), mullion: true });
       }
       for (const x of [-7.6, -3.75, 0, 3.75, 7.6]) {
         b.box(0.7, H - 0.6, 0.6, stone, { at: [x, 0, s * (D / 2 + 0.3)] });
@@ -50,30 +49,30 @@ export function greatHall(b: Builder, stone: number, roof: number) {
     // porch at the screens end, and the solar (private chamber) cross-wing at the dais end
     b.box(3.2, 4.4, 3, stone, { at: [-5.6, 0, D / 2 + 1.4] });
     b.gable(3.2, 3, 1.6, roof, { at: [-5.6, 4.4, D / 2 + 1.4], ridge: 'z', wall: stone });
-    b.panel(1.4, 2.8, P.oakDark, { at: [-5.6, 0, D / 2 + 2.9], facing: '+z', shape: 'pointed' });
+    arch(b, 1.4, 2.8, P.oakDark, { at: [-5.6, 0, D / 2 + 2.9], facing: '+z' });
     b.box(4.5, 9.6, 10, stone, { at: [L / 2 + 2.25, 0, 0] });
     b.gable(4.5, 10, 3.6, roof, { at: [L / 2 + 2.25, 9.6, 0], ridge: 'z', overhang: 0.2, wall: stone });
-    b.window(1.2, 2.8, { at: [L / 2 + 2.25, 5.4, 5], facing: '+z', shape: 'pointed', frame: tint(stone, -0.06), bars: [2, 2] });
+    archWindow(b, 1.2, 2.8, { at: [L / 2 + 2.25, 5.4, 5], facing: '+z', frame: tint(stone, -0.06), mullion: true });
     b.chimney(1.1, 3.8, 1.1, stone, { at: [L / 2 + 4.2, 9.6, -2] });
   });
 }
 
 /** The twin-towered gatehouse with portcullis and drawbridge over the moat. */
 export function gatehouse(b: Builder, stone: number, o?: { ruin?: boolean }) {
-  b.group({ at: [GATE[0], 0, GATE[1] - 2.6] }, () => {
+  b.group({ at: [GATE[0], 0, GATE[1] - 3.4] }, () => {
     const W = 11;
-    b.archWall(W, 11, 5, stone, { openings: 1, openW: 3.2, openH: 4.6, shape: 'pointed' });
+    arcade(b, W, 11, 5, stone, { openings: 1, openW: 3.2, openH: 4.6, shape: 'pointed' });
     b.crenel(W, 5, stone, { at: [0, 11, 0], merlonW: 0.7, merlonH: 0.9, t: 0.45 });
     b.box(W - 0.9, 0.1, 4.1, P.lead, { at: [0, 10.8, 0] });
     b.sym((s) => roundTower(b, s * 3.6, 2.6, 2.7, 12.5, stone));
     // the passage between the towers: portcullis grille, murder hole slot, the drawbridge down
-    b.panel(3.0, 4.4, P.iron, { at: [0, 1.6, 2.55], facing: '+z', shape: 'pointed', depth: 0.03 });
-    b.panel(3.3, 5.0, tint(stone, -0.08), { at: [0, 0, 2.5], facing: '+z', shape: 'pointed', depth: 0.02 });
+    arch(b, 3.0, 4.4, P.iron, { at: [0, 1.6, 2.55], facing: '+z', depth: 0.03 });
+    arch(b, 3.3, 5.0, tint(stone, -0.08), { at: [0, 0, 2.5], facing: '+z', depth: 0.02 });
     b.box(3.2, 1.6, 0.4, stone, { at: [0, 4.6, 4.6] });
-    b.window(1.1, 2.4, { at: [0, 7, 4.9], facing: '+z', shape: 'pointed', frame: tint(stone, -0.06), bars: [2, 1] });
+    archWindow(b, 1.1, 2.4, { at: [0, 7, 4.9], facing: '+z', frame: tint(stone, -0.06), mullion: true });
     if (!o?.ruin) {
-      b.box(3.2, 0.3, 4, P.oak, { at: [0, 0.3, 6.4] });
-      b.sym((s) => b.box(0.1, 0.1, 4.6, P.iron, { at: [s * 1.5, 0.6, 6.0], rot: [-0.28, 0, 0] }));
+      b.box(3.2, 0.3, 3.8, P.oak, { at: [0, 0.3, 4.4] });
+      b.sym((s) => b.box(0.1, 0.1, 4.4, P.iron, { at: [s * 1.5, 0.6, 4.2], rot: [-0.28, 0, 0] }));
     }
   });
 }
@@ -81,7 +80,7 @@ export function gatehouse(b: Builder, stone: number, o?: { ruin?: boolean }) {
 export const edwardianCastle: BuildingDef = {
   id: 'edwardian-castle',
   name: 'Enlarged castle',
-  style: 'Decorated Gothic military',
+  style: 'Gothic (Edwardian)',
   date: 'c. 1290',
   summary:
     'Under Edward I castle design changed fast, using lessons from the Crusades and the king\'s Welsh wars. The old keep is kept, but the curtain wall is rebuilt higher with round towers that let archers shoot along the wall face, and with no square corners to undermine. ' +
@@ -107,15 +106,19 @@ export const edwardianCastle: BuildingDef = {
     const base = (x: number, z: number) => motteY(x, z);
     const right: [number, number][] = [toSummit(BAILEY_RIGHT[0], MOTTE.rTop - 0.8), ...BAILEY_RIGHT.slice(0, -1), [GATE[0] + 5, 19]];
     const left: [number, number][] = [[GATE[0] - 5, 19], ...BAILEY_LEFT.slice(1), toSummit(BAILEY_LEFT[BAILEY_LEFT.length - 1], MOTTE.rTop - 0.8)];
-    curtain(b, right, 7.6, 2, wall, { base, outer: -1 });
-    curtain(b, left, 7.6, 2, wall, { base, outer: -1 });
-    for (const p of [...BAILEY_RIGHT.slice(1, -1), ...BAILEY_LEFT.slice(1, -1)]) roundTower(b, p[0], p[1], 2.7, 10.6, stone);
+    curtain(b, right, 7.6, 2, wall, { base, outer: -1, piece: 7, merlon: 1 });
+    curtain(b, left, 7.6, 2, wall, { base, outer: -1, piece: 7, merlon: 1 });
+    for (const p of [...BAILEY_RIGHT.slice(1, -1), ...BAILEY_LEFT.slice(1, -1)]) {
+      // pulled a little inwards so the towers stay on the plot
+      const k = 0.94;
+      roundTower(b, 3 + (p[0] - 3) * k, 1 + (p[1] - 1) * k, 2.5, 10.6, stone);
+    }
     gatehouse(b, stone);
 
     // wet moat
-    const moatPts = (pts: [number, number][]) => ditchLine(pts, 1.08);
-    strip(b, moatPts(BAILEY_RIGHT.slice(1, -1)), 2, 0.04, P.water, { mat: 'glass' });
-    strip(b, moatPts(BAILEY_LEFT.slice(1, -1)), 2, 0.04, P.water, { mat: 'glass' });
+    const moatPts = (pts: [number, number][]) => ditchLine(pts, 1.06);
+    strip(b, moatPts(BAILEY_RIGHT.slice(1, -1)), 1.6, 0.04, P.water, { mat: 'glass' });
+    strip(b, moatPts(BAILEY_LEFT.slice(1, -1)), 1.6, 0.04, P.water, { mat: 'glass' });
     strip(b, [[-13, 20.8], [14, 20.8]], 2, 0.04, P.water, { mat: 'glass' });
 
     // the great hall, a kitchen, stables
@@ -127,23 +130,22 @@ export const edwardianCastle: BuildingDef = {
     });
     b.group({ at: [15, 0, 4] }, () => {
       b.box(4.4, 3.2, 12, mix(P.oak, P.oakSilver, 0.3));
-      b.frame(12, 3.2, P.oakDark, { at: [-2.2, 0, 0], facing: '-x', studs: 5, rails: 1, brace: 'corner' });
       b.shed(5.2, 12.6, 1.5, P.tileRed, { at: [0, 3.2, 0], high: '+x' });
     });
     // chapel (the Norman one, with a new pointed east window)
     b.group({ at: [-11, 0, 11.5] }, () => {
       b.box(5, 4.6, 8, stone);
       b.gable(5, 8, 3, P.stoneSlate, { at: [0, 4.6, 0], ridge: 'z', overhang: 0.2, wall: stone });
-      b.panel(1.4, 2.6, P.oakDark, { at: [0, 0, 4], facing: '+z', shape: 'round' });
-      b.window(1.4, 3, { at: [0, 1.6, -4], facing: '-z', shape: 'pointed', frame: tint(stone, -0.05), bars: [2, 2] });
-      for (const z of [-2, 1]) b.sym((s) => b.window(0.6, 1.6, { at: [s * 2.5, 2.2, z], facing: s > 0 ? '+x' : '-x', shape: 'round', frame: tint(stone, -0.05) }));
+      arch(b, 1.4, 2.6, P.oakDark, { at: [0, 0, 4], facing: '+z', shape: 'round' });
+      archWindow(b, 1.4, 3, { at: [0, 1.6, -4], facing: '-z', frame: tint(stone, -0.05), mullion: true });
+      for (const z of [-2, 1]) b.sym((s) => archWindow(b, 0.6, 1.6, { at: [s * 2.5, 2.2, z], facing: s > 0 ? '+x' : '-x', shape: 'round', frame: tint(stone, -0.05) }));
     });
     b.cyl(0.8, 0.8, P.rubble, { at: [5, 0, 6], segs: 8 });
 
     // colliders
     lineColliders(b, right.slice(1), 2.2);
     lineColliders(b, left.slice(0, -1), 2.2);
-    b.sym((s) => b.collider(3.4, 6, { at: [GATE[0] + s * 3.8, 0, GATE[1] - 1.4] }));
+    b.sym((s) => b.collider(3.4, 6.5, { at: [GATE[0] + s * 3.8, 0, GATE[1] - 2.2] }));
     b.collider(KEEP.w + 1.6, KEEP.w + 1.6, { at: [MOTTE.x, 0, MOTTE.z] });
     b.collider(3.4, 6.4, { at: [MOTTE.x + KEEP.w / 2 + 1.7, 0, MOTTE.z - 0.8] });
     b.collider(25, 10, { at: [10.7, 0, -12] });

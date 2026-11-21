@@ -134,8 +134,8 @@ export const arkwrightMill: BuildingDef = {
     });
     b.window(1.0, 1.6, { at: [cx, 3.6, cz + 2.3], facing: '+z', frame, bars: [2, 3] });
     b.chimney(0.7, 1.4, 0.7, brick, { at: [cx - 2.6, 6.6, cz], pots: 2 });
-    b.box(14, 1.8, 0.4, brick, { at: [1.5, 0, 10.2] });
-    b.box(3.6, 1.8, 0.4, brick, { at: [-16.2, 0, 10.2] });
+    b.box(19.6, 1.8, 0.4, brick, { at: [-0.85, 0, 10.2] });
+    b.box(3.2, 1.8, 0.4, brick, { at: [-16.0, 0, 10.2] });
     b.sym((s) => b.box(0.7, 2.6, 0.7, stone, { at: [-12.5 + s * 1.85, 0, 10.2] }));
     b.box(3.0, 0.1, 0.1, P.castIron, { at: [-12.5, 2.3, 10.2] });
 

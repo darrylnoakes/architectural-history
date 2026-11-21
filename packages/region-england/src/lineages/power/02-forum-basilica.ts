@@ -1,5 +1,5 @@
 import { P, mix, spread, tint, type BuildingDef, type Builder } from '@ah/kit';
-import { arcLathe, columns } from './shared';
+import { arcLathe, arcade, arch, archWindow, columns } from './shared';
 
 /** Red tile bonding courses wrapped round a block: the stripes that mark Roman masonry in Britain. */
 function bonding(b: Builder, w: number, d: number, h: number, at: [number, number, number]) {
@@ -52,7 +52,7 @@ export const forumBasilica: BuildingDef = {
       b.shed(L + 0.4, AISLE + 0.5, 1.4, tile, { at: [0, AH, z + s * 0.2], high: s > 0 ? '-z' : '+z' });
       // clerestory windows in the nave walls
       for (const x of spread(10, -L / 2, L / 2)) {
-        b.window(1.1, 1.8, { at: [x, AH + 1.9, BZ + s * (NAVE / 2)], facing: s > 0 ? '+z' : '-z', shape: 'round', frame: plaster, glass: P.windowDark });
+        archWindow(b, 1.1, 1.8, { at: [x, AH + 1.9, BZ + s * (NAVE / 2)], facing: s > 0 ? '+z' : '-z', shape: 'round', frame: plaster, glass: P.windowDark });
       }
     });
     b.gable(L + 0.2, NAVE, 1.6, tile, { at: [0, NH, BZ], overhang: 0.4 });
@@ -64,14 +64,14 @@ export const forumBasilica: BuildingDef = {
       b.box(0.3, NH - 2, NAVE, stone, { at: [(s * (L + 0.3)) / 2, 0, BZ] });
       // aisle end walls
       b.box(0.4, AH, NAVE + AISLE * 2, stone, { at: [s * (L / 2 - 0.2), 0, BZ] });
-      b.window(1.0, 1.6, { at: [s * (L / 2 + NAVE / 2) + 0.0, 4.5, BZ], facing: s > 0 ? '+x' : '-x', shape: 'round', frame: plaster });
+      archWindow(b, 1.0, 1.6, { at: [s * (L / 2 + NAVE / 2) + 0.0, 4.5, BZ], facing: s > 0 ? '+x' : '-x', shape: 'round', frame: plaster });
     });
     // basilica doors and windows on the courtyard side; small high windows on the back
     const bf = BZ + NAVE / 2 + AISLE;
     for (const x of spread(7, -L / 2, L / 2)) {
-      if (Math.abs(x) < 3) b.panel(2.4, 4.2, P.oakDark, { at: [x, 0, bf], facing: '+z', shape: 'round' });
-      else b.panel(1.6, 3, P.oakDark, { at: [x, 0, bf], facing: '+z', shape: 'round' });
-      b.window(1, 1.4, { at: [x, 1.6, BZ - NAVE / 2 - AISLE], facing: '-z', shape: 'round', frame: plaster });
+      if (Math.abs(x) < 3) arch(b, 2.4, 4.2, P.oakDark, { at: [x, 0, bf], facing: '+z', shape: 'round' });
+      else arch(b, 1.6, 3, P.oakDark, { at: [x, 0, bf], facing: '+z', shape: 'round' });
+      archWindow(b, 1, 1.4, { at: [x, 1.6, BZ - NAVE / 2 - AISLE], facing: '-z', shape: 'round', frame: plaster });
     }
 
     // ---------------------------------------------------------- portico in front of the basilica
@@ -124,7 +124,7 @@ export const forumBasilica: BuildingDef = {
     b.sym((s) => b.box(0.7, 7, FD, stone, { at: [s * 3.15, 0, FZ] }));
     b.box(7, 1.6, FD, stone, { at: [0, 5.4, FZ] });
     b.gable(7, FD, 1.4, tile, { at: [0, 7, FZ], ridge: 'z', overhang: 0.2, wall: stone });
-    b.archWall(5.6, 5.4, 0.4, plaster, { at: [0, 0, FZ - FD / 2 + 0.2], openings: 1, openW: 3.6, openH: 5, shape: 'round' });
+    arcade(b, 5.6, 5.4, 0.4, plaster, { at: [0, 0, FZ - FD / 2 + 0.2], openings: 1, openW: 3.6, openH: 5, shape: 'round' });
     // pedimented porch onto the street
     const PZ2 = 20.6;
     b.box(8.6, 0.3, 2.6, stone, { at: [0, 0, PZ2] });

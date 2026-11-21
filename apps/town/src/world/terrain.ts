@@ -62,7 +62,7 @@ function groundColour(x: number, z: number, h: number, era: Era, out: THREE.Colo
   const fu = Math.floor((block ? u : v) / cw);
   const fv = Math.floor((block ? v : u) / cl);
   const pick = hash2(fu * 1.31 + 3.1, fv * 2.17 - 1.7);
-  const fieldTones = [env.fields, P.meadow, P.grassDry, P.crop, P.soil, P.grass];
+  const fieldTones = [env.fields, P.meadow, P.grassDry, P.crop, 0x93885f, P.grass, env.fields, P.meadow];
   const tone = fieldTones[Math.floor(pick * pick * fieldTones.length) % fieldTones.length];
   hex(tone, c1);
   hex(P.grass, c2).offsetHSL(0, -0.05, -0.05 + nz * 0.05);

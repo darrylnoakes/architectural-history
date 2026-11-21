@@ -139,7 +139,7 @@ export class Scenery {
         y: baseHeight(x, z) - 0.15,
         rot: rng() * 6.28,
         h: 7 + rng() * 9 + (kind === 2 ? 3 : 0),
-        score: 0.5 * far + 0.5 * rng(),
+        score: 0.38 * far + 0.62 * rng(),
         cur: 0,
         kind,
         slot: perKind[kind]++,

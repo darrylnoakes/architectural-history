@@ -76,7 +76,7 @@ export const greatRoundhouse: BuildingDef = {
 
     // the yard enclosure: hurdles on posts with a gateway in front
     const ring = roundedRing(9.3, 11.3, 28, 3.2);
-    hurdleFence(b, ring, 1.1, { closed: true, gaps: [0, 27] });
-    b.sym((s) => b.cyl(0.13, 2.0, P.oak, { at: [s * 1.05, 0, 11.3], segs: 6 }));
+    hurdleFence(b, ring, 1.1, { closed: true, gaps: [0] });
+    for (const [x, z] of [ring[0], ring[1]]) b.cyl(0.14, 2.0, P.oak, { at: [x, 0, z], segs: 6 });
   },
 };

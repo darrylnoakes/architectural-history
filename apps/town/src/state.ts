@@ -56,3 +56,6 @@ export const useApp = create<AppState>((set, get) => ({
   openStreet: (plotId, lineageId) => set({ street: { plotId, lineageId }, selected: plotId, playing: false }),
   closeStreet: () => set((s) => ({ street: null, focusTick: s.focusTick + 1 })),
 }));
+
+// handy in the console, and used by the scripted checks
+if (typeof window !== 'undefined') (window as unknown as { __app: typeof useApp }).__app = useApp;

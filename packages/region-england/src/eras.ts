@@ -89,7 +89,7 @@ export const eras: Era[] = [
     traits: ['Tall brick chimney stacks', 'Close-studded and patterned timber framing', 'Mullioned windows', 'Jetties and gables', 'Symmetrical show fronts'],
     materials: ['Oak frame with plaster or brick infill', 'Red brick', 'Clay tile', 'Leaded glass'],
     color: 0x8f4f3a,
-    env: { streets: 'cobble', treeCover: 0.32, ground: P.earth, fields: P.crop, extent: 125 },
+    env: { streets: 'cobble', treeCover: 0.36, ground: P.earth, fields: P.crop, extent: 125 },
   },
   {
     id: 'georgian',
@@ -104,7 +104,7 @@ export const eras: Era[] = [
     traits: ['Strict symmetry', 'Sash windows', 'Columns, pediments and cornices', 'Terraces and squares', 'Hidden, low-pitched roofs'],
     materials: ['Red and yellow brick', 'Portland and Bath stone', 'Welsh slate', 'Stucco', 'Cast iron'],
     color: 0xc0714a,
-    env: { streets: 'cobble', treeCover: 0.26, ground: P.gravel, fields: P.meadow, extent: 140 },
+    env: { streets: 'cobble', treeCover: 0.32, ground: P.gravel, fields: P.meadow, extent: 140 },
   },
   {
     id: 'victorian',
@@ -119,7 +119,7 @@ export const eras: Era[] = [
     traits: ['Gothic Revival pointed arches', 'Polychrome brickwork', 'Bay windows', 'Iron and glass roofs', 'Clock towers and chimneys'],
     materials: ['Machine-made brick', 'Welsh slate', 'Cast and wrought iron', 'Plate glass', 'Terracotta'],
     color: 0x7a3f33,
-    env: { streets: 'setts', treeCover: 0.2, ground: P.cobble, fields: P.meadow, extent: 175 },
+    env: { streets: 'setts', treeCover: 0.27, ground: P.cobble, fields: P.meadow, extent: 175 },
   },
   {
     id: 'interwar',
@@ -134,7 +134,7 @@ export const eras: Era[] = [
     traits: ['Semi-detached houses with bay windows', 'Mock-Tudor gables', 'Streamlined Art Deco fronts', 'Steel frames behind stone', 'Flat roofs and strip windows'],
     materials: ['Brick and pebbledash', 'Steel frame', 'Faience tiles', 'Reinforced concrete', 'Crittall steel windows'],
     color: 0xb9a36a,
-    env: { streets: 'macadam', treeCover: 0.2, ground: P.paving, fields: P.meadow, extent: 205 },
+    env: { streets: 'macadam', treeCover: 0.27, ground: P.paving, fields: P.meadow, extent: 205 },
   },
   {
     id: 'postwar',
@@ -149,7 +149,7 @@ export const eras: Era[] = [
     traits: ['Exposed board-marked concrete', 'Flat roofs', 'Ribbon windows', 'Towers and slabs', 'Raised walkways and precincts'],
     materials: ['Reinforced and precast concrete', 'Curtain-wall glazing', 'Dark engineering brick', 'Aluminium'],
     color: 0x8e8b84,
-    env: { streets: 'tarmac', treeCover: 0.18, ground: P.paving, fields: P.meadow, extent: 220 },
+    env: { streets: 'tarmac', treeCover: 0.26, ground: P.paving, fields: P.meadow, extent: 220 },
   },
   {
     id: 'contemporary',
@@ -164,6 +164,6 @@ export const eras: Era[] = [
     traits: ['Glass walls and atria', 'Exposed steel structure', 'Timber cladding', 'Solar panels and green roofs', 'Old buildings reused'],
     materials: ['Glass and steel', 'Engineered timber (CLT)', 'Zinc and aluminium cladding', 'Insulated render'],
     color: 0x4f8fa8,
-    env: { streets: 'tarmac', treeCover: 0.24, ground: P.paving, fields: P.meadow, extent: 230 },
+    env: { streets: 'tarmac', treeCover: 0.31, ground: P.paving, fields: P.meadow, extent: 230 },
   },
 ];

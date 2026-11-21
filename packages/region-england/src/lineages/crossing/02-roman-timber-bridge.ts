@@ -3,7 +3,7 @@ import { BANK, BED, END, hump, side, steps, bar, cutwaterPier, plankDeck, handra
 
 /** Shared with the ruin stage, which shows the same piers broken. */
 export const ROMAN_PIERS = [-2.9, 2.9];
-export const ROMAN_PIER = { len: 4.4, thick: 1.7, nose: 1.1, top: 0.1 };
+export const ROMAN_PIER = { len: 4.4, thick: 1.7, nose: 1.1, top: -0.25 };
 
 export const romanTimberBridge: BuildingDef = {
   id: 'roman-timber-bridge',
@@ -26,7 +26,7 @@ export const romanTimberBridge: BuildingDef = {
   build(b) {
     b.noCollide();
     const W = 4.6; // deck width
-    const crown = 1.6;
+    const crown = 2.1;
     const f = hump(crown);
     b.deck(W, 26, crown, { yEnds: 0 });
     const stone = b.pick([P.sandstone, tint(P.sandstone, 0.04), P.limestoneWarm]);

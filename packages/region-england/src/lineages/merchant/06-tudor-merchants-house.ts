@@ -17,7 +17,7 @@ export const tudorMerchantsHouse: BuildingDef = {
     { label: 'Close studding', note: 'Upright timbers set barely a stud’s width apart: oak used as a show of wealth.', at: [-5.6, 1.6, 10.6] },
     { label: 'Oriel window', note: 'A window that projects from the wall on brackets, glazed with small leaded panes.', at: [0, 4.6, 11.6] },
     { label: 'Carved bargeboards', note: 'Boards with a cusped edge and a pendant finial hang under the verge of each gable.', at: [5, 10.4, 12.1] },
-    { label: 'Clustered chimney shafts', note: 'Tall brick shafts on one stack: a new luxury, as each hearth now had its own flue.', at: [8.2, 14.2, 4.5] },
+    { label: 'Clustered chimney shafts', note: 'Tall brick shafts on one stack: a new luxury, as each hearth now had its own flue.', at: [8.2, 14.4, 4.5] },
   ],
   build(b) {
     const oak = b.pick([tint(P.oak, 0.06), P.oak, mixSilver()]);
@@ -40,7 +40,7 @@ export const tudorMerchantsHouse: BuildingDef = {
       const zc = (zf + zb) / 2;
       b.box(W, hs[i], d, infill, { at: [0, ys[i], zc] });
       b.frame(W, hs[i], oak, { at: [0, ys[i], zf], facing: '+z', studs: studs(W), rails: i === 0 ? 0 : 1 });
-      b.frame(W, hs[i], oak, { at: [0, ys[i], zb], facing: '-z', studs: 9, rails: 1, brace: 'corner' });
+      b.frame(W, hs[i], oak, { at: [0, ys[i], zb], facing: '-z', studs: 6, rails: 1, brace: 'corner' });
       b.sym((s) => b.frame(d, hs[i], oak, { at: [s * W / 2, ys[i], zc], facing: s > 0 ? '+x' : '-x', studs: Math.round(d / 0.9), rails: 1 }));
       if (i > 0) {
         // carved bressumer and jetty brackets
@@ -93,11 +93,13 @@ export const tudorMerchantsHouse: BuildingDef = {
       const oy = ys[1] + 0.55;
       const oh = ys[2] - oy - 0.12;
       const zf = zfs[1];
-      b.box(2.6, 0.18, 0.55, oak, { at: [x, oy - 0.18, zf + 0.27] });
-      b.box(2.6, oh, 0.55, oak, { at: [x, oy, zf + 0.27] });
-      b.window(2.4, oh - 0.16, { at: [x, oy + 0.08, zf + 0.55], facing: '+z', frame: oak, bars: [6, 2], border: 0.06 });
-      b.sym((s) => b.window(0.4, oh - 0.16, { at: [x + s * 1.3, oy + 0.08, zf + 0.27], facing: s > 0 ? '+x' : '-x', frame: oak, bars: [1, 2], border: 0.05 }));
-      b.sym((s) => beam(b, [x + s * 1.1, oy - 0.75, zf + 0.02], [x + s * 1.1, oy - 0.18, zf + 0.5], 0.14, oak));
+      const od = 0.9;
+      b.box(2.6, 0.18, od, oak, { at: [x, oy - 0.18, zf + od / 2] });
+      b.box(2.6, oh, od, oak, { at: [x, oy, zf + od / 2] });
+      b.window(2.4, oh - 0.16, { at: [x, oy + 0.08, zf + od], facing: '+z', frame: oak, bars: [6, 2], border: 0.06 });
+      b.sym((s) => b.window(0.7, oh - 0.16, { at: [x + s * 1.3, oy + 0.08, zf + od / 2], facing: s > 0 ? '+x' : '-x', frame: oak, bars: [1, 2], border: 0.05 }));
+      b.sym((s) => beam(b, [x + s * 1.1, oy - 0.85, zf + 0.02], [x + s * 1.1, oy - 0.18, zf + od - 0.1], 0.14, oak));
+      b.shed(2.8, od - jet + 0.15, 0.35, tile, { at: [x, oy + oh, zf + jet + (od - jet) / 2 + 0.05], high: '-z' });
     }
     // ---- second floor: long bands of leaded lights
     for (const x of [-5, 0, 5]) b.window(3.4, 1.1, { at: [x, ys[2] + 0.7, zfs[2]], facing: '+z', frame: oak, bars: [8, 1], border: 0.08 });
@@ -113,13 +115,13 @@ export const tudorMerchantsHouse: BuildingDef = {
     const cz = 4.5;
     const cx = W / 2 + 0.45;
     b.box(2.0, 2.0, 1.0, brick, { at: [cx, 0, cz] });
-    b.box(1.6, 12.0, 0.8, brick, { at: [cx, 2.0, cz] });
-    b.box(1.85, 0.25, 1.05, tint(brick, 0.05), { at: [cx, 13.9, cz] });
+    b.box(1.6, 11.0, 0.8, brick, { at: [cx, 2.0, cz] });
+    b.box(1.85, 0.25, 1.05, tint(brick, 0.05), { at: [cx, 12.9, cz] });
     for (const dz of [-0.33, 0.33]) {
-      b.cyl(0.24, 1.9, brick, { at: [cx - 0.35, 14.1, cz + dz], segs: 8 });
-      b.cyl(0.24, 1.9, brick, { at: [cx + 0.35, 14.1, cz + dz], segs: 8 });
+      b.cyl(0.22, 1.7, brick, { at: [cx - 0.38, 13.1, cz + dz], segs: 8 });
+      b.cyl(0.22, 1.7, brick, { at: [cx + 0.38, 13.1, cz + dz], segs: 8 });
     }
-    b.box(1.6, 0.2, 1.3, tint(brick, 0.05), { at: [cx, 16.0, cz] });
+    b.box(1.7, 0.18, 1.4, tint(brick, 0.05), { at: [cx, 14.8, cz] });
     b.panel(1.2, 1.0, 0x2b2420, { at: [cx, 0.3, cz + 0.5], facing: '+z', shape: 'segmental' });
 
     // ---- garden behind: a knot garden in low clipped hedges, and a brick wall
@@ -128,7 +130,7 @@ export const tudorMerchantsHouse: BuildingDef = {
       [7, 0.35, 3.2, -3.2], [7, 0.35, 3.2, -10], [0.35, 7, -0.3, -6.6], [0.35, 7, 6.7, -6.6],
       [4.6, 0.3, 3.2, -6.6], [0.3, 4.6, 3.2, -6.6],
     ] as const) b.box(w, 0.4, d, P.hedge, { at: [x, 0, z] });
-    for (const r of [0, Math.PI / 2]) b.box(4.2, 0.38, 0.3, P.hedge, { at: [3.2, 0, -6.6], rotY: Math.PI / 4 + r });
+    for (const r of [0, Math.PI / 2]) b.box(3.4, 0.38, 0.3, P.hedge, { at: [3.2, 0, -6.6], rotY: Math.PI / 4 + r });
     b.sym((s) => b.box(0.35, 2.0, 13.2, brick, { at: [s * 9.7, 0, -5.2] }));
     b.box(19.7, 2.0, 0.35, brick, { at: [0, 0, -11.6] });
     // a lean-to kitchen against the back wall

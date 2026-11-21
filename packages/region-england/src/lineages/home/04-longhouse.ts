@@ -21,7 +21,7 @@ export const longhouse: BuildingDef = {
     {
       label: 'Byre end',
       note: 'The lower end housed the cattle; a drain ran down its floor and out through the end wall to the muck heap.',
-      at: [5.6, 1.1, 1.4],
+      at: [6.1, 0.5, 0.4],
     },
     {
       label: 'Smoke hole',
@@ -35,7 +35,7 @@ export const longhouse: BuildingDef = {
     },
   ],
   build(b) {
-    const L = b.pick([12.6, 13]);
+    const L = b.pick([12, 12.4]);
     const D = 5.2;
     const z0 = 0.4;
     const wallH = 1.75;
@@ -49,7 +49,7 @@ export const longhouse: BuildingDef = {
     b.box(L, wallH - 0.35, D, cob, { at: [0, 0.35, z0] });
     // soften the corners with buttress-like rounded cob
     for (const [x, z] of [[-L / 2, zf], [L / 2, zf], [-L / 2, zb], [L / 2, zb]]) {
-      b.cyl(0.32, wallH - 0.1, cob, { at: [x * 0.995, 0, z * 0.995 + z0 * 0.005], segs: 7 });
+      b.cyl(0.32, wallH - 0.55, cob, { at: [x * 0.995, 0, z * 0.995 + z0 * 0.005], segs: 7 });
     }
 
     // steep hipped thatch with a smoke gablet at the domestic (-X) end
@@ -59,8 +59,7 @@ export const longhouse: BuildingDef = {
     // cross passage: opposite doors, a little toward the byre end
     const xp = 1.1;
     for (const s of [1, -1] as const) {
-      b.panel(1.0, 1.75, P.oakDark, { at: [xp, 0.05, z0 + s * D / 2], facing: s > 0 ? '+z' : '-z' });
-      b.panel(1.2, 0.14, P.oak, { at: [xp, 1.8, z0 + s * D / 2], facing: s > 0 ? '+z' : '-z' });
+      b.panel(1.0, 1.6, P.oakDark, { at: [xp, 0.05, z0 + s * D / 2], facing: s > 0 ? '+z' : '-z' });
     }
     // small shuttered openings to the living end
     for (const x of [-4.0, -2.2]) b.window(0.5, 0.45, { at: [x, 1.0, zf], facing: '+z', frame: P.oak, bars: [2, 1] });
@@ -68,8 +67,8 @@ export const longhouse: BuildingDef = {
 
     // byre end: a drain outlet and the muck heap
     b.panel(0.35, 0.25, P.timberBlack, { at: [L / 2, 0.02, z0], facing: '+x' });
-    b.box(0.5, 0.06, 1.4, P.soil, { at: [L / 2 + 0.6, 0, z0] });
-    b.blob(0.9, tint(P.soil, -0.05), { at: [L / 2 + 0.5, 0.15, z0 - 1.7], stretch: [1, 0.45, 1.2] });
+    b.box(0.6, 0.06, 0.5, P.soil, { at: [L / 2 + 0.3, 0, z0] });
+    b.blob(0.8, tint(P.soil, -0.05), { at: [L / 2 - 0.4, 0.3, zb - 1.4], stretch: [1.2, 0.45, 0.9] });
     // an outshot byre door, wider, for the beasts
     b.panel(1.3, 1.6, tint(P.oakDark, 0.04), { at: [L / 2 - 1.8, 0.05, zb], facing: '-z' });
 

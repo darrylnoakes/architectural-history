@@ -1,17 +1,5 @@
 import { P, mix, tint, type BuildingDef, type Builder } from '@ah/kit';
-import {
-  BAILEY_LEFT,
-  BAILEY_RIGHT,
-  GATE,
-  MOTTE,
-  arcPts,
-  bank,
-  lineColliders,
-  motte,
-  motteY,
-  palisade,
-  strip,
-} from './shared';
+import { BAILEY_LEFT, BAILEY_RIGHT, GATE, MOTTE, arcPts, arch, bank, lineColliders, motte, motteY, palisade, strip } from './shared';
 
 type XZ = [number, number];
 
@@ -22,7 +10,7 @@ export function toSummit(p: XZ, r = MOTTE.rTop - 0.4): XZ {
 }
 
 /** Offset a bailey line outwards (scaled about a point near the bailey centre) for the outer ditch. */
-export function ditchLine(pts: XZ[], k = 1.08): XZ[] {
+export function ditchLine(pts: XZ[], k = 1.06): XZ[] {
   return pts.map(([x, z]) => [x * k, 2 + (z - 2) * k]);
 }
 
@@ -115,8 +103,8 @@ export const motteAndBailey: BuildingDef = {
     const base = (x: number, z: number) => Math.max(motteY(x, z), bankH - 0.1);
     palisade(b, rightLine, 3, tint(P.oak, 0.05), { base, rail: 2 });
     palisade(b, leftLine, 3, tint(P.oak, 0.05), { base, rail: 2 });
-    strip(b, ditchLine(BAILEY_RIGHT.slice(1)), 1.7, 0.03, ditch);
-    strip(b, ditchLine(BAILEY_LEFT.slice(0, -1)), 1.7, 0.03, ditch);
+    strip(b, ditchLine(BAILEY_RIGHT.slice(1)), 1.5, 0.03, ditch);
+    strip(b, ditchLine(BAILEY_LEFT.slice(0, -1)), 1.5, 0.03, ditch);
 
     // ----------------------------------------------------------- the motte top
     const ringR = MOTTE.rTop - 0.4;
@@ -143,11 +131,11 @@ export const motteAndBailey: BuildingDef = {
       // gates folded back inside
       b.sym((s) => b.box(0.15, 3.2, 1.6, P.oakDark, { at: [s * 1.5, 0, -2.6], rotY: s * 0.2 }));
       // bridge across the ditch
-      b.box(3.2, 0.25, 3, P.oak, { at: [0, 0.35, 2.9] });
+      b.box(3.2, 0.25, 2.6, P.oak, { at: [0, 0.35, 1.7] });
       b.sym((s) => {
-        b.box(0.12, 1.0, 3, P.oakDark, { at: [s * 1.5, 0.6, 2.9] });
-        b.box(0.24, 0.6, 0.24, P.oakDark, { at: [s * 1.4, 0, 2.2] });
-        b.box(0.24, 0.6, 0.24, P.oakDark, { at: [s * 1.4, 0, 3.9] });
+        b.box(0.12, 1.0, 2.6, P.oakDark, { at: [s * 1.5, 0.6, 1.7] });
+        b.box(0.24, 0.6, 0.24, P.oakDark, { at: [s * 1.4, 0, 1.0] });
+        b.box(0.24, 0.6, 0.24, P.oakDark, { at: [s * 1.4, 0, 2.6] });
       });
     });
     // the front ditch, with the bridge over it
@@ -177,7 +165,7 @@ export const motteAndBailey: BuildingDef = {
       b.gable(4.4, 7, 2.6, P.shingle, { at: [0, 3.2, 0], ridge: 'z', overhang: 0.3, wall: plank });
       b.box(0.9, 1.2, 0.9, P.oak, { at: [0, 5.6, 3] });
       b.pyramid(1.2, 1.2, 0.9, P.shingle, { at: [0, 6.8, 3] });
-      b.panel(1.1, 2.1, P.oakDark, { at: [0, 0, 3.5], facing: '+z', shape: 'round' });
+      arch(b, 1.1, 2.1, P.oakDark, { at: [0, 0, 3.5], facing: '+z', shape: 'round' });
     });
     // well, cart, woodpile
     b.cyl(0.8, 0.8, P.rubble, { at: [5, 0, 6], segs: 8 });

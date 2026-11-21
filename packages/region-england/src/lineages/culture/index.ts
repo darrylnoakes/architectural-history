@@ -6,6 +6,9 @@ import { priory } from './04-priory';
 import { playhouse } from './05-playhouse';
 import { assemblyRooms } from './06-assembly-rooms';
 import { crystalPalace } from './07-crystal-palace';
+import { artDecoCinema } from './08-art-deco-cinema';
+import { brutalistArtsCentre } from './09-brutalist-arts-centre';
+import { concertHall } from './10-concert-hall';
 
 const lineage: Lineage = {
   id: 'culture',
@@ -20,6 +23,9 @@ const lineage: Lineage = {
     { from: 1599, def: playhouse },
     { from: 1771, def: assemblyRooms },
     { from: 1851, def: crystalPalace },
+    { from: 1936, def: artDecoCinema },
+    { from: 1972, def: brutalistArtsCentre },
+    { from: 2010, def: concertHall },
   ],
 };
 

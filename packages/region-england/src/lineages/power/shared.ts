@@ -1,4 +1,4 @@
-import { Builder, P, mix, tint, type Opts } from '@ah/kit';
+import { Builder, P, facingAngle, mix, tint, type Facing, type Opts } from '@ah/kit';
 
 /*
  * Local helpers for the power lineage: raw triangle meshes (partial lathes, serrated palisades,
@@ -184,20 +184,22 @@ export function bank(b: Builder, pts: XZ[], w: number, h: number, color: number)
     const L = Math.hypot(x1 - x0, z1 - z0) || 1;
     const nx = (-(z1 - z0) / L) * (w / 2);
     const nz = ((x1 - x0) / L) * (w / 2);
-    const ex = ((x1 - x0) / L) * (w * 0.3);
-    const ez = ((z1 - z0) / L) * (w * 0.3);
+    const ex = 0;
+    const ez = 0;
     const a = [x0 - ex, 0, z0 - ez];
     const c = [x1 + ex, 0, z1 + ez];
     quad(out, [a[0] + nx, 0, a[2] + nz], [c[0] + nx, 0, c[2] + nz], [c[0], h, c[2]], [a[0], h, a[2]]);
     quad(out, [a[0] - nx, 0, a[2] - nz], [a[0], h, a[2]], [c[0], h, c[2]], [c[0] - nx, 0, c[2] - nz]);
   }
   soup(b, out, color);
+  // round off the joints
+  for (const [x, z] of pts.slice(1, -1)) b.cone(w / 2, h, color, { at: [x, 0, z], segs: 8 });
 }
 
 // ------------------------------------------------------------------ the motte (1068 to 1575)
 
 /** The earth mound thrown up in 1068. Its centre and size are fixed so later stages can reuse it. */
-export const MOTTE = { x: -10, z: -10, rBase: 12.2, rTop: 6.8, h: 6.5 };
+export const MOTTE = { x: -9.8, z: -9.8, rBase: 12, rTop: 6.8, h: 6.5 };
 
 const MOTTE_PROFILE: [number, number][] = [
   [MOTTE.rBase, 0],
@@ -227,7 +229,7 @@ export function motteY(x: number, z: number): number {
  */
 export function motte(b: Builder, o?: { color?: number; ditch?: 'dry' | 'water' | 'none' }): void {
   const col = o?.color ?? P.turf;
-  b.lathe(MOTTE_PROFILE, col, { at: [MOTTE.x, 0, MOTTE.z], segs: 22 });
+  b.lathe(MOTTE_PROFILE, col, { at: [MOTTE.x, 0, MOTTE.z], segs: 20 });
   b.deck(MOTTE.rTop * 1.4, MOTTE.rTop * 1.4, MOTTE.h, { at: [MOTTE.x, 0, MOTTE.z] });
   const ditch = o?.ditch ?? 'dry';
   if (ditch !== 'none') {
@@ -239,8 +241,8 @@ export function motte(b: Builder, o?: { color?: number; ditch?: 'dry' | 'water' 
         [MOTTE.rBase + 0.1, 0.03],
         [MOTTE.rBase + 2.4, 0.03],
       ],
-      -1.25,
-      2.82,
+      -0.85,
+      2.4,
       18,
       wet ? P.water : mix(P.soil, P.earth, 0.3),
       { at: [MOTTE.x, 0, MOTTE.z], mat: wet ? 'glass' : 'matte' },
@@ -319,13 +321,17 @@ export function clockTower(b: Builder, o?: { brick?: number; stone?: number }): 
         b.box(0.9, 0.3, 0.9, stone, { at: [sx * (W / 2 - 0.15), 1.2 + S * 0.55, sz * (W / 2 - 0.15)] });
       }
     // lancet windows up the shaft on all four faces
+    const B0 = S + 1.8;
+    const BH = 5;
     for (const f of ['+z', '-z', '+x', '-x'] as const) {
       const rot = { '+z': 0, '-z': Math.PI, '+x': Math.PI / 2, '-x': -Math.PI / 2 }[f];
       b.group({ rotY: rot }, () => {
-        b.panel(1.6, 3.4, stone, { at: [0, 1.2, W / 2], shape: 'pointed' });
-        b.panel(1.2, 3.0, P.doorBlack, { at: [0, 1.2, W / 2 + 0.03], shape: 'pointed' });
-        for (const y of [7.5, 13.5]) b.window(0.9, 2.6, { at: [0, y, W / 2], shape: 'pointed', frame: stone });
-        b.window(0.7, 2.2, { at: [0, 19.2, W / 2], shape: 'pointed', frame: stone });
+        if (f === '+z') {
+          arch(b, 2.0, 3.8, stone, { at: [0, 1.2, W / 2], depth: 0.1 });
+          arch(b, 1.5, 3.3, P.doorBlack, { at: [0, 1.2, W / 2 + 0.05], depth: 0.1 });
+        } else archWindow(b, 1.1, 3.0, { at: [0, 2.0, W / 2], frame: stone });
+        archWindow(b, 0.9, 2.8, { at: [0, 11, W / 2], frame: stone });
+        arch(b, 0.7, 2.2, P.windowDark, { at: [0, 18.6, W / 2] });
         // clock stage: projecting stone frame with a big white dial
         b.box(W - 0.6, 3.8, 0.25, stone, { at: [0, S - 3.2, W / 2] });
         b.panel(3.1, 3.1, P.white, { at: [0, S - 3.0, W / 2 + 0.25], shape: 'circle', depth: 0.08 });
@@ -333,23 +339,16 @@ export function clockTower(b: Builder, o?: { brick?: number; stone?: number }): 
         b.panel(0.9, 0.12, P.black, { at: [0.45, S - 1.45, W / 2 + 0.36], depth: 0.03 });
         // gablet over each dial
         b.extrude([[-1.9, 0], [1.9, 0], [0, 1.6]], 0.4, stone, { at: [0, S + 0.6, W / 2 - 0.05] });
+        // open belfry: two tall pointed openings with louvres
+        for (const x of [-1.25, 1.25]) {
+          arch(b, 1.7, 4.3, stone, { at: [x, B0 + 0.3, W / 2 - 0.5], depth: 0.12 });
+          arch(b, 1.3, 3.9, P.doorBlack, { at: [x, B0 + 0.5, W / 2 - 0.45], depth: 0.12 });
+        }
       });
     }
-    // cornice and the open belfry stage above
+    // cornice and the belfry stage above
     b.box(W + 0.5, 0.6, W + 0.5, stone, { at: [0, S + 1.2, 0] });
-    const B0 = S + 1.8;
-    const BH = 5;
-    for (const f of [0, Math.PI / 2, Math.PI, -Math.PI / 2]) {
-      b.archWall(W - 0.6, BH, 0.5, brick, {
-        facing: f,
-        at: [Math.sin(f) * (W / 2 - 0.55), B0, Math.cos(f) * (W / 2 - 0.55)],
-        openings: 2,
-        openW: 1.3,
-        openH: 3.8,
-        shape: 'pointed',
-        sill: 0.5,
-      });
-    }
+    b.box(W - 1, BH, W - 1, brick, { at: [0, B0, 0] });
     for (const sx of [-1, 1])
       for (const sz of [-1, 1]) {
         b.box(1, BH, 1, brick, { at: [sx * (W / 2 - 0.5), B0, sz * (W / 2 - 0.5)] });
@@ -357,10 +356,9 @@ export function clockTower(b: Builder, o?: { brick?: number; stone?: number }): 
         b.box(0.8, 1.6, 0.8, stone, { at: [sx * (W / 2 - 0.45), B0 + BH + 0.4, sz * (W / 2 - 0.45)] });
         b.cone(0.55, 3.2, stone, { at: [sx * (W / 2 - 0.45), B0 + BH + 2, sz * (W / 2 - 0.45)], segs: 4, rotY: Math.PI / 4 });
       }
-    b.box(W - 1.2, 0.3, W - 1.2, P.oakDark, { at: [0, B0 + 0.4, 0] });
     b.box(W + 0.4, 0.4, W + 0.4, stone, { at: [0, B0 + BH, 0] });
     // parapet and the steep slate spire with lucarnes, finished with a gilded vane
-    b.crenel(W + 0.4, W + 0.4, stone, { at: [0, B0 + BH + 0.4, 0], merlonW: 0.45, merlonH: 0.55, t: 0.3 });
+    b.box(W + 0.2, 0.7, W + 0.2, stone, { at: [0, B0 + BH + 0.4, 0] }); // pierced parapet, solid at this scale
     const SP = B0 + BH + 0.4;
     b.cone((W - 0.8) * 0.72, 11, P.slate, { at: [0, SP, 0], segs: 8, rotY: Math.PI / 8 });
     for (const f of [0, Math.PI / 2, Math.PI, -Math.PI / 2]) {
@@ -452,4 +450,99 @@ export function curtain(
       });
     }
   }
+}
+
+// ------------------------------------------------------------------ low-poly arched openings
+
+/** Outline of an arched opening w wide and h tall (to the apex), sampled with few points. */
+export function archOutline(w: number, h: number, shape: 'pointed' | 'round' | 'rect', n = 3): [number, number][] {
+  const a = w / 2;
+  if (shape === 'rect') return [[-a, 0], [a, 0], [a, h], [-a, h]];
+  const pts: [number, number][] = [[-a, 0], [a, 0]];
+  if (shape === 'round') {
+    const hs = Math.max(0, h - a);
+    const m = n * 2;
+    for (let i = 0; i <= m; i++) {
+      const t = (i / m) * Math.PI;
+      pts.push([a * Math.cos(t), hs + a * Math.sin(t)]);
+    }
+    return pts;
+  }
+  const rise = Math.min(h * 0.6, w * 0.866);
+  const hs = h - rise;
+  const R = (a * a + rise * rise) / (2 * a);
+  const phi = Math.atan2(rise, R - a);
+  // right side: circle centred at (a - R, hs) from angle 0 up to phi
+  for (let i = 0; i < n; i++) {
+    const t = (i / n) * phi;
+    pts.push([a - R + R * Math.cos(t), hs + R * Math.sin(t)]);
+  }
+  pts.push([0, h]);
+  for (let i = n - 1; i >= 0; i--) {
+    const t = (i / n) * phi;
+    pts.push([-(a - R + R * Math.cos(t)), hs + R * Math.sin(t)]);
+  }
+  return pts;
+}
+
+/** A cheap arched panel standing `depth` proud of a wall (same placement rules as Builder.panel). */
+export function arch(
+  b: Builder,
+  w: number,
+  h: number,
+  color: number,
+  o: { at?: [number, number, number]; facing?: Facing; shape?: 'pointed' | 'round' | 'rect'; depth?: number; mat?: 'matte' | 'glass'; n?: number },
+): void {
+  const depth = o.depth ?? 0.06;
+  b.group({ at: o.at ?? [0, 0, 0], rotY: facingAngle(o.facing) }, () => {
+    b.extrude(archOutline(w, h, o.shape ?? 'pointed', o.n ?? 3), depth + 0.03, color, {
+      at: [0, 0, (depth - 0.03) / 2],
+      mat: o.mat,
+      jitter: false,
+    });
+  });
+}
+
+/** A cheap arched window: frame, dark glazing and an optional central mullion. */
+export function archWindow(
+  b: Builder,
+  w: number,
+  h: number,
+  o: { at?: [number, number, number]; facing?: Facing; shape?: 'pointed' | 'round'; frame?: number; glass?: number; mullion?: boolean; border?: number },
+): void {
+  const frame = o.frame ?? P.limestone;
+  const border = o.border ?? Math.min(0.12, w * 0.12);
+  const shape = o.shape ?? 'pointed';
+  b.group({ at: o.at ?? [0, 0, 0], rotY: facingAngle(o.facing) }, () => {
+    arch(b, w, h, frame, { shape, depth: 0.05 });
+    arch(b, w - border * 2, h - border * 2, o.glass ?? P.windowDark, { at: [0, border, 0], shape, depth: 0.075 });
+    if (o.mullion) b.box(Math.min(0.1, w * 0.08), h - border * 2 - (shape === 'round' ? w / 2 : w * 0.4), 0.1, frame, { at: [0, border, 0.06], jitter: false });
+  });
+}
+
+/**
+ * A wall pierced by a row of arched openings down to the ground: a cheap stand-in for
+ * Builder.archWall (same placement: w wide, h tall, t thick, standing on `at`, facing `facing`).
+ */
+export function arcade(
+  b: Builder,
+  w: number,
+  h: number,
+  t: number,
+  color: number,
+  o: { at?: [number, number, number]; facing?: Facing; openings: number; openW: number; openH: number; shape?: 'pointed' | 'round'; n?: number },
+): void {
+  const pitch = w / o.openings;
+  const pts: [number, number][] = [[-w / 2, 0]];
+  for (let i = 0; i < o.openings; i++) {
+    const xc = -w / 2 + (i + 0.5) * pitch;
+    const ol = archOutline(o.openW, o.openH, o.shape ?? 'pointed', o.n ?? 3);
+    pts.push([xc - o.openW / 2, 0]);
+    for (const [x, y] of ol.slice(2).reverse()) pts.push([xc + x, y]);
+    pts.push([xc + o.openW / 2, 0]);
+  }
+  pts.push([w / 2, 0], [w / 2, h], [-w / 2, h]);
+  b.group({ at: o.at ?? [0, 0, 0], rotY: facingAngle(o.facing) }, () => {
+    b.extrude(pts, t, color);
+  });
 }
