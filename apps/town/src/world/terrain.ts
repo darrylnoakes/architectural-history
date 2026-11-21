@@ -294,8 +294,9 @@ export class Terrain {
     }
     // the market square, and the bridge approaches
     const sq = SQUARE;
-    if (st.pavement) quad(sq.x0 - 1, sq.z0 - 1, sq.x1 + 1, sq.z1 + 1, 0.05, pave);
-    quad(sq.x0, sq.z0, sq.x1, sq.z1, st.pavement ? 0.036 : 0.062, road);
+    // once streets have pavements the square is flagged over rather than left as carriageway
+    if (st.pavement) quad(sq.x0 - 1, sq.z0 - 1, sq.x1 + 1, sq.z1 + 1, 0.055, pave);
+    else quad(sq.x0, sq.z0, sq.x1, sq.z1, 0.062, road);
     void BRIDGE;
     if (road.idx.length) this.roadGroup.add(meshFrom(road, this.roadMat));
     if (pave.idx.length) this.roadGroup.add(meshFrom(pave, this.paveMat));

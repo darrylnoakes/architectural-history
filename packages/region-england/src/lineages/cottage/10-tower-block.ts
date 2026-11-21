@@ -61,13 +61,12 @@ export const towerBlock: BuildingDef = {
       const y = POD + f * FH;
       // front: floor-edge band, window strip, then balconies on alternate bays
       b.box(SW + 0.1, 0.32, 0.25, tint(conc, 0.04), { at: [SX, y, zf + 0.12] });
-      b.window(SW - 0.4, 1.6, { at: [SX, y + 0.75, zf], facing: '+z', frame: tint(conc, 0.02), glass: P.windowDark, bars: [bays * 2, 1], border: 0.06 });
+      b.window(SW - 0.4, 1.6, { at: [SX, y + 0.75, zf], facing: '+z', frame: tint(conc, 0.02), glass: P.windowDark, bars: [bays, 1], border: 0.06 });
       for (let k = 0; k < bays; k++) {
         if ((k + f) % 2 === 1 && (k === 0 || k === bays - 1 || f % 3 !== 2)) continue;
         const x = SX - SW / 2 + bw * (k + 0.5);
         b.box(bw - 0.3, 0.2, 1.2, conc, { at: [x, y + 0.12, zf + 0.6] });
         b.box(bw - 0.3, 1.05, 0.14, tint(conc, 0.06), { at: [x, y + 0.32, zf + 1.13] });
-        b.box(0.12, 1.05, 1.2, tint(conc, 0.06), { at: [x - bw / 2 + 0.21, y + 0.32, zf + 0.6] });
       }
       // back: every third floor is an access-corridor floor with a long ribbon window; others have smaller windows
       if (f % 3 === 1) {

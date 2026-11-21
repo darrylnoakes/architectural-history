@@ -52,7 +52,7 @@ export const councilCottages: BuildingDef = {
       b.gable(gw, 4.4, 2.3, tile, { at: [gx, H, ZF - 1.4], ridge: 'z', overhang: 0.3, thick: 0.16, wall });
     });
     // stacks: on the ridge at the party walls, each serving two houses
-    for (const x of [-hw, 0, hw]) b.chimney(1.3, rh + 1.6, 0.8, brick, { at: [x, H + 0.5, zc], pots: 4 });
+    for (const x of [-hw, 0, hw]) b.chimney(1.3, rh + 0.8, 0.8, brick, { at: [x, H + 0.5, zc], pots: 4 });
 
     for (let i = 0; i < 4; i++) {
       const x = -L / 2 + hw * (i + 0.5);

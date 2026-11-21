@@ -1,8 +1,8 @@
 import { P, tint, type BuildingDef } from '@ah/kit';
 
 const W = 24;
-const D = 12;
-const ZF = 6.0; // front building line
+const D = 11.2;
+const ZF = 5.9; // front building line
 const GF = 4.2; // shop storey
 const FH = 3.05;
 const UP = 4; // brick floors
@@ -47,7 +47,7 @@ export const apartmentBlock: BuildingDef = {
     b.box(bw * 3.6, 0.6, 0.15, tint(metal, -0.1), { at: [-bw * 1.1, 3.4, ZF + 0.05] });
     b.panel(bw * 1.6, 0.3, P.cladWhite, { at: [-bw * 1.1, 3.55, ZF + 0.12], facing: '+z' });
     b.window(1.6, 2.8, { at: [bw * 1.8, 0.1, ZF], facing: '+z', frame, glass: P.glassDark, mat: 'glass', border: 0.08 });
-    b.box(2.4, 0.2, 1.2, frame, { at: [bw * 1.8, 3.0, ZF + 0.6] });
+    b.box(2.4, 0.2, 0.9, frame, { at: [bw * 1.8, 3.0, ZF + 0.45] });
     b.panel(bw * 1.3, 2.6, P.cladGrey, { at: [bw * 2.65, 0.1, ZF], facing: '+z' });
     for (let k = 0; k < 4; k++) b.window(1.6, 2.4, { at: [-9 + k * 6, 0.6, zb], facing: '-z', frame, glass: P.glassDark, border: 0.08 });
 
@@ -108,7 +108,7 @@ export const apartmentBlock: BuildingDef = {
     for (let k = 0; k < 4; k++) {
       const x = -10 + k * 6.5;
       b.box(1.6, 0.5, 0.7, P.cladGrey, { at: [x, top + 0.33, ZF - 0.8] });
-      b.tree(1.6, { at: [x, top + 0.8, ZF - 0.8], kind: 'bush', color: P.leaf });
+      b.tree(1.1, { at: [x, top + 0.8, ZF - 0.8], kind: 'bush', color: P.leaf });
     }
     // photovoltaic panels on the main roof
     for (let k = 0; k < 6; k++) b.box(2.4, 0.08, 1.4, P.solar, { at: [-7.5 + k * 3, top + FH + 0.7, tz - 0.4], rot: [-0.25, 0, 0] });

@@ -1,4 +1,5 @@
 import { P, tint, type Builder, type BuildingDef } from '@ah/kit';
+import { bar } from './shared';
 
 const ZF = 6.3; // street front
 const HD = 4.3; // depth of each house
@@ -146,9 +147,10 @@ export const backToBacks: BuildingDef = {
     // washing line
     b.box(0.08, 2.0, 0.08, P.oakSilver, { at: [6.5, 0, -3.6] });
     b.box(0.08, 2.0, 0.08, P.oakSilver, { at: [10.5, 0, -4.2] });
+    bar(b, [6.5, 1.95, -3.6], [10.5, 1.95, -4.2], 0.03, P.oakSilver);
     for (let i = 0; i < 4; i++) {
       const t = (i + 0.7) / 4.6;
-      b.box(0.55, 0.65, 0.03, b.pick([P.white, P.cream, P.doorBlue, P.pinkWash]), { at: [6.5 + 4 * t, 1.25, -3.6 - 0.6 * t], rotY: Math.atan2(0.6, 4) });
+      b.box(0.55, 0.65, 0.03, b.pick([P.white, P.cream, P.doorBlue, P.pinkWash]), { at: [6.5 + 4 * t, 1.28, -3.6 - 0.6 * t], rotY: Math.atan2(0.6, 4) });
     }
   },
 };

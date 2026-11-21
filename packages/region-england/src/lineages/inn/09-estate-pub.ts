@@ -9,10 +9,10 @@ export const FLAT = { x0: 5.6, x1: 10.4, z0: -10.4, z1: -2.4, h: 6.4 };
 export function estateShell(b: Builder, brick: number, roofFelt: number): void {
   const { x0, x1, z0, z1, h } = BAR;
   b.box(x1 - x0, h, z1 - z0, brick, { at: [(x0 + x1) / 2, 0, (z0 + z1) / 2] });
-  b.box(x1 - x0 - 0.4, 0.06, z1 - z0 - 0.4, roofFelt, { at: [(x0 + x1) / 2, h, (z0 + z1) / 2] });
+  b.box(x1 - x0, 0.06, z1 - z0, roofFelt, { at: [(x0 + x1) / 2, h, (z0 + z1) / 2] });
   const f = FLAT;
   b.box(f.x1 - f.x0, f.h, f.z1 - f.z0, brick, { at: [(f.x0 + f.x1) / 2, 0, (f.z0 + f.z1) / 2] });
-  b.box(f.x1 - f.x0 - 0.4, 0.06, f.z1 - f.z0 - 0.4, roofFelt, { at: [(f.x0 + f.x1) / 2, f.h, (f.z0 + f.z1) / 2] });
+  b.box(f.x1 - f.x0, 0.06, f.z1 - f.z0, roofFelt, { at: [(f.x0 + f.x1) / 2, f.h, (f.z0 + f.z1) / 2] });
 }
 
 /** A flat-roof edge band of depth `h` round a rectangle, standing `out` proud of the walls. */
@@ -25,7 +25,11 @@ export function fasciaBand(b: Builder, r: typeof BAR, y: number, h: number, out:
   b.box(w, h, 0.12, color, { at: [cx, y, r.z0 - out] });
   b.box(0.12, h, d, color, { at: [r.x1 + out, y, cz] });
   b.box(0.12, h, d, color, { at: [r.x0 - out, y, cz] });
-  b.box(w, 0.08, d, tint(color, -0.15), { at: [cx, y, cz] });
+  // soffit under the overhang, as a frame round the wall top
+  b.box(w, 0.06, out + 0.12, tint(color, -0.15), { at: [cx, y - 0.06, r.z1 + out / 2] });
+  b.box(w, 0.06, out + 0.12, tint(color, -0.15), { at: [cx, y - 0.06, r.z0 - out / 2] });
+  b.box(out + 0.12, 0.06, d, tint(color, -0.15), { at: [r.x1 + out / 2, y - 0.06, cz] });
+  b.box(out + 0.12, 0.06, d, tint(color, -0.15), { at: [r.x0 - out / 2, y - 0.06, cz] });
 }
 
 export const estatePub: BuildingDef = {

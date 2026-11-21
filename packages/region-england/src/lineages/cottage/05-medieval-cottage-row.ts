@@ -69,7 +69,7 @@ export const medievalCottageRow: BuildingDef = {
       b.box(0.12, GF - 1.1, 0.1, oak, { at: [wx + (doorLeft ? 0.75 : -0.75), 1.1, ZF] });
       b.panel(0.9, 1.9, b.pick([P.oak, P.oakDark, P.oakSilver]), { at: [dx, 0.4, ZF], facing: '+z', depth: 0.08 });
       // window with diamond-set mullions, unglazed, and a shutter hung below
-      b.window(1.1, 0.75, { at: [wx, 1.25, ZF + 0.02], facing: '+z', frame: oak, glass: P.timberBlack, bars: [5, 1] });
+      b.window(1.1, 0.75, { at: [wx, 1.25, ZF + 0.02], facing: '+z', frame: oak, glass: P.timberBlack, bars: [4, 1] });
       b.box(1.1, 0.4, 0.05, tint(oak, 0.08), { at: [wx, 0.8, ZF + 0.12] });
 
       // upper floor: braced frame with a mid rail and a small window in the middle bay
@@ -77,7 +77,7 @@ export const medievalCottageRow: BuildingDef = {
       b.window(0.66, 0.72, { at: [x, GF + 0.18 + 1.2, zu + 0.02], facing: '+z', frame: oak, glass: P.timberBlack, bars: [3, 1] });
 
       // back: plainer frame, back door and a small window
-      b.frame(UW, UF, oak, { at: [x, GF + 0.18, zb], facing: '-z', studs: 3, rails: 1, beam: 0.15 });
+      b.frame(UW, UF, oak, { at: [x, GF + 0.18, zb], facing: '-z', studs: 2, rails: 1, beam: 0.15 });
       b.frame(UW, GF - 0.35, oak, { at: [x, 0.35, zb], facing: '-z', studs: 0, rails: 0, beam: 0.16 });
       b.panel(0.85, 1.85, P.oakDark, { at: [x + (doorLeft ? 1 : -1) * 1.0, 0.38, zb], facing: '-z', depth: 0.08 });
       b.window(0.7, 0.6, { at: [x - (doorLeft ? 1 : -1) * 0.8, 1.3, zb - 0.02], facing: '-z', frame: oak, glass: P.timberBlack, bars: [3, 1] });
