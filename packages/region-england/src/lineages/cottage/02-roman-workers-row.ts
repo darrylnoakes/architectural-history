@@ -112,7 +112,7 @@ export const romanWorkersRow: BuildingDef = {
 
     // portico: oak posts on stone pads carrying a lean-to roof along the whole frontage
     const len = n * UW + (n - 1) * GAP + 0.4;
-    const pz = FRONT + 2.0;
+    const pz = FRONT + 1.8;
     const posts = n * 2 + 1;
     for (let i = 0; i < posts; i++) {
       const x = -len / 2 + 0.2 + ((len - 0.4) * i) / (posts - 1);
@@ -121,7 +121,7 @@ export const romanWorkersRow: BuildingDef = {
     }
     b.box(len, 0.2, 0.2, P.oak, { at: [0, 2.35, pz] });
     const roofTile = tint(tile, -0.03);
-    const run = 2.3;
+    const run = 2.05;
     const ang = Math.atan2(0.45, run);
     b.box(len, 0.12, run + 0.25, roofTile, { at: [0, 2.55 + 0.45 / 2 - 0.06, FRONT + run / 2 + 0.05], rot: [ang, 0, 0] });
     // flagged walk under the portico

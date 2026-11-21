@@ -19,13 +19,22 @@ export function ruinWall(
   hMax: number,
   t: number,
   color: number,
-  o: { at?: Vec3; rotY?: number; holes?: Pt[][]; endHigh?: number },
+  o: { at?: Vec3; rotY?: number; holes?: Pt[][]; endHigh?: number; arch?: { w: number; h: number } },
 ): void {
   const n = Math.max(2, Math.round(len / 0.9));
-  const pts: Pt[] = [
-    [-len / 2, 0],
-    [len / 2, 0],
-  ];
+  const pts: Pt[] = [[-len / 2, 0]];
+  if (o.arch) {
+    // a walk-through round arch cut up from the ground in the middle of the wall
+    const a = o.arch.w / 2;
+    const hs = o.arch.h - a;
+    pts.push([-a, 0]);
+    for (let i = 0; i <= 10; i++) {
+      const t = Math.PI - (i / 10) * Math.PI;
+      pts.push([a * Math.cos(t), hs + a * Math.sin(t)]);
+    }
+    pts.push([a, 0]);
+  }
+  pts.push([len / 2, 0]);
   let h = o.endHigh ?? b.range(hMin, hMax);
   for (let i = n; i >= 0; i--) {
     const x = -len / 2 + (len * i) / n;

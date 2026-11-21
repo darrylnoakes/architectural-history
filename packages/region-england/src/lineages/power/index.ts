@@ -4,6 +4,10 @@ import { forumBasilica } from './02-forum-basilica';
 import { saxonGreatHall } from './03-saxon-great-hall';
 import { motteAndBailey } from './04-motte-and-bailey';
 import { stoneKeepDef } from './05-stone-keep';
+import { edwardianCastle } from './06-edwardian-castle';
+import { elizabethanManor } from './07-elizabethan-manor';
+import { palladianHall } from './08-palladian-hall';
+import { gothicRevivalTownHall } from './09-gothic-revival-town-hall';
 
 const lineage: Lineage = {
   id: 'power',
@@ -16,6 +20,10 @@ const lineage: Lineage = {
     { from: 470, def: saxonGreatHall },
     { from: 1068, def: motteAndBailey },
     { from: 1130, def: stoneKeepDef },
+    { from: 1290, def: edwardianCastle },
+    { from: 1575, def: elizabethanManor },
+    { from: 1735, def: palladianHall },
+    { from: 1874, def: gothicRevivalTownHall },
   ],
 };
 
