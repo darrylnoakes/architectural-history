@@ -94,9 +94,9 @@ export const victorianMill: BuildingDef = {
     b.box(ew + 0.14, 0.6, ed + 0.14, dress, { at: [ex, 0, ez] });
     b.gable(ew, ed, 2.0, P.slate, { at: [ex, eh, ez], ridge: 'z', overhang: 0.3, wall: brick });
     b.extrude([[-ew / 2 - 0.3, 0], [0, 2.3], [ew / 2 + 0.3, 0], [ew / 2, 0], [0, 2.0], [-ew / 2, 0]], 0.3, dress, { at: [ex, eh, ez + ed / 2] });
-    b.window(1.8, 7.2, { at: [ex, 2.6, ez + ed / 2], facing: '+z', shape: 'round', frame: dress, glass, bars: [3, 8] });
+    b.window(1.8, 7.2, { at: [ex, 2.6, ez + ed / 2], facing: '+z', shape: 'round', frame: dress, glass, bars: [3, 4] });
     b.window(1.0, 1.0, { at: [ex, eh + 0.4, ez + ed / 2], facing: '+z', shape: 'circle', frame: dress, glass });
-    for (const z of [-2.6, 0, 2.6]) b.window(1.4, 6.0, { at: [ex + ew / 2, 3.2, ez + z], facing: '+x', shape: 'round', frame: dress, glass, bars: [2, 6] });
+    for (const z of [-2.6, 0, 2.6]) b.window(1.4, 6.0, { at: [ex + ew / 2, 3.2, ez + z], facing: '+x', shape: 'round', frame: dress, glass, bars: [2, 3] });
 
     // ---- boiler house, low and long, with a louvred roof vent
     const bx = ex + ew / 2 + 3.6;

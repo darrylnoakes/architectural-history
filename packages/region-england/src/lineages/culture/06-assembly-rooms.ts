@@ -6,7 +6,7 @@ function venetianWindow(b: Builder, stone: number, at: [number, number, number],
   const ang = { '+z': 0, '-z': Math.PI, '+x': Math.PI / 2, '-x': -Math.PI / 2 }[facing];
   b.group({ at, rotY: ang }, () => {
     b.panel(4.6, 0.25, stone, { at: [0, -0.25, 0], depth: 0.16 });
-    b.window(1.5, 3.4, { shape: 'round', frame: P.white, bars: [3, 5] });
+    b.window(1.5, 3.4, { shape: 'round', frame: P.white, bars: [2, 4] });
     b.sym((s) => {
       b.window(0.8, 2.4, { at: [s * 1.6, 0, 0], frame: P.white, bars: [2, 4] });
       b.panel(0.22, 2.4, stone, { at: [s * 0.95, 0, 0], depth: 0.14 });
@@ -67,8 +67,8 @@ export const assemblyRooms: BuildingDef = {
     const bays = spread(5, -W / 2, W / 2);
     bays.forEach((x, i) => {
       const mid = i > 0 && i < 4;
-      if (i !== 2) b.window(1.2, 2.3, { at: [x, base + 1.0, zf], facing: '+z', frame: P.white, bars: [2, 3] });
-      b.window(1.6, 4.6, { at: [x, g + 1.3, zf], facing: '+z', frame: P.white, bars: [3, 5], shape: mid ? 'round' : 'rect' });
+      if (i !== 2) b.window(1.2, 2.3, { at: [x, base + 1.0, zf], facing: '+z', frame: P.white, bars: [2, 2] });
+      b.window(1.6, 4.6, { at: [x, g + 1.3, zf], facing: '+z', frame: P.white, bars: [2, 4], shape: mid ? 'round' : 'rect' });
       if (!mid) {
         b.panel(2.3, 0.18, light, { at: [x, g + 6.0, zf], facing: '+z', depth: 0.2 });
         b.extrude([[-1.2, 0], [1.2, 0], [0, 0.55]], 0.24, light, { at: [x, g + 6.18, zf + 0.12] });
@@ -77,12 +77,12 @@ export const assemblyRooms: BuildingDef = {
     b.panel(1.9, 3.2, P.doorGreen, { at: [0, 1.2, zf], facing: '+z' });
     // back and sides: plainer, but finished
     for (const x of bays) {
-      b.window(1.2, 2.3, { at: [x, base + 1.0, zf - D], facing: '-z', frame: P.white, bars: [2, 3] });
-      b.window(1.6, 4.6, { at: [x, g + 1.3, zf - D], facing: '-z', frame: P.white, bars: [3, 5] });
+      b.window(1.2, 2.3, { at: [x, base + 1.0, zf - D], facing: '-z', frame: P.white, bars: [2, 2] });
+      b.window(1.6, 4.6, { at: [x, g + 1.3, zf - D], facing: '-z', frame: P.white, bars: [2, 4] });
     }
     b.sym((s) => {
       for (const z of [zc - 4, zc + 4]) {
-        b.window(1.6, 4.6, { at: [s * (W / 2), g + 1.3, z], facing: s > 0 ? '+x' : '-x', frame: P.white, bars: [3, 5] });
+        b.window(1.6, 4.6, { at: [s * (W / 2), g + 1.3, z], facing: s > 0 ? '+x' : '-x', frame: P.white, bars: [2, 4] });
       }
     });
 
@@ -119,7 +119,7 @@ export const assemblyRooms: BuildingDef = {
       venetianWindow(b, light, [x, 2.6, wz + wd / 2], '+z');
       venetianWindow(b, light, [x, 2.6, wz - wd / 2], '-z');
       for (const z of spread(3, wz - wd / 2, wz + wd / 2)) {
-        b.window(1.4, 3.4, { at: [x + s * (ww / 2), 2.3, z], facing: s > 0 ? '+x' : '-x', frame: P.white, bars: [3, 4], shape: 'round' });
+        b.window(1.4, 3.4, { at: [x + s * (ww / 2), 2.3, z], facing: s > 0 ? '+x' : '-x', frame: P.white, bars: [2, 3], shape: 'round' });
       }
       b.chimney(0.8, 1.6, 1.6, stone, { at: [x + s * 1.6, wh, wz - 2] });
     });

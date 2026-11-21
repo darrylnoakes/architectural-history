@@ -76,7 +76,7 @@ export function balustrade(b: Builder, len: number, h: number, color: number, o:
   b.group({ at: o.at, rotY: o.rotY }, () => {
     b.box(len, 0.14, 0.4, color);
     b.box(len + 0.1, 0.14, 0.46, color, { at: [0, h - 0.14, 0] });
-    const n = Math.max(2, Math.round(len / (o.step ?? 0.55)));
+    const n = Math.max(2, Math.round(len / (o.step ?? 0.8)));
     for (let i = 0; i < n; i++) {
       const x = -len / 2 + ((i + 0.5) * len) / n;
       b.box(0.16, h - 0.28, 0.16, color, { at: [x, 0.14, 0] });

@@ -132,7 +132,9 @@ export const glassHouse: BuildingDef = {
     b.box(0.3, 2.4, 5.6, conc, { at: [9.2, 0, -9.0] });
 
     // ---- street side: gravel, a low concrete wall and a single tree
-    b.box(18.4, 0.04, 4.2, P.gravel, { at: [0, 0, 9.8] });
+    b.box(18.4, 0.04, 4.2, P.grass, { at: [0, 0, 9.8] });
+    b.box(5.5, 0.05, 4.4, P.gravel, { at: [6.0, 0, 9.7] });
+    b.box(1.6, 0.06, 4.4, P.paving, { at: [4.5, 0, 9.7] });
     b.box(9.5, 0.7, 0.3, conc, { at: [-4.8, 0, 11.8] });
     b.tree(5.5, { at: [-7.6, 0, 9.6], kind: 'round', color: P.leafDark });
   },

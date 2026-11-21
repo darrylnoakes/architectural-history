@@ -66,13 +66,13 @@ export const modernistVilla: BuildingDef = {
     const sx = -4.2;
     const sr = 1.9;
     const sz = zf;
-    b.cyl(sr, H + 1.9, white, { at: [sx, 0, sz], segs: 20 });
-    b.cyl(sr + 0.06, 0.12, tint(white, -0.08), { at: [sx, H + 1.9, sz], segs: 20 });
+    b.cyl(sr, H + 2.8, white, { at: [sx, 0, sz], segs: 20 });
+    b.cyl(sr + 0.06, 0.12, tint(white, -0.08), { at: [sx, H + 2.8, sz], segs: 20 });
     for (const a of linspace(7, -1.15, 1.15)) {
       b.window(0.62, H + 0.4, { at: [sx + Math.sin(a) * sr, 0.6, sz + Math.cos(a) * sr], facing: a, frame, bars: [1, 9], border: 0.04 });
     }
     // the stair tower opens on to the roof
-    b.panel(0.9, 2.1, frame, { at: [sx + 1.85, H + 0.45, sz - 0.4], facing: '+x' });
+    b.panel(0.9, 2.0, frame, { at: [sx + 1.85, H + 0.45, sz - 0.4], facing: 1.78 });
 
     // ---- entrance: door beside the tower under a thin cantilevered slab
     b.panel(1.1, 2.3, tint(frame, 0.05), { at: [-1.4, 0, zf], facing: '+z', depth: 0.06 });

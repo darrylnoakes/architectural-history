@@ -44,16 +44,16 @@ export const artDecoStore: BuildingDef = {
     'Glazed cream faience tiles keep it clean in a smoky town, and a stepped central tower with a projecting sign makes sure it is seen from every street into the square.',
   materials: ['steel frame', 'glazed faience', 'metal (Crittall) windows', 'plate glass', 'bronze'],
   lookFor: [
-    { label: 'Faience cladding', note: 'Glazed, machine-made ceramic blocks: bright, washable and cheap to mould into ornament.', at: [-6.0, 5.0, 7.6] },
-    { label: 'Ribbon windows', note: 'Continuous horizontal bands of steel-framed windows, possible because the frame, not the wall, holds the building up.', at: [-4.0, 7.0, 7.55] },
-    { label: 'Rounded corner', note: 'The bands wrap round a curved corner, the streamlined look of liners and express trains.', at: [8.9, 9.0, 6.4] },
-    { label: 'Fin sign', note: 'A vertical blade carrying the store’s name, meant to be read from far down the street.', at: [9.4, 12.6, 7.8] },
-    { label: 'Stepped tower', note: 'The centre rises in setbacks with vertical fins, a jazz-age skyscraper in miniature.', at: [0, 15.8, 8.2] },
+    { label: 'Faience cladding', note: 'Glazed, machine-made ceramic blocks: bright, washable and cheap to mould into ornament.', at: [-6.0, 4.9, 7.3] },
+    { label: 'Ribbon windows', note: 'Continuous horizontal bands of steel-framed windows, possible because the frame, not the wall, holds the building up.', at: [-4.0, 6.6, 7.3] },
+    { label: 'Rounded corner', note: 'The bands wrap round a curved corner, the streamlined look of liners and express trains.', at: [-8.7, 8.0, 6.4] },
+    { label: 'Fin sign', note: 'A vertical blade carrying the store’s name, meant to be read from far down the street.', at: [9.6, 9.5, 7.3] },
+    { label: 'Stepped tower', note: 'The centre rises in setbacks with vertical fins, a jazz-age skyscraper in miniature.', at: [0, 16.4, 7.6] },
   ],
   influences: ['art-deco', 'chicago-frame'],
   build(b) {
-    const W = 20;
-    const D = 15;
+    const W = 19;
+    const D = 14.4;
     const R = 3.6;
     const faience = P.faience;
     const accent = b.variant === 0 ? P.cladGreen : b.pick([P.cladGreen, P.black, P.cladBlue]);
@@ -69,8 +69,8 @@ export const artDecoStore: BuildingDef = {
     slab(b, outer, 3.5, 0.9, faience);
     slab(b, band, 3.85, 0.12, accent);
     // canopy over the pavement all round
-    slab(b, roundRect(W + 2.6, D + 2.6, R + 1.3, 6), 3.3, 0.22, metal);
-    slab(b, roundRect(W + 2.66, D + 2.66, R + 1.33, 6), 3.34, 0.1, accent);
+    slab(b, roundRect(W + 2.2, D + 2.2, R + 1.1, 6), 3.3, 0.22, tint(faience, -0.12));
+    slab(b, roundRect(W + 2.26, D + 2.26, R + 1.13, 6), 3.34, 0.1, accent);
 
     // two upper storeys of faience spandrels and ribbon windows
     let y = 4.4;
@@ -84,13 +84,13 @@ export const artDecoStore: BuildingDef = {
       y += 2.2;
     }
     // parapet with stripes
-    slab(b, outer, y, 1.6, faience);
+    slab(b, outer, y, 1.6, faience, undefined, roundRect(W - 0.8, D - 0.8, R - 0.4, 6));
     for (const dy of [0.35, 0.6]) slab(b, band, y + dy, 0.1, accent);
-    slab(b, roundRect(W + 0.2, D + 0.2, R + 0.1, 6), y + 1.6, 0.14, tint(faience, -0.05));
+    slab(b, roundRect(W + 0.2, D + 0.2, R + 0.1, 6), y + 1.6, 0.14, tint(faience, -0.05), undefined, roundRect(W - 0.8, D - 0.8, R - 0.4, 6));
     const yTop = y + 1.6;
     // flat roof and the lift motor room
-    slab(b, core, yTop - 0.3, 0.1, P.asphalt);
-    b.box(4, 2.2, 3, faience, { at: [-4, yTop - 0.3, -3] });
+    slab(b, core, yTop - 1.0, 0.1, P.asphalt);
+    b.box(4, 2.9, 3, faience, { at: [-4, yTop - 1.0, -3] });
     b.box(4.2, 0.15, 3.2, tint(faience, -0.05), { at: [-4, yTop + 1.9, -3] });
 
     // central stepped tower with fins over the main entrance, on front and back

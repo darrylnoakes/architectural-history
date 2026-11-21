@@ -56,7 +56,12 @@ export const civicHub: BuildingDef = {
     b.box(W, 0.6, D, P.cladWhite, { at: [XC, G - 0.3, ZC] });
     b.box(W - 0.3, FL * 3, D - 0.3, glass, { at: [XC, G + 0.3, ZC], mat: 'glass' });
     for (let f = 1; f <= 3; f++) b.box(W + 0.05, 0.35, D + 0.05, P.cladWhite, { at: [XC, G + FL * f - 0.05, ZC] });
-    b.box(W + 0.3, 0.7, D + 0.3, P.cladWhite, { at: [XC, TOP, ZC] }); // parapet edge
+    // parapet upstand round the roof edge
+    b.sym((s) => {
+      b.box(W + 0.3, 0.7, 0.3, P.cladWhite, { at: [XC, TOP, ZC + s * (D / 2)] });
+      b.box(0.3, 0.7, D + 0.3, P.cladWhite, { at: [XC + s * (W / 2), TOP, ZC] });
+    });
+    b.box(W, 0.1, D, P.cladWhite, { at: [XC, TOP - 0.05, ZC] });
     // fins on the front (south-facing) and the east side
     for (const x of spread(34, X0 + 0.3, X1 - 0.3)) b.box(0.12, FL * 3 - 0.2, 0.55, larch, { at: [x, G + 0.35, Z1 + 0.3] });
     for (const z of spread(26, Z0 + 0.3, Z1 - 0.3)) b.box(0.55, FL * 3 - 0.2, 0.12, larch, { at: [X1 + 0.3, G + 0.35, z] });
@@ -66,7 +71,7 @@ export const civicHub: BuildingDef = {
       for (let f = 0; f < 3; f++) b.window(1.6, 2.2, { at: [x, G + 0.9 + f * FL, Z0 - 0.15], facing: '-z', frame: frame, glass: P.glassDark });
     b.box(W - 0.2, G, 0.2, larch, { at: [XC, 0, Z0 - 0.05] });
     // green roof with rooflights, a bank of solar panels and a plant enclosure
-    b.box(W - 0.4, 0.3, D - 0.4, sedum, { at: [XC, TOP, ZC] });
+    b.box(W - 0.4, 0.3, D - 0.4, sedum, { at: [XC, TOP + 0.05, ZC] });
     for (const x of [2, 8, 14]) b.box(2.4, 0.9, 6, mix(P.glass, P.white, 0.4), { at: [x, TOP + 0.3, ZC + 2.6], mat: 'glass' });
     for (const x of spread(5, 3, 15)) b.box(2.0, 0.08, 1.6, P.solar, { at: [x, TOP + 0.9, Z0 + 2.4], rot: [0.5, 0, 0], mat: 'glass' });
     b.box(4, 2.2, 3.4, frame, { at: [X1 - 3, TOP + 0.3, Z0 + 2.4] });
@@ -86,7 +91,8 @@ export const civicHub: BuildingDef = {
     for (const z of spread(7, AZ0 + 0.1, AZ1 - 0.1)) b.box(0.14, AH, 0.14, frame, { at: [AX1 - 0.05, 0, z] });
     for (const x of spread(3, AX0 + 0.2, AX1 - 0.2)) b.box(0.14, AH, 0.14, frame, { at: [x, 0, AZ1] });
     for (const y of [G, G + FL * 1.5, AH - 0.2]) b.box(AW + 0.06, 0.14, 0.14, frame, { at: [AXC, y, AZ1] });
-    b.box(AW + 0.4, 0.3, AD + 0.4, frame, { at: [AXC, AH, AZC] });
+    b.sym((s) => b.box(AW + 0.4, 0.3, 0.3, frame, { at: [AXC, AH, AZC + s * (AD / 2)] }));
+    b.box(AW + 0.3, 0.3, AD, mix(P.glass, P.white, 0.25), { at: [AXC, AH, AZC], mat: 'glass' });
     b.box(3.4, 3.0, 0.3, mix(glass, P.white, 0.2), { at: [AXC, 0, AZ1 + 0.05], mat: 'glass' });
 
     // ---------------------------------------------------------- council chamber at the back left

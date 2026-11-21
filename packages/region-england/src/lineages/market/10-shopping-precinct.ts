@@ -62,8 +62,8 @@ export const shoppingPrecinct: BuildingDef = {
     b.collider(W, D, { at: [0, 0, 0] });
     // first floor slab, carried out as the walkway at the front and a canopy at the back
     b.box(W + 0.4, 0.3, D + WK + 0.2, conc, { at: [0, G, WK / 2] });
-    b.box(W + 0.4, 0.22, 1.8, conc, { at: [0, 3.0, -D / 2 - 0.9] });
-    b.box(W + 0.44, 0.08, 1.84, P.black, { at: [0, 3.1, -D / 2 - 0.9] });
+    b.box(W + 0.4, 0.22, 1.8, conc, { at: [0, 3.3, -D / 2 - 0.9] });
+    b.box(W + 0.44, 0.08, 1.84, P.black, { at: [0, 3.4, -D / 2 - 0.9] });
     // roof slab with a deep fascia
     b.box(W + 0.6, 0.9, D + 0.6, conc, { at: [0, G + U, 0] });
     b.box(W + 0.64, 0.12, D + 0.64, concD, { at: [0, G + U + 0.25, 0] });
@@ -77,7 +77,7 @@ export const shoppingPrecinct: BuildingDef = {
         b.panel(bw - 0.5, 2.6, alu, { at: [x, 0.05, zf], facing, depth: 0.05 });
         b.panel(bw - 0.7, 2.4, P.glassDark, { at: [x, 0.15, zf], facing, depth: 0.08, mat: 'glass' });
         b.panel(0.9, 2.3, P.doorBlack, { at: [x + bw / 2 - 1.0, 0.1, zf], facing, depth: 0.1 });
-        b.panel(bw - 0.4, 0.55, signColours[(i * 2 + (s > 0 ? 0 : 1) + b.variant) % signColours.length], { at: [x, 2.8, zf], facing, depth: 0.1 });
+        b.panel(bw - 0.4, 0.55, signColours[(i * 2 + (s > 0 ? 0 : 1) + b.variant) % signColours.length], { at: [x, 2.7, zf], facing, depth: 0.1 });
         // upper storey: precast panels with a strip of windows
         b.panel(bw - 0.3, 1.5, P.glassDark, { at: [x, G + 1.0, zf], facing, depth: 0.05, mat: 'glass' });
         for (const mx of linspace(4, x - bw / 2 + 0.15, x + bw / 2 - 0.15)) b.panel(0.08, 1.5, alu, { at: [mx, G + 1.0, zf], facing, depth: 0.08 });

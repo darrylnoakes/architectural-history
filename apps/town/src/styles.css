@@ -303,6 +303,10 @@ ul, ol { list-style: none; }
   .tl-year { font-size: 25px; }
   .tl-era-tag { display: none; }
   .tl-speed button { padding: 3px 6px; }
+  .tl-speed button:first-child { display: none; }
+  .tl-era-name { white-space: nowrap; }
+  .tl-mark { width: 15px; height: 15px; margin-left: -7.5px; border-width: 1px; }
+  .tl-mark svg { width: 9px; height: 9px; }
   .tl-bar-wrap { margin-top: 24px; }
   .tl-seg span { display: none; }
   .tl-seg.on span { display: none; }

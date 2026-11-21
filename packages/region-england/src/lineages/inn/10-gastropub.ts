@@ -1,6 +1,6 @@
 import { P, spread, tint, type Builder, type BuildingDef } from '@ah/kit';
 import { BAR, FLAT, estateShell, fasciaBand } from './09-estate-pub';
-import { bayLines, car, ground, pole } from './shared';
+import { car, ground, pole } from './shared';
 
 const EZ1 = 3.4; // front of the new extensions
 const BREW = { x0: 0.4, x1: 5.6 }; // the brewhouse
@@ -45,7 +45,7 @@ export const gastropub: BuildingDef = {
   lookFor: [
     { label: 'Brewing tanks', note: 'Stainless-steel fermenters behind glass. Brewing on the premises has returned after a century of beer from big breweries.', at: [3.0, 2.6, EZ1 + 0.3] },
     { label: 'Glazed extension', note: 'A dining room walled in glass, added to the old brick box and kept clearly distinct from it.', at: [-5, 2.0, EZ1 + 0.2] },
-    { label: 'Retained 1960s shell', note: 'The flat-roofed brick pub of 1968 is still here, painted and reclad rather than demolished.', at: [-6.5, 3.2, BAR.z1 - 0.5] },
+    { label: 'Retained 1960s shell', note: 'The flat-roofed brick pub of 1968 is still here, painted and reclad rather than demolished.', at: [-6.5, 3.6, BAR.z1 + 0.15] },
     { label: 'Terrace', note: 'Decking, parasols and festoon lights where cars used to park. After the 2007 smoking ban outdoor space became essential.', at: [-3, 1.2, 6.2] },
     { label: 'Timber cladding', note: 'Untreated larch boards over the old flat, left to weather to silver-grey.', at: [FLAT.x1 + 0.1, 5.0, -6] },
   ],
@@ -60,7 +60,6 @@ export const gastropub: BuildingDef = {
     ground(b, 22, 22, P.paving, [0, 0]);
     ground(b, 20.4, 4.6, deck, [-0.6, 5.8], 0.15);
     ground(b, 22, 2.8, P.tarmac, [0, 9.6], 0.05);
-    bayLines(b, -9.8, 4.6, 6, 9.6, 2.7);
 
     // ---------------- the retained 1968 shell, painted, with a slim zinc coping
     estateShell(b, paint, P.asphalt);
@@ -81,8 +80,6 @@ export const gastropub: BuildingDef = {
       b.box(2.6, 0.06, 1.6, P.solar, { at: [x, BAR.h + 0.5, -6.0], rot: [-0.3, 0, 0], mat: 'glass' });
       b.box(0.08, 0.5, 0.08, P.steel, { at: [x, BAR.h, -5.6] });
     }
-    // name in painted lettering on the old brick, and a hanging sign to bring back the old custom
-    for (const x of spread(9, -9.2, -4.4)) b.panel(0.36, 0.45, P.cream, { at: [x, 2.85, BAR.z1], facing: '+z', depth: 0.03 });
     // back of the shell: kitchen door, extract duct, bins
     b.panel(1.0, 2.1, frame, { at: [-3, 0, BAR.z0], facing: '-z' });
     b.box(0.5, 0.5, 2.2, P.steel, { at: [-6, BAR.h - 0.6, BAR.z0 - 0.3] });
@@ -141,7 +138,7 @@ export const gastropub: BuildingDef = {
       b.cyl(0.04, 2.4, P.white, { at: [x, 0.15, z], segs: 5 });
       b.cone(1.4, 0.5, c, { at: [x, 2.2, z], segs: 8 });
     };
-    const pc = b.pick([P.cream, P.cladGreen, P.doorBlack]);
+    const pc = b.pick([P.cream, P.cladGreen, tint(P.cream, -0.08)]);
     for (const [x, z, r] of [[-8, 5.2, 0], [-4.6, 6.6, 0.1], [-1.2, 5.0, -0.05], [2.4, 6.6, 0], [5.8, 5.4, 0.08]] as const) {
       bench(x, z, r);
       parasol(x, z, pc);
@@ -172,8 +169,8 @@ export const gastropub: BuildingDef = {
     for (const x of [6.8, 7.6, 8.4]) {
       b.box(0.06, 0.8, 0.7, P.steel, { at: [x, 0, 9.8] });
     }
-    car(b, [-6.2, 0, 9.6], Math.PI / 2, b.pick([P.white, P.cladBlue, P.zinc]), 2012);
-    b.tree(6, { at: [9.2, 0, 4.5], kind: 'round' });
+    car(b, [-6.2, 0, 9.9], 0, b.pick([P.white, P.cladBlue, P.zinc]), 2012);
+    b.tree(5.5, { at: [8.3, 0, 4.6], kind: 'round' });
 
     // ---------------- colliders: building and extensions solid, terrace open
     b.collider(BAR.x1 - BAR.x0, BAR.z1 - BAR.z0, { at: [(BAR.x0 + BAR.x1) / 2, 0, (BAR.z0 + BAR.z1) / 2] });

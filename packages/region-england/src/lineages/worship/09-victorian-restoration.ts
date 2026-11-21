@@ -42,7 +42,7 @@ export const victorianRestoration: BuildingDef = {
     { label: 'Steep new roofs', note: 'Restorers thought a steep pitch the true Gothic form, so the nave now has a high slate roof rising behind its old battlements.', at: [0, 13.5, 4] },
     { label: 'Tower clock', note: 'A public clock, paid for by subscription: railway time had made accurate hours matter to everyone.', at: [0, 15.7, 21.3] },
     { label: 'Vestry', note: 'A small new room off the chancel for the clergy and choir to robe in, with its own chimney for a stove.', at: [-5.6, 3.5, -12] },
-    { label: 'Lychgate', note: 'A roofed gate where the coffin waited for the priest at the start of a funeral.', at: [8.5, 3.2, 21.3] },
+    { label: 'Lychgate', note: 'A roofed gate where the coffin waited for the priest at the start of a funeral.', at: [9.2, 3.4, 22.2] },
     { label: 'Headstones and yews', note: 'Carved stone grave markers spread across the churchyard in the 18th and 19th centuries; yews are its oldest residents.', at: [11.2, 1.2, -6] },
   ],
   influences: ['gothic-revival-export'],
@@ -67,13 +67,13 @@ export const victorianRestoration: BuildingDef = {
     });
 
     // churchyard: path, lychgate, yews, headstones, the medieval cross now a broken stump
-    b.box(1.6, 0.03, 13.0, P.gravel, { at: [9.2, 0, 16.0], jitter: false });
-    lychgate(b, 9.2, 21.2);
+    b.box(1.6, 0.03, 11.0, P.gravel, { at: [9.2, 0, 15.0], jitter: false });
+    lychgate(b, 9.2, 20.7);
     churchyardCross(b, [8.0, 0, -12.0], P.limestone, true);
-    for (const [x, z, h] of [[-9.5, 17, 6.5], [11.5, -17, 7], [-10.5, -19, 5.5], [6.0, 19.5, 4.5]] as [number, number, number][]) {
+    for (const [x, z, h] of [[-9.5, 17, 6.0], [10.2, -17.5, 6.0], [-10.0, -19, 5.5], [5.6, 19.8, 4.5]] as [number, number, number][]) {
       b.cyl(0.35, h * 0.3, P.bark, { at: [x, 0, z], segs: 6 });
-      b.blob(h * 0.33, tint(P.leafDark, -0.1), { at: [x, h * 0.45, z], stretch: [1.15, 1.0, 1.15] });
-      b.blob(h * 0.22, tint(P.leafDark, -0.12), { at: [x + 0.4, h * 0.75, z - 0.2] });
+      b.blob(h * 0.33, tint(P.leafDark, -0.03), { at: [x, h * 0.45, z], stretch: [1.15, 1.0, 1.15] });
+      b.blob(h * 0.22, tint(P.leafDark, -0.05), { at: [x + 0.4, h * 0.75, z - 0.2] });
     }
     const stones = [P.limestone, P.sandstone, P.slate, tint(P.limestone, -0.1)];
     const rows: [number, number, number][] = [

@@ -1,5 +1,5 @@
 import { P, linspace, spread, tint, type BuildingDef, type Builder } from '@ah/kit';
-import { beam, goods } from './shared';
+import { beam } from './shared';
 
 /** A ring of alternating-colour voussoirs round a semicircular arch in a wall facing +Z (local frame). */
 function voussoirs(b: Builder, r: number, springY: number, colors: number[], n = 15, depth = 0.5): void {
@@ -58,7 +58,7 @@ export const victorianMarketHall: BuildingDef = {
       const zs = spread(5, -D / 2 + 0.6, D / 2 - 0.6);
       for (const z of zs) {
         b.panel(1.9, 3.6, yellow, { at: [xf, 2.1, z], facing, shape: 'round', depth: 0.05 });
-        b.window(1.5, 3.3, { at: [xf, 2.2, z], facing, shape: 'round', frame: iron, bars: [3, 5], border: 0.06 });
+        b.window(1.5, 3.3, { at: [xf, 2.2, z], facing, shape: 'round', frame: iron, bars: [2, 3], border: 0.06 });
       }
       for (const z of linspace(6, -D / 2 + 0.6, D / 2 - 0.6)) b.panel(0.5, EH - 0.85, red, { at: [xf, 0.5, z], facing, depth: 0.18 });
     }
@@ -67,7 +67,7 @@ export const victorianMarketHall: BuildingDef = {
     const yR = EH;
     b.gable(W - 0.4, D - 1.0, RH, P.glass, { at: [0, yR, 0], ridge: 'z', overhang: 0.2, mat: 'glass', thick: 0.06 });
     const half = (W - 0.4) / 2;
-    for (const z of linspace(9, -D / 2 + 0.7, D / 2 - 0.7)) {
+    for (const z of linspace(8, -D / 2 + 0.7, D / 2 - 0.7)) {
       for (const s of [-1, 1]) beam(b, [s * (half + 0.2), yR - 0.05, z], [0, yR + RH + 0.05, z], 0.12, iron, 0.14);
     }
     for (const t of [0.3, 0.6]) {
@@ -77,7 +77,7 @@ export const victorianMarketHall: BuildingDef = {
     const yL = yR + RH * (1 - lw / 2 / half) - 0.05;
     b.box(lw, 1.15, D - 2.2, P.castIron, { at: [0, yL, 0] });
     for (const s of [1, -1] as const) {
-      for (const z of spread(8, -D / 2 + 1.2, D / 2 - 1.2)) b.panel(1.4, 0.75, tint(P.slate, 0.1), { at: [s * (lw / 2), yL + 0.2, z], facing: s > 0 ? '+x' : '-x', depth: 0.06 });
+      for (const z of spread(6, -D / 2 + 1.2, D / 2 - 1.2)) b.panel(1.8, 0.75, tint(P.slate, 0.1), { at: [s * (lw / 2), yL + 0.2, z], facing: s > 0 ? '+x' : '-x', depth: 0.06 });
     }
     b.gable(lw, D - 2.2, 0.75, P.zinc, { at: [0, yL + 1.15, 0], ridge: 'z', overhang: 0.3 });
 
@@ -110,7 +110,7 @@ export const victorianMarketHall: BuildingDef = {
           for (const sx of [-1, 1]) {
             const x0 = archR + 0.6;
             const x1 = W / 2;
-            b.box(x1 - x0, h, 0.08, c, { at: [sx * (x0 + x1) / 2, y, zf] });
+            b.panel(x1 - x0, h, c, { at: [sx * (x0 + x1) / 2, y, zf], depth: 0.03 });
           }
         }
         // coping and corner piers with pyramid caps
@@ -131,7 +131,7 @@ export const victorianMarketHall: BuildingDef = {
         voussoirs(b, archR, springY, [stone, red, stone, blue], main ? 17 : 13, zf);
         b.box(2 * archR + 1.2, 0.3, 0.14, stone, { at: [0, springY - 0.3, zf] }); // impost band
         b.panel(2 * archR - 0.1, springY, P.windowDark, { at: [0, 0.5, -0.1], depth: 0.04 });
-        for (const x of linspace(main ? 11 : 9, -archR + 0.1, archR - 0.1)) b.box(0.05, springY - 0.6, 0.05, iron, { at: [x, 0.5, zf - 0.1] });
+        for (const x of linspace(main ? 9 : 7, -archR + 0.1, archR - 0.1)) b.box(0.05, springY - 0.6, 0.05, iron, { at: [x, 0.5, zf - 0.1] });
         b.box(2 * archR, 0.1, 0.08, iron, { at: [0, springY - 0.15, zf - 0.1] });
         b.box(2 * archR, 0.08, 0.08, iron, { at: [0, 1.3, zf - 0.1] });
         b.panel(2 * archR - 0.1, archR, P.glassDark, { at: [0, springY, -0.1], shape: 'round', depth: 0.04 });
@@ -144,7 +144,7 @@ export const victorianMarketHall: BuildingDef = {
         for (const sx of [-1, 1]) {
           for (const x of main ? [5.0, 7.6] : [5.6]) {
             b.panel(1.8, 3.9, yellow, { at: [sx * x, 1.6, zf], shape: 'round', depth: 0.05 });
-            b.window(1.4, 3.6, { at: [sx * x, 1.7, zf], shape: 'round', frame: iron, bars: [2, 4], border: 0.06 });
+            b.window(1.4, 3.6, { at: [sx * x, 1.7, zf], shape: 'round', frame: iron, bars: [2, 3], border: 0.06 });
           }
         }
         if (main) {
@@ -163,7 +163,6 @@ export const victorianMarketHall: BuildingDef = {
     // stalls glimpsed inside through the glass
     for (const x of [-5.5, -2, 2, 5.5]) {
       b.box(2.2, 0.9, D - 5, tint(P.pine, -0.05), { at: [x, 0.5, -0.5] });
-      goods(b, D - 6, [x, 1.4, -0.5], Math.PI / 2, ['fruit', 'basket', 'cloth']);
     }
   },
 };

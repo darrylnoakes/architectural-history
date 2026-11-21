@@ -1,5 +1,13 @@
 import { P, mix, spread, tint, type BuildingDef, type Builder } from '@ah/kit';
-import { TOWER, arcade, arch, archWindow, clockTower } from './shared';
+import { TOWER, arcade, arch, archOutline, archWindow, clockTower } from './shared';
+
+/** The band between two arch outlines, from the springing line up: polychrome voussoirs. */
+function archRing(wo: number, ho: number, wi: number, hi: number): [number, number][] {
+  const outer = archOutline(wo, ho, 'pointed', 3).slice(2).reverse();
+  const inner = archOutline(wi, hi, 'pointed', 3).slice(2);
+  const ys = hi - Math.min(hi * 0.6, wi * 0.866);
+  return [[-wo / 2, ys], ...outer.filter(([, y]) => y >= ys), [wo / 2, ys], [wi / 2, ys], ...inner, [-wi / 2, ys]];
+}
 
 const octagon = (r: number): [number, number][] =>
   Array.from({ length: 8 }, (_, i) => [r * Math.cos((i * Math.PI) / 4 + Math.PI / 8), r * Math.sin((i * Math.PI) / 4 + Math.PI / 8)] as [number, number]);
@@ -100,9 +108,8 @@ export const gothicRevivalTownHall: BuildingDef = {
     const pitch = AL / 8;
     for (let i = 0; i < 8; i++) {
       const x = AX0 + (i + 0.5) * pitch;
-      arch(b, 2.7, 4.05, yellow, { at: [x, 0, FZ + 3.0], facing: '+z', depth: 0.03 });
-      arch(b, 2.3, 3.8, brick, { at: [x, 0, FZ + 3.02], facing: '+z', depth: 0.03 });
-      arch(b, 2.2, 3.7, mix(P.windowDark, P.paving, 0.25), { at: [x, 0, FZ + 3.04], facing: '+z', depth: 0.03 });
+      b.extrude(archRing(2.9, 4.25, 2.2, 3.7), 0.08, yellow, { at: [x, 0, FZ + 3.03] });
+      b.extrude(archRing(2.55, 3.98, 2.2, 3.7), 0.08, brick, { at: [x, 0, FZ + 3.07] });
       // doors and windows behind the arcade
       if (i % 3 === 1) arch(b, 1.5, 3.0, P.oakDark, { at: [x, 0.3, FZ], facing: '+z' });
       else archWindow(b, 1.4, 2.6, { at: [x, 0.9, FZ], facing: '+z', frame: stone });

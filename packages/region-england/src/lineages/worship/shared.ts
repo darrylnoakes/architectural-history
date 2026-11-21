@@ -428,7 +428,7 @@ export function buttress(
   if (kind === 'pilaster') {
     const w = o.w ?? 1.1;
     const p = o.proj ?? 0.22;
-    b.group({ at: o.at, rotY: ang }, () => b.box(w, o.h, p + 0.1, o.color, { at: [0, 0, p / 2 - 0.05] }));
+    b.group({ at: o.at, rotY: ang }, () => b.box(w, o.h, p + 0.1, tint(o.color, 0.05), { at: [0, 0, p / 2 - 0.05] }));
     return;
   }
   const w = o.w ?? 0.7;

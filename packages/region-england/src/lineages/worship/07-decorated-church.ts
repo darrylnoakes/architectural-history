@@ -47,7 +47,7 @@ export const decoratedChurch: BuildingDef = {
     { label: 'Reticulated east window', note: 'Five lights with S-curved ogee heads and a net of ogee shapes above, the peak of Decorated design.', at: [0, 5.8, -17.4] },
     { label: 'South porch', note: 'Shelter for the main entrance, where weddings and parts of baptisms took place.', at: [12.8, 3.0, DOOR_Z] },
     { label: 'Ballflower', note: 'A small three-petalled ball, repeated along cornices and window arches; the hallmark ornament of c. 1310 to 1340.', at: [9.3, 4.2, 11.5] },
-    { label: 'Spire with pinnacles', note: 'A taller spire set back behind a parapet, with a pinnacle at each corner and gabled spire lights.', at: [3.4, 18.6, 20.4] },
+    { label: 'Spire with pinnacles', note: 'A taller spire set back behind a parapet, with a pinnacle at each corner and gabled spire lights.', at: [2.6, 19.6, 19.6] },
   ],
   influences: ['french-gothic'],
   build(b) {

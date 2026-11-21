@@ -74,7 +74,7 @@ export const romanMacellum: BuildingDef = {
     b.hip(OW, OD, slope * (OD / 2), tile, { at: [0, pY, 0], overhang: 0.3, ridge: OW - OD });
     // imbrices on the long portico slopes
     const pRun = (OD - BD) / 2 + 0.3;
-    const pxs = spread(30, -OW / 2 + 0.6, OW / 2 - 0.6);
+    const pxs = spread(22, -OW / 2 + pRun + 0.2, OW / 2 - pRun - 0.2);
     for (const s of [-1, 1]) {
       imbrices(b, OW, pxs, pY - 0.07 - 0.05, s * (OD / 2 + 0.3), pRun * slope + 0.02, -s * pRun, tint(tile, -0.05));
     }
@@ -92,7 +92,7 @@ export const romanMacellum: BuildingDef = {
     const cx = spread(8, -OW / 2 + 0.25, OW / 2 - 0.25);
     const cz = spread(4, -OD / 2 + 0.25, OD / 2 - 0.25);
     const col = (x: number, z: number) => {
-      b.column(0.22, colH, stone, { at: [x, 0.35, z], order: 'tuscan' });
+      b.column(0.22, colH, stone, { at: [x, 0.35, z], order: 'tuscan', segs: 8 });
       b.collider(0.5, 0.5, { at: [x, 0, z] });
     };
     for (const x of cx) {

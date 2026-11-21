@@ -126,7 +126,7 @@ export const crystalPalace: BuildingDef = {
     for (const [x, z, c] of [[0, 0, P.postRed], [-L / 2 + 0.4, d2 / 2, P.cladBlue], [L / 2 - 0.4, d2 / 2, P.cladBlue], [-L / 2 + 0.4, -d2 / 2, P.postRed], [L / 2 - 0.4, -d2 / 2, P.postRed]] as const) {
       const y = x === 0 ? h2 + tw / 2 : h2;
       b.cyl(0.05, 3.2, P.white, { at: [x, y, z], segs: 5 });
-      b.box(1.4, 0.8, 0.03, c, { at: [x + 0.72, y + 2.3, z] });
+      b.box(1.4, 0.8, 0.03, c, { at: [x > 1 ? x - 0.72 : x + 0.72, y + 2.3, z] });
     }
 
     // ---------------------------------------------------------------- entrance and grounds
@@ -142,8 +142,8 @@ export const crystalPalace: BuildingDef = {
       b.cyl(1.55, 0.05, P.water, { at: [s * 9.5, 0.42, 13.0], segs: 12, mat: 'glass' });
       b.lathe([[0.25, 0.4], [0.18, 1.2], [0.7, 1.4], [0.6, 1.55], [0.1, 1.7], [0.08, 2.3]], P.portland, { at: [s * 9.5, 0, 13.0], segs: 8 });
     });
-    b.tree(7, { at: [-15.2, 0, 12.8], kind: 'round' });
-    b.tree(7.5, { at: [15.2, 0, -13.6], kind: 'round' });
+    b.tree(6.5, { at: [-14.6, 0, 12.8], kind: 'round' });
+    b.tree(6.5, { at: [14.6, 0, -12.8], kind: 'round' });
 
     b.collider(L + 0.6, d1 + 0.6);
   },

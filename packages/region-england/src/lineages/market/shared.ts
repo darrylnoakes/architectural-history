@@ -36,12 +36,12 @@ export function roundRect(w: number, d: number, r: number, n = 5): [number, numb
 }
 
 /** A horizontal slab whose plan outline is `pts` ([x, z] pairs), from height y0, h thick. */
-export function slab(b: Builder, pts: [number, number][], y0: number, h: number, color: number, mat?: 'glass'): void {
+export function slab(b: Builder, pts: [number, number][], y0: number, h: number, color: number, mat?: 'glass', hole?: [number, number][]): void {
   b.extrude(
     pts.map(([x, z]) => [x, -z] as [number, number]),
     h,
     color,
-    { at: [0, y0 + h / 2, 0], rot: [-Math.PI / 2, 0, 0], mat },
+    { at: [0, y0 + h / 2, 0], rot: [-Math.PI / 2, 0, 0], mat, holes: hole ? [hole.map(([x, z]) => [x, -z] as [number, number])] : undefined },
   );
 }
 

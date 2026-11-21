@@ -71,7 +71,7 @@ export const perpendicularChurch: BuildingDef = {
     { label: 'Clerestory', note: 'A row of windows high in the raised nave walls, lighting the nave over the aisle roofs.', at: [4.3, 8.2, 4.5] },
     { label: 'Panel tracery', note: 'Straight vertical mullions run right up into the arch, dividing the glass into tall panels.', at: [9.4, 3.2, -2.7] },
     { label: 'Battlements', note: 'Low lead roofs are hidden behind battlemented parapets: the roofline turns flat and horizontal.', at: [9.0, 5.6, 0.9] },
-    { label: 'West tower with pinnacles', note: 'A tall ashlar tower with diagonal buttresses, a great west window and a crown of battlements and pinnacles.', at: [4, 26.5, 21] },
+    { label: 'West tower with pinnacles', note: 'A tall ashlar tower with diagonal buttresses, a great west window and a crown of battlements and pinnacles.', at: [3.2, 26.6, 20.8] },
     { label: 'Two-storey porch', note: 'The porch gained an upper room, the parvise, used as a school, a store or a priest\'s lodging.', at: [12.8, 5.3, DOOR_Z] },
   ],
   influences: ['perpendicular'],

@@ -54,7 +54,7 @@ export const estatePub: BuildingDef = {
     const { x0, x1, z0, z1, h } = BAR;
 
     ground(b, 22, 22, P.tarmac, [0, 0]);
-    ground(b, 21, 1.4, P.concrete, [-2, z1 + 0.7], 0.08);
+    ground(b, 20.6, 1.4, P.concrete, [-0.4, z1 + 0.7], 0.08);
     bayLines(b, -9.6, 9.6, 7, 6.3, 4.4);
 
     estateShell(b, brick, P.asphalt);
