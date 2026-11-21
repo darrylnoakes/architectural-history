@@ -117,8 +117,8 @@ export const assemblyRooms: BuildingDef = {
       balustrade(b, ww + 0.2, 1.0, light, { at: [x, wh, wz + wd / 2 + 0.1] });
       balustrade(b, wd + 0.2, 1.0, light, { at: [x + s * (ww / 2 + 0.1), wh, wz], rotY: Math.PI / 2 });
       venetianWindow(b, light, [x, 2.6, wz + wd / 2], '+z');
-      venetianWindow(b, light, [x, 2.6, wz - wd / 2], '-z');
-      for (const z of spread(3, wz - wd / 2, wz + wd / 2)) {
+      for (const dx of [-1.5, 1.5]) b.window(1.3, 2.8, { at: [x + dx, 2.3, wz - wd / 2], facing: '-z', frame: P.white, bars: [2, 3] });
+      for (const z of spread(2, wz - wd / 2, wz + wd / 2)) {
         b.window(1.4, 3.4, { at: [x + s * (ww / 2), 2.3, z], facing: s > 0 ? '+x' : '-x', frame: P.white, bars: [2, 3], shape: 'round' });
       }
       b.chimney(0.8, 1.6, 1.6, stone, { at: [x + s * 1.6, wh, wz - 2] });
@@ -129,7 +129,7 @@ export const assemblyRooms: BuildingDef = {
     b.box(34, 0.08, rz - zf, tint(P.paving, 0.02), { at: [0, 0, (rz + zf) / 2] });
     b.sym((s) => {
       b.box(12.4, 0.5, 0.35, stone, { at: [s * 10.6, 0, rz] });
-      for (const x of spread(26, 4.4, 16.8)) b.box(0.05, 1.1, 0.05, P.castIron, { at: [s * x, 0.5, rz] });
+      for (const x of spread(15, 4.4, 16.8)) b.box(0.05, 1.1, 0.05, P.castIron, { at: [s * x, 0.5, rz] });
       b.box(12.4, 0.06, 0.08, P.castIron, { at: [s * 10.6, 1.5, rz] });
       b.box(0.7, 2.0, 0.7, stone, { at: [s * 4.1, 0, rz] });
       b.sphere(0.32, stone, { at: [s * 4.1, 2.3, rz], segs: 6 });

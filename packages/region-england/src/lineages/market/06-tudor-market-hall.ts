@@ -7,16 +7,16 @@ export const tudorMarketHall: BuildingDef = {
   style: 'Late Tudor and Jacobean timber framing',
   date: 'c. 1617',
   summary:
-    'The town now governs itself, and it puts its council chamber on stilts over the market. Sixteen oak posts carry a timber-framed upper room where the borough court met and corn was stored, while traders keep the dry, open floor below. ' +
+    'The town now runs its own affairs, and it puts a room for them on stilts over the market. Sixteen timber posts carry a framed upper chamber for meetings, the market court and storage, while traders keep the dry, open floor below. ' +
     'Oak was still plentiful in the west Midlands, and the frame is a show of it: close-set studs and zigzag herringbone braces that a plainer building would not need. ' +
     'Unlike the stone cross before it, this is a working building with a room for the people who run the town.',
   materials: ['oak frame', 'lime plaster infill', 'clay tiles', 'sandstone post pads'],
   lookFor: [
     { label: 'Open undercroft', note: 'The ground floor is left open between the posts so that traders can set out stalls under cover.', at: [0, 1.6, 3.9] },
     { label: 'Close studding', note: 'Vertical timbers set as close as their own width apart. It used far more oak than needed, so it signalled wealth.', at: [-4.2, 4.0, 4.0] },
-    { label: 'Herringbone bracing', note: 'Short diagonal timbers set in alternating directions to make a decorative zigzag.', at: [2.1, 5.2, 4.1] },
+    { label: 'Herringbone bracing', note: 'Short diagonal timbers set in alternating directions to make a decorative zigzag.', at: [2.27, 5.4, 4.1] },
     { label: 'Jetty', note: 'The upper floor projects beyond the posts on its joist ends, giving more room upstairs and shelter below.', at: [7.6, 3.4, 4.0] },
-    { label: 'Mullioned windows', note: 'Wide windows divided by upright mullions and a transom into small leaded panes.', at: [-2.1, 5.4, 4.1] },
+    { label: 'Mullioned windows', note: 'Wide windows divided by upright mullions and a transom into small leaded panes.', at: [-4.55, 5.0, 4.1] },
   ],
   modelledOn: 'The Market House, Ledbury, Herefordshire (begun c. 1617)',
   build(b) {

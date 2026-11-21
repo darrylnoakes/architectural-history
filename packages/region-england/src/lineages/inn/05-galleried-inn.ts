@@ -44,16 +44,15 @@ export const galleriedInn: BuildingDef = {
   summary:
     'Pilgrims, merchants and carriers now travelled in numbers, and the alehouse gave way to a true inn with beds, stabling and meals, often built as an investment by a monastery or a wealthy townsman. ' +
     'Timber-framed ranges with close-set studs enclose a yard reached through a carriage arch from the street. ' +
-    'The guest chambers open off galleries round the yard, so that each room had its own door without a corridor, and the yard itself doubled as a stage for travelling players.',
+    'The guest chambers open off galleries round the yard, so that each room had its own door without a corridor. A century later such yards were often used as stages by travelling players.',
   materials: ['oak frame', 'wattle and daub', 'limewash', 'clay plain tiles'],
   lookFor: [
-    { label: 'Open galleries', note: 'Two tiers of balconies give every chamber its own door, and later inspired the galleries of Shakespeare’s playhouses.', at: [-XI + GAL + 0.3, 6.4, -1] },
+    { label: 'Open galleries', note: 'Two tiers of open walkways give every chamber its own door. They are often said to have inspired the galleries of Shakespeare’s playhouses.', at: [-XI + GAL + 0.3, 6.4, -1] },
     { label: 'Carriage arch', note: 'A wide gateway through the street range, big enough for a loaded packhorse or wagon to reach the yard.', at: [0, 3.4, ZF + 0.3] },
     { label: 'Close studding', note: 'Upright oak studs set close together, using far more timber than the frame needed: a show of the owner’s wealth.', at: [-6.5, 5.2, ZF + 0.8] },
     { label: 'Jetty', note: 'Each upper storey oversails the one below on the ends of the floor joists, gaining space over the street.', at: [6.5, G + 0.1, ZF + 0.6] },
     { label: 'Courtyard', note: 'Stables in the back range and chambers on three sides: the plan of the English inn for the next 400 years.', at: [1.5, 0.5, -1.5] },
   ],
-  influences: ['perpendicular'],
   build(b) {
     const oak = b.pick([P.oak, tint(P.oak, -0.04), tint(P.oak, 0.04)]);
     const fill = b.pick([P.limewash, P.plaster, tint(P.ochreWash, 0.1)]);
@@ -149,10 +148,8 @@ export const galleriedInn: BuildingDef = {
       b.box(XO - XI, TOP, sLen, fill, { at: [xc, 0, sZ] });
       b.box(XO - XI + 0.06, 0.3, sLen + 0.06, P.rubble, { at: [xc, 0, sZ] });
       // outer wall: square panels with corner braces, storey by storey
-      for (const [y, h] of [[0.3, G - 0.3], [G, F1], [G + F1, F2]]) {
-        b.frame(sLen, h, oak, { at: [s * XO, y, sZ], facing: out, studs: 7, rails: 1, brace: 'corner', beam: 0.17 });
-        b.frame(sLen, h, oak, { at: [s * XI, y, sZ], facing: inn, studs: 5, rails: 1, beam: 0.15 });
-      }
+      b.frame(sLen, TOP - 0.3, oak, { at: [s * XO, 0.3, sZ], facing: out, studs: 7, rails: 2, brace: 'corner', beam: 0.17 });
+      b.frame(sLen, TOP - 0.3, oak, { at: [s * XI, 0.3, sZ], facing: inn, studs: 5, rails: 2, beam: 0.15 });
       for (const z of [-3, 0.4, 3]) {
         b.window(1.4, 1.0, { at: [s * XO, G + 0.9, z], facing: out, frame: oak, bars: [3, 2] });
         b.window(1.2, 0.9, { at: [s * XO, G + F1 + 0.85, z], facing: out, frame: oak, bars: [3, 2] });

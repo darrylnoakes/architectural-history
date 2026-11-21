@@ -33,7 +33,7 @@ export const roadhousePub: BuildingDef = {
   summary:
     'Between the wars the brewers, pressed by magistrates and temperance campaigners, rebuilt pubs as large, respectable "improved" houses with restaurants, family rooms and car parks for the new motorist. ' +
     'They dressed them in a homely Tudor costume: brick below, black-and-white half-timbering applied to the upper walls and gables, leaded casements and clusters of tall chimneys. ' +
-    'The timbering is decoration, not structure: behind it the walls are brick and the floors steel and concrete.',
+    'The timbering is decoration, not structure: behind it the walls are solid brick.',
   materials: ['red brick', 'applied oak-stained timber', 'roughcast render', 'clay plain tiles', 'leaded casements'],
   lookFor: [
     { label: 'Mock half-timbering', note: 'Thin boards fixed over brick or render to look like a medieval frame. Compare the real frame of the galleried inn.', at: [-8, 5.2, WZ1 + 0.5] },

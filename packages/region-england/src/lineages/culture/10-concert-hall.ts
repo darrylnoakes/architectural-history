@@ -42,7 +42,7 @@ export const concertHall: BuildingDef = {
   lookFor: [
     { label: 'Curved shell', note: 'A single roof of stainless-steel panels, curved in two directions, wrapping all three halls like a blanket.', at: [-6.2, 18.4, -1] },
     { label: 'Three lobes', note: 'Each hump of the shell covers one hall, so you can count the halls from outside.', at: [12, 12.6, -2.6] },
-    { label: 'Stainless-steel panels', note: 'The shell is clad in some 3,000 stainless-steel panels, with glass only where light is wanted. The seams run in long curves.', at: [0.5, 14.2, 5.5] },
+    { label: 'Stainless-steel panels', note: 'The shell is clad in some 3,000 stainless-steel panels, with glass only where light is wanted. The seams run in long curves.', at: [0.5, 13.2, 5.5] },
     { label: 'Glazed concourse', note: 'A full-height glass wall under the shell\'s overhanging edge, so the foyers face the town and the river.', at: [-6.2, 3, 11.0] },
   ],
   influences: ['high-tech-export'],
@@ -74,8 +74,10 @@ export const concertHall: BuildingDef = {
       b.group({ at: [l.x, y0 - 0.05, l.z], scale: [l.rx, 1, l.rz] }, () => {
         b.cyl(1, 0.05, P.cladGrey, { segs: 22 });
       });
-      for (const f of [-0.55, -0.18, 0.18, 0.55]) rib(b, l, y0, f, ribC);
+      for (const f of [-0.5, 0, 0.5]) rib(b, l, y0, f, ribC);
     }
+    // the concourse glazing runs on between the lobes
+    b.box(30, y0 - 0.3, 12, glass, { at: [-0.5, 0.3, 0.4], mat: 'glass' });
     // mullions on the concourse glass, along the street front
     for (let i = -7; i <= 7; i++) {
       const x = i * 2.1;
@@ -96,6 +98,7 @@ export const concertHall: BuildingDef = {
 
     for (const l of lobes) b.collider(l.rx * 1.6, l.rz * 1.8, { at: [l.x, 0, l.z] });
     b.collider(26, 5, { at: [-1, 0, -12.2] });
+    b.collider(30, 12, { at: [-0.5, 0, 0.4] });
   },
 };
 

@@ -19,7 +19,7 @@ export const gothicButtercross: BuildingDef = {
     'The plain cross has grown into a shelter. Eight pointed arches on buttressed piers enclose a vaulted space round a central pillar, where country women sold butter, eggs and cheese out of the rain and sun. ' +
     'It was paid for by a rich town guild or a pious merchant, and it is dressed like a small church: pinnacles, panelled parapet, and flying buttresses leaping up to a lantern with a cross on top. ' +
     'Masons trained on the great Perpendicular churches brought their whole vocabulary to the market place.',
-  materials: ['ashlar limestone', 'lead'],
+  materials: ['ashlar limestone', 'stone slates'],
   lookFor: [
     { label: 'Pointed arches', note: 'Each of the eight sides opens in a two-centred Gothic arch, so buyers can walk in from any direction.', at: [0, 3.0, 4.25] },
     { label: 'Buttresses', note: 'Stepped piers at each corner resist the outward push of the vault inside.', at: [2.05, 2.4, 4.75] },

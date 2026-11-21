@@ -21,7 +21,7 @@ export const romanMacellum: BuildingDef = {
   id: 'roman-macellum',
   name: 'Market building (macellum)',
   style: 'Romano-British',
-  date: 'c. AD 150',
+  date: 'c. AD 100',
   summary:
     'Rome gave the town a planned market: a block of small lock-up shops (tabernae) facing outward, wrapped in a covered walk of columns so buyers stayed dry. ' +
     'It is built of mortared stone, plastered and painted, and roofed with fired clay tiles, all techniques that arrived with the Roman army. ' +

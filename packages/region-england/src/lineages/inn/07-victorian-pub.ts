@@ -202,12 +202,12 @@ export const victorianPub: BuildingDef = {
     b.box(X1 - X0, 0.12, 0.25, P.terracotta, { at: [0, TOP + rise + 0.05, zm] });
     // front cross gable
     const gw = 5.4;
-    b.gable(gw, dep / 2 + 0.2, rise + 0.3, slate, { at: [-2.1, TOP, ZF - dep / 4 + 0.1], ridge: 'z', overhang: 0.1, wall: brick });
-    gableFront(b, [-2.1, TOP, ZF + 0.05], '+z', gw + 0.6, rise + 1.9, brick, stone);
-    b.window(1.4, 1.6, { at: [-2.1, TOP + 0.5, ZF + 0.25], facing: '+z', frame: P.white, shape: 'round', bars: [2, 3] });
+    b.gable(gw, dep / 2, rise + 0.3, slate, { at: [-2.1, TOP, ZF - 0.2 - dep / 4], ridge: 'z', overhang: 0.1, wall: brick });
+    gableFront(b, [-2.1, TOP, ZF + 0.12], '+z', gw + 0.6, rise + 1.9, brick, stone);
+    b.window(1.4, 1.6, { at: [-2.1, TOP + 0.5, ZF + 0.32], facing: '+z', frame: P.white, shape: 'round', bars: [2, 3] });
     // side street gable over the end wall
-    gableFront(b, [X1 + 0.05, TOP, zm - 0.4], '+x', dep - 1.6, rise + 2.0, brick, stone);
-    b.window(1.2, 1.4, { at: [X1 + 0.25, TOP + 0.6, zm - 0.4], facing: '+x', frame: P.white, shape: 'round', bars: [2, 3] });
+    gableFront(b, [X1 + 0.3, TOP, zm - 0.4], '+x', dep - 1.6, rise + 2.0, brick, stone);
+    b.window(1.2, 1.4, { at: [X1 + 0.5, TOP + 0.6, zm - 0.4], facing: '+x', frame: P.white, shape: 'round', bars: [2, 3] });
     // party-wall gable and chimneys
     b.chimney(1.6, rise + 2.2, 0.9, brick, { at: [X0 + 0.8, TOP, zm], pots: 4 });
     b.chimney(1.4, 2.6, 0.8, brick, { at: [4.2, TOP + rise - 1.4, zm], pots: 3 });

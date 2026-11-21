@@ -48,7 +48,7 @@ export const romanMansio: BuildingDef = {
     { label: 'Tegulae and imbrices', note: 'Flat tiles with raised edges (tegulae), their joints capped by half-round tiles (imbrices) that make the ribbed stripes.', at: [-5, 4.6, 7.2] },
     { label: 'Portico', note: 'A covered walk on columns along the street front, giving shade, shelter and a dignified face to the road.', at: [4.4, 2.3, 10.6] },
     { label: 'Stable range', note: 'Fresh horses for the imperial post were kept here, with wide doors opening onto the yard.', at: [-2.5, 1.6, ZB + DEP + 0.2] },
-    { label: 'Bath suite', note: 'Even a roadside inn had heated baths. The apse held a warm plunge pool, heated from the furnace by the flue.', at: [X1 + 1.3, 2.0, -0.6] },
+    { label: 'Bath suite', note: 'Even a roadside inn had heated baths. The apse held a hot plunge bath over a hypocaust, an underfloor heating system fed by a furnace.', at: [X1 + 1.3, 2.0, -0.6] },
   ],
   influences: ['roman-conquest'],
   build(b) {

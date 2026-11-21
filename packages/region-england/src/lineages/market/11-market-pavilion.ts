@@ -58,16 +58,16 @@ export const marketPavilion: BuildingDef = {
     const top2: [number, number][] = xs.slice().reverse().map((x) => [x, roofY(x) + T + 0.08]);
     b.extrude([...top, ...top2], RD + 0.1, zinc);
     // standing seams
-    for (const z of linspace(10, -RD / 2 + 0.6, RD / 2 - 0.6)) {
-      for (let i = 0; i < xs.length - 2; i += 2) {
-        beam(b, [xs[i], roofY(xs[i]) + T + 0.06, z], [xs[i + 2], roofY(xs[i + 2]) + T + 0.06, z], 0.06, tint(zinc, -0.06));
+    for (const z of linspace(7, -RD / 2 + 0.8, RD / 2 - 0.8)) {
+      for (let i = 0; i < xs.length - 3; i += 3) {
+        beam(b, [xs[i], roofY(xs[i]) + T + 0.06, z], [xs[i + 3], roofY(xs[i + 3]) + T + 0.06, z], 0.06, tint(zinc, -0.06));
       }
     }
     // glulam ribs under the roof
     const ribZ = linspace(6, -RD / 2 + 0.8, RD / 2 - 0.8);
     for (const z of ribZ) {
-      for (let i = 0; i < xs.length - 2; i += 2) {
-        beam(b, [xs[i], roofY(xs[i]) - 0.45, z], [xs[i + 2], roofY(xs[i + 2]) - 0.45, z], 0.5, glulam, 0.22);
+      for (let i = 0; i < xs.length - 3; i += 3) {
+        beam(b, [xs[i], roofY(xs[i]) - 0.45, z], [xs[i + 3], roofY(xs[i + 3]) - 0.45, z], 0.5, glulam, 0.22);
       }
     }
 
@@ -108,7 +108,7 @@ export const marketPavilion: BuildingDef = {
     // permanent counters inside the hall
     for (const z of [-2.2, 2.2]) {
       b.box(6.5, 1.0, 1.0, P.white, { at: [(x0 + x1) / 2, 0.1, z] });
-      goods(b, 6, [(x0 + x1) / 2, 1.1, z], 0, ['fruit', 'basket', 'fruit', 'pot']);
+      goods(b, 3.6, [(x0 + x1) / 2, 1.1, z], 0, ['fruit', 'basket', 'fruit', 'pot']);
     }
 
     // open stalls under the low end and spilling out onto the square

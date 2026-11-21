@@ -16,7 +16,7 @@ export const normanAlehouse: BuildingDef = {
   summary:
     'As the town grew round its market, so did its alehouse. This is a long timber-framed hall with wattle-and-daub panels, limewashed against the weather, under a steep gabled roof of thatch. ' +
     'There is still no chimney: smoke from the open hearth rises to a louvre on the ridge. ' +
-    'Brewing has moved out of the living room into a lean-to brewhouse with its own fire and a copper for boiling the wort, a sign that ale was now a trade, usually run by a woman, the alewife.',
+    'Brewing has moved out of the living room into a lean-to brewhouse with its own fire and a big metal pot, the copper, for heating water and wort, a sign that ale was now a trade, usually run by a woman, the alewife.',
   materials: ['oak posts', 'wattle and daub', 'limewash', 'straw thatch'],
   lookFor: [
     { label: 'Lean-to brewhouse', note: 'A single-slope roof against the gable end, sheltering the copper, the mash tubs and the brewing fire.', at: [HX + W / 2 + 1.8, 2.7, HZ] },

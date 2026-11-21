@@ -1,16 +1,16 @@
-import { P, tint, linspace, type BuildingDef, type Builder } from '@ah/kit';
+import { P, mix, tint, linspace, type BuildingDef, type Builder } from '@ah/kit';
 
 /** Temple plan: square cella inside a square ambulatory, centred at z = TZ, door to the east (-Z). */
 export const TZ = 2;
 export const CELLA = 7;
-export const CELLA_H = 9.5;
+export const CELLA_H = 10.6;
 export const AMB = 15;
 export const PX = 12.2;
 export const PZ = 21.5;
 
 export const PLASTER = P.plaster;
 export const RED = tint(P.romanTile, -0.08);
-export const WALLSTONE = P.flint;
+export const WALLSTONE = mix(P.flint, P.rubble, 0.55);
 
 /** Column positions along one side of the ambulatory (the east side leaves the middle open). */
 export const colPos = linspace(7, -AMB / 2 + 0.4, AMB / 2 - 0.4);
@@ -54,9 +54,9 @@ export const romanoCelticTemple: BuildingDef = {
     'The god was probably a local one given a Roman name, and the walled precinct follows the line of the Iron Age enclosure.',
   materials: ['flint and mortar', 'painted plaster', 'clay roof tile', 'limestone columns'],
   lookFor: [
-    { label: 'Cella', note: 'The tall central room that housed the cult statue. Only priests went in.', at: [3.8, 8.0, TZ] },
+    { label: 'Cella', note: 'The tall central room that housed the cult statue. Only priests went in.', at: [3.8, 9.0, TZ] },
     { label: 'Ambulatory', note: 'A lower covered walkway round all four sides, open between short columns on a low wall.', at: [7.9, 3.0, TZ + 3] },
-    { label: 'Tiled roofs', note: 'Flat tegulae and curved imbrices of fired clay, one of the new materials Rome brought.', at: [0, 11.8, TZ] },
+    { label: 'Tiled roofs', note: 'Flat tegulae and curved imbrices of fired clay, one of the new materials Rome brought.', at: [0, 12.9, TZ] },
     { label: 'Altar', note: 'Sacrifices and offerings were made in the open air, in front of the temple door.', at: [0, 1.3, -9.5] },
     { label: 'Temenos wall', note: 'The wall of the sacred precinct, laid with courses of red tile in the Roman way.', at: [PX + 0.4, 1.6, 8] },
   ],
@@ -74,7 +74,7 @@ export const romanoCelticTemple: BuildingDef = {
     b.pyramid(CELLA + 0.9, CELLA + 0.9, 2.5, P.romanTile, { at: [0, CELLA_H + 0.6, TZ] });
     for (const [f, x, z] of [['+z', 0, CELLA / 2], ['-z', 0, -CELLA / 2], ['+x', CELLA / 2, 0], ['-x', -CELLA / 2, 0]] as const) {
       for (const o of [-1.5, 1.5]) {
-        const at: [number, number, number] = f === '+z' || f === '-z' ? [o, 7.6, TZ + z] : [x, 7.6, TZ + o];
+        const at: [number, number, number] = f === '+z' || f === '-z' ? [o, 8.4, TZ + z] : [x, 8.4, TZ + o];
         b.window(0.8, 1.2, { at, facing: f, shape: 'round', frame: stone });
       }
     }
@@ -104,7 +104,7 @@ export const romanoCelticTemple: BuildingDef = {
     for (const s of [-1, 1]) b.log(0.11, 0.9, stone, { at: [s * 0.5, 1.3, -9.5], axis: 'z' });
 
     // precinct wall with a gatehouse on the east
-    precinctWall(b, () => 2.4);
+    precinctWall(b, () => 2.1);
     for (const s of [-1, 1]) b.box(0.9, 3.4, 1.2, WALLSTONE, { at: [s * 2.4, 0, -PZ] });
     b.box(5.8, 0.5, 1.6, PLASTER, { at: [0, 3.4, -PZ] });
     b.gable(6.0, 2.0, 1.1, P.romanTile, { at: [0, 3.9, -PZ], overhang: 0.2 });

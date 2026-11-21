@@ -25,8 +25,8 @@ function boundary(b: Builder, x0: number, z0: number, x1: number, z1: number, ox
   const cx = (x0 + x1) / 2;
   const cz = (z0 + z1) / 2;
   // ditch: a dark band of mud just outside the bank, with a wet bottom
-  b.box(1.8, 0.04, len + 1.8, tint(P.mud, -0.05), { at: [cx + ox * 1.9, 0, cz + oz * 1.9], rotY: ang, jitter: false });
-  b.box(0.7, 0.06, len + 1.2, tint(P.mud, -0.18), { at: [cx + ox * 1.9, 0, cz + oz * 1.9], rotY: ang, jitter: false });
+  b.box(1.8, 0.04, len + 1.8, tint(P.mud, 0.04), { at: [cx + ox * 1.9, 0, cz + oz * 1.9], rotY: ang, jitter: false });
+  b.box(0.45, 0.06, len + 1.2, tint(P.mud, -0.07), { at: [cx + ox * 1.9, 0, cz + oz * 1.9], rotY: ang, jitter: false });
   // bank: a low earth ridge
   b.group({ at: [cx + ox * 0.4, 0, cz + oz * 0.4], rotY: ang }, () =>
     b.extrude([[-0.9, 0], [0.9, 0], [0.3, 0.55], [-0.3, 0.55]], len + 0.6, tint(P.turf, -0.04)),

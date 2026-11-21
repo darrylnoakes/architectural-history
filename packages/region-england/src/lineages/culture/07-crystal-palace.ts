@@ -49,7 +49,7 @@ export const crystalPalace: BuildingDef = {
     const G = { mat: 'glass' as const };
 
     // ---------------------------------------------------------------- the glass boxes
-    b.box(L + 0.6, 0.35, d1 + 0.6, tint(P.paving, -0.05), { at: [0, 0, 0] });
+    b.box(L + 0.3, 0.35, d1 + 0.6, tint(P.paving, -0.05), { at: [0, 0, 0] });
     b.box(L, 1.0, d1, board, { at: [0, 0.35, 0] });
     b.box(L, h1 - 1.35, d1, glass, { at: [0, 1.35, 0], ...G });
     b.box(L, h2 - h1, d2, glass, { at: [0, h1, 0], ...G });
@@ -75,7 +75,7 @@ export const crystalPalace: BuildingDef = {
       for (const s of [1, -1]) {
         b.box(0.18, h1 - 0.35, 0.18, iron, { at: [x, 0.35, s * (d1 / 2 + 0.05)] });
         if (Math.abs(x) > tw / 2 + 0.1) b.box(0.15, h2 - h1, 0.15, iron, { at: [x, h1, s * (d2 / 2 + 0.05)] });
-        b.box(0.05, h1 - 1.4, 0.06, P.white, { at: [x + mod / 2, 1.4, s * (d1 / 2 + 0.03)] });
+        if (i < ncol) b.box(0.05, h1 - 1.4, 0.06, P.white, { at: [x + mod / 2, 1.4, s * (d1 / 2 + 0.03)] });
       }
     }
     for (let j = 0; j <= Math.round(d1 / mod); j++) {
@@ -142,8 +142,8 @@ export const crystalPalace: BuildingDef = {
       b.cyl(1.55, 0.05, P.water, { at: [s * 9.5, 0.42, 13.0], segs: 12, mat: 'glass' });
       b.lathe([[0.25, 0.4], [0.18, 1.2], [0.7, 1.4], [0.6, 1.55], [0.1, 1.7], [0.08, 2.3]], P.portland, { at: [s * 9.5, 0, 13.0], segs: 8 });
     });
-    b.tree(6.5, { at: [-14.6, 0, 12.8], kind: 'round' });
-    b.tree(6.5, { at: [14.6, 0, -12.8], kind: 'round' });
+    b.tree(6, { at: [-13.6, 0, 12.6], kind: 'round' });
+    b.tree(6, { at: [13.6, 0, -12.6], kind: 'round' });
 
     b.collider(L + 0.6, d1 + 0.6);
   },

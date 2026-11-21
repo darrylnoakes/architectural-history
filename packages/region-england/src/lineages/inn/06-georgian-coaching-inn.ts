@@ -39,7 +39,7 @@ export const georgianCoachingInn: BuildingDef = {
     'Turnpike roads and scheduled stagecoaches made the market-town inn a busy staging post, where coaches changed horses and passengers dined while they waited. ' +
     'Prosperous innkeepers refronted the old timber ranges in fashionable brick with tall sash windows, a parapet and a classical cornice, keeping the medieval plan of a yard behind. ' +
     'The carriage arch grew tall enough for a coach with luggage and passengers on the roof, and stables for dozens of horses filled the yard.',
-  materials: ['red brick', 'Portland stone dressings', 'Welsh slate', 'painted timber sashes'],
+  materials: ['red brick', 'stone dressings', 'clay roof tiles', 'painted timber sashes'],
   lookFor: [
     { label: 'Carriage arch', note: 'Tall and wide enough for a loaded stagecoach with passengers riding on the roof.', at: [0, 4.7, ZF + 0.3] },
     { label: 'Sash windows', note: 'Two sliding frames, six panes each, set in a regular grid. Tallest on the first floor, where the best rooms were.', at: [-6, 5.8, ZF + 0.3] },
@@ -52,7 +52,7 @@ export const georgianCoachingInn: BuildingDef = {
     const brick = b.pick([P.brickRed, tint(P.brickRed, 0.03), P.brickOrange]);
     const stone = P.portland;
     const sash = P.white;
-    const roof = b.pick([P.slate, P.slateBlue]);
+    const roof = b.pick([P.tileRed, P.tileBrown, tint(P.tileRed, -0.05)]);
     const door = b.pick([P.doorGreen, P.doorBlack, P.doorBlue]);
     const zm = (ZF + ZFB) / 2;
     const dep = ZF - ZFB;
@@ -84,7 +84,9 @@ export const georgianCoachingInn: BuildingDef = {
     b.box(2 * XO, 0.8, 0.3, brick, { at: [0, TOP, ZF - 0.15] });
     b.box(2 * XO, 0.8, 0.3, brick, { at: [0, TOP, ZFB + 0.15] });
     b.sym((s) => b.box(0.3, 0.8, dep, brick, { at: [s * (XO - 0.15), TOP, zm] }));
-    b.box(2 * XO + 0.1, 0.12, dep + 0.1, stone, { at: [0, TOP + 0.8, zm] });
+    b.box(2 * XO + 0.1, 0.12, 0.4, stone, { at: [0, TOP + 0.8, ZF - 0.15] });
+    b.box(2 * XO + 0.1, 0.12, 0.4, stone, { at: [0, TOP + 0.8, ZFB + 0.15] });
+    b.sym((s) => b.box(0.4, 0.12, dep, stone, { at: [s * (XO - 0.15), TOP + 0.8, zm] }));
     b.sym((s) => {
       for (let i = 0; i < 12; i++) {
         const w = i % 2 ? 0.5 : 0.8;

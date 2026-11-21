@@ -30,7 +30,7 @@ export const normanMarketCross: BuildingDef = {
   date: 'c. 1200',
   summary:
     'The lord of the manor has bought a royal charter for a weekly market, and a tall stone cross now marks the spot where tolls are paid and deals are struck. ' +
-    'Stone is back for the first time since Rome, but only for the cross; the traders work from small thatched booths that have become permanent. ' +
+    'In the market place only the cross is built of stone; the traders work from small thatched booths that have become permanent fixtures. ' +
     'The stocks stand alongside as a warning: the market court punished short weights and bad ale on the spot.',
   materials: ['limestone', 'oak', 'wattle and daub', 'straw thatch'],
   lookFor: [
