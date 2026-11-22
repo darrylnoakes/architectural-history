@@ -84,6 +84,14 @@ export function plate(b: Builder, pts: Pt[], depth: number, color: number, z = 0
   b.extrude(pts, depth, color, { at: [0, 0, z + depth / 2], holes, jitter: false });
 }
 
+/** A moulded band (archivolt) round an arched opening in the local face frame: t wide, standing `depth` proud. */
+export function archRing(b: Builder, xc: number, y0: number, w: number, h: number, t: number, depth: number, color: number, z = 0, shape: 'round' | 'pointed' | 'segmental' | 'basket' = 'round'): void {
+  const inner = archPts(xc, y0, w, h, shape, 10).slice(1, -1);
+  const outer = archPts(xc, y0, w + 2 * t, h + t, shape, 10).slice(1, -1);
+  const pts: Pt[] = [[xc - w / 2 - t, y0], ...outer, [xc + w / 2 + t, y0], [xc + w / 2, y0], ...inner.reverse(), [xc - w / 2, y0]];
+  plate(b, pts, depth, color, z);
+}
+
 /** A thin bar between two points of the local face frame, standing `d` proud. */
 export function bar(b: Builder, x0: number, y0: number, x1: number, y1: number, t: number, d: number, color: number, z = 0): void {
   b.beam([x0, y0, z + d / 2], [x1, y1, z + d / 2], t, d, color, { jitter: false });
@@ -137,12 +145,11 @@ export function croisee(
   if (o.mullion !== false) b.box(0.12, h, 0.1, frame, { at: [x, y, z + 0.12], jitter: false });
   if (o.bars) {
     // leaded or wooden glazing bars, one level row in each light
-    for (let i = 1; i <= o.bars; i++) b.box(w, 0.035, 0.05, tint(frame, -0.25), { at: [x, y + ((tr - y) * i) / (o.bars + 1), z + 0.12], jitter: false });
+    for (let i = 1; i <= o.bars; i++) b.box(w, 0.035, 0.05, P.lead, { at: [x, y + ((tr - y) * i) / (o.bars + 1), z + 0.12], jitter: false });
   }
   if (o.hood) {
     // a drip moulding (larmier) with short returns
     b.box(w + 2 * f + 0.3, 0.14, 0.18, frame, { at: [x, y + h + f, z + 0.09], jitter: false });
-    for (const s of [-1, 1]) b.box(0.14, 0.4, 0.18, frame, { at: [x + s * (w / 2 + f + 0.08), y + h + f - 0.3, z + 0.09], jitter: false });
   }
 }
 
@@ -401,10 +408,9 @@ export function dormer(
     // the gable (gâble) in front of the dormer roof, its rakes crocketed, a finial at the top
     plate(b, [[x - fw / 2 - 0.08, gy], [x + fw / 2 + 0.08, gy], [x, gy + gh]], 0.24, st, 0.0);
     plate(b, [[x - fw / 2 + 0.3, gy + 0.18], [x + fw / 2 - 0.3, gy + 0.18], [x, gy + gh - 0.5]], 0.28, tint(st, -0.07), 0.0);
-    accolade(b, x, gy - 0.05, w * 0.85, gh * 0.55, st, 0.2, 0.1);
     for (const s of [-1, 1]) {
-      for (let i = 1; i <= 3; i++) {
-        const t = i / 4;
+      for (let i = 1; i <= 2; i++) {
+        const t = i / 3;
         b.box(0.2, 0.16, 0.2, st, { at: [x + s * (fw / 2 + 0.08) * (1 - t) + s * 0.05, gy + gh * t + 0.02, 0.12], jitter: false });
       }
       // flanking pinnacles

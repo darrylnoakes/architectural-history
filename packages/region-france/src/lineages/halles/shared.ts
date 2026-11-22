@@ -31,13 +31,9 @@ export function archPanel(b: Builder, w: number, h: number, color: number, at: V
  * A solid standing on a polygon drawn in plan: `pts` are [x, z] pairs (any winding), the solid
  * rises from y0 to y0 + h. For blocks that are not rectangles (round the rotunda of a passage, say).
  */
-export function planSolid(b: Builder, pts: [number, number][], h: number, color: number, y0 = 0, mat?: 'glass'): void {
-  b.extrude(
-    pts.map(([x, z]) => [x, -z] as [number, number]),
-    h,
-    color,
-    { at: [0, y0 + h / 2, 0], rot: [-Math.PI / 2, 0, 0], mat },
-  );
+export function planSolid(b: Builder, pts: [number, number][], h: number, color: number, y0 = 0, mat?: 'glass', holes?: [number, number][][]): void {
+  const flip = (p: [number, number][]) => p.map(([x, z]) => [x, -z] as [number, number]);
+  b.extrude(flip(pts), h, color, { at: [0, y0 + h / 2, 0], rot: [-Math.PI / 2, 0, 0], mat, holes: holes?.map(flip) });
 }
 
 /**
@@ -267,10 +263,10 @@ export function courses(b: Builder, w: number, y0: number, z0: number, y1: numbe
 }
 
 /** A cast-iron column: a base, a slender shaft and a flared capital. */
-export function ironColumn(b: Builder, h: number, at: Vec3, r = 0.13, color: number = P.castIron): void {
-  b.cyl(r * 1.8, 0.35, color, { at, segs: 8 });
-  b.cyl(r, h - 0.75, color, { at: [at[0], at[1] + 0.35, at[2]], segs: 8, rTop: r * 0.9 });
-  b.cyl(r * 0.9, 0.4, color, { at: [at[0], at[1] + h - 0.4, at[2]], segs: 8, rTop: r * 2.0 });
+export function ironColumn(b: Builder, h: number, at: Vec3, r = 0.13, color: number = P.castIron, segs = 6): void {
+  b.cyl(r * 1.8, 0.35, color, { at, segs });
+  b.cyl(r, h - 0.75, color, { at: [at[0], at[1] + 0.35, at[2]], segs, rTop: r * 0.9 });
+  b.cyl(r * 0.9, 0.4, color, { at: [at[0], at[1] + h - 0.4, at[2]], segs, rTop: r * 2.0 });
 }
 
 /** A run of iron railing: a top rail, a bottom rail and balusters, from p0 to p1 at height h. */
@@ -292,7 +288,7 @@ export function railing(b: Builder, p0: Vec3, p1: Vec3, h: number, color: number
 export function windowRow(b: Builder, xs: number[], y: number, w: number, h: number, facing: Facing, z: number, frame: number, shutter?: number, alongZ = false): void {
   for (const c of xs) {
     const at: Vec3 = alongZ ? [z, y, c] : [c, y, z];
-    b.window(w, h, { at, facing, frame, bars: [2, 3] });
+    b.window(w, h, { at, facing, frame, bars: [2, 2] });
     if (shutter !== undefined) {
       for (const s of [-1, 1]) {
         const off = s * (w / 2 + w * 0.27);

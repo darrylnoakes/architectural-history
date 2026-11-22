@@ -61,9 +61,8 @@ export function cafeTable(b: Builder, at: Vec3, top: number, frame: number, chai
     for (let i = 0; i < chairs; i++) {
       const a = (i / chairs) * Math.PI * 2 + Math.PI / 2;
       b.group({ at: [Math.sin(a) * 0.62, 0, Math.cos(a) * 0.62], rotY: a }, () => {
-        b.box(0.4, 0.04, 0.4, frame, { at: [0, 0.44, 0] });
-        b.box(0.4, 0.4, 0.04, frame, { at: [0, 0.48, 0.19] });
-        b.sym((s) => b.box(0.03, 0.44, 0.36, frame, { at: [s * 0.17, 0, 0] }));
+        b.box(0.4, 0.44, 0.4, frame, { at: [0, 0, 0], jitter: false });
+        b.box(0.4, 0.45, 0.04, frame, { at: [0, 0.44, 0.19], jitter: false });
       });
     }
   });

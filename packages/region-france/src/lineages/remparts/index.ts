@@ -1,29 +1,33 @@
-import { P, type Lineage } from '@ah/kit';
+import type { Lineage } from '@ah/kit';
+import { murusGallicus } from './01-murus-gallicus';
+import { monumentalArch } from './02-monumental-arch';
+import { castrumWall } from './03-castrum-wall';
+import { philippianGate } from './04-philippian-gate';
+import { fortifiedGate } from './05-fortified-gate';
+import { vaubanGateStage } from './06-vauban-gate';
 
-// PLACEHOLDER: replaced by the real lineage.
 const lineage: Lineage = {
   id: 'remparts',
   name: 'Les Remparts',
   kind: 'defence',
-  role: 'Placeholder',
+  role: 'The main gate and the wall either side of it.',
   plotSize: [30, 16],
   stages: [
     {
-      from: -300,
-      def: {
-        id: 'remparts-placeholder',
-        name: 'Les Remparts',
-        style: 'Placeholder',
-        date: 'n/a',
-        summary: 'Placeholder building.',
-        materials: [],
-        lookFor: [],
-        build(b) {
-          b.box(12, 4, 8.0, P.pierreBlonde);
-          b.gable(12, 8.0, 2, P.ardoise, { at: [0, 4, 0], overhang: 0.3 });
-        },
+      from: -120,
+      builtUntil: -52,
+      end: {
+        year: -20,
+        fate: 'cleared',
+        note: 'After the conquest the new Roman town spread over the plain below and needed no wall. The old rampart was abandoned, its stones and timbers carted off for building, and by about 20 BC it had been levelled.',
       },
+      def: murusGallicus,
     },
+    { from: 200, builtUntil: 250, def: monumentalArch },
+    { from: 290, builtUntil: 380, def: castrumWall },
+    { from: 1200, builtUntil: 1300, def: philippianGate },
+    { from: 1420, builtUntil: 1500, def: fortifiedGate },
+    { from: 1680, builtUntil: 1720, def: vaubanGateStage },
   ],
 };
 

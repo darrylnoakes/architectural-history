@@ -5,6 +5,11 @@ import { artisansRow } from './02-artisans-row';
 import { sunkenHuts } from './03-sunken-huts';
 import { oneRoomHouses } from './04-one-room-houses';
 import { weaversHouses } from './05-weavers-houses';
+import { couree } from './06-couree';
+import { familistere } from './07-familistere';
+import { citeJardin } from './08-cite-jardin';
+import { grandEnsemble } from './09-grand-ensemble';
+import { renewalHousing } from './10-renewal-housing';
 
 const lineage: Lineage = {
   id: 'faubourg',
@@ -18,6 +23,11 @@ const lineage: Lineage = {
     { from: 500, builtUntil: 1000, end: renewedBy(1180), def: sunkenHuts },
     { from: 1150, builtUntil: 1450, end: renewedBy(1560), def: oneRoomHouses },
     { from: 1480, builtUntil: 1640, def: weaversHouses },
+    { from: 1850, builtUntil: 1900, def: couree },
+    { from: 1872, builtUntil: 1900, def: familistere },
+    { from: 1922, builtUntil: 1935, def: citeJardin },
+    { from: 1962, builtUntil: 1975, def: grandEnsemble },
+    { from: 2012, def: renewalHousing },
   ],
 };
 

@@ -63,8 +63,8 @@ export const ford: BuildingDef = {
       ];
       side(b, s > 0 ? ramp : ramp.reverse(), 4.6, mix(gravel, P.mud, 0.35), fx);
       // trodden chalky track up from the ford, with wheel ruts
-      b.box(3.4, 0.04, 5.0, mix(P.earth, P.chalk, 0.25), { at: [fx * 0.6, 0, s * (BANK + 5.6)], jitter: false });
-      for (const dx of [-0.75, 0.75]) b.box(0.18, 0.05, 5.0, mix(P.mud, P.earth, 0.4), { at: [fx * 0.6 + dx, 0.0, s * (BANK + 5.6)], jitter: false });
+      b.box(3.4, 0.04, 5.0, mix(P.earth, P.chalk, 0.25), { at: [fx, 0, s * (BANK + 5.6)], jitter: false });
+      for (const dx of [-0.75, 0.75]) b.box(0.18, 0.05, 5.0, mix(P.mud, P.earth, 0.4), { at: [fx + dx, 0.0, s * (BANK + 5.6)], jitter: false });
       // reeds along the bank either side of the crossing
       for (const x of [-7.0, -5.2, 2.6, 6.8]) reeds(b, x, s * (BANK + 0.5), P.reed);
     });

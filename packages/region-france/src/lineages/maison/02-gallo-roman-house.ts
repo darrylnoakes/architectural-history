@@ -16,22 +16,22 @@ export const galloRomanHouse: BuildingDef = {
     {
       label: 'Open shop front',
       note: 'By day the whole street end stands open behind a masonry counter; at night it is closed with boards slid into a groove in the sill.',
-      at: [-2.9, 1.4, 8.3],
+      at: [-2.6, 1.4, 8.3],
     },
     {
       label: 'Stone sill',
       note: 'A low wall of mortared rubble keeps the timber frame and cob out of the wet ground, a Roman improvement on posts sunk in the earth.',
-      at: [-6.75, 0.35, 0.0],
+      at: [-6.45, 0.35, 0.0],
     },
     {
       label: 'Tegulae and imbrices',
       note: 'Flat tiles with raised edges laid side by side, the joints capped by half-round tiles: the Roman roof, heavy and fireproof, at a low pitch.',
-      at: [-1.3, 4.6, 0.5],
+      at: [-1.0, 4.6, 0.5],
     },
     {
       label: 'Cellar stair',
       note: 'Steps under a little tiled hood lead down to a stone cellar, cool for storing wine, oil and grain, with niches in its walls.',
-      at: [1.65, 0.5, -1.6],
+      at: [1.95, 0.5, -1.6],
     },
     {
       label: 'Well',
@@ -44,7 +44,7 @@ export const galloRomanHouse: BuildingDef = {
     const timber = mix(P.oak, plaster, 0.25);
     const sill = tint(P.rubble, b.range(-0.04, 0.03));
     const tile = tint(P.romanTile, b.range(-0.05, 0.03));
-    const xc = -2.9;
+    const xc = -2.6;
     const W = 7.6;
     const zF = 7.8;
     const zB = -3.6;

@@ -114,7 +114,7 @@ export function archCurve(op: Opening, n = 12): ZY[] {
       out.push([cz + a * Math.cos(t), spring + rise * Math.sin(t)]);
     }
   } else if (kind === 'pointed') {
-    const e = a * 0.3;
+    const e = a * 0.45;
     const A = a + e;
     const D = (e * e + rise * rise - A * A) / (2 * rise);
     const h = Math.ceil(n / 2);
@@ -339,9 +339,8 @@ export function balustrade(b: Builder, o: { x: number; za: number; zb: number; f
       b.lathe(
         [
           [0.07, 0],
-          [0.12, bh * 0.3],
-          [0.06, bh * 0.75],
-          [0.09, bh],
+          [0.12, bh * 0.35],
+          [0.06, bh],
         ],
         col,
         { at: [o.x, y, z], segs: 4, jitter: false },
@@ -354,10 +353,12 @@ export function balustrade(b: Builder, o: { x: number; za: number; zb: number; f
 export function railing(b: Builder, o: { x: number; za: number; zb: number; f: (z: number) => number; color: number; h?: number; posts?: number; y0?: number }): void {
   const h = o.h ?? 1.05;
   const y0 = o.y0 ?? 0;
-  const zs = steps(o.posts ?? 20, o.za, o.zb);
+  const posts = o.posts ?? 20;
+  const zs = steps(posts, o.za, o.zb);
+  const n = Math.max(2, Math.min(20, posts));
   for (const z of zs) b.box(0.05, h, 0.05, o.color, { at: [o.x, o.f(z) + y0, z], jitter: false });
-  band(b, o.x, 0.07, o.za, o.zb, (z) => o.f(z) + y0 + h - 0.05, (z) => o.f(z) + y0 + h + 0.02, o.color, 24);
-  band(b, o.x, 0.04, o.za, o.zb, (z) => o.f(z) + y0 + h * 0.45, (z) => o.f(z) + y0 + h * 0.45 + 0.04, o.color, 24);
+  band(b, o.x, 0.07, o.za, o.zb, (z) => o.f(z) + y0 + h - 0.05, (z) => o.f(z) + y0 + h + 0.02, o.color, n);
+  band(b, o.x, 0.04, o.za, o.zb, (z) => o.f(z) + y0 + h * 0.45, (z) => o.f(z) + y0 + h * 0.45 + 0.04, o.color, n);
 }
 
 /** Reeds in a clump at the water's edge. */

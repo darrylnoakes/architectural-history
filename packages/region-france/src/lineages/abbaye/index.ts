@@ -1,29 +1,26 @@
-import { P, type Lineage } from '@ah/kit';
+import type { Lineage } from '@ah/kit';
+import { merovingianMonastery } from './01-merovingian-monastery';
+import { carolingianAbbey } from './02-carolingian-abbey';
+import { romanesqueAbbey } from './03-romanesque-abbey';
+import { gothicChoir } from './04-gothic-choir';
+import { mauristAbbey } from './05-maurist-abbey';
+import { abbeyQuarried } from './06-abbey-quarried';
+import { abbeyMuseum } from './07-abbey-museum';
 
-// PLACEHOLDER: replaced by the real lineage.
 const lineage: Lineage = {
   id: 'abbaye',
   name: 'L’Abbaye',
   kind: 'monastery',
-  role: 'Placeholder',
+  role: 'The great abbey outside the walls: a saint’s grave becomes a planned monastery, gives birth to Gothic, and is sold for stone in the Revolution.',
   plotSize: [40, 44],
   stages: [
-    {
-      from: -300,
-      def: {
-        id: 'abbaye-placeholder',
-        name: 'L’Abbaye',
-        style: 'Placeholder',
-        date: 'n/a',
-        summary: 'Placeholder building.',
-        materials: [],
-        lookFor: [],
-        build(b) {
-          b.box(12, 4, 12, P.pierreBlonde);
-          b.gable(12, 12, 2, P.ardoise, { at: [0, 4, 0], overhang: 0.3 });
-        },
-      },
-    },
+    { from: 560, def: merovingianMonastery },
+    { from: 830, def: carolingianAbbey },
+    { from: 1090, def: romanesqueAbbey },
+    { from: 1144, builtUntil: 1230, def: gothicChoir },
+    { from: 1700, builtUntil: 1780, def: mauristAbbey },
+    { from: 1800, builtUntil: 1830, def: abbeyQuarried },
+    { from: 1995, def: abbeyMuseum },
   ],
 };
 

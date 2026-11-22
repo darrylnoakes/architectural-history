@@ -31,7 +31,7 @@ export function pitched(
   d: number,
   h: number,
   color: number,
-  o: { at: Vec3; ridge?: 'x' | 'z'; overhang?: number; ends?: number; wall?: number; thick?: number; courses?: number; ribs?: number; sides?: (1 | -1)[]; ridgeCap?: number },
+  o: { at: Vec3; ridge?: 'x' | 'z'; overhang?: number; ends?: number; wall?: number; thick?: number; courses?: number; ribs?: number; sides?: (1 | -1)[]; ridgeCap?: number; noFill?: boolean },
 ): void {
   const ov = o.overhang ?? 0.3;
   const oe = o.ends ?? ov;
@@ -50,7 +50,7 @@ export function pitched(
     color,
     { at: o.at, rotY: rot },
   );
-  b.extrude([[-half, 0], [half, 0], [0, h]], run, o.wall ?? color, { at: o.at, rotY: rot });
+  if (!o.noFill) b.extrude([[-half, 0], [half, 0], [0, h]], run, o.wall ?? color, { at: o.at, rotY: rot });
   const [x0, y0, z0] = o.at;
   const line = tint(color, -0.07);
   const n = o.courses ?? 0;
@@ -115,10 +115,10 @@ export function mansard(
   if (o.ends !== false) {
     for (const s of [1, -1]) {
       b.extrude(
-        [[-half, 0], [half, 0], [half - inset + 0.15, hLow + 0.1], [0, hLow + hUp + 0.25], [-half + inset - 0.15, hLow + 0.1]],
+        [[-half, 0], [half, 0], [half - inset + 0.04, hLow], [0, hLow + hUp + 0.06], [-half + inset - 0.04, hLow]],
         0.3,
         wallColor,
-        { at: [x0 + s * (w / 2 + 0.15), y0, z0], rotY: Math.PI / 2 },
+        { at: [x0 + s * (w / 2 - 0.15), y0, z0], rotY: Math.PI / 2 },
       );
     }
   }
@@ -141,9 +141,9 @@ export function dormer(
     const rh = o.pitch ?? w * 0.45;
     if (o.pediment !== undefined) {
       // a stone pediment in front of a little roof
-      b.extrude([[-w / 2 - 0.12, 0], [w / 2 + 0.12, 0], [0, rh]], 0.16, o.pediment, { at: [0, h, 0.02] });
+      b.extrude([[-w / 2 - 0.12, -0.05], [w / 2 + 0.12, -0.05], [0, rh + 0.1]], 0.2, o.pediment, { at: [0, h, 0.14] });
     }
-    pitched(b, w, dep, rh, roof, { at: [0, h, -dep / 2], ridge: 'z', overhang: 0.12, ends: 0.1, wall: cheek, thick: 0.1 });
+    pitched(b, w, dep, rh, roof, { at: [0, h, -dep / 2], ridge: 'z', overhang: 0.12, ends: 0.05, wall: cheek, thick: 0.1, ridgeCap: tint(roof, 0.04) });
     const ww = w - 0.36;
     b.window(ww, h - 0.3, { at: [0, 0.12, 0.0], frame: o.frame ?? P.white, glass: o.win ?? P.windowDark, bars: o.bars ?? [2, 3], shape: o.shape });
   });

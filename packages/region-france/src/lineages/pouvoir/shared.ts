@@ -231,7 +231,7 @@ export const TRICOLOUR = [0x2a4f8f, P.white, 0xc23b2e];
 export function statue(b: Builder, at: V3, h: number, color: number, o?: { rotY?: number; arm?: boolean }): void {
   b.group({ at, rotY: o?.rotY ?? 0 }, () => {
     b.cyl(h * 0.13, h * 0.8, color, { rTop: h * 0.09, segs: 6, jitter: false });
-    b.sphere(h * 0.08, color, { at: [0, h * 0.88, 0], segs: 5, jitter: false });
+    b.box(h * 0.13, h * 0.14, h * 0.13, color, { at: [0, h * 0.8, 0], jitter: false });
     if (o?.arm) b.beam([h * 0.1, h * 0.7, 0], [h * 0.3, h * 0.95, h * 0.12], h * 0.06, h * 0.06, color);
   });
 }
@@ -336,7 +336,7 @@ export function belfry(b: Builder, st: Stage): void {
         arcade(b, cw, 5.4, 0.45, stone, { at: [0, BEL_GALLERY - 0.9, ch - 0.22], openings: 2, openW: 1.5, openH: 4.0, shape: 'pointed' });
         for (const sx of [-cw / 4, cw / 4]) {
           // abat-sons: sloping louvre boards that throw the sound of the bells down into the town
-          for (const y of [1.1, 2.0, 2.9]) b.box(1.45, 0.1, 0.5, P.oakDark, { at: [sx, BEL_GALLERY - 0.9 + y, ch - 0.3], rot: [0.5, 0, 0], jitter: false });
+          for (const y of [1.3, 2.6]) b.box(1.45, 0.1, 0.5, P.oakDark, { at: [sx, BEL_GALLERY - 0.9 + y, ch - 0.3], rot: [0.5, 0, 0], jitter: false });
         }
       });
     }
@@ -432,7 +432,7 @@ export function marketHallColliders(b: Builder): void {
   b.collider(2.0, 8, { at: [x1 + 0.9, 0, (z0 + z1) / 2 - 0.5] });
 }
 
-/** A flamboyant stone dormer (lucarne) rising from the parapet: window, crocketed gable, pinnacles. */
+/** A flamboyant stone dormer (lucarne) rising from the parapet: window, gable, pinnacles. */
 function lucarne(b: Builder, x: number, y: number, z: number, w: number, h: number, stone: number, slate: number, big: boolean): void {
   b.group({ at: [x, y, z] }, () => {
     const gh = big ? 2.2 : 1.2;
@@ -441,8 +441,7 @@ function lucarne(b: Builder, x: number, y: number, z: number, w: number, h: numb
     b.extrude([[-w / 2 - 0.1, 0], [w / 2 + 0.1, 0], [0, gh]], 0.3, stone, { at: [0, h, 0.0], jitter: false });
     win(b, w - 0.6, h - 0.4, { at: [0, 0.2, 0.0], frame: tint(stone, -0.06), mullion: big, transom: big ? (h - 0.4) * 0.55 : undefined });
     if (big) {
-      // crockets up the gable, a finial, and a pinnacle each side
-      for (const t of [0.3, 0.6]) for (const s of [-1, 1]) b.box(0.2, 0.2, 0.2, stone, { at: [s * (w / 2 + 0.1) * (1 - t), h + gh * t, 0.15], jitter: false });
+      // a finial on the gable and a pinnacle each side
       b.cone(0.18, 0.9, stone, { at: [0, h + gh - 0.1, 0], segs: 4 });
       for (const s of [-1, 1]) {
         b.box(0.32, h + 0.6, 0.32, stone, { at: [s * (w / 2 + 0.2), 0, 0.05], jitter: false });
@@ -522,7 +521,6 @@ export function townHall(b: Builder, st: Stage): void {
   const zc = (z0 + z1) / 2;
   b.gable(W, z1 - z0, HALL_RISE, slate, { at: [xc, EAVES + 0.1, zc], wall: stone, thick: 0.2 });
   b.box(W + 0.2, 0.25, 0.3, tint(P.lead, -0.05), { at: [xc, EAVES + HALL_RISE + 0.2, zc], jitter: false });
-  for (const x of spread(7, x0 + 1, x1 - 1)) b.cone(0.1, 0.8, P.lead, { at: [x, EAVES + HALL_RISE + 0.4, zc], segs: 4 });
   for (const ex of [x0, x1]) {
     b.box(0.5, 1.4, 0.5, stone, { at: [ex, EAVES + HALL_RISE - 0.2, zc], jitter: false });
     b.cone(0.35, 1.6, stone, { at: [ex, EAVES + HALL_RISE + 1.2, zc], segs: 4 });
@@ -532,8 +530,8 @@ export function townHall(b: Builder, st: Stage): void {
   b.chimney(1.0, 2.6, 0.8, stone, { at: [x1 - 3, EAVES + HALL_RISE * 0.55, zc - 3] });
   // flamboyant dormers in two rows on the front, smaller ones behind
   BAYS.forEach((x) => lucarne(b, x, EAVES, z1 - 0.3, 2.2, 3.0, stone, slate, true));
-  for (const x of spread(4, x0 + 4, x1 - 4)) lucarne(b, x, EAVES + 5.3, z1 - 3.9, 1.3, 1.6, slate, slate, false);
-  for (const x of spread(3, x0 + 9, x1 - 3)) {
+  for (const x of spread(3, x0 + 5, x1 - 5)) lucarne(b, x, EAVES + 5.3, z1 - 3.9, 1.3, 1.6, slate, slate, false);
+  for (const x of spread(2, x0 + 10, x1 - 4)) {
     b.group({ at: [x, 0, z0], rotY: Math.PI }, () => lucarne(b, 0, EAVES + 1.0, 0.7, 1.4, 1.8, slate, slate, false));
   }
   // from the Revolution on, the tricolour on the hall; in 1510 the town's banner

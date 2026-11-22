@@ -41,9 +41,9 @@ export const frankishHouse: BuildingDef = {
     b.box(13.6, 0.03, 17.6, tint(P.earth, 0.12), { at: [0, 0, 0], jitter: false });
 
     // the long post house, eaves to the street
-    const xc = -2.4;
+    const xc = -2.2;
     const zc = 1.6;
-    const W = 9.6;
+    const W = 8.6;
     const D = 5.6;
     const wallH = 1.5;
     b.box(W, wallH, D, daub, { at: [xc, 0, zc] });
@@ -52,8 +52,8 @@ export const frankishHouse: BuildingDef = {
       for (let i = 0; i <= 6; i++) b.cyl(0.14, wallH + 0.1, post, { at: [xc - W / 2 + (i * W) / 6, 0, zc + s * (D / 2 + 0.06)], segs: 6 });
     }
     for (const s of [1, -1]) b.cyl(0.14, wallH + 0.1, post, { at: [xc + s * (W / 2 + 0.06), 0, zc], segs: 6 });
-    b.hip(W + 1.6, D + 1.6, 4.4, thatch, { at: [xc, wallH + 0.3, zc] });
-    b.hip(W + 0.9, D + 0.9, 4.0, tint(thatch, -0.12), { at: [xc, wallH, zc] });
+    b.hip(W + 1.2, D + 1.4, 4.2, thatch, { at: [xc, wallH + 0.3, zc] });
+    b.hip(W + 0.7, D + 0.9, 3.9, tint(thatch, -0.12), { at: [xc, wallH, zc] });
     // door under the eaves
     const dz = zc + D / 2;
     b.panel(1.1, 1.65, P.oakDark, { at: [xc + 1.2, 0, dz], facing: '+z', depth: 0.08 });
@@ -71,9 +71,10 @@ export const frankishHouse: BuildingDef = {
     b.box(hw - 0.2, 0.31, hl - 0.2, P.soil, { at: [hx, 0, hz], jitter: false });
     for (const s of [1, -1]) b.cyl(0.13, 2.55, post, { at: [hx, 0, hz + s * (hl / 2 - 0.05)], segs: 6 });
     b.log(0.09, hl + 0.5, post, { at: [hx, 2.35, hz], axis: 'z', segs: 6 });
-    pitched(b, hw, hl, 2.15, thatch, { at: [hx, 0.3, hz], ridge: 'z', overhang: 0.15, ends: 0.2, wall: tint(P.wattle, 0.04), thick: 0.32 });
-    // the front gable is left open below: wattle only in the apex
-    b.extrude([[-hw / 2, 0], [hw / 2, 0], [0, 2.15]], 0.1, P.timberBlack, { at: [hx, 0.3, hz + hl / 2 + 0.01] });
+    pitched(b, hw, hl, 2.15, thatch, { at: [hx, 0.3, hz], ridge: 'z', overhang: 0.15, ends: 0.2, wall: tint(P.wattle, 0.04), thick: 0.32, noFill: true });
+    // the back gable is closed with wattle, the front left open below the apex
+    b.extrude([[-hw / 2, 0], [hw / 2, 0], [0, 2.15]], 0.1, tint(P.wattle, 0.04), { at: [hx, 0.3, hz - hl / 2 + 0.05] });
+    b.extrude([[-hw / 2 + 0.1, 0], [hw / 2 - 0.1, 0], [0, 2.0]], 0.05, tint(P.soil, -0.1), { at: [hx, 0.3, hz - hl / 2 + 0.13] });
     b.extrude([[-0.9, 1.15], [0.9, 1.15], [0, 2.1]], 0.12, tint(P.wattle, 0.04), { at: [hx, 0.3, hz + hl / 2 + 0.03] });
     // the loom just inside: two uprights leaning back, the warp, a row of clay weights
     const lz = hz + hl / 2 - 0.35;

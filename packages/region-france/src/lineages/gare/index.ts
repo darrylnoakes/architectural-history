@@ -1,29 +1,16 @@
-import { P, type Lineage } from '@ah/kit';
+import type { Lineage } from '@ah/kit';
+import { embarcadere } from './01-embarcadere';
+import { grandeGare } from './02-grande-gare';
 
-// PLACEHOLDER: replaced by the real lineage.
 const lineage: Lineage = {
   id: 'gare',
   name: 'La Gare',
   kind: 'transport',
-  role: 'Placeholder',
+  role: 'Where the railway reaches the town: from a stone pavilion and a timber shed to a glass canopy for the TGV.',
   plotSize: [40, 24],
   stages: [
-    {
-      from: -300,
-      def: {
-        id: 'gare-placeholder',
-        name: 'La Gare',
-        style: 'Placeholder',
-        date: 'n/a',
-        summary: 'Placeholder building.',
-        materials: [],
-        lookFor: [],
-        build(b) {
-          b.box(12, 4, 12.0, P.pierreBlonde);
-          b.gable(12, 12.0, 2, P.ardoise, { at: [0, 4, 0], overhang: 0.3 });
-        },
-      },
-    },
+    { from: 1849, builtUntil: 1870, def: embarcadere },
+    { from: 1893, builtUntil: 1914, def: grandeGare },
   ],
 };
 

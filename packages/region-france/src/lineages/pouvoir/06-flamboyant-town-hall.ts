@@ -14,7 +14,7 @@ export const flamboyantTownHall: BuildingDef = {
   lookFor: [
     { label: 'Arcade on the square', note: 'Five pointed arches carry the front wall, leaving a covered walk where merchants could trade in the rain.', at: [BAYS[1], 2.6, HALL.z1 + 0.3] },
     { label: 'Statues in niches', note: 'Figures of saints and rulers stand in canopied niches on the buttresses between the windows.', at: [BUTTS[2], HALL.g + 2.4, HALL.z1 + 1.1] },
-    { label: 'Flamboyant dormers', note: 'Stone dormers (lucarnes) rise from the parapet, each with a mullioned window, a crocketed gable and pinnacles.', at: [BAYS[3], EAVES + 3.4, HALL.z1 + 0.1] },
+    { label: 'Flamboyant dormers', note: 'Stone dormers (lucarnes) rise from the parapet, each with a mullioned window, a pointed gable with a finial, and pinnacles either side.', at: [BAYS[3], EAVES + 3.4, HALL.z1 + 0.1] },
     { label: 'Openwork parapet', note: 'The stone parapet along the eaves is pierced with a row of small pointed lights like a lace edging.', at: [BAYS[0] + 2, EAVES + 0.6, HALL.z1 + 0.3] },
     { label: 'Clock and corner turrets', note: 'The belfry is brought up to date with a public clock on its face to the square and four turrets with conical slate roofs at the gallery.', at: [BEL.x, 25.2 + 1.3, BEL.z + BEL.w / 2 + 0.3] },
   ],

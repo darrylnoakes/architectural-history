@@ -1,5 +1,5 @@
 import { P, mix, tint, type Builder, type BuildingDef } from '@ah/kit';
-import { DEG, patch, tileRoof, well } from './shared';
+import { patch, tileRoof, well } from './shared';
 
 const ZF = 5.6; // street face of the ground storey
 const D = 8.4; // depth of each house
@@ -21,7 +21,7 @@ function gableStuds(b: Builder, x: number, z: number, w: number, y0: number, h: 
     if (top < 0.3) continue;
     b.box(0.15, top - 0.05, 0.05, oak, { at: [x + u, y0, z + s * 0.025] });
   }
-  b.box(w, 0.15, 0.05, oak, { at: [x, y0 + h * 0.45, z + s * 0.025] });
+  b.box(w * 0.55, 0.15, 0.05, oak, { at: [x, y0 + h * 0.45, z + s * 0.025] });
 }
 
 /** One gabled, jettied weaver's house. `door` is the side of the front the door is on (-1 left, 1 right). */
@@ -67,11 +67,8 @@ function weaverHouse(b: Builder, x: number, w: number, o: { infill: number; oak:
   // back: a door to the yard and a window
   b.panel(0.85, 1.9, P.oakDark, { at: [x - door * (w / 2 - 0.7), 0.45, ZB - 0.04], facing: '-z', depth: 0.06 });
   b.window(1.4, 0.9, { at: [x + door * 0.6, 1.3, ZB - 0.04], facing: '-z', frame: oak, glass: LINEN, bars: [2, 1], border: 0.07 });
-  // a brick chimney stack on the party wall, through the roof near the back
-  const cz = ZB + 2.0;
-  const cx = x + o.chimney * (w / 2 - 0.35);
-  const roofAt = top + Math.tan(PITCH * DEG) * 0.35;
-  b.chimney(0.7, top + h + 0.9 - roofAt, 0.55, P.briqueNord, { at: [cx, roofAt, cz] });
+  // a brick chimney stack rising through the ridge near the back, over the hearth of the upper room
+  b.chimney(0.75, 1.5, 0.6, P.briqueNord, { at: [x + o.chimney * 0.15, top + h - 0.5, ZB + 1.6] });
 }
 
 export const weaversHouses: BuildingDef = {
@@ -89,7 +86,7 @@ export const weaversHouses: BuildingDef = {
     { label: 'Loom window', note: 'A long strip of lights across the ground floor gives the weaver the even daylight he needs at the loom.', at: [-7.0, 1.7, ZF + 0.2] },
     { label: 'Jetty', note: 'The upper floor projects over the street on joists and brackets, gaining space and sheltering the front.', at: [0.2, G - 0.2, ZF + JET + 0.1] },
     { label: 'Close studding', note: 'Upright oak studs set close together, the spaces filled with cob and limewashed.', at: [7.0, G + 1.6, ZF + JET + 0.1] },
-    { label: 'Chimney stack', note: 'By the fifteenth century even a weaver had a brick chimney instead of an open hearth in the middle of the floor.', at: [-3.0, 9.6, -0.8] },
+    { label: 'Chimney stack', note: 'By the fifteenth century even a weaver had a brick chimney instead of an open hearth in the middle of the floor.', at: [-0.6, 10.6, ZB + 1.6] },
     { label: 'Shared well', note: 'One well in the yard behind served all the households on the plot.', at: [3.0, 2.6, -5.6] },
   ],
   build(b) {
@@ -127,14 +124,15 @@ export const weaversHouses: BuildingDef = {
     if (alleyAt === 3) alleyX = x + alley / 2;
     // the alley: a gate in a wall between the houses
     patch(b, alley, D, tint(P.cobble, 0.05), [alleyX, (ZF + ZB) / 2], 0.05);
-    b.box(alley, 0.3, 0.3, oak, { at: [alleyX, 2.2, ZF - 0.1] });
+    b.box(alley + 0.3, 0.25, 0.25, oak, { at: [alleyX, 2.2, ZF - 0.1] });
+    for (const s of [-1, 1]) b.box(0.2, 2.2, 0.2, oak, { at: [alleyX + s * (alley / 2 + 0.05), 0, ZF - 0.1] });
 
     // the yard: the shared well, a pile of fleeces, a tenter frame of cloth drying, low walls
     well(b, 3.0, -5.6, P.pierreBlonde, roof);
     for (let k = 0; k <= 4; k++) b.box(0.1, 1.6, 0.1, oak, { at: [-10.0 + k * 1.6, 0, -6.8] });
     b.box(6.6, 0.07, 0.07, oak, { at: [-6.8, 1.55, -6.8] });
     b.box(6.6, 0.07, 0.07, oak, { at: [-6.8, 0.45, -6.8] });
-    b.box(6.2, 1.0, 0.03, b.pick([P.limewash, P.voletBleu, P.terracottaPainted]), { at: [-6.8, 0.52, -6.75] });
+    b.box(6.2, 1.0, 0.03, b.pick([P.limewash, P.ochreWash, P.terracottaPainted]), { at: [-6.8, 0.52, -6.75] });
     b.blob(0.6, P.limewash, { at: [9.4, 0.3, -5.4], stretch: [1.6, 0.6, 1.0], detail: 0 });
     b.box(25.6, 1.4, 0.3, P.pierreBlonde, { at: [0, 0, -7.75] });
     b.collider(25.6, 0.4, { at: [0, 0, -7.75] });

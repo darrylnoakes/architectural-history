@@ -1,5 +1,5 @@
 import { P, tint, type BuildingDef, type Builder, type Vec3 } from '@ah/kit';
-import { BANK, WATER, boat, heap, lin, rise, riverWall, water } from './shared';
+import { boat, heap, lin, rise, riverWall, water } from './shared';
 
 const SAMIAN = 0xb4553a; // the glossy red of terra sigillata
 const GREEN = 0xc9b48e; // unfired, leather-hard clay
