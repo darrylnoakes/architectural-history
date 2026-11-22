@@ -23,6 +23,8 @@ export interface PlotState {
   colliders: WorldCollider[];
   decks: WorldDeck[];
   variant: number;
+  /** Height of the ground the plot stands on: 0 in the flat town, more for a castle on its hill. */
+  base: number;
 }
 
 function easeOutBack(t: number) {
@@ -73,7 +75,11 @@ export class Town {
   /** Fired when the building on a plot changes (after the swap). */
   onSwap: ((p: PlotState) => void) | null = null;
 
-  constructor(readonly region: Region) {
+  constructor(
+    readonly region: Region,
+    /** Height of the land, so that a plot on a hill stands on it rather than inside it. */
+    ground: (x: number, z: number) => number = () => 0,
+  ) {
     const variantCount = new Map<string, number>();
     for (const plot of region.plots) {
       const lineage = region.lineages.find((l) => l.id === plot.lineage);
@@ -81,7 +87,10 @@ export class Town {
       const n = variantCount.get(lineage.id) ?? 0;
       variantCount.set(lineage.id, n + 1);
       const holder = new THREE.Group();
-      holder.position.set(plot.x, 0, plot.z);
+      // (plots in the river bed, the bridges, stay at bank level)
+      const h = ground(plot.x, plot.z);
+      const base = h > 0.3 ? h : 0;
+      holder.position.set(plot.x, base, plot.z);
       holder.rotation.y = plot.rotY;
       this.group.add(holder);
       const state: PlotState = {
@@ -97,6 +106,7 @@ export class Town {
         colliders: [],
         decks: [],
         variant: plot.hero ? 0 : n,
+        base,
       };
       this.plots.push(state);
       this.byId.set(plot.id, state);
@@ -190,7 +200,10 @@ export class Town {
       p.current.object.position.y = 0;
       p.holder.add(p.current.object);
       p.colliders = p.current.colliders.map((c) => toWorld(c, p.plot));
-      p.decks = p.current.decks.map((d) => toWorld(d, p.plot));
+      p.decks = p.current.decks.map((d) => {
+        const w = toWorld(d, p.plot);
+        return p.base ? { ...w, y: w.y + p.base, yEnds: w.yEnds === undefined ? undefined : w.yEnds + p.base } : w;
+      });
     } else {
       p.colliders = [];
       p.decks = [];
@@ -304,13 +317,13 @@ export class Town {
 
   /** World-space centre and size of what stands on a plot, for framing the camera. */
   focus(p: PlotState): { centre: THREE.Vector3; radius: number } {
-    const centre = new THREE.Vector3(p.plot.x, 0, p.plot.z);
+    const centre = new THREE.Vector3(p.plot.x, p.base, p.plot.z);
     let radius = Math.max(p.lineage.plotSize[0], p.lineage.plotSize[1]) * 0.6;
     if (p.current && !p.current.bounds.isEmpty()) {
       const c = p.current.bounds.getCenter(new THREE.Vector3());
       const s = p.current.bounds.getSize(new THREE.Vector3());
       c.applyAxisAngle(THREE.Object3D.DEFAULT_UP, p.plot.rotY);
-      centre.set(p.plot.x + c.x, Math.min(s.y * 0.4, 9), p.plot.z + c.z);
+      centre.set(p.plot.x + c.x, p.base + Math.min(s.y * 0.4, 9), p.plot.z + c.z);
       radius = Math.max(8, Math.hypot(s.x, s.z) * 0.5, s.y * 0.6);
     }
     return { centre, radius };

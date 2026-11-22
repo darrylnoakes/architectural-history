@@ -1,30 +1,14 @@
-import { P, type Lineage } from '@ah/kit';
+import type { Lineage } from '@ah/kit';
+import { renewedBy } from '../../ends';
+import { aristocratsFarm } from './01-aristocrats-farm';
 
-// PLACEHOLDER: replaced by the real lineage.
 const lineage: Lineage = {
   id: 'hotel',
   name: 'L’Hôtel',
   kind: 'elite',
-  role: 'Placeholder',
+  role: 'The home of the richest household in town, from a Gaulish noble’s enclosure to a glass house: where each new fashion in living arrives first.',
   plotSize: [24, 26],
-  stages: [
-    {
-      from: -300,
-      def: {
-        id: 'hotel-placeholder',
-        name: 'L’Hôtel',
-        style: 'Placeholder',
-        date: 'n/a',
-        summary: 'Placeholder building.',
-        materials: [],
-        lookFor: [],
-        build(b) {
-          b.box(12.0, 4, 12, P.pierreBlonde);
-          b.gable(12.0, 12, 2, P.ardoise, { at: [0, 4, 0], overhang: 0.3 });
-        },
-      },
-    },
-  ],
+  stages: [{ from: -300, builtUntil: -30, end: renewedBy(80), def: aristocratsFarm }],
 };
 
 export default lineage;

@@ -1,29 +1,17 @@
-import { P, type Lineage } from '@ah/kit';
+import type { Lineage } from '@ah/kit';
+import { invasions, renewedBy } from '../../ends';
+import { gaulishHuts } from './01-gaulish-huts';
+import { artisansRow } from './02-artisans-row';
 
-// PLACEHOLDER: replaced by the real lineage.
 const lineage: Lineage = {
   id: 'faubourg',
   name: 'Le Faubourg',
   kind: 'workers',
-  role: 'Placeholder',
+  role: 'Where the poor live, outside the walls along the road in: from huts by the rampart to the slab of the 1960s and what replaced it.',
   plotSize: [26, 16],
   stages: [
-    {
-      from: -300,
-      def: {
-        id: 'faubourg-placeholder',
-        name: 'Le Faubourg',
-        style: 'Placeholder',
-        date: 'n/a',
-        summary: 'Placeholder building.',
-        materials: [],
-        lookFor: [],
-        build(b) {
-          b.box(12, 4, 8.0, P.pierreBlonde);
-          b.gable(12, 8.0, 2, P.ardoise, { at: [0, 4, 0], overhang: 0.3 });
-        },
-      },
-    },
+    { from: -300, builtUntil: -52, end: renewedBy(60), def: gaulishHuts },
+    { from: 40, builtUntil: 250, end: invasions, def: artisansRow },
   ],
 };
 

@@ -4,6 +4,7 @@ export * from './rng';
 export * from './builder';
 export * from './noise';
 export * from './props';
+export * from './circuit';
 
 import { Builder, type Built } from './builder';
 import type { BuildingDef } from './types';

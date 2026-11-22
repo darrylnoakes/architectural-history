@@ -160,7 +160,7 @@ export class Engine {
     this.timeScale = scaleOf(region);
     this.land = new Land(region.site);
     this.terrain = new Terrain(this.land);
-    this.town = new Town(region);
+    this.town = new Town(region, this.land.height);
     this.scenery = new Scenery(region, this.land, { treeCount: this.treeCount });
     scene.add(this.terrain.group, this.town.group, this.scenery.group);
 
@@ -524,7 +524,7 @@ export class Engine {
       }
       const top = p.current.bounds.isEmpty() ? 4 : Math.min(p.current.bounds.max.y, 26);
       const f = this.town.focus(p);
-      l.world.set(f.centre.x, top + 3.5, f.centre.z);
+      l.world.set(f.centre.x, p.base + top + 3.5, f.centre.z);
       this.place(l.el, l.world, 520);
       l.el.classList.toggle('sel', s.selected === p.plot.id);
     }
@@ -544,7 +544,7 @@ export class Engine {
       const p = this.town.get(s.selected);
       if (p) {
         const f = this.town.focus(p);
-        this.ring.position.set(f.centre.x, 0.14, f.centre.z);
+        this.ring.position.set(f.centre.x, p.base + 0.14, f.centre.z);
         this.ring.scale.setScalar(f.radius + 1.5);
         show = true;
       }
