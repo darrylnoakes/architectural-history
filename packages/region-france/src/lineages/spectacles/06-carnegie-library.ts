@@ -41,7 +41,7 @@ export const carnegieLibrary: BuildingDef = {
   style: 'Art Deco',
   date: '1927',
   summary:
-    'The town was shelled for four years, and the circus and much of the centre were left in ruins. Among the gifts from abroad for the rebuilding is a public library, paid for by the Carnegie Endowment for International Peace. ' +
+    'The town was shelled for four years and much of its centre left in ruins. Among the gifts from abroad for the rebuilding is a public library, paid for by the Carnegie Endowment for International Peace. ' +
     'It is a temple of learning in the new Art Deco manner: a symmetrical stone front with fluted pilasters and a stepped attic, a porch glittering with mosaic, iron grilles in geometric patterns, and a top-lit entrance hall under a ceiling of stained glass. ' +
     'Behind, the books live in a separate semicircular stack of many floors, fireproof and lit by narrow slits; the public rooms in front are for reading, where the museum had been for looking.',
   materials: ['reinforced concrete faced with limestone', 'mosaic', 'stained glass', 'wrought iron', 'oak panelling'],
