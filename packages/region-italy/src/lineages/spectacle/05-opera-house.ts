@@ -101,7 +101,7 @@ export const operaHouse: BuildingDef = {
     },
   ],
   build(b) {
-    const cutaway = b.cutaway && false;
+    const cutaway = b.cutaway;
     const stucco = tint(b.pick([P.stucco, mix(P.stucco, P.intonacoCream, 0.5)]), b.range(-0.03, 0.01));
     const stone = tint(P.travertine, -0.06);
     const roof = tint(P.coppi, b.range(-0.03, 0.02));

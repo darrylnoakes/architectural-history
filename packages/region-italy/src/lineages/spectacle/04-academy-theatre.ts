@@ -76,7 +76,7 @@ export const academyTheatre: BuildingDef = {
     },
   ],
   build(b) {
-    const cutaway = b.cutaway && false;
+    const cutaway = b.cutaway;
     const plaster = tint(b.pick([P.intonacoCream, P.plaster, mix(P.intonacoOchre, P.plaster, 0.5)]), b.range(-0.03, 0.02));
     const stone = tint(P.pietraSerena, 0.12);
     const roof = tint(P.coppi, b.range(-0.03, 0.02));
