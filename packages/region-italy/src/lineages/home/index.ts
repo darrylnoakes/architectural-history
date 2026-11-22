@@ -22,7 +22,19 @@ const lineage: Lineage = {
   stages: [
     { from: -750, builtUntil: -600, end: renewedBy(-520), def: ironAgeHut },
     { from: -550, builtUntil: -300, end: renewedBy(-120), def: archaicHouse },
-    { from: -200, builtUntil: 50, def: atriumHouse },
+    {
+      from: -200,
+      builtUntil: 50,
+      // not every plot was rebuilt as flats: where the old house lasted, this is how it ended
+      end: {
+        year: 550,
+        fate: 'ruin',
+        note:
+          'Houses of the old atrium kind were patched and subdivided for centuries, but few outlasted the wars, plague and famine of the sixth century. ' +
+          'This one was left to fall in, and its plot grew vegetables until the town filled up again.',
+      },
+      def: atriumHouse,
+    },
     { from: 100, builtUntil: 250, def: gardenApartment },
     { from: 480, builtUntil: 600, def: houseInRuins },
     { from: 800, builtUntil: 1100, end: renewedBy(1300), def: domusSolarata },

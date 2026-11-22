@@ -38,7 +38,6 @@ export const rationalistVilla: BuildingDef = {
     b.box(W, 0.35, D, white, { at: [0, y0, zc] });
     b.box(W, h, D, white, { at: [0, y0 + 0.35, zc] });
     b.box(W + 0.1, 0.15, D + 0.1, white, { at: [0, y0 + 0.35 + h, zc] });
-    b.collider(1.2, 1.2, { at: [5.2, 0, -1.0] });
     // strip windows
     const strip = (f: '+z' | '-z', z: number) =>
       onFace(b, f, [0, 0, z], () => {

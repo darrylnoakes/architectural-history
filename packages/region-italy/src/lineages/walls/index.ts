@@ -22,7 +22,7 @@ const lineage: Lineage = {
     { from: 275, builtUntil: 550, def: aurelianGate },
     { from: 1150, builtUntil: 1450, def: communalGate },
     { from: 1540, builtUntil: 1750, def: bastionGate },
-    { from: 1870, def: gateAsMonument },
+    { from: 1870, builtUntil: 1900, def: gateAsMonument },
   ],
 };
 
