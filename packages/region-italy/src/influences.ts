@@ -21,7 +21,7 @@ export const influences: Influence[] = [
     dir: 'home',
     place: 'Etruria',
     title: 'What Rome learned from the Etruscans',
-    text: 'The Tuscan temple, the atrium house, the true arch in cut stone, painted terracotta sculpture and the surveyed town all pass from the Etruscan cities to Rome.',
+    text: 'The Tuscan temple, the atrium house, painted terracotta sculpture, the rituals of laying out a town and probably the true arch in cut stone all pass from the Etruscan cities to Rome.',
   },
   {
     id: 'roman-concrete',
@@ -29,7 +29,7 @@ export const influences: Influence[] = [
     dir: 'home',
     place: 'Campania and Latium',
     title: 'Concrete',
-    text: 'Builders find that lime mixed with volcanic sand from around Vesuvius sets rock-hard, even under water. Poured between facings of stone or brick, it makes vaults and domes possible and changes architecture for good.',
+    text: 'Builders find that lime mixed with volcanic ash (pozzolana, named after Pozzuoli on the Bay of Naples, and dug round Rome too) sets rock-hard, even under water. Laid in layers between facings of stone or brick, it makes vaults and domes possible and changes architecture for good.',
   },
   {
     id: 'hellenistic-luxury',
@@ -58,7 +58,7 @@ export const influences: Influence[] = [
     place: 'the whole Christian world',
     at: [48.86, 2.35],
     title: 'The basilica becomes the church',
-    text: 'Constantine’s great churches in Rome adapt the Roman law-court hall for Christian worship: a long nave, lower aisles, a clerestory and an apse. Churches in the West follow this plan for the next thousand years and more.',
+    text: 'Constantine’s great churches in Rome adapt the Roman basilica, the hall for law courts and public business, for Christian worship: a long nave, lower aisles, a clerestory and an apse. Churches in the West follow this plan for the next thousand years and more.',
   },
   {
     id: 'byzantine-ravenna',
@@ -105,7 +105,7 @@ export const influences: Influence[] = [
     region: 'france',
     at: [47.41, 0.98],
     title: 'The Renaissance crosses the Alps',
-    text: 'French kings invading Italy bring home Italian artists and ideas; printed treatises by Serlio and Palladio carry them further. A century later Inigo Jones takes Palladio’s books back to England.',
+    text: 'French kings invading Italy bring home Italian artists and ideas; printed treatises by Serlio and Palladio carry them further. More than a century later Inigo Jones takes Palladio’s books back to England.',
   },
   {
     id: 'bastion-export',
@@ -193,7 +193,7 @@ export const influences: Influence[] = [
     region: 'usa',
     at: [40.85, -73.94],
     title: 'Italian concrete and Italian design',
-    text: 'Pier Luigi Nervi’s ribbed domes and Gio Ponti’s slender Pirelli tower make Italian engineering and design admired worldwide, and both men build abroad.',
+    text: 'Pier Luigi Nervi’s ribbed domes and Gio Ponti’s slender Pirelli tower (with Nervi as engineer) make Italian engineering and design admired worldwide, and both men build abroad.',
   },
   {
     id: 'rossi-city',

@@ -39,8 +39,8 @@ export const eras: Era[] = [
     tagline: 'Brick, marble, vault and dome',
     summary:
       'Peace and imperial money rebuild the town in fired brick and concrete, dressed with marble shipped from across the Mediterranean. ' +
-      'Concrete vaults and domes roof spaces no timber could span: baths, markets and the amphitheatre. Ordinary people live stacked ' +
-      'in apartment blocks five storeys high, over shops that open their whole front to the street.',
+      'Concrete vaults and domes roof spaces no timber could span: baths, markets and the amphitheatre. In the bigger towns ordinary people live stacked ' +
+      'in apartment blocks of four or five storeys, over shops that open their whole front to the street.',
     traits: ['Brick-faced concrete', 'Barrel vaults and domes', 'Apartment blocks over shops', 'Marble columns and veneers', 'Arcades framed by columns'],
     materials: ['Fired brick', 'Concrete with pozzolana', 'Marble', 'Travertine', 'Window glass'],
     color: 0xc46f4a,
@@ -113,10 +113,10 @@ export const eras: Era[] = [
     to: 1600,
     tagline: 'Antiquity measured and reborn',
     summary:
-      'In Florence around 1420 Brunelleschi studies Roman ruins and designs with round arches, classical columns and simple ratios, and ' +
+      'In Florence from about 1420 Brunelleschi, who has studied the ruins of Rome, designs with round arches, classical columns and simple ratios, and ' +
       'raises a dome wider than any since antiquity. Alberti writes the rules down. Within a century every prince and banker wants a ' +
-      'palace with a rusticated front and an arcaded courtyard, and architects such as Bramante, Michelangelo and Palladio are bending the ' +
-      'rules with a freedom later called Mannerism.',
+      'palace with a rusticated front and an arcaded courtyard; after Bramante has given the style its grandest Roman form, Michelangelo and Giulio Romano ' +
+      'bend the rules with a freedom later called Mannerism.',
     traits: ['Round arches on classical columns', 'Symmetry and simple proportions', 'Rusticated palace fronts with a great cornice', 'The dome', 'Arcaded courtyards and loggias'],
     materials: ['Pietra serena against white plaster', 'Rusticated stone', 'Travertine', 'Brick and stucco'],
     color: 0xb8894a,
@@ -144,8 +144,8 @@ export const eras: Era[] = [
     to: 1900,
     tagline: 'Opera houses, railways and a new nation',
     summary:
-      'The excavation of Pompeii and Herculaneum makes a cooler, more correct classicism the fashion across Europe, and every town builds ' +
-      'an opera house in it. After unification in 1861 the new state marks its arrival with prefectures, railway stations, monuments and ' +
+      'The excavation of Pompeii and Herculaneum makes a cooler, more correct classicism the fashion across Europe, and town after town builds ' +
+      'an opera house. After unification in 1861 the new state marks its arrival with prefectures, railway stations, monuments and ' +
       'broad streets cut through old quarters. Iron and glass roof the markets and arcades, and apartment blocks with shutters and balconies fill the new districts.',
     traits: ['Temple fronts and plain walls', 'The horseshoe opera house', 'Iron and glass arcades', 'Stuccoed apartment blocks with iron balconies', 'Boulevards in place of the walls'],
     materials: ['Stucco over brick', 'Cast and wrought iron', 'Glass', 'Travertine and marble for show'],
