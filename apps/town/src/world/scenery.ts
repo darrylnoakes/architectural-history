@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { Builder, P, getMaterials, mulberry32, type Era, type Region, type TreeKind } from '@ah/kit';
+import { Builder, P, getMaterials, mulberry32, type Collider, type Era, type Region, type TreeKind } from '@ah/kit';
 import type { Land } from './land';
 
 interface TreeInst {
@@ -18,6 +18,8 @@ interface TreeInst {
 interface Prop {
   since: number;
   until: number;
+  /** What a walker bumps into while this prop stands. */
+  colliders: Collider[];
   object: THREE.Object3D;
   cur: number;
   spin?: THREE.Object3D[];
@@ -43,6 +45,8 @@ export class Scenery {
   private cover = -1;
   private year = 0;
   private settling = true;
+  private solid: Collider[] = [];
+  private collidersYear = NaN;
   private dummy = new THREE.Object3D();
 
   constructor(
@@ -138,11 +142,20 @@ export class Scenery {
     this.meshes[t.kind].setMatrixAt(t.slot, this.dummy.matrix);
   }
 
-  private addProp(object: THREE.Object3D, since: number, until = Infinity, spin?: THREE.Object3D[]) {
+  private addProp(object: THREE.Object3D, since: number, until = Infinity, spin?: THREE.Object3D[], colliders: Collider[] = []) {
     object.scale.setScalar(0.0001);
     object.visible = false;
     this.group.add(object);
-    this.props.push({ since, until, object, cur: 0, spin });
+    this.props.push({ since, until, object, cur: 0, spin, colliders });
+  }
+
+  /** The solid parts of whatever scenery stands in the current year. */
+  colliders(): readonly Collider[] {
+    if (this.collidersYear !== this.year) {
+      this.collidersYear = this.year;
+      this.solid = this.props.filter((p) => p.colliders.length && this.year >= p.since && this.year < p.until).flatMap((p) => p.colliders);
+    }
+    return this.solid;
   }
 
   private makeProps() {
@@ -155,7 +168,8 @@ export class Scenery {
         console.error(`Failed to build ${prop.id}`, err);
         return;
       }
-      this.addProp(b.finish().object, prop.since ?? -Infinity, prop.until ?? Infinity);
+      const built = b.finish();
+      this.addProp(built.object, prop.since ?? -Infinity, prop.until ?? Infinity, undefined, prop.solid ? built.colliders : []);
     });
 
     if (site.turbines) {

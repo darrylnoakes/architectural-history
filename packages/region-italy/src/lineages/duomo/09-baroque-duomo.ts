@@ -1,6 +1,6 @@
 import { P, tint, type BuildingDef, type Builder } from '@ah/kit';
 import { cathedral, framed, circlePts, statue, onWall, FF, TOWER, BAROQUE, type Pt } from './shared';
-import { gothicFacade } from './07-gothic-duomo';
+import { unfinishedFacade } from './07-gothic-duomo';
 
 const TRAV = P.travertine;
 const CX = -12.4; // chapel centre
@@ -69,12 +69,11 @@ export function baroqueChapel(b: Builder) {
   b.collider(w, d, { at: [CX, 0, CZC] });
 }
 
-/** Statues of saints set up along the old front: on the cornice over the doors and on the gables. */
+/** Statues of saints set up on the cornice of the finished marble ground storey. */
 export function frontStatues(b: Builder) {
   const s = 2.6;
   const stone = tint(P.limestoneWarm, -0.12);
   for (const x of [-7.6, -4.3, 4.3, 7.6]) statue(b, [x, 10.75, FF + 0.12], s, stone);
-  for (const x of [-7.6, 7.6]) statue(b, [x, 19.1, FF + 0.1], s * 0.85, stone);
 }
 
 export const baroqueDuomo: BuildingDef = {
@@ -84,20 +83,20 @@ export const baroqueDuomo: BuildingDef = {
   date: 'c. 1630 to 1670',
   summary:
     'The Counter-Reformation church wanted drama and rich families wanted to be remembered, so the cathedral gained a domed chapel off the north aisle, lit from its own small dome as Bernini’s Chapel of the Vow at Siena (1659 to 1662) is, and dressed with paired pilasters, a curved pediment and scrolls bracing the drum. ' +
-    'A curved flight of steps now spills down into the square, statues of saints stand along the front, and the Gothic spire of the bell tower was replaced by an open octagonal belfry under a lead cupola. ' +
-    'As in most Italian cathedrals, the change is by addition: the Gothic front, the dome, the Romanesque flanks and the baptistery all remain, and much of the new work was inside, in marble altars and stucco.',
+    'A curved flight of steps now spills down into the square, statues of saints stand on the cornice of the marble ground storey, and the Gothic spire of the bell tower was replaced by an open octagonal belfry under a lead cupola. ' +
+    'As in most Italian cathedrals, the change is by addition. The front above the doors is still bare brick, as it had been for three centuries (Florence had even pulled its half-built front down in 1587 and painted a temporary one for festivals); the dome, the Romanesque flanks and the baptistery all remain, and much of the new work was inside, in marble altars and stucco.',
   materials: ['travertine', 'lead', 'marble statues', 'stucco'],
   lookFor: [
     { label: 'Domed chapel', note: 'A family or votive chapel with its own drum, dome and lantern, added to the side of the old church.', at: [CX - 1.0, 13.5, CZC + 2.3] },
     { label: 'Scroll buttresses', note: 'Curving volutes brace the chapel’s drum: a Baroque way of turning structure into ornament.', at: [CX - 2.2, 10.6, CZC + 2.2] },
     { label: 'Curved steps', note: 'Convex steps that swell out into the square, inviting people up to the doors.', at: [0, 0.8, FF + 7.8] },
-    { label: 'Statues of saints', note: 'Life-size figures set along the cornice and on the gables, speaking to the crowd in the square.', at: [4.3, 13.4, FF + 0.6] },
+    { label: 'Statues of saints', note: 'Larger-than-life figures set on the cornice over the doors, the one finished part of the front, speaking to the crowd in the square.', at: [4.3, 13.6, FF + 0.6] },
     { label: 'New belfry', note: 'The spire was taken down and replaced by an open octagonal belfry with a bulbous lead cupola.', at: [TOWER.x, 35.5, TOWER.z + 2.6] },
   ],
   modelledOn: 'Bernini’s Chapel of the Vow (Cappella del Voto), Siena Cathedral, for the chapel',
   build(b) {
     cathedral(b, BAROQUE);
-    gothicFacade(b);
+    unfinishedFacade(b);
     frontStatues(b);
     baroqueChapel(b);
   },

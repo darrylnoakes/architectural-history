@@ -6,6 +6,11 @@ const SZ1 = -13.2; // back of the stand
 const STAND_TOP = 8.6;
 const ROOF_Y = 13.4;
 const ROOF_TIP = -0.6;
+// the uncovered terrace across the pitch, and the tower in its middle
+const TZ0 = 12.4;
+const TZ1 = 17.6;
+const TERRACE_TOP = 3.4;
+const TZ = 15.9;
 
 /** A helical stair of concrete: a ramp of treads winding round a slender post, with a solid parapet. */
 function helix(b: Builder, x: number, z: number, h: number, color: number): void {
@@ -53,11 +58,11 @@ export const stadium: BuildingDef = {
   summary:
     'Football and athletics became mass entertainment between the wars, and the Fascist regime promoted sport and paid for stadiums in town after town. ' +
     'This one shows the engineer’s art more than the architect’s: the concrete is left bare, and every part is shaped by the forces in it. ' +
-    'The roof over the main stand is a thin slab carried by cantilevered beams, so no columns block the view; spiral stairs wind up to the upper terraces, and a slender tower marks the stadium across the town. ' +
+    'The roof over the main stand is a thin slab carried by cantilevered beams, so no columns block the view; spiral stairs wind up to the upper terraces, and from the middle of the open terrace across the pitch a slender tower marks the stadium across the town. ' +
     'Where the opera house seated two thousand by rank, the stand and the open terraces hold everyone together.',
   materials: ['reinforced concrete, left exposed', 'steel railings', 'cinder running track', 'grass'],
   modelledOn:
-    'Stadio Giovanni Berta (now Artemio Franchi), Florence, by Pier Luigi Nervi (1930-32), a fragment much reduced; at Florence the tower stands on the opposite stand',
+    'Stadio Giovanni Berta (now Artemio Franchi), Florence, by Pier Luigi Nervi (1930-32), a fragment much reduced: the covered main stand, and opposite it the Maratona terrace with its tower',
   influences: ['rationalism'],
   lookFor: [
     {
@@ -72,8 +77,8 @@ export const stadium: BuildingDef = {
     },
     {
       label: 'Tower',
-      note: 'A slender concrete tower with a stair inside, a landmark visible from far off and a platform for flags.',
-      at: [-6.0, 27.0, -16.0],
+      note: 'A slender concrete tower with a stair inside, rising from the middle of the uncovered terrace opposite the covered stand: a landmark visible from far off, with a platform for flags.',
+      at: [0, 27.0, TZ],
     },
     {
       label: 'Raking stand',
@@ -94,15 +99,18 @@ export const stadium: BuildingDef = {
     const W = 32;
 
     // ------------------------------------------------ pitch and track
-    b.box(40, 0.05, 15.2, grass, { at: [0, 0, 10.4] });
+    b.box(40, 0.05, TZ0 - 2.8, grass, { at: [0, 0, (TZ0 + 2.8) / 2] });
     b.box(40, 0.06, 5.6, track, { at: [0, 0, 0.0] });
     for (let i = 1; i < 5; i++) b.box(40, 0.02, 0.06, P.white, { at: [0, 0.06, -2.8 + i * 1.12] });
     b.box(40, 0.02, 0.12, P.white, { at: [0, 0.06, 3.6] }); // touchline
-    b.box(0.12, 0.02, 14.4, P.white, { at: [0, 0.06, 10.8] }); // halfway line
-    for (let i = 1; i < 14; i++) {
-      const a = -Math.PI / 2 + (i / 14) * Math.PI;
-      b.box(1.4, 0.02, 0.12, P.white, { at: [6.2 * Math.sin(a), 0.06, 18 - 6.2 * Math.cos(a) * 0.98], rotY: -a });
+    b.box(40, 0.02, 0.12, P.white, { at: [0, 0.06, TZ0 - 1.0] }); // far touchline
+    b.box(0.12, 0.02, TZ0 - 4.6, P.white, { at: [0, 0.06, 3.6] }); // halfway line
+    for (let i = 0; i < 16; i++) {
+      const a = (i / 16) * Math.PI * 2;
+      b.box(1.3, 0.02, 0.12, P.white, { at: [3.2 * Math.sin(a), 0.06, 7.6 + 3.2 * Math.cos(a)], rotY: a });
     }
+    b.box(40, 0.06, 0.9, track, { at: [0, 0, TZ0 - 0.45] }); // the track along the far side
+    b.box(34, 0.9, 0.25, concDark, { at: [0, 0, TZ0 + 0.1] }); // the low wall in front of the terrace
     b.box(W, 1.1, 0.25, concDark, { at: [0, 0, SZ0 + 0.4] }); // the low wall in front of the stand
 
     // ------------------------------------------------ the stand: stepped terraces on sloping beams
@@ -154,14 +162,32 @@ export const stadium: BuildingDef = {
       b.box(1.6, 0.35, 2.4, conc, { at: [s * 16.8, STAND_TOP - 0.35, -9.6] }); // landing bridge to the stand
     });
 
-    // ------------------------------------------------ the tower
+    // ------------------------------------------------ the uncovered terrace opposite, low concrete steps
     {
-      const tx = -6;
-      const tz = -15.7;
+      const n = 6;
+      const tp: [number, number][] = [[-(TZ0 + 0.2), 0]];
+      for (let i = 0; i < n; i++) {
+        const z0 = TZ0 + 0.2 + ((TZ1 - TZ0 - 0.2) * i) / n;
+        const z1 = TZ0 + 0.2 + ((TZ1 - TZ0 - 0.2) * (i + 1)) / n;
+        const y = 0.5 + ((TERRACE_TOP - 0.5) * (i + 1)) / n;
+        tp.push([-z0, y], [-z1, y]);
+      }
+      tp.push([-TZ1, 0]);
+      b.extrude(tp, 34, conc, { at: [0, 0, 0], rotY: Math.PI / 2 });
+      b.box(34, 0.08, 0.08, P.castIron, { at: [0, TERRACE_TOP + 1.0, TZ1 - 0.15] });
+      for (let i = 0; i < 18; i++) b.box(0.06, 1.0, 0.06, P.castIron, { at: [-16.8 + i * (33.6 / 17), TERRACE_TOP, TZ1 - 0.15] });
+      for (const x of [-12, -6, 6, 12]) b.panel(1.4, 2.2, P.doorGreen, { at: [x, 0, TZ1], facing: '+z' });
+    }
+
+    // ------------------------------------------------ the tower, rising from the middle of the terrace
+    {
+      const tx = 0;
+      const tz = TZ;
       const H = 26;
       b.box(2.2, H, 2.2, conc, { at: [tx, 0, tz] });
       b.sym((s) => b.box(0.35, H + 1.2, 0.6, concDark, { at: [tx + s * 1.25, 0, tz] })); // fins
-      b.box(0.5, H - 6, 0.06, P.windowDark, { at: [tx, 3, tz + 1.12] }); // the slot of the stair
+      b.box(0.5, H - 8, 0.06, P.windowDark, { at: [tx, TERRACE_TOP + 1.5, tz - 1.12] }); // the slot of the stair, toward the pitch
+      b.box(0.5, H - 6, 0.06, P.windowDark, { at: [tx, 3, tz + 1.12] });
       b.box(3.6, 0.3, 3.6, conc, { at: [tx, H, tz] });
       b.box(3.6, 0.08, 0.08, P.steel, { at: [tx, H + 1.2, tz + 1.75] });
       b.box(3.6, 0.08, 0.08, P.steel, { at: [tx, H + 1.2, tz - 1.75] });
@@ -180,6 +206,6 @@ export const stadium: BuildingDef = {
     b.collider(W, SZ0 - SZ1 + 0.4, { at: [0, 0, (SZ0 + SZ1) / 2] });
     for (const x of xs) b.collider(0.8, 1.0, { at: [x, 0, SZ1 - 0.6] });
     b.sym((s) => b.collider(1.2, 1.2, { at: [s * 18, 0, -9] }));
-    b.collider(3.0, 3.0, { at: [-6, 0, -15.7] });
+    b.collider(34, TZ1 - TZ0, { at: [0, 0, (TZ0 + TZ1) / 2] });
   },
 };

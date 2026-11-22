@@ -103,7 +103,8 @@ export function plotSchedule(plot: Plot, lineage: Lineage, regionEnd: number): P
     if (prev) {
       // a type that is renewed when its time is up pulls its successor forward
       const end = stages[prev.index].end;
-      if (end?.fate === 'renew') from = Math.min(from, end.year);
+      // (but never to before the successor itself existed: until then the old type is simply kept up)
+      if (end?.fate === 'renew') from = Math.max(st.from, Math.min(from, end.year));
       if (from <= prev.from) continue;
     }
     // too late: this type had already had its day before the plot would have adopted it

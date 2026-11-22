@@ -280,6 +280,13 @@ ul, ol { list-style: none; }
 .help-grid dt { font-weight: 600; white-space: nowrap; }
 .help-grid dd { color: var(--ink-2); }
 .help-grid p { font-size: 13px; color: var(--ink-2); }
+.help-graphics { grid-column: 1 / -1; display: flex; align-items: center; gap: 12px 16px; flex-wrap: wrap; padding-bottom: 10px; border-bottom: 1px solid var(--line); }
+.help-graphics h3 { margin: 0; }
+.help-graphics p { flex: 1 1 260px; margin: 0; }
+.slow { align-self: center; max-width: 440px; padding: 12px 16px; display: flex; flex-direction: column; gap: 10px; animation: rise 0.4s both; pointer-events: auto; }
+.slow p { font-size: 13.5px; color: var(--ink-2); line-height: 1.45; }
+.slow p strong { color: var(--ink); }
+.slow-actions { display: flex; gap: 8px; flex-wrap: wrap; }
 .crosshair {
   position: absolute; left: 50%; top: 50%; width: 8px; height: 8px; margin: -4px; border-radius: 50%;
   background: rgba(255, 255, 255, 0.95); box-shadow: 0 0 0 1.5px rgba(0, 0, 0, 0.55); pointer-events: none;

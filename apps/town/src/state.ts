@@ -14,7 +14,25 @@ export type Screen =
   | { kind: 'building'; ref: LineageRef }
   | { kind: 'compare'; a: LineageRef; b: LineageRef };
 
+/** How much the renderer does: 'low' drops shadows, thins the trees and draws at the screen's plain resolution. */
+export type Quality = 'high' | 'low';
+
+const QUALITY_KEY = 'ah.quality';
+function storedQuality(): Quality | null {
+  try {
+    const v = localStorage.getItem(QUALITY_KEY);
+    return v === 'low' || v === 'high' ? v : null;
+  } catch {
+    return null;
+  }
+}
+
 export interface AppState {
+  quality: Quality;
+  /** Set when the town is drawing slowly at full quality, to offer the simpler graphics. */
+  slow: boolean;
+  /** The offer has been turned down: do not make it again. */
+  slowDismissed: boolean;
   /** The region whose town is showing. */
   regionId: string;
   year: number;
@@ -42,6 +60,8 @@ export interface AppState {
   touch: boolean;
   ready: boolean;
 
+  /** Change the graphics quality and remember it on this device. */
+  setQuality(q: Quality): void;
   /** Go to another region's town, keeping the year where the two stories overlap. */
   setRegion(id: string): void;
   setYear(year: number): void;
@@ -60,10 +80,15 @@ export interface AppState {
 }
 
 const params = new URLSearchParams(typeof location !== 'undefined' ? location.search : '');
+const urlQuality = params.get('q');
+const startQuality: Quality = urlQuality === 'low' || urlQuality === 'high' ? urlQuality : (storedQuality() ?? 'high');
 const startRegion = REGIONS[params.get('r') ?? ''] ? params.get('r')! : 'england';
 const startYear = Number(params.get('y') ?? REGIONS[startRegion].start);
 
 export const useApp = create<AppState>((set, get) => ({
+  quality: startQuality,
+  slow: false,
+  slowDismissed: false,
   regionId: startRegion,
   year: Number.isFinite(startYear) ? startYear : REGIONS[startRegion].start,
   playing: false,
@@ -83,6 +108,14 @@ export const useApp = create<AppState>((set, get) => ({
   touch: typeof window !== 'undefined' && window.matchMedia?.('(pointer: coarse)').matches,
   ready: false,
 
+  setQuality: (q) => {
+    try {
+      localStorage.setItem(QUALITY_KEY, q);
+    } catch {
+      // private windows and the like: the choice lasts for this visit only
+    }
+    set({ quality: q, slow: false });
+  },
   setRegion: (id) => {
     const region = REGIONS[id];
     if (!region || id === get().regionId) return;

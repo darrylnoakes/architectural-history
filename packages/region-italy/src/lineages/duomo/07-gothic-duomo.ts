@@ -1,27 +1,52 @@
-import { P, tint, type BuildingDef, type Builder } from '@ah/kit';
-import { cathedral, archPts, archHead, circlePts, pinnacle, opening, FZ, FF, NW, MARBLE, RECESS, GOTHIC, type Pt } from './shared';
+import { P, tint, mix, type BuildingDef, type Builder } from '@ah/kit';
+import { cathedral, archPts, archHead, circlePts, FZ, FF, NW, MARBLE, BRICK, ROOF, GOTHIC, type Pt } from './shared';
 
-const FW = 10.2; // half-width of the front
-const PINK = tint(P.marbleRed, 0.28);
-const MOSAIC_BLUE = 0x3a5a8c;
+export const FW = 10.2; // half-width of the front
+export const PINK = tint(P.marbleRed, 0.28);
+/** The rough brick core of the unfinished front, waiting for its marble. */
+const ROUGH = mix(BRICK, P.rubble, 0.35);
+/** The four piers of the front: x, width. */
+export const PIERS: [number, number][] = [[-FW + 0.6, 1.2], [FW - 0.6, 1.2], [-NW - 0.1, 1.1], [NW + 0.1, 1.1]];
 
-/** A gabled portal: a pointed opening in stepped frames, a bronze door, a mosaic lunette and a gable. */
-function portal(b: Builder, x: number, w: number, h: number) {
+/**
+ * A gabled portal: a pointed opening in stepped frames, a bronze door, a lunette and a gable. In 1310
+ * the lunette and the gable field are plain pink marble; `mosaic` fills them with gold, as in 1887.
+ */
+function portal(b: Builder, x: number, w: number, h: number, mosaic: boolean) {
   const y0 = 0.6;
   const z = FF;
+  const field = mosaic ? P.gold : PINK;
   b.extrude(archPts('pointed', w + 1.4, h + 0.8, x, y0), 0.5, MARBLE, { at: [0, 0, z + 0.25], holes: [archPts('pointed', w + 0.6, h + 0.4, x, y0 + 0.02)] });
   b.extrude(archPts('pointed', w + 0.6, h + 0.4, x, y0), 0.3, PINK, { at: [0, 0, z + 0.15], holes: [archPts('pointed', w, h, x, y0 + 0.02)] });
   const dh = h - (w / 2) * Math.sqrt(3);
   b.box(w, dh, 0.08, P.bronze, { at: [x, y0, z + 0.02], jitter: false });
   b.box(w + 0.1, 0.22, 0.14, MARBLE, { at: [x, y0 + dh, z + 0.05], jitter: false });
-  b.extrude(archHead('pointed', w / 2, y0 + dh + 0.22, x, 3), 0.06, P.gold, { at: [0, 0, z + 0.03], jitter: false });
-  // the gable (wimperg) above, with a mosaic in it, and pinnacles either side
+  b.extrude(archHead('pointed', w / 2, y0 + dh + 0.22, x, 3), 0.06, field, { at: [0, 0, z + 0.03], jitter: false });
+  // the gable (wimperg) above the arch
   const gb = y0 + h + 0.9;
   const gw = w / 2 + 0.9;
-  const gh = gw * 1.45;
+  const gh = gw * 1.1;
   b.extrude([[x - gw, gb], [x + gw, gb], [x, gb + gh]], 0.4, MARBLE, { at: [0, 0, z + 0.62] });
-  b.extrude([[x - gw + 0.45, gb + 0.25], [x + gw - 0.45, gb + 0.25], [x, gb + gh - 0.5]], 0.06, P.gold, { at: [0, 0, z + 0.84], jitter: false });
+  b.extrude([[x - gw + 0.45, gb + 0.25], [x + gw - 0.45, gb + 0.25], [x, gb + gh - 0.45]], 0.06, field, { at: [0, 0, z + 0.84], jitter: false });
   b.box(gw * 2 + 0.2, 0.3, 0.9, MARBLE, { at: [x, gb - 0.3, z + 0.45], jitter: false });
+}
+
+/**
+ * The part of the Gothic front that was actually built: a marble ground storey with three gabled
+ * portals and the bases of four piers, up to a cornice at 10.4 m. It survives in every later stage.
+ */
+export function lowerRegister(b: Builder, mosaic: boolean) {
+  const zc = (FZ + FF) / 2;
+  const t = FF - FZ;
+  b.box(FW * 2, 10.4, t, MARBLE, { at: [0, 0, zc] });
+  b.box(FW * 2 + 0.1, 0.6, t + 0.1, PINK, { at: [0, 0.6, zc], jitter: false });
+  b.box(FW * 2 + 0.4, 0.35, 0.9, MARBLE, { at: [0, 10.4, FF], jitter: false });
+  portal(b, 0, 3.0, 6.3, mosaic);
+  b.sym((s) => portal(b, s * 7.6, 2.0, 5.0, mosaic));
+  for (const [x, w] of PIERS) {
+    b.box(w, 10.4, 1.3, MARBLE, { at: [x, 0, FZ + 0.6] });
+    b.box(w + 0.04, 0.3, 1.34, PINK, { at: [x, 10.0, FZ + 0.6], jitter: false });
+  }
 }
 
 /** A plate-tracery rose: a white wheel pierced by a ring of circles, over a dark glazed disc. */
@@ -36,87 +61,67 @@ export function rose(b: Builder, x: number, y: number, r: number, z: number, fra
 }
 
 /**
- * The Gothic front of Siena and Orvieto: four piers rising to pinnacles divide it into three; three
- * gabled portals below; a rose in a square frame in the middle; three tall gables filled with gold
- * mosaic above, the central one far taller than the roof behind it.
+ * The front as it stood for centuries: the marble ground storey, and above it the bare brick core
+ * with putlog holes from the scaffolding, stumps of the piers with toothing left to bond the marble
+ * facing, a plain round opening where the rose was meant to go, and a low temporary gable.
  */
-export function gothicFacade(b: Builder) {
+export function unfinishedFacade(b: Builder) {
   const zc = (FZ + FF) / 2;
   const t = FF - FZ;
-  // the wall itself: full width to 10.4, the side bays to 14.6, the centre to the gable
-  b.box(FW * 2, 10.4, t, MARBLE, { at: [0, 0, zc] });
-  b.sym((s) => b.box(FW - NW, 4.2, t, MARBLE, { at: [s * (FW + NW) / 2, 10.4, zc] }));
-  b.box(NW * 2, 9.6, t, MARBLE, { at: [0, 10.4, zc] });
-  // a plinth band of pink marble and a cornice over the portals
-  b.box(FW * 2 + 0.1, 0.6, t + 0.1, PINK, { at: [0, 0.6, zc], jitter: false });
-  b.box(FW * 2 + 0.4, 0.35, 0.9, MARBLE, { at: [0, 10.4, FF], jitter: false });
-
-  portal(b, 0, 3.0, 6.3);
-  b.sym((s) => portal(b, s * 7.6, 2.0, 5.0));
-
-  // the rose window in its square frame, with gold mosaic in the corners
-  b.box(6.6, 6.6, 0.12, P.gold, { at: [0, 11.6, FF + 0.06], jitter: false });
-  for (const [w, h, x, y] of [[6.9, 0.3, 0, 11.4], [6.9, 0.3, 0, 18.2], [0.3, 7.1, -3.45, 11.4], [0.3, 7.1, 3.45, 11.4]] as const) {
-    b.box(w, h, 0.3, PINK, { at: [x, y, FF + 0.15], jitter: false });
-  }
-  rose(b, 0, 14.9, 2.75, FF + 0.1);
-  // side bays: tall mosaic panels over the side portals, then gables
+  lowerRegister(b, false);
+  const top = 19.6;
+  b.box(NW * 2 + 0.2, top - 10.75, t, ROUGH, { at: [0, 10.75, zc] });
+  b.extrude([[-NW - 0.1, top], [NW + 0.1, top], [0, top + 2.0]], t, ROUGH, { at: [0, 0, zc] });
   b.sym((s) => {
-    b.box(2.4, 3.0, 0.12, P.gold, { at: [s * 7.6, 10.95, FF + 0.06], jitter: false });
-    b.box(1.6, 2.2, 0.06, MOSAIC_BLUE, { at: [s * 7.6, 11.35, FF + 0.12], jitter: false });
-    const gb = 14.6;
-    b.extrude([[s * 5.9, gb], [s * 9.3, gb], [s * 7.6, gb + 4.6]], 0.5, MARBLE, { at: [0, 0, zc + 0.05] });
-    b.extrude([[s * 6.6, gb + 0.3], [s * 8.6, gb + 0.3], [s * 7.6, gb + 3.6]], 0.06, P.gold, { at: [0, 0, FF + 0.33], jitter: false });
+    b.beam([s * (NW + 0.35), top - 0.05, zc], [0, top + 2.15, zc], 0.5, 0.18, ROOF);
+    b.box(FW - NW - 0.1, 1.1, t, ROUGH, { at: [s * (FW + NW + 0.1) / 2, 10.75, zc] });
+    b.extrude([[s * NW, 11.85], [s * FW, 11.85], [s * NW, 13.8]], t, ROUGH, { at: [0, 0, zc] });
   });
-  // the central gable, taller than the nave roof behind it
-  const gb = 20.0;
-  const apex = 27.0;
-  b.box(NW * 2 + 0.4, 0.35, t + 0.7, MARBLE, { at: [0, gb - 0.3, zc + 0.35], jitter: false });
-  b.extrude([[-NW, gb], [NW, gb], [0, apex]], t, MARBLE, { at: [0, 0, zc] });
-  b.extrude([[-NW + 0.7, gb + 0.4], [NW - 0.7, gb + 0.4], [0, apex - 1.1]], 0.06, P.gold, { at: [0, 0, FF + 0.03], jitter: false });
-  b.extrude([[-1.3, gb + 1.0], [1.3, gb + 1.0], [1.3, gb + 3.6], [0, gb + 4.4], [-1.3, gb + 3.6]], 0.05, MOSAIC_BLUE, { at: [0, 0, FF + 0.07], jitter: false });
-  b.sym((s) => {
-    b.beam([s * (NW + 0.3), gb - 0.1, FF + 0.1], [0, apex + 0.25, FF + 0.1], 0.5, 0.35, MARBLE);
-    // crockets along the raking edges
-    for (let i = 1; i < 6; i++) {
-      const f = i / 6;
-      b.box(0.3, 0.3, 0.3, MARBLE, { at: [s * NW * (1 - f) + s * 0.15, gb + (apex - gb) * f + 0.25, FF + 0.1], jitter: false });
+  // the round opening left for the rose, glazed plainly
+  b.extrude(circlePts(0, 15.3, 2.55, 14), 0.08, tint(ROUGH, -0.1), { at: [0, 0, FF + 0.04], jitter: false });
+  b.extrude(circlePts(0, 15.3, 2.2, 14), 0.08, P.windowDark, { at: [0, 0, FF + 0.07], jitter: false });
+  // putlog holes left by the scaffolding
+  const dark = tint(ROUGH, -0.45);
+  for (const y of [11.6, 13.2, 14.8, 16.4, 18.0]) {
+    for (const x of [-4.4, -2.2, 0, 2.2, 4.4]) {
+      if (Math.hypot(x, y - 15.3) < 3.0) continue;
+      b.box(0.22, 0.22, 0.04, dark, { at: [x, y, FF + 0.01], jitter: false });
     }
-  });
-  b.cyl(0.12, 1.4, MARBLE, { at: [0, apex + 0.2, FF], segs: 6 });
-  b.box(0.9, 0.14, 0.14, MARBLE, { at: [0, apex + 1.1, FF] });
-
-  // the four piers and their pinnacles
-  for (const [x, top, w] of [[-FW + 0.6, 19.4, 1.2], [FW - 0.6, 19.4, 1.2], [-NW - 0.1, 23.6, 1.1], [NW + 0.1, 23.6, 1.1]] as const) {
-    b.box(w, top, 1.3, MARBLE, { at: [x, 0, FZ + 0.6] });
-    b.box(w + 0.04, 0.3, 1.34, PINK, { at: [x, 10.0, FZ + 0.6], jitter: false });
-    b.box(w + 0.04, 0.3, 1.34, PINK, { at: [x, 14.6, FZ + 0.6], jitter: false });
-    opening(b, 'pointed', w * 0.5, 2.2, [x, top - 3.2, FZ + 1.25], '+z', RECESS, 0.04);
-    pinnacle(b, [x, top, FZ + 0.6], w * 0.42, 4.2, MARBLE);
+  }
+  b.sym((s) => b.box(0.22, 0.22, 0.04, dark, { at: [s * 7.8, 11.1, FF + 0.01], jitter: false }));
+  // brick stumps of the piers, toothed on their faces for the marble that never came
+  for (const [x, w] of PIERS) {
+    const inner = Math.abs(x) < 8;
+    const h = inner ? 3.4 : 1.5;
+    b.box(w, h, 1.3, ROUGH, { at: [x, 10.75, FZ + 0.6] });
+    for (let y = 11.0; y < 10.75 + h - 0.3; y += 0.7) {
+      const wide = Math.round((y - 11) / 0.7) % 2 === 0;
+      b.box(wide ? w + 0.3 : w + 0.1, 0.32, 1.45, tint(ROUGH, 0.06), { at: [x, y, FZ + 0.6], jitter: false });
+    }
   }
 }
 
 export const gothicDuomo: BuildingDef = {
   id: 'gothic-duomo',
-  name: 'Gothic cathedral',
+  name: 'Gothic cathedral, front unfinished',
   style: 'Italian Gothic',
   date: 'c. 1310',
   summary:
-    'Two centuries on, the city remade the front in the new Gothic manner. As at Siena and Orvieto it is still a screen of marble set against the church, not a wall of glass: four pinnacled piers, three gabled doorways, a rose window in a square frame, and three tall gables glittering with gold mosaic, the middle one rising well above the roof behind. ' +
-    'The nave was raised on pointed arcades and its new upper walls laid in bold black and white bands, with pointed two-light windows; the old round-headed clerestory windows were blocked. ' +
-    'Italian builders used pointed arches and rose windows but kept thick walls and small windows, and almost never flying buttresses. The Romanesque aisles, transept and apse, the bell tower (now topped with a spire) and the baptistery all survive.',
-  materials: ['white, pink and dark marble', 'gold and coloured glass mosaic', 'bronze doors', 'brick spire', 'clay tiles'],
+    'Two centuries on, the city rebuilt the cathedral in the Gothic manner. The nave and transept were raised on pointed arcades, and the new upper walls laid in bold black and white bands with pointed two-light windows, as at Siena and Orvieto; the old round-headed clerestory windows were blocked. ' +
+    'A grand new marble front was begun as well, meant to rise in three mosaic gables round a rose window like the fronts planned at Siena and Orvieto. Only the ground storey was finished: three gabled doorways and the bases of the piers. Money, plague (the Black Death of 1348) and politics stopped the work, and the rest was left as bare brick with scaffold holes, a plain round opening for the rose and a makeshift gable. ' +
+    'Many Italian cathedral and church fronts stayed like this for centuries; some, like San Petronio at Bologna, still do. The Romanesque aisles, transept and apse, the bell tower (now topped with a spire) and the baptistery all survive.',
+  materials: ['white and pink marble', 'brick core', 'bronze doors', 'dark and white banded stone', 'brick spire', 'clay tiles'],
   lookFor: [
-    { label: 'Gables', note: 'Three steep triangular gables crown the front; they hide the low-pitched roofs behind rather than following them.', at: [0, 24.5, FF + 0.6] },
-    { label: 'Rose window', note: 'A great round window of stone tracery, set in a square frame as at Orvieto.', at: [0, 14.9, FF + 0.6] },
-    { label: 'Mosaic', note: 'Gold-ground glass mosaic fills the gables and the lunettes over the doors, catching the sun across the square.', at: [7.6, 16.5, FF + 0.6] },
-    { label: 'Pinnacles', note: 'The four piers that divide the front end in slender pointed pinnacles.', at: [NW + 0.1, 26.0, FZ + 1.4] },
+    { label: 'Gabled portals', note: 'The three pointed doorways, each under a sharp marble gable: the only part of the planned front that was built.', at: [0, 9.3, FF + 1.0] },
+    { label: 'Unfinished brick front', note: 'Above the cornice the rough brick core was never faced in marble; Italian church fronts were often left like this for centuries.', at: [-3.4, 17.0, FF + 0.4] },
+    { label: 'Putlog holes', note: 'Square holes left where the beams of the builders’ scaffolding were set into the wall.', at: [4.4, 18.0, FF + 0.3] },
+    { label: 'Toothing', note: 'Brick courses left jutting from the pier stumps so that the marble facing could later be bonded in.', at: [NW + 0.1, 13.0, FZ + 1.5] },
     { label: 'Striped upper nave', note: 'The heightened nave walls are laid in equal bands of dark and white stone, as at Siena and Orvieto; the blocked Romanesque windows show below the new ones.', at: [-NW - 0.3, 15.5, 2.0] },
   ],
-  modelledOn: 'The fronts of Siena Cathedral (lower part 1284 to 1297) and Orvieto Cathedral (designed by Lorenzo Maitani from 1310)',
+  modelledOn: 'The striped nave of Siena and Orvieto cathedrals; for the unfinished front, Florence Cathedral (Arnolfo di Cambio’s front, never finished and pulled down in 1587), Santa Croce, Florence (bare until 1857) and San Petronio, Bologna (still unfinished)',
   influences: ['cistercian-gothic'],
   build(b) {
     cathedral(b, GOTHIC);
-    gothicFacade(b);
+    unfinishedFacade(b);
   },
 };

@@ -91,9 +91,32 @@ export function Intro() {
   );
 }
 
+/** Shown once if the town is drawing slowly at full quality. */
+export function SlowNotice() {
+  const slow = useApp((s) => s.slow);
+  const intro = useApp((s) => s.intro);
+  if (!slow || intro) return null;
+  return (
+    <div className="slow panel" role="status">
+      <p>
+        <strong>Running slowly?</strong> Simpler graphics drop the shadows and thin the trees. You can switch back under the ? button.
+      </p>
+      <div className="slow-actions">
+        <button className="btn primary small" onClick={() => useApp.getState().setQuality('low')}>
+          Use simpler graphics
+        </button>
+        <button className="btn small" onClick={() => useApp.setState({ slow: false, slowDismissed: true })}>
+          Leave it
+        </button>
+      </div>
+    </div>
+  );
+}
+
 export function Help() {
   const open = useApp((s) => s.helpOpen);
   const touch = useApp((s) => s.touch);
+  const quality = useApp((s) => s.quality);
   if (!open) return null;
   return (
     <div className="modal-back" onClick={() => useApp.setState({ helpOpen: false })}>
@@ -105,6 +128,18 @@ export function Help() {
           </button>
         </div>
         <div className="scroll help-grid">
+          <section className="help-graphics">
+            <h3>Graphics</h3>
+            <div className="seg" role="group" aria-label="Graphics quality">
+              <button className={quality === 'high' ? 'on' : ''} onClick={() => useApp.getState().setQuality('high')}>
+                Full
+              </button>
+              <button className={quality === 'low' ? 'on' : ''} onClick={() => useApp.getState().setQuality('low')}>
+                Simple
+              </button>
+            </div>
+            <p>Simple leaves out the shadows and most of the trees. Choose it if the town moves in jerks; the choice is remembered on this device.</p>
+          </section>
           <section>
             <h3>Time</h3>
             <dl>

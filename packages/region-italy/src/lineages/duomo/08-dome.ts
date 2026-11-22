@@ -1,6 +1,6 @@
 import type { BuildingDef } from '@ah/kit';
 import { cathedral, CZ, DOME } from './shared';
-import { gothicFacade } from './07-gothic-duomo';
+import { unfinishedFacade } from './07-gothic-duomo';
 
 export const dome: BuildingDef = {
   id: 'dome',
@@ -10,7 +10,7 @@ export const dome: BuildingDef = {
   summary:
     'The crossing had waited generations for a dome no one knew how to build. A generation or two after Brunelleschi’s success at Florence (1420 to 1436), the city hired a master who had learned from it and raised an eight-sided drum over it, pierced with round windows, and closed it with a pointed dome of eight tiled faces divided by white marble ribs. ' +
     'The pointed profile pushes outwards less than a hemisphere would, and Brunelleschi’s method (two shells, bricks laid in a herringbone pattern so each course holds itself) let such domes go up without a forest of timber centring; a smaller copy like this one could follow the same recipe. ' +
-    'A marble lantern on top lights the space below and weighs the ribs down to lock them. Everything else, the Gothic front and nave, the Romanesque aisles and apse, the bell tower and the baptistery, stays as it was.',
+    'A marble lantern on top lights the space below and weighs the ribs down to lock them. Everything else, the half-built front with its bare brick upper part, the striped Gothic nave, the Romanesque aisles and apse, the bell tower and the baptistery, stays as it was.',
   materials: ['brick dome under clay tiles', 'white marble ribs and lantern', 'marble-faced drum', 'gilt copper ball and cross'],
   lookFor: [
     { label: 'Ribbed dome', note: 'Eight white marble ribs run up the corners of the dome, with red tiles between: the look of Florence Cathedral.', at: [4.4, 30.5, CZ + 4.4] },
@@ -22,6 +22,6 @@ export const dome: BuildingDef = {
   influences: ['renaissance-birth'],
   build(b) {
     cathedral(b, DOME);
-    gothicFacade(b);
+    unfinishedFacade(b);
   },
 };

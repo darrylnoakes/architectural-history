@@ -8,14 +8,14 @@ export const fortifiedBridge: BuildingDef = {
   date: 'c. 1100',
   summary:
     'With trade reviving, the broken arch is rebuilt in stone: in rubble and brick, rougher than the Roman work either side, but again a round arch. ' +
-    'Bridges were the gateways of a town and the places where tolls were taken, so a tower is raised over the roadway with a gate that can be shut and a battlemented fighting top; the machicolations under it are the sort of improvement added over the next two or three centuries. ' +
+    'Bridges were the gateways of a town and the places where tolls were taken, so a tower is raised over the roadway with a gate that can be shut and a fighting platform on top behind a plain parapet of merlons, built flush with the walls; the projecting machicolated galleries seen on later Italian towers became common only from the 13th century. ' +
     'At the bridgehead a small chapel lets travellers give thanks for a safe crossing and leave alms for the bridge’s upkeep. ' +
     'The Roman piers and arches are kept: medieval builders patched what they had rather than start again.',
   materials: ['Roman travertine and tufa', 'rubble and brick', 'clay roof tiles (coppi)'],
   modelledOn: 'The Ponte Nomentano over the Aniene, Rome: a Roman bridge cut by Totila and rebuilt by Narses in the 550s, with towers and a fortified superstructure built up through the Middle Ages and largely remade under Pope Nicholas V (1447 to 1455)',
   lookFor: [
     { label: 'Gate tower', note: 'The road passes through an arch under the tower, which could be closed with a gate; tolls were collected here.', at: [3.7, 5.5, -7.65] },
-    { label: 'Machicolations', note: 'Openings in the floor of the projecting parapet, between stone brackets, so defenders could drop stones on attackers at the foot of the wall; in Italy these became common only from the 13th century.', at: [1.2, 7.9, -5.5] },
+    { label: 'Battlements', note: 'Square merlons rise straight from the face of the tower, with gaps (crenels) between them for defenders to shoot through; there is no projecting gallery yet.', at: [2.4, 8.7, -5.95] },
     { label: 'Rebuilt arch', note: 'The arch broken in the Gothic War, rebuilt in rubble with a ring of brick: a patch that still shows.', at: [3.3, 0.2, 5.15] },
     { label: 'Wayside chapel', note: 'A little chapel at the bridgehead where travellers prayed and gave money towards the bridge.', at: [5.0, 4.0, 14.4] },
   ],
@@ -65,20 +65,12 @@ export const fortifiedBridge: BuildingDef = {
       b.window(0.7, 1.1, { at: [0, base + 5.0, tz + k * (td / 2)], facing: k > 0 ? '+z' : '-z', shape: 'round', frame: quoin });
       b.panel(0.18, 1.0, P.windowDark, { at: [k * (tw / 2), base + 4.6, tz], facing: k > 0 ? '+x' : '-x' });
     });
-    // projecting fighting top on stone brackets, with machicolations between them, and merlons
+    // a plain battlemented top: a thin string course, then merlons flush with the wall faces
     const topY = base + H;
-    const ov = 0.45;
-    b.sym((k) => {
-      for (const d of [-1.35, -0.45, 0.45, 1.35]) {
-        b.box(0.3, 0.6, ov + 0.1, quoin, { at: [d * (tw / td) * 0.85, topY - 0.6, tz + k * (td / 2 + ov / 2)] });
-        b.box(ov + 0.1, 0.6, 0.3, quoin, { at: [k * (tw / 2 + ov / 2), topY - 0.6, tz + d * 0.85] });
-      }
-    });
-    b.box(tw + ov * 2, 1.0, td + ov * 2, stone, { at: [0, topY, tz] });
-    b.box(tw + ov * 2 + 0.1, 0.15, td + ov * 2 + 0.1, quoin, { at: [0, topY, tz] });
-    b.crenel(tw + ov * 2, td + ov * 2, stone, { at: [0, topY + 1.0, tz], merlonW: 0.6, merlonH: 0.9, t: 0.4 });
+    b.box(tw + 0.08, 0.15, td + 0.08, quoin, { at: [0, topY - 0.15, tz] });
+    b.crenel(tw, td, stone, { at: [0, topY, tz], merlonW: 0.6, merlonH: 0.9, t: 0.4 });
     // a low tiled roof over the guard chamber, set back behind the battlements
-    b.hip(tw - 0.4, td - 0.4, 1.0, P.coppi, { at: [0, topY + 1.0, tz] });
+    b.hip(tw - 1.2, td - 1.0, 0.9, P.coppi, { at: [0, topY, tz] });
 
     // ---- the wayside chapel on the north bank, beside the road
     const cx = 5.0;

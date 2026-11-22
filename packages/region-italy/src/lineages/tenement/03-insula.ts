@@ -25,15 +25,15 @@ export const insula: BuildingDef = {
   date: 'c. AD 60 to 150',
   summary:
     'Under the empire most people in Rome, Ostia and the larger towns rented rooms in an insula, a block of flats of five storeys or so built in concrete faced with brick, which could be raised higher and burnt less than the timber-framed blocks before it. ' +
-    'Shops with mezzanines filled the street front; the best flats, on the first floor, had a balcony on stone brackets, and rents fell as you climbed, so the poorest lived under the roof in small rooms that were the last to escape a fire. ' +
+    'Shops with mezzanines filled the street front, and between them narrow doorways opened straight onto stairs up to the flats, so tenants never passed through a shop. The best flats, on the first floor, had a balcony on stone brackets, and rents fell as you climbed, so the poorest lived under the roof in small rooms that were the last to escape a fire. ' +
     'There was no running water above the ground floor, and tenants carried it upstairs from the street fountain. Augustus limited the height of buildings on the street to 70 Roman feet, about 21 metres, and Trajan is said to have lowered it to 60.',
   materials: ['concrete faced with brick (opus testaceum)', 'travertine brackets and thresholds', 'timber floors and balconies', 'fired roof tiles'],
   modelledOn: 'The insulae of Ostia (House of Diana, 2nd century AD) and the Insula dell’Ara Coeli, Rome',
   lookFor: [
     { label: 'Brick-faced concrete', note: 'A core of concrete faced with neat triangular bricks; string courses of brick mark each floor.', at: [-9.5, 9.4, ZF + 0.1] },
     { label: 'Balcony on travertine brackets', note: 'A long balcony (maenianum) runs along the first floor on stone corbels, as on the House of Diana at Ostia.', at: [-4.8, 4.0, ZF + 1.2] },
-    { label: 'Shops with mezzanines', note: 'Each shop has a wide doorway and a small window above it lighting the loft where its keeper lived.', at: [-8.0, 2.0, ZF + 0.2] },
-    { label: 'Stair from the street', note: 'Stairs rose straight from the street to the flats, so tenants never passed through the shops.', at: [11.6, 3.0, 1.0] },
+    { label: 'Shops with mezzanines', note: 'Each shop has a wide doorway and a small window above it lighting the loft where its keeper lived.', at: [-3.1, 2.0, ZF + 0.2] },
+    { label: 'Stair doorway', note: 'A narrow door on the street with a travertine threshold, the first steps of the stair to the upper flats rising just inside, as at Ostia.', at: [-W / 2 + 1.5 * BP, 1.6, ZF + 0.25] },
     { label: 'Garrets under the roof', note: 'The top storey has the smallest windows and the flimsiest timber balconies: the cheapest rooms, and the most dangerous in a fire.', at: [3.1, 15.2, ZF + 0.9] },
   ],
   influences: ['roman-concrete'],
@@ -58,7 +58,7 @@ export const insula: BuildingDef = {
     b.hip(W + 1.0, D + 1.0, rh, roof, { at: [0, TOP - 0.05, ZC] });
     b.box(W - D + 0.1, 0.16, 0.2, tint(roof, -0.08), { at: [0, TOP - 0.05 + rh - 0.04, ZC] });
 
-    // ground floor: six shops and the entrance to a stair in the middle bay
+    // ground floor: shops, two stair doorways, and the entrance to the courtyard in the middle bay
     for (let i = 0; i < BAYS; i++) {
       const x = -W / 2 + (i + 0.5) * BP;
       if (i === 3) {
@@ -78,6 +78,24 @@ export const insula: BuildingDef = {
           { at: [x, 3.55, ZF + 0.14] },
         );
         b.box(1.8, 0.15, 0.6, trav, { at: [x, 0, ZF + 0.3] });
+        continue;
+      }
+      if (i === 1 || i === 5) {
+        // a stair doorway: travertine jambs, lintel and threshold, the first steps rising inside
+        const dw = 1.1;
+        const dh = 2.5;
+        b.panel(dw, dh, P.timberBlack, { at: [x, 0.15, ZF], facing: '+z', depth: 0.02 });
+        for (let k = 0; k < 7; k++) {
+          const y = 0.15 + k * 0.25;
+          const shade = tint(trav, -0.12 - k * 0.07);
+          b.panel(dw - 0.04, 0.25, tint(brick, -0.2 - k * 0.05), { at: [x, y, ZF], facing: '+z', depth: 0.03 }); // riser
+          b.panel(dw - 0.04, 0.05, shade, { at: [x, y + 0.2, ZF], facing: '+z', depth: 0.04 }); // tread nosing
+        }
+        for (const sd of [-1, 1]) b.box(0.22, dh + 0.15, 0.2, trav, { at: [x + sd * (dw / 2 + 0.11), 0, ZF + 0.08] });
+        b.box(dw + 0.64, 0.3, 0.24, trav, { at: [x, dh + 0.15, ZF + 0.1] });
+        b.box(dw + 0.5, 0.15, 0.45, trav, { at: [x, 0, ZF + 0.2] }); // threshold
+        b.panel(dw + 0.8, 0.4, lintel, { at: [x, dh + 0.5, ZF], facing: '+z', shape: 'segmental', depth: 0.03 }); // relieving arch
+        b.window(0.35, 0.8, { at: [x, 3.3, ZF], facing: '+z', frame: lintel, glass: P.windowDark, border: 0.06 }); // slit lighting the stair
         continue;
       }
       const open = b.chance(0.6);
@@ -113,12 +131,24 @@ export const insula: BuildingDef = {
         if (b.chance(0.2)) b.panel(ww - 0.14, wh - 0.12, P.oak, { at: [x, y0 + sill + 0.06, ZF], facing: '+z', depth: 0.1 });
       }
     }
-    // side walls: a few windows on the left flank, the stair flank mostly blind
+    // side walls: a column of windows on each flank, under flat brick arches
     for (let f = 1; f < FL.length; f++) {
       const [y0, , ww, wh, sill] = FL[f];
-      for (const z of [-3.0, 0.2, 3.2]) b.window(ww * 0.9, wh, { at: [-W / 2, y0 + sill, z], facing: '-x', frame: tint(brick, -0.05), glass: P.windowDark, border: 0.06 });
-      if (f > 1) b.window(ww * 0.9, wh, { at: [W / 2, y0 + sill, -3.2], facing: '+x', frame: tint(brick, -0.05), glass: P.windowDark, border: 0.06 });
+      for (const [sx, facing] of [
+        [-W / 2, '-x'],
+        [W / 2, '+x'],
+      ] as const) {
+        for (const z of [-3.0, 0.2, 3.2]) {
+          b.window(ww * 0.9, wh, { at: [sx, y0 + sill, z], facing, frame: tint(brick, -0.05), glass: P.windowDark, border: 0.06 });
+          b.panel(ww * 0.9 + 0.35, 0.22, lintel, { at: [sx, y0 + sill + wh, z], facing, depth: 0.04 });
+        }
+      }
     }
+    // a small window to the ground-floor back rooms on each flank
+    for (const [sx, facing] of [
+      [-W / 2, '-x'],
+      [W / 2, '+x'],
+    ] as const) b.window(0.7, 0.6, { at: [sx, 2.6, -2.0], facing, frame: lintel, glass: P.windowDark, border: 0.06 });
 
     // the first-floor balcony on travertine corbels, with a brick parapet
     const by = FL[1][0];
@@ -164,30 +194,11 @@ export const insula: BuildingDef = {
     }
     washing(b, [-8.0, FL[3][0] + 2.0, ZF + 0.9], [-4.6, FL[3][0] + 2.0, ZF + 0.9], 4);
 
-    // the outside stair up the right flank on a rising brick vault, to a first-floor door
-    const sx = W / 2 + 0.65;
-    const z0 = ZF - 0.2; // foot, at the street
-    const z1 = -2.6; // landing
-    const steps = 16;
-    const run = (z0 - z1) / steps;
-    for (let k = 0; k < steps; k++) b.box(1.2, (by * (k + 1)) / steps, run, k % 2 ? brick : tint(brick, 0.03), { at: [sx, 0, z0 - (k + 0.5) * run] });
-    b.box(1.2, by, 2.0, brick, { at: [sx, 0, z1 - 1.0] }); // landing
-    b.panel(1.3, 1.9, lintel, { at: [sx, 0, z1 - 1.0 + 0.0], facing: '+x', shape: 'round', depth: 0.02 }); // relieving arch under the landing
-    // parapet along the open side of the stair
-    b.beam([sx + 0.6, 1.0, z0], [sx + 0.6, by + 1.0, z1], 0.14, 0.14, trav);
-    for (let k = 0; k <= 4; k++) {
-      const t = k / 4;
-      b.box(0.12, 1.0, 0.12, brick, { at: [sx + 0.6, by * t, z0 - (z0 - z1) * t] });
-    }
-    b.box(0.2, 1.0, 2.0, brick, { at: [sx + 0.6, by, z1 - 1.0] });
-    b.panel(1.0, 2.1, P.oakDark, { at: [W / 2, by, z1 - 1.0], facing: '+x', depth: 0.06 });
-    b.panel(1.2, 2.3, lintel, { at: [W / 2, by, z1 - 1.0], facing: '+x', depth: 0.03 });
     // a street fountain basin at the corner, where everyone drew water
     b.box(1.6, 0.7, 0.9, trav, { at: [-W / 2 - 0.9, 0.15, 6.9] });
     b.box(1.4, 0.05, 0.7, P.water, { at: [-W / 2 - 0.9, 0.78, 6.9], mat: 'glass' });
     b.box(0.35, 1.3, 0.3, trav, { at: [-W / 2 - 0.9, 0.15, 6.35] });
 
     b.collider(W, D, { at: [0, 0, ZC] });
-    b.collider(1.6, ZF - z1 + 2.0, { at: [sx, 0, (ZF + z1 - 2.0) / 2] });
   },
 };

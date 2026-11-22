@@ -34,6 +34,11 @@ export class Engine {
   readonly street = new Street();
   private townWorld!: Walkable;
   private treeCount: number;
+  private low = false;
+  /** Frames and seconds counted towards the next reading of the frame rate. */
+  private fps = { frames: 0, time: 0, warm: 0, bad: 0 };
+  /** Where the camera was when the last engine was shut down, so a change of quality does not move it. */
+  private static lastView: { region: string; pos: THREE.Vector3; target: THREE.Vector3 } | null = null;
   private raycaster = new THREE.Raycaster();
   private last = performance.now();
   private raf = 0;
@@ -63,8 +68,9 @@ export class Engine {
     Engine.instance = this;
     const touch = useApp.getState().touch;
     const small = Math.min(window.innerWidth, window.innerHeight) < 700;
-    // ?q=low is for weak devices (and software renderers): no shadows, fewer trees
-    const low = new URLSearchParams(location.search).get('q') === 'low';
+    // low quality is for weak devices (and software renderers): no shadows, fewer trees
+    const low = useApp.getState().quality === 'low';
+    this.low = low;
     this.stage = createStage({
       canvas,
       shadowExtent: 250,
@@ -79,6 +85,13 @@ export class Engine {
     this.buildWorld(REGIONS[useApp.getState().regionId] ?? Object.values(REGIONS)[0]);
     this.nav = new Navigator(camera, canvas, () => (useApp.getState().street ? this.street : this.townWorld));
     this.frameRegion();
+    const v = Engine.lastView;
+    if (v && v.region === this.region.id) {
+      camera.position.copy(v.pos);
+      this.nav.orbit.target.copy(v.target);
+      this.nav.orbit.update();
+    }
+    Engine.lastView = null;
     this.nav.onPick = (ndc) => this.pick(ndc);
     this.nav.onHover = (ndc) => this.hover(ndc);
     this.nav.onLockChange = (locked) => useApp.setState({ locked });
@@ -150,6 +163,7 @@ export class Engine {
 
     const town = this.town;
     const land = this.land;
+    const scenery = this.scenery;
     this.townWorld = {
       centre: new THREE.Vector3(region.site.centre[0], 0, region.site.centre[1]),
       radius: region.site.radius,
@@ -160,7 +174,10 @@ export class Engine {
         for (const d of town.decks()) h = Math.max(h, deckHeightAt(d, x, z));
         return h;
       },
-      colliders: () => town.colliders(),
+      colliders: () => {
+        const extra = scenery.colliders();
+        return extra.length ? [...town.colliders(), ...extra] : town.colliders();
+      },
     };
     // a name tag over each of the principal plots, so it is clear what can be clicked
     for (const p of this.town.plots) {
@@ -589,6 +606,7 @@ export class Engine {
 
     this.updateOverlays();
     this.stage.renderer.render(this.stage.scene, cam);
+    this.watchFrameRate(dt);
   };
 
   /** Lineage info for the UI. */
@@ -600,7 +618,28 @@ export class Engine {
     return this.town.get(id);
   }
 
+  /** Notice when full quality is too much for the device, and offer the simpler graphics once. */
+  private watchFrameRate(dt: number) {
+    const f = this.fps;
+    if (this.low || document.hidden) return;
+    // the first seconds are spent building the town and are no guide
+    if (f.warm < 6) {
+      f.warm += dt;
+      return;
+    }
+    f.frames++;
+    f.time += dt;
+    if (f.time < 2) return;
+    const rate = f.frames / f.time;
+    f.frames = 0;
+    f.time = 0;
+    f.bad = rate < 17 ? f.bad + 1 : 0;
+    const s = useApp.getState();
+    if (f.bad >= 2 && !s.slow && !s.slowDismissed) useApp.setState({ slow: true });
+  }
+
   dispose() {
+    Engine.lastView = { region: this.region.id, pos: this.stage.camera.position.clone(), target: this.nav.orbit.target.clone() };
     cancelAnimationFrame(this.raf);
     window.removeEventListener('resize', this.onResize);
     this.unsub();

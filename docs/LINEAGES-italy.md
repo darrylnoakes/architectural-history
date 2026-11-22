@@ -137,10 +137,10 @@ tower stay where they are from stage to stage. The temples before it face the sa
 | 20 | `imperial-temple` | A marble Corinthian temple on a high podium inside a colonnaded precinct. Cameo: the Maison Carrée, Nîmes; the Temple of Augustus, Pula |
 | 400 | `early-christian-basilica` | The temple closed and quarried; a basilica built from its columns: nave, aisles, clerestory, apse, a forecourt, and an octagonal baptistery. Cameo: Santa Sabina, Rome |
 | 1120 | `romanesque-duomo` | A new cathedral: a front of tiered arcades, bands of coloured marble, round arches, and a freestanding bell tower. Cameo: Pisa; Lucca |
-| 1310 | `gothic-duomo` | The front remade in Italian Gothic: three gables, a rose window, mosaic, pinnacles; the nave raised on pointed arcades. Cameo: Siena; Orvieto |
+| 1310 | `gothic-duomo` | The nave raised on pointed arcades in black-and-white bands; a new front begun in Italian Gothic but carried up only to the top of its three gabled doorways, bare brick above. Cameo: Siena and Orvieto for the intention; Florence, Santa Croce and San Petronio for the unfinished front |
 | 1480 | `dome` | A ribbed, pointed, eight-sided dome with a lantern raised over the crossing. Cameo: Brunelleschi's dome, Florence |
 | 1630 | `baroque-duomo` | Baroque additions: a domed side chapel, a curved flight of steps, a new top to the bell tower, statues along the front |
-| 1887 | `completed-facade` | The nineteenth century "completes" the cathedral: a new marble front in a revived medieval style, and the houses crowding it are cleared. Cameo: the façade of Florence Cathedral |
+| 1887 | `completed-facade` | The nineteenth century finishes the front at last in a revived Gothic style above the medieval doorways (rose, gables, mosaic, statues), and the houses crowding the cathedral are cleared. Cameo: the façades of Florence Cathedral (1887) and Santa Croce (1863) |
 
 ## power: "The Seat of Power"
 

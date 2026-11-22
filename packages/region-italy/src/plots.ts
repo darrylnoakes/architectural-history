@@ -23,7 +23,7 @@ export const plots: Plot[] = [
   // united Italy, the party and the region are separate buildings on their own ground, built without
   // the palace because they are not on the main plot)
   { id: 'power', lineage: 'power', x: 32, z: -73, rotY: S, seed: 11, hero: true, skip: ['prefecture', 'casa-del-fascio', 'regional-offices'] },
-  { id: 'prefettura', lineage: 'power', x: 101, z: -60, rotY: E, seed: 12, since: 1885, keep: 'prefecture' },
+  { id: 'prefettura', lineage: 'power', x: 119, z: -60, rotY: E, seed: 12, since: 1885, keep: 'prefecture' },
   { id: 'casa-del-fascio', lineage: 'power', x: 110, z: 155.5, rotY: N, seed: 34, since: 1934, keep: 'casa-del-fascio' },
   { id: 'regione', lineage: 'power', x: 86, z: 163.5, rotY: N, seed: 35, since: 1975, keep: 'regional-offices' },
   { id: 'fountain', lineage: 'fountain', x: 32, z: -28, rotY: S, seed: 13, hero: true, keep: 'civic-fountain' },
@@ -43,15 +43,15 @@ export const plots: Plot[] = [
 
   // --- three bridges: the old one, rebuilt as it was; the boulevard bridge downstream; the footbridge upstream
   { id: 'bridge', lineage: 'bridge', x: 0, z: 96, rotY: S, seed: 20, hero: true, skip: ['iron-bridge'], keep: 'rebuilt-bridge' },
-  { id: 'new-bridge', lineage: 'bridge', x: 128, z: 96, rotY: S, seed: 21, since: 1880, skip: ['bailey-bridge', 'rebuilt-bridge'], keep: 'concrete-bridge' },
+  { id: 'new-bridge', lineage: 'bridge', x: 146, z: 96, rotY: S, seed: 21, since: 1880, skip: ['rebuilt-bridge'], keep: 'concrete-bridge' },
   { id: 'footbridge', lineage: 'bridge', x: -36, z: 96, rotY: S, seed: 22, since: 2008 },
 
   // --- spectacle: the amphitheatre that becomes houses, the theatre, and the halls of the twentieth century
   { id: 'arena', lineage: 'spectacle', x: -112, z: 24, rotY: N, seed: 23, hero: true, keep: 'arena-houses' },
   { id: 'theatre', lineage: 'spectacle', x: 101, z: -23.5, rotY: S, seed: 24, since: 1585, keep: 'opera-house' },
-  { id: 'cinema', lineage: 'spectacle', x: 151.5, z: -50, rotY: W, seed: 25, since: 1911, keep: 'liberty-cinema' },
+  { id: 'cinema', lineage: 'spectacle', x: 166, z: -50, rotY: W, seed: 25, since: 1911, keep: 'liberty-cinema' },
   { id: 'stadium', lineage: 'spectacle', x: -128, z: 159.5, rotY: N, seed: 37, since: 1932, keep: 'stadium' },
-  { id: 'sports-hall', lineage: 'spectacle', x: 152, z: 36, rotY: W, seed: 38, since: 1957, keep: 'sports-hall' },
+  { id: 'sports-hall', lineage: 'spectacle', x: 169, z: 38, rotY: W, seed: 38, since: 1957, keep: 'sports-hall' },
   { id: 'auditorium', lineage: 'spectacle', x: -172, z: 159.5, rotY: N, seed: 39, since: 2002 },
 
   // --- food, drink and a bed
@@ -60,10 +60,14 @@ export const plots: Plot[] = [
   { id: 'grand-hotel', lineage: 'osteria', x: 37, z: 164, rotY: W, seed: 28, since: 1898, keep: 'grand-hotel' },
   { id: 'bar', lineage: 'osteria', x: -60, z: 119.5, rotY: S, seed: 29, since: 1958, keep: 'bar-and-pensione' },
 
-  // --- gates: north on the cardo, east and west on the decumanus (the bridge guards the south)
+  // --- gates: north on the cardo, east and west on the decumanus (the river and the bridge guard the
+  // south). All three change with the wall between them, which is drawn by the site (`site.ts`): the
+  // west gate keeps its medieval tower when the bastions go up, and when the walls come down after 1870
+  // the north-western stretch survives with the north gate, while the east gate is left alone on the
+  // new boulevard.
   { id: 'gate-north', lineage: 'walls', x: 0, z: -128, rotY: N, seed: 30, hero: true, keep: 'bastion-gate' },
-  { id: 'gate-east', lineage: 'walls', x: 146, z: 0, rotY: E, seed: 31, since: -400, lag: 0.3 },
-  { id: 'gate-west', lineage: 'walls', x: -150, z: 0, rotY: W, seed: 32, since: -30, lag: 0.5, keep: 'communal-gate' },
+  { id: 'gate-east', lineage: 'walls', x: 146, z: 0, rotY: E, seed: 31 },
+  { id: 'gate-west', lineage: 'walls', x: -150, z: 0, rotY: W, seed: 32, keep: 'communal-gate' },
 
   // --- the railway
   { id: 'station', lineage: 'station', x: 0, z: 184, rotY: N, seed: 33, hero: true },
@@ -109,6 +113,6 @@ export const plots: Plot[] = [
   { id: 'ringhiera', lineage: 'tenement', x: 40, z: 122.5, rotY: S, seed: 83, since: 1880, keep: 'casa-di-ringhiera' },
   { id: 'case-popolari', lineage: 'tenement', x: 70, z: 122.5, rotY: S, seed: 84, since: 1926, keep: 'case-popolari' },
   { id: 'ina-casa', lineage: 'tenement', x: 100, z: 122.5, rotY: S, seed: 85, since: 1954, keep: 'ina-casa' },
-  { id: 'megastructure', lineage: 'tenement', x: 190, z: -13.5, rotY: S, seed: 86, since: 1978, keep: 'megastructure' },
-  { id: 'social-housing', lineage: 'tenement', x: 190, z: 13.5, rotY: N, seed: 87, since: 2018 },
+  { id: 'megastructure', lineage: 'tenement', x: 205, z: -13.5, rotY: S, seed: 86, since: 1978, keep: 'megastructure' },
+  { id: 'social-housing', lineage: 'tenement', x: 205, z: 13.5, rotY: N, seed: 87, since: 2018 },
 ];

@@ -65,7 +65,6 @@ export const renaissanceLoggia: BuildingDef = {
     b.box(W + 2.4, 0.2, D + 2.4, tint(grey, 0.1), { at: [0, 0, 0] });
     b.box(W + 1.6, 0.15, D + 1.6, tint(grey, 0.14), { at: [0, 0.2, 0] });
     b.box(W + 0.8, 0.15, D + 0.8, tint(grey, 0.18), { at: [0, 0.35, 0] });
-    for (let i = -4; i <= 4; i++) b.box(0.08, 0.01, D + 0.6, tint(grey, 0.02), { at: [i * 2.4, y0, 0], jitter: false });
     // the marble wheel in the middle of the floor
     b.cyl(1.3, 0.03, P.marble, { at: [0, y0, 0], segs: 16 });
     b.cyl(0.95, 0.04, P.marbleGreen, { at: [0, y0, 0], segs: 16 });
@@ -79,8 +78,14 @@ export const renaissanceLoggia: BuildingDef = {
     for (const x of [-5, 0, 5]) for (const z of [-2.5, 2.5]) colAt.push([x, z]); // inside
     for (const [x, z] of colAt) {
       b.box(0.85, PED, 0.85, grey, { at: [x, y0, z] });
-      b.box(0.95, 0.12, 0.95, greyL, { at: [x, y0 + PED - 0.12, z] });
       b.column(0.3, CH, grey, { at: [x, y0 + PED, z], order: 'corinthian', segs: 6 });
+      // Composite: a pair of Ionic volutes set diagonally at the corners over the leafy bell
+      const yV = y0 + PED + CH - CH * 0.13 * 0.55;
+      for (const a of [Math.PI / 4, -Math.PI / 4]) {
+        b.group({ at: [x, yV, z], rotY: a }, () => {
+          b.log(0.11, 1.0, greyL, { at: [0, -0.11, 0], segs: 4 }); // the two ends show as volutes at the corners
+        });
+      }
       b.box(0.85, IMP, 0.85, grey, { at: [x, y0 + PED + CH, z] });
       b.collider(0.9, 0.9, { at: [x, 0, z] });
     }
@@ -104,8 +109,8 @@ export const renaissanceLoggia: BuildingDef = {
       const fx = s > 0 ? '+x' : '-x';
       b.archWall(W - 0.2, yE - yS, T, white, { at: [0, yS, s * (D / 2 - 0.3)], facing: fz, openings: 4, openW: 2 * R, openH: R, shape: 'round' });
       b.archWall(D - 0.2, yE - yS, T, white, { at: [s * (W / 2 - 0.3), yS, 0], facing: fx, openings: 3, openW: 2 * R, openH: R, shape: 'round' });
-      for (const x of [-7.5, -2.5, 2.5, 7.5]) archivolt(b, R, 0.32, 0, 0.08, grey, [x, yS, s * (D / 2 + 0.01)], fz, 8);
-      for (const z of [-5, 0, 5]) archivolt(b, R, 0.32, 0, 0.08, grey, [s * (W / 2 + 0.01), yS, z], fx, 8);
+      for (const x of [-7.5, -2.5, 2.5, 7.5]) archivolt(b, R, 0.32, 0, 0.08, grey, [x, yS, s * (D / 2 + 0.01)], fz, 6);
+      for (const z of [-5, 0, 5]) archivolt(b, R, 0.32, 0, 0.08, grey, [s * (W / 2 + 0.01), yS, z], fx, 6);
       // roundels in the spandrels
       for (const x of [-5, 0, 5]) b.panel(0.7, 0.7, grey, { at: [x, yS + 1.5, s * (D / 2)], facing: fz, shape: 'circle', depth: 0.06 });
       for (const z of [-2.5, 2.5]) b.panel(0.7, 0.7, grey, { at: [s * (W / 2), yS + 1.5, z], facing: fx, shape: 'circle', depth: 0.06 });
@@ -113,7 +118,22 @@ export const renaissanceLoggia: BuildingDef = {
     // inner arches carrying the vaults, along both axes
     for (const z of [-2.5, 2.5]) b.archWall(W - 1.2, yE - yS, 0.4, white, { at: [0, yS, z], openings: 4, openW: 2 * R + 0.2, openH: R, shape: 'round' });
     for (const x of [-5, 0, 5]) b.archWall(D - 1.2, yE - yS, 0.4, white, { at: [x, yS, 0], facing: '+x', openings: 3, openW: 2 * R + 0.2, openH: R, shape: 'round' });
-    b.box(W - 0.4, 0.3, D - 0.4, white, { at: [0, yE - 0.3, 0] }); // vault crowns, simplified as a ceiling
+    // a shallow sail vault over each bay: a faceted cap on a square plan, springing from the arch crowns
+    const rc = 2.5 * Math.SQRT2;
+    for (const x of [-7.5, -2.5, 2.5, 7.5]) {
+      for (const z of [-5, 0, 5]) {
+        b.lathe(
+          [
+            [rc, 0],
+            [rc * 0.72, 0.42],
+            [rc * 0.38, 0.7],
+            [0.01, 0.8],
+          ],
+          tint(white, -0.03),
+          { at: [x, yS + R, z], segs: 4, rotY: Math.PI / 4 },
+        );
+      }
+    }
 
     // entablature, attic with small windows over each arch, and cornice
     b.box(W + 0.3, 0.55, D + 0.3, grey, { at: [0, yE, 0] });
@@ -128,7 +148,7 @@ export const renaissanceLoggia: BuildingDef = {
     b.box(W + 0.5, 0.2, D + 0.5, grey, { at: [0, yC - 0.2, 0] });
     b.box(W + 1.1, 0.3, D + 1.1, greyL, { at: [0, yC, 0] });
     b.hip(W + 0.8, D + 0.8, 2.3, P.coppi, { at: [0, yC + 0.3, 0], overhang: 0.3 });
-    hipRibs(b, W + 0.8, D + 0.8, 2.3, [0, yC + 0.3, 0], 0.3, tint(P.coppi, -0.08), 0.9);
+    hipRibs(b, W + 0.8, D + 0.8, 2.3, [0, yC + 0.3, 0], 0.3, tint(P.coppi, -0.08), 1.4);
 
     // ---- trading inside: benches of silk and cloth, a money-changer's table with a green cloth
     const benches: [number, number, number][] = [

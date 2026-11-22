@@ -10,7 +10,7 @@ export const gothicPalazzo: BuildingDef = {
     'The great families of the commune have come down from their towers into a broad, compact town palace that is at once house, counting-house and warehouse. ' +
     'The ground floor opens to the street in wide arches for the family business, while the household lives on the floors above, lit by two-light windows with pointed heads. ' +
     'Battlements on corbels still give a fortified look, but they are now more a sign of rank than a defence. ' +
-    'Behind, a small courtyard holds the well and an open stone stair with timber galleries leading to the upper rooms, and an open loggia on the roof of the back range catches the evening air; many palaces added such loggias later, in place of their battlements.',
+    'Behind, a small courtyard holds the well and an open stone stair with timber galleries leading to the upper rooms. Later generations often replaced the battlements with an open roof loggia (altana), as the Davanzati did at this palace in the sixteenth century.',
   materials: ['pietraforte ashlar', 'brick', 'timber floors and galleries', 'coppi roof tiles', 'wrought iron'],
   modelledOn: 'Palazzo Davanzati, Florence (built for the Davizzi family in the mid-fourteenth century); the two-light windows follow Sienese palaces',
   influences: ['cistercian-gothic'],
@@ -19,7 +19,7 @@ export const gothicPalazzo: BuildingDef = {
     { label: 'Two-light windows (bifore)', note: 'Each window is split by a slender colonnette into two pointed lights under one pointed arch.', at: [4, 7.6, 12.4] },
     { label: 'Battlements on corbels', note: 'Square merlons crown a parapet carried forward on a row of stone corbels: a show of rank rather than a real defence.', at: [-9.5, 18.4, 12.6] },
     { label: 'Courtyard stair and gallery', note: 'An open stone stair climbs the side of the courtyard to a timber gallery (ballatoio) that gives onto the rooms of the main floor.', at: [4.2, 3.4, -2.0] },
-    { label: 'Roof loggia (altana)', note: 'An open loggia under the roof of the back range, for drying cloth, keeping cool and watching the street. Davanzati’s own loggia replaced its battlements in the sixteenth century.', at: [-4, 15.4, -9.6] },
+    { label: 'Courtyard well', note: 'A stone wellhead with an iron frame for the pulley: the household’s own water, drawn from a cistern or well under the court.', at: [-3.5, 1.2, -2.0] },
   ],
   build(b) {
     const stone = b.pick([P.pietraForte, tint(P.pietraForte, 0.04), tint(P.pietraForte, -0.03)]);
@@ -117,30 +117,19 @@ export const gothicPalazzo: BuildingDef = {
     b.crenel(pw, pd, upper, { at: [0, H + 0.9, pzc], merlonW: 0.75, merlonH: 0.9, t: 0.35 });
     b.hip(W - 0.6, zf - zb - 0.6, 1.5, roof, { at: [0, H, pzc] });
 
-    // ---- right-hand range down the court, and the back range with its roof loggia
+    // ---- right-hand range down the court, and the back range under deep timber eaves
     block(b, 5, Hr, 10, upper, 7.5, -2);
     b.box(5.02, G, 10.02, stone, { at: [7.5, 0, -2] });
     b.gable(5, 10, 1.1, roof, { at: [7.5, Hr, -2], ridge: 'z', overhang: 0.5, wall: upper });
     block(b, W, Hr, 5, upper, 0, -9.5);
     b.box(W + 0.02, G, 5.02, stone, { at: [0, 0, -9.5] });
-    // the loggia: back wall, five stone piers on the court side, deep timber eaves
-    b.sym((s) => b.box(0.4, 3.0, 4.6, upper, { at: [s * (W / 2 - 0.2), Hr, -9.7] }));
-    b.box(W, 0.12, 5, P.cotto, { at: [0, Hr, -9.5] });
-    for (const z of [-7.3, -11.7]) {
-      for (const x of [-7.2, -2.4, 2.4, 7.2]) {
-        b.cyl(0.2, 2.7, trim, { at: [x, Hr, z], segs: 8 });
-        b.box(0.5, 0.2, 0.5, trim, { at: [x, Hr + 2.6, z] });
-      }
-      b.box(W, 0.3, 0.4, wood, { at: [0, Hr + 2.8, z] });
-      b.box(W - 0.8, 1.0, 0.2, tint(wood, 0.1), { at: [0, Hr, z] }); // parapet rail
-    }
-    b.box(4, 2.8, 0.3, upper, { at: [-W / 2 + 2.2, Hr, -9.5], rotY: Math.PI / 2 }); // a closed room at one end
-    b.gable(W, 5, 1.1, roof, { at: [0, Hr + 3.0, -9.5], overhang: 0.8 });
-    coppiRibs(b, -W / 2 - 0.6, W / 2 + 0.6, -9.5, 5, Hr + 3.0, 1.1, 0.8, tint(roof, -0.06), 1.0);
-    // rafter ends under the eaves of the loggia
+    b.gable(W, 5, 1.1, roof, { at: [0, Hr, -9.5], overhang: 0.8, wall: upper });
+    coppiRibs(b, -W / 2 - 0.6, W / 2 + 0.6, -9.5, 5, Hr, 1.1, 0.8, tint(roof, -0.06), 1.0);
+    // rafter ends under the eaves
     for (let i = 0; i < 16; i++) {
-      for (const z of [-6.7, -12.3]) b.box(0.12, 0.12, 0.8, wood, { at: [-W / 2 + 0.6 + i * 1.25, Hr + 2.95, z] });
+      for (const z of [-6.7, -12.3]) b.box(0.12, 0.12, 0.8, wood, { at: [-W / 2 + 0.6 + i * 1.25, Hr - 0.3, z] });
     }
+    b.chimney(0.8, 1.8, 0.8, upper, { at: [-6, Hr + 0.4, -10.2] });
 
     // back range: windows to the court and to the back street
     onFace(b, '-z', [0, 0, -12], () => {

@@ -201,6 +201,11 @@ export interface SiteProp {
   id: string;
   since?: number;
   until?: number;
+  /**
+   * Set when a walker must not pass through it (a town wall, say). The prop then declares its solid
+   * parts with `b.collider(...)`, in world metres and outside any `b.group`.
+   */
+  solid?: boolean;
   build(b: Builder, ground: (x: number, z: number) => number): void;
 }
 

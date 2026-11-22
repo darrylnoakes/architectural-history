@@ -171,6 +171,8 @@ export function createStage(opts: StageOptions): Stage3D {
     resize,
     dispose() {
       renderer.dispose();
+      // give the graphics memory back at once: the canvas is not used again
+      renderer.forceContextLoss();
     },
   };
 }

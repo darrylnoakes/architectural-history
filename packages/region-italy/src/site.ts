@@ -50,15 +50,17 @@ const roads: Road[] = [
   { id: 'via-roma', kind: 'main', pts: [[0, 113], [0, 156]] },
   { id: 'old-south-road', kind: 'main', pts: [[0, 156], [0, 190], [-14, 260], [-50, 360], [-80, 480]], until: 1864 },
   { id: 'decumanus-west', kind: 'main', pts: [[0, 0], [-170, 0], [-250, 16], [-340, 30], [-480, 70]] },
-  { id: 'decumanus-east', kind: 'main', pts: [[0, 0], [170, 0], [250, 12], [340, -18], [480, -30]] },
+  { id: 'decumanus-east', kind: 'main', pts: [[0, 0], [230, 0], [290, 12], [350, -18], [480, -30]] },
   { id: 'via-dei-mulini', kind: 'lane', pts: [[-26, 55], [128, 55]], since: -200 },
   { id: 'via-del-mercato', kind: 'lane', pts: [[-64, 0], [-64, 36]], since: -250 },
-  // united Italy: a boulevard where the walls stood, a second bridge, an avenue to the station
-  { id: 'viale', kind: 'main', pts: [[-150, 136], [128, 136]], since: 1864 },
+  // united Italy: an avenue to the station, a boulevard where the east wall stood, a second bridge
+  { id: 'viale', kind: 'main', pts: [[-150, 136], [146, 136]], since: 1864 },
   { id: 'viale-west', kind: 'main', pts: [[-200, 136], [-150, 136]], since: 2002 },
-  { id: 'new-south-road', kind: 'main', pts: [[128, 136], [131, 200], [112, 300], [84, 380], [70, 480]], since: 1864 },
-  { id: 'boulevard-north', kind: 'main', pts: [[128, -92], [128, 79]], since: 1880 },
-  { id: 'boulevard-south', kind: 'main', pts: [[128, 113], [128, 136]], since: 1880 },
+  { id: 'new-south-road', kind: 'main', pts: [[146, 136], [149, 200], [126, 300], [92, 380], [70, 480]], since: 1864 },
+  // (it runs on the line of the east wall, pulled down after 1870, and steps aside round the old gate)
+  { id: 'boulevard-north', kind: 'main', pts: [[146, -128], [146, -26], [134, -17], [134, 17], [146, 26], [146, 79]], since: 1880 },
+  { id: 'via-dei-mulini-east', kind: 'lane', pts: [[128, 55], [146, 55]], since: 1880 },
+  { id: 'boulevard-south', kind: 'main', pts: [[146, 113], [146, 136]], since: 1880 },
   { id: 'footbridge-path-north', kind: 'lane', pts: [[-36, 74], [-36, 79]], since: 2008 },
   { id: 'footbridge-path-south', kind: 'lane', pts: [[-36, 113], [-36, 136]], since: 2008 },
 ];
@@ -85,7 +87,7 @@ const carSpots: [number, number, number][] = [
   [PIAZZA.x1 - 4, -14, Math.PI], [PIAZZA.x1 - 4, -19, Math.PI], [PIAZZA.x1 - 4, -24, Math.PI], [PIAZZA.x0 + 16, -9, Math.PI / 2],
   [MARKET_SQUARE.x0 + 4, 42, 0], [MARKET_SQUARE.x0 + 4, 47, 0], [MARKET_SQUARE.x1 - 4, 66, Math.PI],
   [30, 57.4, Math.PI / 2], [78, 52.6, -Math.PI / 2], [-70, 133.6, -Math.PI / 2], [60, 138.4, Math.PI / 2], [100, 133.6, -Math.PI / 2],
-  [-18, 160, 0], [18, 164, Math.PI], [125.6, 30, Math.PI], [130.4, 60, 0],
+  [-18, 160, 0], [18, 164, Math.PI], [143.6, 44, Math.PI], [148.4, 64, 0],
 ];
 
 /** One stretch of aqueduct: a row of tall round arches carrying a covered channel. */
