@@ -14,8 +14,8 @@ export const foodHall: BuildingDef = {
   lookFor: [
     { label: 'The 1936 shell, kept', note: 'The parabolic concrete arches and thin shell between them are the original structure, repaired rather than rebuilt.', at: [6.4, 7.6, 7.6] },
     { label: 'New glazing', note: 'The middle of the glass-block front has been replaced by clear glass in a slender steel grid.', at: [-3.0, 6.6, 9.2] },
-    { label: 'New mezzanine', note: 'A steel deck with a glass balustrade, set under the highest part of the vault and full of tables.', at: [0, 5.2, 3.6] },
-    { label: 'Steel stair', note: 'A light new stair leads up from the market floor, kept clear of the old structure.', at: [-4.2, 2.4, 5.0] },
+    { label: 'New mezzanine', note: 'A steel deck with a glass balustrade, set under the highest part of the vault and full of tables.', at: [0, 5.9, 3.6] },
+    { label: 'Steel stair', note: 'A light new stair leads up from the market floor, kept clear of the old structure.', at: [-4.2, 2.6, 5.4] },
     { label: 'Clock tower', note: 'The travertine tower of 1936 still keeps the market’s time.', at: [11.6, 12.6, 9.0] },
   ],
   modelledOn:
@@ -26,7 +26,7 @@ export const foodHall: BuildingDef = {
     const y0 = 0.28;
 
     // ---- the new mezzanine under the crown of the vault (the shell is over 8 m high for |x| < 5)
-    const yM = y0 + 3.9;
+    const yM = y0 + 4.5;
     const mx = 4.6; // half width
     const z0 = -7.6;
     const z1 = 3.4;
@@ -49,9 +49,9 @@ export const foodHall: BuildingDef = {
     }
     // the steel stair, rising from the front of the hall to the front edge of the deck
     const sx0 = -mx + 0.75;
-    for (let i = 0; i < 13; i++) b.box(1.3, 0.05, 0.3, P.steel, { at: [sx0, y0 + 0.3 * (i + 1), z1 + 3.9 - i * 0.3] });
-    for (const dx of [-0.7, 0.7]) b.beam([sx0 + dx, y0, z1 + 4.1], [sx0 + dx, yM + 0.3, z1 + 0.1], 0.08, 0.3, P.steel);
-    b.collider(1.5, 4.0, { at: [sx0, 0, z1 + 2.1] });
+    for (let i = 0; i < 15; i++) b.box(1.3, 0.05, 0.3, P.steel, { at: [sx0, y0 + 0.3 * (i + 1), z1 + 4.5 - i * 0.3] });
+    for (const dx of [-0.7, 0.7]) b.beam([sx0 + dx, y0, z1 + 4.7], [sx0 + dx, yM + 0.3, z1 + 0.1], 0.08, 0.3, P.steel);
+    b.collider(1.5, 4.6, { at: [sx0, 0, z1 + 2.4] });
     // tables and stools on the deck, food counters with signs along the back
     for (const x of [-2.6, 0.2, 3.0]) {
       for (const z of [1.8, -1.0, -3.8]) {
@@ -98,13 +98,13 @@ export const foodHall: BuildingDef = {
     // sheffield-type hoops of steel tube in front, two bicycles locked to them
     for (let i = 0; i < 4; i++) {
       const x = -9.6 + i * 1.0;
-      b.beam([x, 0.08, 10.2], [x, 0.85, 10.2], 0.05, 0.05, P.steel);
-      b.beam([x, 0.85, 10.2], [x, 0.85, 10.9], 0.05, 0.05, P.steel);
-      b.beam([x, 0.85, 10.9], [x, 0.08, 10.9], 0.05, 0.05, P.steel);
+      b.beam([x, 0.08, 9.8], [x, 0.85, 9.8], 0.05, 0.05, P.steel);
+      b.beam([x, 0.85, 9.8], [x, 0.85, 10.5], 0.05, 0.05, P.steel);
+      b.beam([x, 0.85, 10.5], [x, 0.08, 10.5], 0.05, 0.05, P.steel);
     }
     for (const x of [-9.1, -7.1]) {
-      for (const dz of [-0.45, 0.45]) b.cyl(0.33, 0.04, P.timberBlack, { at: [x - 0.02, 0.41, 10.55 + dz], rot: [0, 0, Math.PI / 2], segs: 10 });
-      b.beam([x, 0.55, 10.1], [x, 0.85, 10.9], 0.04, 0.04, P.doorRed);
+      for (const dz of [-0.45, 0.45]) b.cyl(0.33, 0.04, P.timberBlack, { at: [x - 0.02, 0.41, 10.15 + dz], rot: [0, 0, Math.PI / 2], segs: 10 });
+      b.beam([x, 0.55, 9.7], [x, 0.85, 10.5], 0.04, 0.04, P.doorRed);
     }
     for (const x of [6.2, 9.0]) {
       b.box(1.6, 0.5, 0.6, P.concreteDark, { at: [x, 0.08, 10.5] });
