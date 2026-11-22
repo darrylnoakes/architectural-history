@@ -134,7 +134,7 @@ export const operaHouse: BuildingDef = {
     // roof trusses (the roof itself is added last, whole or cut away)
     for (const z of [AUD_Z0 + 1.0, 1.5, FOYER_Z0 - 0.6]) {
       b.beam([-AUD_W / 2, AUD_H, z], [AUD_W / 2, AUD_H, z], 0.3, 0.32, oak);
-      b.sym((s) => b.beam([s * AUD_W / 2, AUD_H + 0.1, z], [0, AUD_H + 4.0, z], 0.26, 0.3, oak));
+      b.sym((s) => b.beam([s * (AUD_W / 2 - 0.4), AUD_H - 0.1, z], [0, AUD_H + 3.4, z], 0.26, 0.3, oak));
     }
 
     // ------------------------------------------------ inside: proscenium, stalls, the horseshoe of boxes

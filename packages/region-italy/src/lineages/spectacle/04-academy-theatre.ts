@@ -103,10 +103,10 @@ export const academyTheatre: BuildingDef = {
     // ------------------------------------------------ roof trusses (the tiles are added last, whole or cut away)
     for (const z of [HZ0 + 1.0, -1.2, 5.4, HZ1 - 1.0]) {
       b.beam([-HX + 0.3, EAVES, z], [HX - 0.3, EAVES, z], 0.3, 0.32, oak); // tie beam
-      b.sym((s) => b.beam([s * (HX - 0.2), EAVES + 0.15, z], [0, RIDGE - 0.15, z], 0.26, 0.3, oak)); // rafters
-      b.beam([0, EAVES, z], [0, RIDGE - 0.1, z], 0.24, 0.24, oak); // king post
+      b.sym((s) => b.beam([s * (HX - 0.4), EAVES, z], [0, RIDGE - 0.6, z], 0.26, 0.3, oak)); // rafters
+      b.beam([0, EAVES, z], [0, RIDGE - 0.6, z], 0.24, 0.24, oak); // king post
     }
-    b.beam([0, RIDGE - 0.2, HZ0], [0, RIDGE - 0.2, HZ1], 0.3, 0.3, oak);
+    b.beam([0, RIDGE - 0.65, HZ0], [0, RIDGE - 0.65, HZ1], 0.3, 0.3, oak);
 
     // ------------------------------------------------ front range (entrance rooms) with a rusticated portal
     const fz0 = HZ1;

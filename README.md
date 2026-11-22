@@ -13,6 +13,8 @@ Two regions are built:
   abandoned and keeps what it builds in stone, so the old centre stops rebuilding in the Middle
   Ages, the Renaissance and the Baroque, and the newer stages of each story stand on new ground:
   the villas outside the gate, the quarter of united Italy beyond the river, the estates at the edge.
+  A wall runs round it between three gates and changes with them, from earth rampart to angled
+  bastions, until most of it comes down for a boulevard after 1870.
 
 What you can do in either:
 
@@ -24,7 +26,8 @@ What you can do in either:
 - **Three ways to move.** Turn the model like a diorama, walk the streets in first person, or fly a drone.
   Touch screens get an on-screen stick.
 - **Click any building** for what it is, why it looks that way and what to look for, with the named
-  features pinned on the model.
+  features pinned on the model. A building whose inside is the point (a theatre, a mill) is whole
+  in the townscape and opens up when you select it.
 - **Lineage street.** Line up every building that ever stood on a plot, oldest to newest, to compare
   them side by side.
 - **Ideas on the move.** Markers on the timeline show styles arriving from elsewhere (Gothic from
@@ -83,8 +86,12 @@ pnpm typecheck
 building; add `&region=italy` for another region. `node tools/shot.mjs home roundhouse` (or
 `italy/home atrium-house`) screenshots it (needs the dev server running).
 
+**Graphics.** Under the ? button there is a choice of Full or Simple graphics; Simple turns off the
+shadows and thins the trees for weak devices, and the choice is remembered. If the town is drawing
+slowly at Full, it offers the switch itself.
+
 Handy URL parameters: `/?y=1350` opens the town in a given year and skips the introduction;
-`?r=italy` opens another region; `?q=low` turns off shadows and thins the trees for weak devices.
+`?r=italy` opens another region; `?q=low` (or `?q=high`) sets the graphics for that visit.
 
 ## Ideas for later
 
@@ -100,9 +107,6 @@ Recorded here so they are not lost; none of this is built.
   in `docs/REGIONS.md`.
 - **Links between regions.** Where an idea crossed a border and both ends are built ("Palladio
   reaches England"), let the entry open the other region in that year.
-- **City walls.** Italy's gates stand on their plots, but the wall between them is not drawn. A
-  circuit that changes with the gates (Etruscan, Roman, communal, bastioned, then boulevards) would
-  make the city read as walled.
 - **A date-range filter in the library**, beside the era filter.
 - **Interiors.** Step inside the hall house, the church, the mill.
 - **People and traffic.** Carts, market crowds, trains on the viaduct.
