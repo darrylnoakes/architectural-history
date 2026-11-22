@@ -52,14 +52,14 @@ export const lombardCourt: BuildingDef = {
     b.gable(12.6, 7.6, 2.4, shingle, { at: [-2, G + 3.05, 1], overhang: 0.6, wall: tint(wood, 0.12), thick: 0.2 });
     onFace(b, '+z', [-2, 0, 4.5], () => {
       b.panel(1.4, 2.4, wood, { at: [-1.5, 0, 0], shape: 'round', depth: 0.08 });
-      win(b, 3.5, 1.4, 0.5, 0.8, P.brickRed, { shape: 'round', border: 0.1 });
+      win(b, -5, 1.4, 0.5, 0.8, P.brickRed, { shape: 'round', border: 0.1 });
       for (const x of [-4, 0.5, 4]) b.panel(0.7, 0.8, P.windowDark, { at: [x, G + 1.2, 0.35], depth: 0.04 });
       b.panel(1.0, 2.0, wood, { at: [2.6, G + 0.3, 0.33], depth: 0.06 });
     });
     // outside stair to the upper floor, with a landing
-    b.stairs(1.1, G, 4.2, 11, rubble, { at: [3.4, 0, 6.6], rotY: Math.PI / 2 });
-    b.box(1.6, 0.25, 1.2, wood, { at: [1.0, G, 5.2] });
-    b.collider(4.2, 1.2, { at: [3.4, 0, 6.6] });
+    b.stairs(1.1, G, 4.2, 11, rubble, { at: [3.4, 0, 5.1], rotY: Math.PI / 2 });
+    b.box(1.4, 0.25, 1.2, wood, { at: [0.6, G - 0.25, 5.1] });
+    b.collider(4.2, 1.2, { at: [3.4, 0, 5.1] });
 
     // ---- the chapel with its apse
     const cz = -7.5;
