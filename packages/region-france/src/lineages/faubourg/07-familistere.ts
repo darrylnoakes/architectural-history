@@ -110,15 +110,15 @@ export const familistere: BuildingDef = {
   date: 'c. 1872',
   summary:
     'Jean-Baptiste André Godin, who made cast-iron stoves at Guise, believed that workers should have the comforts of the rich, and between 1859 and 1884 he built them a “social palace”, the Familistère, after the ideas of Charles Fourier. ' +
-    'Its flats are arranged round a courtyard under a glass roof, opening on to galleries on every floor, so that the court is a covered public square: light, aired, and warmed by the people themselves. Water was laid on to every floor, which few houses of the rich could yet boast. ' +
+    'Its flats are arranged round a courtyard under a glass roof, opening on to galleries on every floor, so that the court is a covered public square, light and well aired. Water was laid on to every floor, a rare comfort in working-class housing of the time. ' +
     'Round it Godin added shops, schools, a theatre, a laundry and a swimming pool, and from 1880 the works and the housing belonged to a cooperative of the workers, which lasted until 1968. Here one pavilion stands, much reduced.',
   materials: ['red brick', 'timber and iron galleries', 'iron and glass roof', 'slate'],
-  modelledOn: 'The Familistère of Guise, Aisne (Godin, central pavilion begun 1859; the whole 1859 to 1884): one pavilion, much smaller than the original',
+  modelledOn: 'The Familistère of Guise, Aisne (Godin; left wing 1859 to 1860, central pavilion 1862 to 1865, right wing 1877 to 1879, the whole 1859 to 1884): one pavilion, much smaller than the original',
   influences: ['iron-and-rail'],
   lookFor: [
     { label: 'Glass-roofed court', note: 'The courtyard is roofed in iron and glass, so the court becomes a hall for the whole community, lit from above and aired through the lantern.', at: [0, GLASS_Y + 0.4, (CZ0 + CZ1) / 2] },
     { label: 'Galleries', note: 'Every flat opens on to a gallery round the court: neighbours meet there, and everyone can see everyone else.', at: [CX0 + 0.6, G + F + 1.0, 0.0] },
-    { label: 'Corner stair and water point', note: 'In each corner a stair, and on every landing water and refuse chutes: services on every floor were Godin’s pride.', at: [CX1 - 0.5, G + 1.2, CZ0 + 0.5] },
+    { label: 'Corner stair and water point', note: 'In each corner a stair, and on every landing a tap of clean water: services on every floor were Godin’s pride.', at: [CX1 - 0.5, G + 1.2, CZ0 + 0.5] },
     { label: 'Brick facades', note: 'Plain red brick with even rows of windows: dignified, but no ornament the residents had to pay for.', at: [-9.0, 6.0, Z1 + 0.2] },
     { label: 'Passage to the court', note: 'An arched passage leads from the square in front straight into the court.', at: [0, 2.0, Z1 + 0.3] },
   ],

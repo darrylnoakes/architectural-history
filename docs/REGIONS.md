@@ -1,12 +1,13 @@
 # Regions: plan
 
-England was the first region and Italy is the second. This is how regions fit into the platform, and
+England was the first region, Italy the second and France the third. This is how regions fit into the platform, and
 the plan for adding more.
 
 ## What already works across regions
 
 - **Kinds.** Every lineage has a `kind` (`home`, `workers`, `elite`, `worship`, `power`, `market`,
-  `work`, `crossing`, `culture`, `hospitality`, `farm`; see `KINDS` in `packages/kit/src/types.ts`).
+  `work`, `crossing`, `culture`, `hospitality`, `farm`, `defence`, `transport`, `castle`, `monastery`;
+  see `KINDS` in `packages/kit/src/types.ts`).
   Lineage ids and names belong to a region; the kind is shared. It is what lets the library filter by
   type and the compare view put an English family home beside an Italian one.
 - **The registry.** `apps/town/src/regions.ts` lists every region on the map (`REGION_LIST`, with
@@ -70,10 +71,10 @@ Suggested, with reasons. Each is a town followed through time, like England.
 | Order | Region | Why here |
 |---|---|---|
 | built | **Italy**: a city on a river, 750 BC to today | The source of half of what arrives in England: the Roman town, the Renaissance, Palladio, the Baroque. The strongest single comparison, and it needed no new kit primitives. |
-| 1 | **France**: a cathedral town | The birthplace of Gothic, and England's nearest neighbour in every century. With Italy it completes the main European exchanges already named in England's influences. |
-| 2 | **United States**: a town that becomes a city | The other end of England's exports (the Georgian house, the factory) and the source of the steel frame, the suburb and the mall. A short timeline, so a smaller build. |
-| 3 | **China**: a walled town on a canal | The first tradition that owes nothing to Rome: timber frame, courtyard plan, the roof as the main event. Needs the curved-roof and bracket work above. |
-| 4 | **Japan**, **India**, **Egypt**, **Israel** | Each a distinct tradition with its own logic; order by interest. Egypt and Israel between them also carry the story of Islamic building in the eastern Mediterranean, which has no region of its own. |
+| built | **France**: a cathedral city, 300 BC to today | The birthplace of Gothic, and England's nearest neighbour in every century. With Italy it completes the main European exchanges already named in England's influences. It added abbeys, castles and plot-by-plot war damage to the platform. |
+| 1 | **United States**: a town that becomes a city | The other end of England's exports (the Georgian house, the factory) and the source of the steel frame, the suburb and the mall. A short timeline, so a smaller build. |
+| 2 | **China**: a walled town on a canal | The first tradition that owes nothing to Rome: timber frame, courtyard plan, the roof as the main event. Needs the curved-roof and bracket work above. |
+| 3 | **Japan**, **India**, **Egypt**, **Israel** | Each a distinct tradition with its own logic; order by interest. Egypt and Israel between them also carry the story of Islamic building in the eastern Mediterranean, which has no region of its own. |
 | later | **Greece**, **Germany**, **Mesoamerica** | Greece could instead be folded into Italy's early stages; Germany overlaps France and England more than the others. |
 
 A region does not have to be complete to be useful. A first pass with five or six lineages (home,

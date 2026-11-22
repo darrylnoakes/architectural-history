@@ -91,9 +91,9 @@ export const grandEnsemble: BuildingDef = {
   summary:
     'In 1954 France was short of some four million homes, and families were still living in courées, huts and shanty towns. From 1958 the state answered with the ZUP (zone à urbaniser en priorité): whole districts of flats built at speed on open land at the edge of town, with their schools and shops planned at the same time. ' +
     'The flats were assembled from storey-high concrete panels cast in factories and lifted into place by tower cranes, the cranes running on rails along the long slabs (barres), with towers (tours) among them. ' +
-    'For the first tenants, the bathroom, central heating and light were a revolution; within twenty years the estates had become places of unemployment and isolation, and building of the type was stopped in 1973.',
+    'For the first tenants, the bathroom, central heating and light were a revolution; within twenty years many estates had become places of unemployment and isolation. A government circular of 1973 (the Guichard circular) put an end to building them.',
   materials: ['precast reinforced-concrete panels', 'aluminium windows', 'coloured glass and enamelled panels', 'asphalt'],
-  modelledOn: 'The grands ensembles and ZUPs of the 1960s (Sarcelles; the Croix-Rouge district of Reims, begun 1960s), in general terms',
+  modelledOn: 'The grands ensembles and ZUPs of the 1960s (Sarcelles, begun 1955; the Croix-Rouge ZUP at Reims, decided in 1962 and built from the late 1960s), in general terms',
   influences: ['reinforced-concrete', 'le-corbusier'],
   lookFor: [
     { label: 'Barre (slab)', note: 'A long block eleven storeys high, built in a straight line so the crane could run along it on rails.', at: [8.0, STOP - 3, SZ1 + 0.3] },

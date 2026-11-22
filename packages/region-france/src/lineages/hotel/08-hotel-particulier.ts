@@ -11,8 +11,7 @@ export const hotelParticulier: BuildingDef = {
     'Everything is ordered and symmetrical: a centre bay brought forward under a pediment, tall windows with curved heads and carved keystones, a ground floor scored with horizontal channels like rusticated masonry, and a broken-pitched mansard roof of slate with dormers, which gives a full storey of rooms in the roof. ' +
     'In the provinces the type follows Paris within a generation or so, often built by Parisian architects.',
   materials: ['dressed limestone', 'slate', 'lead', 'wrought iron', 'gravel and clipped box'],
-  modelledOn: 'The Hôtel de Soubise (Pierre-Alexis Delamair, 1705 to 1709) and the Hôtel Matignon (Jean Courtonne, 1722 to 1724), Paris: the gate in a screen wall, the court of honour, the pedimented centre and the garden front. Much reduced; the details are generic',
-  influences: ['versailles-export'],
+  modelledOn: 'The Hôtel de Soubise (Pierre-Alexis Delamair, 1705 to 1709) and the Hôtel Matignon (Jean Courtonne, finished by Antoine Mazin, 1722 to 1725), Paris: the gate in a screen wall, the court of honour, the pedimented centre and the garden front. Much reduced; the details are generic',
   lookFor: [
     { label: 'Carriage gate (porte cochère)', note: 'A great arched gate in the street wall, wide enough for a coach and six, between columns under a pediment.', at: [0, 5.8, 12.2] },
     { label: 'Court of honour (cour d’honneur)', note: 'The paved forecourt where carriages turned, between the low wings of the stables and kitchens.', at: [0, 0.6, 6.0] },

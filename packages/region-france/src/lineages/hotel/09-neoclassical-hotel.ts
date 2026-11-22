@@ -10,9 +10,9 @@ export const neoclassicalHotel: BuildingDef = {
     'The plan between court and garden is kept, but the dress is new: taste has turned against the curves of the Rococo towards the plain walls and free-standing columns of ancient Rome. ' +
     'The street gate is a triumphal arch, colonnades of Ionic columns line the court, and the main front has a portico of Corinthian columns. ' +
     'The steep roof has gone: the house is crowned by a flat roof behind a balustrade, and on the garden side a round salon bulges out under a shallow dome, ringed with columns and statues.',
-  materials: ['fine limestone', 'lead (flat roofs)', 'zinc', 'plaster'],
+  materials: ['fine limestone', 'lead (flat roofs and dome)', 'plaster'],
   modelledOn: 'The Hôtel de Salm, Paris (Pierre Rousseau, 1782 to 1787, now the Palace of the Legion of Honour): the triumphal-arch gate, the Ionic colonnades round the court, the Corinthian portico and the domed rotunda on the garden front with statues above. Much reduced',
-  influences: ['neoclassicism', 'anglomania'],
+  influences: ['neoclassicism'],
   lookFor: [
     { label: 'Domed round salon (rotunda)', note: 'A circular room projects into the garden under a low dome, ringed with columns and topped with statues.', at: [0, 9.4, -10.0] },
     { label: 'Flat roof behind a balustrade', note: 'No more tall roof: the walls end in a straight cornice and a balustrade, as on an Italian palace or an ancient temple.', at: [-7.0, 9.4, 1.9] },

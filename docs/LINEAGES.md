@@ -25,6 +25,9 @@ Three things in the data make that so (the logic is `plotSchedule` in `packages/
   rebuilds it as the next stage (no plot keeps a sunken Saxon hut past about 960); `ruin` leaves
   it standing roofless (every Roman building from about 420, the priory from 1539); `cleared`
   leaves open ground (the playhouse, pulled down in 1644).
+- **Disasters.** A plot may be `struck` in a given year (shellfire, a bomb, a fire): whatever
+  stood on it is a ruin from then until the plot's next stage, with the plot's own note on its
+  card. France uses this for 1915 and 1940; nothing in the lineage changes.
 - **Survivors.** A plot may `keep` one building for good, which is how a Wealden hall house or a
   Georgian town house comes to stand among newer neighbours today. Only durable types (those with
   no `end`) can be kept.

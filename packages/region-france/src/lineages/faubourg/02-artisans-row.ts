@@ -50,7 +50,7 @@ export const artisansRow: BuildingDef = {
   summary:
     'Under Rome the town spread out beyond its old rampart, and the roads in were lined with narrow plots, each with a workshop-house standing gable end to the street: a vicus, as such suburbs were called. ' +
     'They were built the Gaulish way, a timber frame filled with cob, but on a footing of mortared stone and under a Roman roof of flat tiles (tegulae) with round cover tiles (imbrices) over the joints. ' +
-    'At the front was the shop, open to the street under a shared timber portico; behind it the family lived, and the yard held the kiln, the furnace or the oven. Potters, bronze-workers and bakers were pushed out here because their fires were a danger to the town.',
+    'At the front was the shop, open to the street under a shared timber portico; behind it the family lived, and the yard held the kiln, the furnace or the oven. Potters, bronze-workers and bakers were often kept out here because their fires were a danger to the town.',
   materials: ['oak frame', 'cob (torchis)', 'mortared rubble footings', 'fired clay tile', 'gravel street'],
   influences: ['roman-conquest'],
   lookFor: [

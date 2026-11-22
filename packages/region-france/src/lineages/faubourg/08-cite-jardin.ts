@@ -113,7 +113,7 @@ export const citeJardin: BuildingDef = {
     'In place of the courée’s single room the family now had a kitchen, a parlour and bedrooms upstairs, with water laid on and a garden for vegetables. ' +
     'The houses were built in a deliberately reassuring regional manner, with steep tiled roofs, brick dressings and half-timbered gables, so that the new estate looked like a village that had always been there.',
   materials: ['brick', 'lime render', 'flat clay tiles', 'oak half-timbering (often only applied)', 'painted shutters'],
-  modelledOn: 'The garden city of the Chemin-Vert, Reims (built 1919 to 1925 for the Foyer Rémois, architect Jean-Marcel Auburtin), in general terms',
+  modelledOn: 'The garden city of the Chemin-Vert, Reims (laid out from 1919 and built by 1925 for the Foyer Rémois of Georges Charbonneaux, architect Jean-Marcel Auburtin: 617 houses), in general terms',
   lookFor: [
     { label: 'Semi-detached pair', note: 'Two houses share one roof and a party wall, so each family has a house and garden of its own at less than the cost of a detached house.', at: [-6.2, 2.0, ZF + 1.0] },
     { label: 'Half-timbered gable', note: 'Timbering in the gable recalls the old houses of Picardy and Normandy: a picture of the village, not of the factory.', at: [6.3, 6.6, ZF + 0.2] },

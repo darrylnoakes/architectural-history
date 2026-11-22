@@ -78,6 +78,25 @@ In `index.ts` each stage carries, where they apply (see "Timing rules" in `docs/
 
 ---
 
+## The town plan
+
+`packages/region-france/src/site.ts` is the ground (river, the castle hill, streets, squares,
+scenery) and `plots.ts` says which lineage stands where. The Grand'Place with the town hall lies
+north-west of the crossing of the two main streets, the cathedral north-east, the market place
+south-west; the abbey is outside the east gate, the castle on its hill beyond the west gate, the
+château at the end of an avenue to the north, and the faubourg, the station and the quarters of the
+last two centuries across the river. Every stage of every lineage stands somewhere.
+
+- Plots marked `struck: greatWar` are ruins from 1915 until their next stage in the 1920s: the town
+  hall, the works, the covered market, the station and a third of the houses. The bridges are
+  `struck` in 1940.
+- The wall is drawn by the site between the three gate plots (`town-walls.ts`), from the pieces in
+  `lineages/remparts/curtain.ts`. There is none before about 120 BC or between about 20 BC and 290.
+  After 1885 the west and north-west sides go for boulevards; the stretch behind the cathedral stays.
+- Stages marked **(stands alone)** stand on plots of their own.
+
+---
+
 ## maison: "La Maison"
 
 `plotSize: [14, 18]`, kind `home`. An ordinary, middling household: farmer, craftsman, shopkeeper,
@@ -223,8 +242,8 @@ piers only.
 | 50 | `macellum` | A Gallo-Roman food market: shops round a small court behind a portico. Cameo: Saint-Bertrand-de-Comminges |
 | 640 | `fair` | The abbey's fair: rows of timber booths and tents round a cross, set up each year. Cameo: the Lendit fair of Saint-Denis; later the fairs of Champagne |
 | 1290 | `timber-halle` | A great timber market hall: a forest of oak posts under an immense tiled roof that comes down almost to the ground. Cameo: Milly-la-Forêt; Saint-Pierre-sur-Dives |
-| 1767 | `grain-hall` | A circular grain hall round an open court, all arcades. Cameo: the Halle au Blé, Paris (Le Camus de Mézières, 1763 to 1767) |
-| 1826 | `passage` | A covered arcade of shops under a glass roof, with a rotunda. Cameo: the Galerie Vivienne, Paris; the Passage Pommeraye, Nantes. Use `b.cutaway` if the glass roof hides the inside |
+| 1785 | `grain-hall` | A circular grain hall round an open court, all arcades. Cameo: the Halle au Blé, Paris (Le Camus de Mézières, 1763 to 1767) |
+| 1838 | `passage` | A covered arcade of shops under a glass roof, with a rotunda. Cameo: the Galerie Vivienne, Paris; the Passage Pommeraye, Nantes. Use `b.cutaway` if the glass roof hides the inside |
 | 1866 | `iron-halles` | A market pavilion of cast iron and glass on a brick base, with louvred clerestories. Cameo: Baltard's Halles of Paris (1853 to 1870) |
 | 1887 | `grand-magasin` | A department store: an iron frame, a great glazed front, a corner dome, a light well with galleries and a grand stair. Cameo: Au Bon Marché, Paris (Boileau and Eiffel) |
 | 1929 | `concrete-market` | A covered market under a thin parabolic concrete vault only a few centimetres thick. Cameo: the Halles du Boulingrin, Reims (Maigrot and Freyssinet, 1927 to 1929) |
@@ -242,7 +261,7 @@ washing places go at the back and may project a few metres over the water.
 | -300 | `gaulish-forge` | A smith's and a bronze-caster's workshops under thatched shelters, with charcoal stacks |
 | 60 | `potters-quarter` | Gallo-Roman potteries: big round kilns, drying sheds, stacks of red tableware, a quay. Cameo: La Graufesenque; Lezoux |
 | 620 | `abbey-mill` | The abbey's watermill with a vertical wheel, a bakehouse and a brewhouse |
-| 1150 | `cistercian-forge` | A long stone building with buttresses and vaults where a water-powered hammer works iron. Cameo: the forge of Fontenay Abbey |
+| 1180 | `cistercian-forge` | A long stone building with buttresses and vaults where a water-powered hammer works iron. Cameo: the forge of Fontenay Abbey |
 | 1300 | `drapers-works` | The cloth town: a fulling mill, a dye house with vats and a washing stage on the river, cloth stretched on tenter frames |
 | 1680 | `royal-manufactory` | Colbert's royal manufactory: a long symmetrical range with a pediment and bell turret, a gate, a court. Cameo: the Manufacture des Rames (Van Robais), Abbeville |
 | 1835 | `spinning-mill` | A spinning mill: a tall brick block of many windows on iron columns, an engine house and a square chimney |
@@ -261,10 +280,10 @@ bed about y = -2.4. A deck must meet the road (y = 0) at z = ±17. Call `b.noCol
 |---|---|---|
 | -300 | `ford` | A ford with a line of stakes and a dugout canoe |
 | -90 | `gaulish-bridge` | A timber bridge on trestles of driven piles, as Caesar found on the rivers of Gaul |
-| 50 | `roman-bridge` | Stone piers with cutwaters carrying round arches, the roadway nearly level. Cameo: the Pont Julien, Bonnieux; Vaison-la-Romaine |
+| 120 | `roman-bridge` | Stone piers with cutwaters carrying round arches, the roadway nearly level. Cameo: the Pont Julien, Bonnieux; Vaison-la-Romaine |
 | 1185 | `inhabited-bridge` | A medieval bridge of pointed arches with a chapel on one pier, houses along it and mill wheels under the arches. Cameo: the Pont Saint-Bénézet, Avignon; the Grand Pont, Paris |
 | 1320 | `fortified-bridge` | The bridge closed by tall square gate towers. Cameo: the Pont Valentré, Cahors (1308 to 1378) |
-| 1605 | `pont-neuf` | A new kind of bridge: wide, no houses, raised pavements, half-round bays over every pier, carved masks, a bronze king on horseback. Cameo: the Pont Neuf, Paris (1578 to 1607) |
+| 1630 | `pont-neuf` | A new kind of bridge: wide, no houses, raised pavements, half-round bays over every pier, carved masks, a bronze king on horseback. Cameo: the Pont Neuf, Paris (1578 to 1607) |
 | 1775 | `perronet-bridge` | Very flat arches on piers so thin they hardly block the river, a level road, a stone balustrade. Cameo: the Pont de Neuilly and Pont de la Concorde (Perronet) |
 | 1830 | `suspension-bridge` | A light road hung from cables of iron wire over masonry pylons. Cameo: Marc Seguin's bridge at Tournon (1825) |
 | 1947 | `prestressed-bridge` | After two wars of demolitions: one very flat span of prestressed concrete, hinged at the abutments. Cameo: Freyssinet's bridge at Luzancy on the Marne (1941 to 1946) |
@@ -299,7 +318,7 @@ per range, arch and yard walkable.
 | 1380 | `hostellerie` | A medieval inn: timber-framed, a carriage arch to a galleried yard, stables, a hanging sign |
 | 1445 | `hotel-dieu` | **(stands alone)** A hospital for the poor: one great hall of beds with a chapel at its end, a galleried courtyard, and a roof of glazed tiles in coloured lozenges. Cameo: the Hôtel-Dieu, Beaune (1443 to 1451) |
 | 1690 | `relais-de-poste` | A posting inn on the royal road: a wide carriage gate, a yard of stables and coach houses, a dovecote |
-| 1785 | `cafe-restaurant` | A café and one of the first restaurants: mirrors, small tables, a painted shopfront under an arcade. Cameo: the arcades of the Palais-Royal, Paris |
+| 1800 | `cafe-restaurant` | A café and one of the first restaurants: mirrors, small tables, a painted shopfront under an arcade. Cameo: the arcades of the Palais-Royal, Paris |
 | 1905 | `brasserie` | A big Art Nouveau brasserie: a glazed front in curving wood and iron, ceramic panels, a glass canopy, a terrace. Cameo: the Brasserie Excelsior, Nancy (1911) |
 | 1955 | `relais-routier` | A lorry drivers' stop on the main road: café, tobacco counter with its red sign, rooms above, two petrol pumps |
 | 2014 | `bistro-today` | The brasserie of 1905 restored, with a terrace on a car-free street. **The same building as `brasserie`** (share the geometry with a `restored` flag) |
@@ -318,11 +337,11 @@ The stage with no wall (`monumental-arch`) has no curtain.
 
 | from | id | building |
 |---|---|---|
-| -300 | `murus-gallicus` | The Gaulish rampart: an earth bank faced in dry stone with the ends of its timber lacing showing in rows, a ditch, a timber gate tower set back in a funnel entrance. Cameo: the Porte du Rebout, Bibracte. Carries an `end`: abandoned and levelled after the conquest (about 20 BC) |
+| -120 | `murus-gallicus` | The Gaulish rampart: an earth bank faced in dry stone with the ends of its timber lacing showing in rows, a ditch, a timber gate tower set back in a funnel entrance. Cameo: the Porte du Rebout, Bibracte. Carries an `end`: abandoned and levelled after the conquest (about 20 BC) |
 | 200 | `monumental-arch` | No wall: the open Roman town marks its entrance with a triple arch covered in reliefs. Cameo: the Porte de Mars, Reims |
 | 290 | `castrum-wall` | The late Roman wall: small squared stone with brick bands on a base of reused carved blocks, round-fronted towers, the old arch built into it as a gate. Cameo: Le Mans, Senlis; Reims |
 | 1200 | `philippian-gate` | A new wall for the grown town: a gate between two round towers with arrow loops, a portcullis, a curtain with round towers and a ditch. Cameo: the walls of Philip Augustus |
-| 1370 | `fortified-gate` | The Hundred Years' War: the gate raised with machicolations and steep roofs, a drawbridge, and an outwork (boulevard) for the first guns |
+| 1420 | `fortified-gate` | The Hundred Years' War: the gate raised with machicolations and steep roofs, a drawbridge, and an outwork (boulevard) for the first guns |
 | 1680 | `vauban-gate` | Vauban: low brick-faced ramparts with angled bastions, a ditch and a triangular outwork, and a gate dressed as a triumphal arch with the king's trophies. Cameo: the Porte de Paris and the citadel, Lille |
 | 1885 | `gate-and-boulevard` | The fortress declassified: ramparts levelled for a tree-lined boulevard, the monumental gate left standing on a roundabout, with the toll (octroi) pavilions |
 

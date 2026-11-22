@@ -57,8 +57,8 @@ export const sunkenHuts: BuildingDef = {
   date: 'c. 500',
   summary:
     'After the invasions the suburb of the Roman town was abandoned and its stone carted off to build the wall; when people settled outside again, under the Frankish kings, they lived as country people did. ' +
-    'A family had a long house of earth-fast posts, wattle and daub and thatch, often with the cattle at one end, and round it a few sunken huts: shallow pits with a roof right down to the ground, used for weaving, storage and crafts because their damp, steady air kept wool and flax supple. ' +
-    'Excavations on the edges of towns such as Reims, Soissons and Saint-Denis find dozens of these pits, with loom weights still lying in rows where the loom stood.',
+    'A family had a long house of earth-fast posts, wattle and daub and thatch, sometimes with the cattle at one end, and round it a few sunken huts: shallow pits with a roof right down to the ground, used for weaving, storage and crafts because their damp, steady air kept wool and flax supple. ' +
+    'Excavations on the edges of towns in the north, such as Saint-Denis, find dozens of these pits, with loom weights still lying in rows where the loom stood.',
   materials: ['oak posts', 'wattle and daub', 'thatch', 'earth'],
   lookFor: [
     { label: 'Sunken hut (fond de cabane)', note: 'A pit about half a metre deep under a roof that reaches the ground; the floor is below the doorstep.', at: [3.6, 2.8, -4.4] },

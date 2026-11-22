@@ -27,13 +27,12 @@ export const gothicHotel: BuildingDef = {
   style: 'Flamboyant Gothic',
   date: 'c. 1445',
   summary:
-    'A merchant-banker grown rich on royal finance builds a town palace round a courtyard, the first true hôtel: a house for a household rather than a fortress. ' +
+    'A merchant-banker grown rich on royal finance builds a town palace round a courtyard, one of the first true hôtels: a house for a household rather than a fortress. ' +
     'The towers that remain hold spiral stairs, set in polygonal turrets on the court so that every room can be reached without passing through another. ' +
     'Everything that shows is carved in the late Gothic manner called Flamboyant after its flame-like tracery: steep slate roofs with tall dormers (lucarnes) under crocketed gables, ogee hoods, stone cross-windows, and over the gateway a chapel with a traceried window. ' +
     'On the street front, carved servants lean out of two false windows, a joke in stone that only a very rich man could afford.',
   materials: ['fine limestone', 'slate', 'oak', 'lead (roof finials)', 'leaded glass'],
   modelledOn: 'The Palais Jacques-Cœur, Bourges (1443 to 1451): the gate pavilion with its chapel, canopied niche and false windows with figures, the stair turrets and the dormers; and the Hôtel de Cluny, Paris (about 1485 to 1510) for the plan round a court. Much reduced',
-  influences: ['gothic-birth'],
   lookFor: [
     { label: 'Chapel over the gateway', note: 'The household chapel sits above the entrance arch, lit by a tall window of Flamboyant tracery facing the street.', at: [0, 9.8, 12.4] },
     { label: 'False windows with figures', note: 'Two sham windows from which carved servants lean out to watch the street, as on Jacques Cœur’s palace.', at: [2.05, 6.0, 12.4] },

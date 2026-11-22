@@ -7,7 +7,7 @@ export const domus: BuildingDef = {
   style: 'Gallo-Roman',
   date: 'c. 60',
   summary:
-    'Two generations after the conquest the leading family lives like Romans, in a single-storey house of mortared stone, plaster and tile built round a garden framed by columns (the peristyle). ' +
+    'A century after the conquest the leading family lives like Romans, in a single-storey house of mortared stone, plaster and tile built round a garden framed by columns (the peristyle). ' +
     'The street front is let out as shops; behind them the rooms face inward onto covered walks painted with red dados and coloured panels. ' +
     'In the cold north the luxury that mattered most was heat: one room has a floor raised on stacks of tiles (a hypocaust), warmed by hot air from a furnace stoked from outside.',
   materials: ['limestone rubble and lime mortar', 'painted plaster', 'stuccoed columns', 'tegulae and imbrices (roof tiles)', 'brick (hypocaust)'],

@@ -12,7 +12,6 @@ export const brickAndStoneHotel: BuildingDef = {
     'The roofs show the plan from afar: each pavilion carries its own tall slate roof, higher than the one over the middle, with stone dormers under alternating triangular and curved pediments.',
   materials: ['red brick', 'limestone dressings', 'slate', 'oak'],
   modelledOn: 'The pavilions of the Place des Vosges (Place Royale), Paris (1605 to 1612): the brick and stone, the stone chains and the separate tall roofs. The plan is the usual hôtel of the period; the brick is the northern red, as at Reims, Amiens and Saint-Quentin',
-  influences: ['italian-renaissance'],
   lookFor: [
     { label: 'Brick and stone', note: 'Red brick walls with pale stone for the corners, the window surrounds and the floor bands.', at: [-3.9, 5.0, -4.7] },
     { label: 'Quoins (chaînes d’angle)', note: 'Stones laid long and short alternately up each corner, toothing into the brick.', at: [-10.6, 4.0, -3.2] },

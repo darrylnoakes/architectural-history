@@ -44,7 +44,7 @@ export const oneRoomHouses: BuildingDef = {
   summary:
     'As the town prospered in the twelfth century, people who could not afford a house within the walls built along the roads outside the gates: labourers, carters, gardeners, tanners and the poor. ' +
     'Their houses were single rooms of timber and cob under thatch, with a hearth on the floor and a hole or a little hood in the ridge for the smoke; the chimney had not yet reached such houses. ' +
-    'Each stood at the front of a long strip of garden where the family grew vegetables and kept a pig or hens. Such faubourgs (from the Latin for “outside the town”) were the first thing burned when an enemy came, and they were rebuilt each time.',
+    'Each stood at the front of a long strip of garden where the family grew vegetables and kept a pig or hens. Such faubourgs (from the old French forsbourg, “outside the town”) were the first thing burned when an enemy came, and they were rebuilt each time.',
   materials: ['oak frame on sill stones', 'cob (torchis)', 'straw thatch', 'wattle fences'],
   lookFor: [
     { label: 'Smoke louvre', note: 'A small hooded opening on the ridge lets out the smoke of the open hearth inside; there is no chimney.', at: [-9.1, 5.5, 3.2] },

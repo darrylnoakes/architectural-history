@@ -8,10 +8,10 @@ export const aristocratsFarm: BuildingDef = {
   date: 'c. 300 BC',
   summary:
     'The richest family of the tribe lives apart from the rest, inside its own bank, ditch and palisade. Within stand a great aisled house of oak posts, wattle and daub under a thick thatch, raised granaries for the grain the household’s dependants owed it, and storage pits. ' +
-    'Everything is built of wood, earth and straw, but on a scale no one else could command, and the gate is a statement of power: a timber tower hung with captured weapons and, as Greek writers describe, the heads of enemies. ' +
+    'Everything is built of wood, earth and straw, but on a scale no one else could command, and the gate is a statement of power: a timber tower hung with captured weapons and, as the Greek writers Diodorus and Strabo describe after Posidonius, the heads of enemies. ' +
     'Excavated enclosures of this kind show feasting, imported wine jars and finely carved stone stelae.',
   materials: ['oak posts', 'wattle and daub', 'wheat-straw thatch', 'earth bank', 'stone (stele)'],
-  modelledOn: 'The fortified aristocratic residence of Paule, Côtes-d’Armor (5th to 1st century BC, excavated by Yves Menez): reduced to a single enclosure; the layout here is generic',
+  modelledOn: 'The fortified aristocratic residence of Paule, Côtes-d’Armor (lived in from about 500 BC to the Roman conquest, excavated by Yves Menez): reduced to a single enclosure; the layout here is generic',
   lookFor: [
     { label: 'Gate tower with trophies', note: 'A timber tower over the only way in, hung with captured shields and spears: a display of the family’s victories.', at: [0, 4.6, 11.2] },
     { label: 'Aisled house', note: 'Two rows of inner posts carry the roof so the house can be wide: a hall for the household, its guests and its feasts.', at: [0, 4.4, -4.0] },

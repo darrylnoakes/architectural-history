@@ -5,7 +5,7 @@ town followed through its whole history. Every plot keeps its purpose while its 
 in the manner of each age, so you can watch a family home go from Iron Age hut to low-energy flats
 without leaving the spot.
 
-Two regions are built:
+Three regions are built:
 
 - **England**: a market town on a river, 500 BC to today. 109 buildings. The Roman town falls into
   ruin and is forgotten; almost everything is rebuilt again and again.
@@ -15,6 +15,12 @@ Two regions are built:
   the villas outside the gate, the quarter of united Italy beyond the river, the estates at the edge.
   A wall runs round it between three gates and changes with them, from earth rampart to angled
   bastions, until most of it comes down for a boulevard after 1870.
+- **France**: a cathedral city of the north, between Paris and the Belgian border, 300 BC to today.
+  132 buildings. Its breaks are disasters with dates: sacked in 275 and shrunk behind a wall of its
+  own ruins; the cathedral rebuilt in the Gothic that began at the abbey outside its gate; stripped
+  by the Revolution; and shelled between 1914 and 1918, so that chosen plots stand in ruins from
+  1915 and come back in the Art Deco of the 1920s. It adds two things the others lack: an abbey,
+  and a castle on a hill that gives way to a château with a formal garden.
 
 What you can do in either:
 
@@ -22,7 +28,8 @@ What you can do in either:
   Roman paving, cobbles and tarmac; the town spreads across the river. Nothing stands in a year
   when it could not have: England's Roman town falls into ruin after 420 and its priory after 1539;
   Italy's forum and amphitheatre after the Gothic War, its bridges in 1944; and only durable buildings
-  survive as old neighbours in the modern town.
+  survive as old neighbours in the modern town. In France a disaster can strike one plot and not
+  its neighbour.
 - **Three ways to move.** Turn the model like a diorama, walk the streets in first person, or fly a drone.
   Touch screens get an on-screen stick.
 - **Click any building** for what it is, why it looks that way and what to look for, with the named
@@ -58,10 +65,12 @@ packages/
                      town plan, and 109 buildings in ten lineages (plus one-off extras), each a
                      generator function plus its card text.
   region-italy/      The same for Italy: 129 buildings in thirteen lineages.
+  region-france/     And for France: 132 buildings in fourteen lineages.
 docs/
   BUILDING_GUIDE.md  How to write a building.
   LINEAGES.md        The brief for every lineage and stage in the England region, and the timing rules.
   LINEAGES-italy.md  The brief for Italy.
+  LINEAGES-france.md The brief for France, with the rules learned from the first two regions.
   REGIONS.md         How regions fit the platform, and the plan for further ones.
 tools/
   shot.mjs           Screenshots of buildings from the gallery page, for authoring.
@@ -91,7 +100,7 @@ shadows and thins the trees for weak devices, and the choice is remembered. If t
 slowly at Full, it offers the switch itself.
 
 Handy URL parameters: `/?y=1350` opens the town in a given year and skips the introduction;
-`?r=italy` opens another region; `?q=low` (or `?q=high`) sets the graphics for that visit.
+`?r=italy` or `?r=france` opens another region; `?q=low` (or `?q=high`) sets the graphics for that visit.
 
 ## Ideas for later
 
@@ -103,8 +112,8 @@ Recorded here so they are not lost; none of this is built.
   and vegetation. The kit already tags every surface with a named material, which is the hook for it.
 - **The long road.** A second app where distance is time: one road, each era a district along it,
   with driving as well as walking and flying.
-- **More regions.** France, the United States, China and others, each as its own town. The plan is
-  in `docs/REGIONS.md`.
+- **More regions.** The United States, China, Egypt, Israel and others, each as its own town. The
+  plan is in `docs/REGIONS.md`.
 - **Links between regions.** Where an idea crossed a border and both ends are built ("Palladio
   reaches England"), let the entry open the other region in that year.
 - **A date-range filter in the library**, beside the era filter.

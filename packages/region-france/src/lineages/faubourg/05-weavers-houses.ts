@@ -77,11 +77,11 @@ export const weaversHouses: BuildingDef = {
   style: 'Late Gothic timber frame',
   date: 'c. 1480',
   summary:
-    'At the end of the Hundred Years’ War the cloth towns of Picardy recovered on a new, lighter cloth of wool, the sayette, woven not in workshops but at home by families of weavers (at Amiens, the sayetteurs). ' +
+    'After the Hundred Years’ War the cloth towns of Picardy recovered on new, lighter woollens, above all the sayette of Amiens, woven at home by families of weavers, the sayetteurs, whose trade grew from the late fifteenth century and flourished in the sixteenth. ' +
     'Their houses were narrow, gable-ended and timber-framed, with the upper floor jettied out over the street; the loom stood in the ground-floor room, lit by a long strip of windows across the front, while the family lived and slept above. ' +
     'The windows were filled with oiled linen or paper rather than glass, and a brick chimney stack, now usual even in modest houses, served the hearth. Several households shared one well in the yard behind.',
   materials: ['oak frame', 'cob infill', 'flat clay tiles', 'brick chimney', 'oiled linen in the windows'],
-  modelledOn: 'The weavers’ quarter of Saint-Leu, Amiens, in general terms: no single house is copied, and the surviving houses there are mostly later',
+  modelledOn: 'The weavers’ quarter of Saint-Leu, Amiens, in general terms: no single house is copied, and the surviving houses there are mostly later.',
   lookFor: [
     { label: 'Loom window', note: 'A long strip of lights across the ground floor gives the weaver the even daylight he needs at the loom.', at: [-7.0, 1.7, ZF + 0.2] },
     { label: 'Jetty', note: 'The upper floor projects over the street on joists and brackets, gaining space and sheltering the front.', at: [0.2, G - 0.2, ZF + JET + 0.1] },

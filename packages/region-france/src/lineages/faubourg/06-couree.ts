@@ -89,7 +89,7 @@ export const couree: BuildingDef = {
   summary:
     'When the textile mills of the north filled with workers from the countryside and from Belgium, builders and mill-owners filled the back land behind the street houses with courées: two rows of tiny brick houses facing each other across a court a few metres wide, reached from the street by a narrow passage. ' +
     'Each house had one room downstairs and one above, with no water and no drain; the whole court shared one pump and one block of privies at the far end, and its waste ran away in a gutter down the middle. ' +
-    'Lille, Roubaix and Tourcoing had more than a thousand of them by the end of the century; they were cheap to build, profitable to let and, as the doctors of the time reported, deadly in epidemics.',
+    'Lille, Roubaix and Tourcoing had well over a thousand of them between them by the end of the century; they were cheap to build, profitable to let and, as the doctors of the time reported, deadly in epidemics.',
   materials: ['red brick', 'clay pantiles', 'slate', 'cast-iron pump', 'stone sills'],
   modelledOn: 'The courées of Lille and Roubaix (mid to late nineteenth century), in general terms',
   lookFor: [

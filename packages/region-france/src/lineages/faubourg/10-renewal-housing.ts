@@ -119,7 +119,7 @@ export const renewalHousing: BuildingDef = {
   style: 'Contemporary social housing',
   date: 'c. 2012',
   summary:
-    'From 2004 the national urban renewal programme (ANRU) paid for the demolition of thousands of slabs and towers of the 1960s, often to the regret of tenants who had made their lives in them, and for their replacement by smaller buildings. ' +
+    'From 2004 the national urban renewal programme, run by the ANRU (the agency set up by the Borloo law of 2003), paid for the demolition of thousands of slabs and towers of the 1960s, often to the regret of tenants who had made their lives in them, and for their replacement by smaller buildings. ' +
     'In place of the barre stand low blocks of three or four floors, each with its own entrance from the street, a fence round its own ground (the planners called it residentialisation) and a garden shared by the tenants. ' +
     'Timber cladding, deep loggias, insulation and planted roofs answer the new energy rules: what was once a monument to industry is now meant to look domestic, green and calm.',
   materials: ['insulated render', 'larch boarding', 'timber sliding shutters', 'sedum roof', 'solar panels'],
