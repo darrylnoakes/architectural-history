@@ -1,6 +1,7 @@
 import type { Lineage } from '@ah/kit';
-import { renewedBy } from '../../ends';
+import { invasions, renewedBy } from '../../ends';
 import { gaulishForge } from './01-gaulish-forge';
+import { pottersQuarter } from './02-potters-quarter';
 
 const lineage: Lineage = {
   id: 'atelier',
@@ -11,6 +12,7 @@ const lineage: Lineage = {
   river: [-27, -11],
   stages: [
     { from: -300, end: renewedBy(120), def: gaulishForge },
+    { from: 60, builtUntil: 250, end: invasions, def: pottersQuarter },
   ],
 };
 

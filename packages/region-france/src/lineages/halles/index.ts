@@ -1,30 +1,14 @@
-import { P, type Lineage } from '@ah/kit';
+import type { Lineage } from '@ah/kit';
+import { renewedBy } from '../../ends';
+import { gaulishMarket } from './01-gaulish-market';
 
-// PLACEHOLDER: replaced by the real lineage.
 const lineage: Lineage = {
   id: 'halles',
   name: 'Les Halles',
   kind: 'market',
-  role: 'Placeholder',
+  role: 'Where the town buys and sells, from pens by the gate to the great timber halle, the iron market and the thin concrete vault.',
   plotSize: [26, 22],
-  stages: [
-    {
-      from: -300,
-      def: {
-        id: 'halles-placeholder',
-        name: 'Les Halles',
-        style: 'Placeholder',
-        date: 'n/a',
-        summary: 'Placeholder building.',
-        materials: [],
-        lookFor: [],
-        build(b) {
-          b.box(12, 4, 11.0, P.pierreBlonde);
-          b.gable(12, 11.0, 2, P.ardoise, { at: [0, 4, 0], overhang: 0.3 });
-        },
-      },
-    },
-  ],
+  stages: [{ from: -300, end: renewedBy(100), def: gaulishMarket }],
 };
 
 export default lineage;

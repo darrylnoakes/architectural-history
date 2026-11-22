@@ -1,29 +1,16 @@
-import { P, type Lineage } from '@ah/kit';
+import type { Lineage } from '@ah/kit';
+import { invasions } from '../../ends';
+import { theatreAmphitheatre } from './01-theatre-amphitheatre';
 
-// PLACEHOLDER: replaced by the real lineage.
 const lineage: Lineage = {
   id: 'spectacles',
   name: 'Les Spectacles',
   kind: 'culture',
-  role: 'Placeholder',
+  role: 'Where the town goes to be entertained and improved: from a Gallo-Roman arena and a tennis court turned playhouse to a theatre, a museum, a circus, a library and two houses of culture.',
   plotSize: [40, 36],
   stages: [
-    {
-      from: -300,
-      def: {
-        id: 'spectacles-placeholder',
-        name: 'Les Spectacles',
-        style: 'Placeholder',
-        date: 'n/a',
-        summary: 'Placeholder building.',
-        materials: [],
-        lookFor: [],
-        build(b) {
-          b.box(12, 4, 12, P.pierreBlonde);
-          b.gable(12, 12, 2, P.ardoise, { at: [0, 4, 0], overhang: 0.3 });
-        },
-      },
-    },
+    // Gallo-Roman theatre-amphitheatres were built from the later 1st century to the early 3rd
+    { from: 80, builtUntil: 200, end: invasions, def: theatreAmphitheatre },
   ],
 };
 

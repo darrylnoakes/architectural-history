@@ -1,31 +1,14 @@
-import { P, type Lineage } from '@ah/kit';
+import type { Lineage } from '@ah/kit';
+import { ford } from './01-ford';
 
-// PLACEHOLDER: replaced by the real lineage.
 const lineage: Lineage = {
   id: 'pont',
   name: 'Le Pont',
   kind: 'crossing',
-  role: 'Placeholder',
+  role: 'Where the main road crosses the river: the ford the town grew up beside, and every bridge since.',
   plotSize: [16, 40],
   river: [-12, 12],
-  stages: [
-    {
-      from: -300,
-      def: {
-        id: 'pont-placeholder',
-        name: 'Le Pont',
-        style: 'Placeholder',
-        date: 'n/a',
-        summary: 'Placeholder building.',
-        materials: [],
-        lookFor: [],
-        build(b) {
-          b.box(8.0, 4, 12, P.pierreBlonde);
-          b.gable(8.0, 12, 2, P.ardoise, { at: [0, 4, 0], overhang: 0.3 });
-        },
-      },
-    },
-  ],
+  stages: [{ from: -300, def: ford }],
 };
 
 export default lineage;

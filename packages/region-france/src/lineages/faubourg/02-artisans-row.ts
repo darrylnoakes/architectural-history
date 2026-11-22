@@ -86,12 +86,12 @@ export const artisansRow: BuildingDef = {
       b.box(w, WALL - SILL, D, cob, { at: [x, SILL, ZC] });
       // the frame: posts and a middle rail on the long walls, and on the front gable
       for (const s of [-1, 1]) {
-        b.frame(D, WALL - SILL, oak, { at: [x + (s * w) / 2, SILL, ZC], facing: s > 0 ? '+x' : '-x', studs: 5, rails: 1, beam: 0.15, depth: 0.05 });
+        b.frame(D, WALL - SILL, oak, { at: [x + (s * w) / 2, SILL, ZC], facing: s > 0 ? '+x' : '-x', studs: 4, rails: 1, beam: 0.15, depth: 0.05 });
       }
-      tileRoof(b, w, D, 24, roofCol, { at: [x, WALL, ZC], ridge: 'z', ov: 0.35, wall: cob, ribs: 0.42 });
+      tileRoof(b, w, D, 24, roofCol, { at: [x, WALL, ZC], ridge: 'z', ov: 0.35, wall: cob, ribs: 0.55 });
       // the open shop front: a wide opening with its shutters taken down, a counter, the goods
       b.box(w, 0.2, 0.2, oak, { at: [x, 2.55, ZF + 0.08] });
-      b.panel(w - 1.4, 2.25, tint(P.windowDark, 0.12), { at: [x - 0.2, 0.3, ZF], facing: '+z', depth: 0.03 });
+      b.panel(w - 1.4, 2.25, mix(P.oakDark, P.black, 0.45), { at: [x - 0.2, 0.3, ZF], facing: '+z', depth: 0.03 });
       b.panel(0.9, 2.0, P.oakDark, { at: [x + w / 2 - 0.55, SILL, ZF], facing: '+z', depth: 0.05 });
       b.box(w - 1.6, 0.85, 0.5, tint(oak, 0.05), { at: [x - 0.2, 0, ZF + 0.25] }); // counter
       // the shutter boards stacked beside the opening
@@ -144,14 +144,15 @@ export const artisansRow: BuildingDef = {
     for (let k = 0; k <= 10; k++) {
       const x = -L / 2 + 0.15 + ((L - 0.3) * k) / 10;
       b.box(0.3, 0.25, 0.3, stone, { at: [x, 0, zp] });
-      b.box(0.18, 2.3, 0.18, oak, { at: [x, 0.25, zp] });
+      b.box(0.18, 2.1, 0.18, oak, { at: [x, 0.25, zp] });
     }
-    b.box(L, 0.22, 0.22, oak, { at: [0, 2.55, zp] });
-    b.group({ at: [0, 2.77, (ZF + zp) / 2 + 0.05] }, () => {
-      const run = zp - ZF + 0.5;
-      const rise = 0.45;
-      b.beam([0, rise / 2 + 0.05, -run / 2], [0, -rise / 2 + 0.05, run / 2], L, 0.1, roofCol);
-    });
+    b.box(L, 0.2, 0.22, oak, { at: [0, 2.35, zp] });
+    b.beam([0, 2.95, ZF + 0.05], [0, 2.5, zp + 0.4], L, 0.08, roofCol);
+    for (let k = 0; k <= 36; k++) {
+      const x = -L / 2 + 0.2 + ((L - 0.4) * k) / 36;
+      b.beam([x, 3.02, ZF + 0.05], [x, 2.57, zp + 0.4], 0.1, 0.07, tint(roofCol, 0.05), { jitter: false });
+    }
+    for (let k = 0; k < 4; k++) b.beam([-L / 2 + 0.1 + k * (L - 0.2) / 3, 2.6, ZF + 0.1], [-L / 2 + 0.1 + k * (L - 0.2) / 3, 2.48, zp], 0.12, 0.14, oak);
 
     // the yard fences between plots and a shared well
     for (let k = 0; k < 3; k++) {

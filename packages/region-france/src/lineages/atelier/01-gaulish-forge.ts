@@ -65,7 +65,7 @@ export const gaulishForge: BuildingDef = {
     const sz = -0.8;
     const SW = 8;
     const SD = 5.6;
-    const ph = 2.2;
+    const ph = 2.7;
     for (const x of lin(4, sx - SW / 2 + 0.15, sx + SW / 2 - 0.15)) {
       for (const z of [sz - SD / 2 + 0.15, sz + SD / 2 - 0.15]) b.cyl(0.14, ph, timber, { at: [x, 0, z], segs: 6 });
     }
@@ -74,7 +74,7 @@ export const gaulishForge: BuildingDef = {
     // wattle and daub walls on the back (river side) and the west end
     b.box(SW - 0.3, ph - 0.2, 0.16, clay, { at: [sx, 0, sz - SD / 2 + 0.15] });
     b.box(0.16, ph - 0.2, SD - 0.3, clay, { at: [sx - SW / 2 + 0.15, 0, sz] });
-    thatchRoof(b, SW, SD, [sx, ph, sz], { color: thatch, overhang: 0.7 });
+    thatchRoof(b, SW, SD, [sx, ph, sz], { color: thatch, overhang: 0.5 });
     // a smoke hole: the gable ends left open under the ridge, shown as dark triangles
     const rr = rise(SD, 50);
     for (const s of [-1, 1]) {
@@ -113,6 +113,18 @@ export const gaulishForge: BuildingDef = {
     b.cyl(0.3, 0.4, P.wattle, { at: [bx - 1.6, 0, bz + 1.3], rTop: 0.36, segs: 8 });
     b.cyl(0.26, 0.04, P.bronze, { at: [bx - 1.6, 0.38, bz + 1.3], segs: 8, jitter: false });
 
+    // ---- the smith's house: wattle and daub walls on posts, a door to the yard, a steep thatch
+    const hx = 11.2;
+    const hz = 5.0;
+    const HW = 7.0;
+    const HD = 5.2;
+    b.box(HW, 2.0, HD, clay, { at: [hx, 0, hz] });
+    for (const x of lin(5, hx - HW / 2, hx + HW / 2)) for (const z of [hz - HD / 2, hz + HD / 2]) b.box(0.2, 2.0, 0.2, P.oakDark, { at: [x, 0, z] });
+    thatchRoof(b, HW, HD, [hx, 2.0, hz], { color: tint(thatch, 0.03), overhang: 0.6 });
+    b.panel(1.0, 1.8, P.oakDark, { at: [hx - 1.2, 0, hz + HD / 2], facing: '+z' });
+    b.panel(1.0, 1.8, P.oakDark, { at: [hx - 1.2, 0, hz - HD / 2], facing: '-z' });
+    b.box(1.6, 0.12, 1.4, P.oak, { at: [hx - 1.2, 0, hz + HD / 2 + 0.7] }); // a plank porch step
+
     // ---- the yard: charcoal stacks, a woodpile, baskets of charcoal, a fence and gate to the street
     charcoalStack(b, [-14.2, 0, -5.5], 2.2, 1.7);
     charcoalStack(b, [-13.0, 0, -1.2], 1.4, 1.0, tint(P.timberBlack, 0.08)); // a heap of finished charcoal
@@ -139,5 +151,6 @@ export const gaulishForge: BuildingDef = {
     b.collider(SW, SD, { at: [sx, 0, sz] });
     b.collider(BW, BD, { at: [bx, 0, bz] });
     b.collider(4.6, 4.4, { at: [-14.2, 0, -5.5] });
+    b.collider(HW, HD, { at: [hx, 0, hz] });
   },
 };

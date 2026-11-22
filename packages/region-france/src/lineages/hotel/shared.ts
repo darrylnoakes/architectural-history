@@ -605,11 +605,19 @@ export function thatchedHall(
       }
     }
     const ov = 0.7;
-    b.hip(o.w, o.d, o.roof, thatch, { at: [0, o.wall, 0], overhang: ov });
-    b.hip(o.w + 0.2, o.d + 0.2, o.roof, tint(thatch, -0.08), { at: [0, o.wall - 0.28, 0], overhang: ov });
-    // smoke holes under the ridge ends (no chimneys)
-    const ridge = Math.max(0, Math.abs(o.w - o.d)) / 2;
-    if (o.w >= o.d) for (const s of [-1, 1]) b.box(0.6, 0.35, 0.5, 0x2a2420, { at: [s * (ridge + 0.5), o.wall + o.roof - 0.9, 0] });
+    const L = Math.max(o.w, o.d);
+    const S = Math.min(o.w, o.d);
+    const ridge = L - S + S * 0.45;
+    b.hip(o.w, o.d, o.roof, thatch, { at: [0, o.wall, 0], overhang: ov, ridge });
+    b.hip(o.w + 0.2, o.d + 0.2, o.roof, tint(thatch, -0.08), { at: [0, o.wall - 0.28, 0], overhang: ov, ridge });
+    // smoke holes in the little hip ends under the ridge (no chimneys)
+    if (o.w >= o.d) {
+      for (const s of [-1, 1]) {
+        const yy = o.wall + o.roof - 0.75;
+        const xx = ridge / 2 + (0.75 / o.roof) * (L / 2 + ov - ridge / 2) - 0.1;
+        b.box(0.12, 0.32, 0.55, 0x2a2420, { at: [s * xx, yy, 0], jitter: false });
+      }
+    }
     if (o.doorEnd) {
       b.panel(1.3, 2.0, P.oakDark, { at: [o.w / 2, 0, 0], facing: '+x', depth: 0.08 });
     } else {

@@ -1,29 +1,17 @@
-import { P, type Lineage } from '@ah/kit';
+import type { Lineage } from '@ah/kit';
+import { invasions, renewedBy } from '../../ends';
+import { gaulishHall } from './01-gaulish-hall';
+import { mansio } from './02-mansio';
 
-// PLACEHOLDER: replaced by the real lineage.
 const lineage: Lineage = {
   id: 'auberge',
   name: 'L’Auberge',
   kind: 'hospitality',
-  role: 'Placeholder',
+  role: 'Where travellers have been fed, watered and put up for the night, from a Gaulish chief’s feasting hall to a restored Art Nouveau brasserie.',
   plotSize: [22, 22],
   stages: [
-    {
-      from: -300,
-      def: {
-        id: 'auberge-placeholder',
-        name: 'L’Auberge',
-        style: 'Placeholder',
-        date: 'n/a',
-        summary: 'Placeholder building.',
-        materials: [],
-        lookFor: [],
-        build(b) {
-          b.box(11.0, 4, 11.0, P.pierreBlonde);
-          b.gable(11.0, 11.0, 2, P.ardoise, { at: [0, 4, 0], overhang: 0.3 });
-        },
-      },
-    },
+    { from: -300, builtUntil: -30, end: renewedBy(50), def: gaulishHall },
+    { from: 50, builtUntil: 250, end: invasions, def: mansio },
   ],
 };
 

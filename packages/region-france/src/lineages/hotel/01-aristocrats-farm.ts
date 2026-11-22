@@ -83,7 +83,7 @@ export const aristocratsFarm: BuildingDef = {
     }
 
     // ---- the great aisled house at the back of the yard
-    thatchedHall(b, { at: [0, 0, -5.0], w: 13, d: 7.5, wall: 2.2, roof: 5.0, daub, thatch });
+    thatchedHall(b, { at: [0, 0, -5.0], w: 13, d: 7.5, wall: 2.2, roof: 4.4, daub, thatch });
     b.collider(13.4, 7.9, { at: [0, 0, -5.0] });
     // the inner posts of the aisles, glimpsed through the door, and a porch
     for (const x of [-0.9, 0.9]) b.cyl(0.13, 2.3, wood, { at: [x, 0, -5.0 + 3.75 + 1.1], segs: 5 });
