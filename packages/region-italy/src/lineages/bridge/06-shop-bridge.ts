@@ -49,7 +49,7 @@ export const shopBridge: BuildingDef = {
     side(b, bodyOutline({ za: -END, zb: END, top: (q) => f(q) - 0.12, openings: ops }), roadW + 0.6, stone);
     b.sym((k) => {
       for (const op of ops) voussoirs(b, op, { d: 0.5, width: 0.08, x: k * (W / 2 + 0.02), color: dress, blocks: 13 });
-      band(b, k * (W / 2 + 0.05), 0.14, -END + 0.5, END - 0.5, (q) => f(q) - 0.4, (q) => f(q) - 0.12, dress, 30);
+      band(b, k * (W / 2 + 0.05), 0.14, -14.4, 14.4, (q) => f(q) - 0.4, (q) => f(q) - 0.12, dress, 30);
     });
     for (const zp of piers) {
       cutwaterPier(b, { z: zp, len: W, thick: pierT, nose: 1.4, y0: FOOT, h: f(zp) - 0.45 - FOOT, color: stone, cap: 0.06, capColor: dress });

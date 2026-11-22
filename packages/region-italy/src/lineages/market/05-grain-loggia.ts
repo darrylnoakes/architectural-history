@@ -110,7 +110,7 @@ export const grainLoggia: BuildingDef = {
     }
     b.box(W + 1.2, 0.4, D + 1.2, tint(stone, 0.05), { at: [0, top, 0] });
     b.hip(W + 0.8, D + 0.8, 2.6, P.coppi, { at: [0, top + 0.4, 0], overhang: 0.25 });
-    hipRibs(b, W + 0.8, D + 0.8, 2.6, [0, top + 0.4, 0], 0.25, tint(P.coppi, -0.08), 0.75);
+    hipRibs(b, W + 0.8, D + 0.8, 2.6, [0, top + 0.4, 0], 0.25, tint(P.coppi, -0.08), 0.9);
     // a hoist beam and door in the roof for lifting sacks to the top floor
     b.box(1.6, 1.4, 1.2, stone, { at: [0, top + 0.4, D / 2 - 0.4] });
     b.gable(1.8, 1.4, 0.7, P.coppi, { at: [0, top + 1.8, D / 2 - 0.4], ridge: 'z', overhang: 0.15, wall: stone });

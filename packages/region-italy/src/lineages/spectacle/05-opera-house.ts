@@ -11,7 +11,7 @@ const FOYER_H = 16.2;
 const AUD_Z0 = -6.6;
 const AUD_W = 26;
 const AUD_H = 17;
-const STAGE_Z0 = -18;
+const STAGE_Z0 = -17.7;
 const STAGE_H = 26;
 
 // Horseshoe: an arc of radius HR round (0, HC), its straight sides running back to the proscenium.
@@ -108,11 +108,12 @@ export const operaHouse: BuildingDef = {
     const gold = tint(P.gold, -0.05);
     const ivory = tint(P.cream, 0.02);
     const oak = P.oak;
+    const boxDark = mix(P.doorRed, P.black, 0.55);
 
     // ------------------------------------------------ stage house and auditorium shell
     const sd = AUD_Z0 - STAGE_Z0;
     b.box(24, STAGE_H, sd, stucco, { at: [0, 0, (STAGE_Z0 + AUD_Z0) / 2] });
-    b.gable(24, sd, 3.6, roof, { at: [0, STAGE_H, (STAGE_Z0 + AUD_Z0) / 2], ridge: 'z', overhang: 0.4, wall: stucco });
+    b.gable(24, sd, 3.6, roof, { at: [0, STAGE_H, (STAGE_Z0 + AUD_Z0) / 2], ridge: 'z', overhang: 0.25, wall: stucco });
     b.sym((s) => {
       for (const z of [-15, -11.5, -8]) {
         b.window(1.2, 2.2, { at: [s * 12, 18.5, z], facing: s > 0 ? '+x' : '-x', frame: stone, bars: [2, 3] });
@@ -158,7 +159,7 @@ export const operaHouse: BuildingDef = {
       band(b, front, back, y, tint(oak, -0.08)); // floor of the tier
       strip(b, front.map(([x, z]) => [x, z, y, y + 1.0] as [number, number, number, number]), i < 4 ? ivory : tint(ivory, -0.06)); // parapet
       strip(b, front.map(([x, z]) => [x, z, y + 0.85, y + 1.0] as [number, number, number, number]), gold);
-      strip(b, back.map(([x, z]) => [x, z, y, y + 2.4] as [number, number, number, number]), red); // the back of the boxes
+      strip(b, back.map(([x, z]) => [x, z, y, y + 2.4] as [number, number, number, number]), boxDark); // the back of the boxes
       if (i < 4) {
         // partitions between the boxes
         for (let k = 1; k < front.length - 1; k++) {
@@ -216,7 +217,6 @@ export const operaHouse: BuildingDef = {
     const pz = fz + 0.6 + pd / 2;
     b.archWall(12.4, 6.0, 0.9, stone, { at: [0, 0, PORCH_Z - 0.45], openings: 3, openW: 2.7, openH: 4.7 });
     b.sym((s) => b.archWall(pd, 6.0, 0.9, stone, { at: [s * 5.75, 0, pz], facing: s > 0 ? '+x' : '-x', openings: 1, openW: 2.0, openH: 4.4 }));
-    for (let i = 0; i < 8; i++) b.panel(12.4, 0.1, tint(stone, -0.08), { at: [0, 0.55 + i * 0.6, PORCH_Z], depth: 0.03 });
     b.box(12.8, 0.4, pd + 0.4, stone, { at: [0, 6.0, pz] });
     for (let i = 0; i < 13; i++) b.box(0.18, 0.75, 0.18, stone, { at: [-6.0 + i, 6.4, PORCH_Z - 0.15] });
     b.box(12.6, 0.15, 0.3, stone, { at: [0, 7.15, PORCH_Z - 0.15] });

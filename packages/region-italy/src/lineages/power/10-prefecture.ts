@@ -18,7 +18,7 @@ import {
 } from './shared';
 
 /** The prefecture's block in zone C beside the old palace. */
-export const PREF = { x0: 7.5, x1: 21.5, z0: -12, z1: 7, g: 5.4, n: 5.6, t: 4.4 };
+export const PREF = { x0: 7.5, x1: 20.7, z0: -12, z1: 7, g: 5.4, n: 5.6, t: 4.4 };
 
 /** A piano nobile window in a little temple frame: pilasters, an entablature and a pediment. */
 function aedicule(b: Builder, at: [number, number, number], rotY: number, ped: 'tri' | 'seg', stone: number): void {
@@ -56,8 +56,7 @@ export function prefecture(b: Builder): void {
   b.box(W + 0.2, 0.25, D + 0.2, stone, { at: [xc, g + n - 0.1, zc], jitter: false });
   // quoins up the corners of the upper floors
   for (const sx of [-1, 1])
-    for (const sz of [-1, 1])
-      for (let y = g + 0.3; y < H - 0.4; y += 0.9) b.box(0.9, 0.5, 0.9, tint(stucco, -0.08), { at: [xc + sx * (W / 2 - 0.4), y, zc + sz * (D / 2 - 0.4)], jitter: false });
+    for (let y = g + 0.3; y < H - 0.6; y += 1.1) b.box(0.9, 0.55, 0.9, tint(stucco, -0.08), { at: [xc + sx * (W / 2 - 0.4), y, z1 - 0.4], jitter: false });
   // the great cornice on brackets, and a low hipped roof
   corbels(b, [x0, z1], [x1, z1], H - 0.6, 0.7, stone, { pitch: 0.8, h: 0.6 });
   corbels(b, [x1, z1], [x1, z0], H - 0.6, 0.7, stone, { pitch: 0.8, h: 0.6 });
@@ -95,7 +94,6 @@ export function prefecture(b: Builder): void {
     rectWindow(b, 1.2, 2.0, { at: [x1, 1.6, z], facing: '+x', frame: stone });
     rectWindow(b, 1.3, 2.7, { at: [x1, g + 0.9, z], facing: '+x', frame: stone, cornice: true, sill: true });
     rectWindow(b, 1.1, 1.8, { at: [x1, g + n + 0.8, z], facing: '+x', frame: stone, cornice: true });
-    rectWindow(b, 1.2, 2.4, { at: [x0, g + 0.9, z], facing: '-x', frame: stone, cornice: true });
   }
   for (const x of bays) {
     rectWindow(b, 1.2, 2.2, { at: [x, g + 0.9, z0], facing: '-z', frame: stone, cornice: true });

@@ -29,22 +29,22 @@ export const baroqueTownhouse: BuildingDef = {
     {
       label: 'Moulded window surrounds',
       note: 'Stucco frames with little ‘ears’ at the top corners, crowned by pediments that alternate triangle and arc on the main floor.',
-      at: [-2.6, 7.6, 8.55],
+      at: [-2.72, 7.5, 8.55],
     },
     {
       label: 'Mezzanine windows',
       note: 'Small square windows over the ground-floor windows and under the cornice light low rooms for servants, stores and the counting room.',
-      at: [-5.2, 3.6, 8.55],
+      at: [-5.44, 3.6, 8.55],
     },
     {
       label: 'Altana',
       note: 'A roof terrace under a tiled canopy, the Roman family’s place for air and a view over the roofs, and for drying the washing.',
-      at: [1.6, 17.3, 2.0],
+      at: [1.6, 17.0, 2.9],
     },
     {
       label: 'Cornice',
       note: 'A deep moulded cornice of stucco on brick caps the front, in place of the old timber eaves.',
-      at: [5.0, 13.7, 8.9],
+      at: [5.0, 13.95, 9.2],
     },
   ],
   build(b) {
