@@ -324,7 +324,7 @@ function philipTerminal(b: Builder, late: boolean): void {
  * The bastioned front in the plot's frame. The curtain's scarp foot runs along z = CF. Bastions are
  * centred at x = c with flanks at c ± G (from the scarp foot out to the shoulders at z = SH) and faces
  * meeting at the salient (c, SH + K·G). The gate plot's two bastions sit at x = ±PLOT_C, so their inner
- * flanks are at ±11.5. Between every pair of bastions a ravelin (demi-lune) stands in the ditch in front
+ * flanks are at ±10.2. Between every pair of bastions a ravelin (demi-lune) stands in the ditch in front
  * of the curtain: on the gate plot it covers the gate. The real fronts were three times as long (about
  * 350 m from salient to salient), the ditch much wider: everything is compressed to fit the town.
  */
@@ -333,7 +333,7 @@ export const VAUBAN = {
   SH: 3.0,
   G: 13,
   K: 0.6,
-  PLOT_C: 11.5 + 13,
+  PLOT_C: 10.2 + 13,
   spacing: 105,
   top: 6.2, // the terreplein behind the parapet
   cs: 7.6, // the counterscarp wall

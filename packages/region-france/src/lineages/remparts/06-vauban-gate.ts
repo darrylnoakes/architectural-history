@@ -108,7 +108,7 @@ export function vaubanGateColliders(b: Builder): void {
 // ------------------------------------------------------------------ the stage
 
 const SX = VGATE.w / 2; // where the ramparts meet the gate
-const FX = VAUBAN.PLOT_C - VAUBAN.G; // the inner flanks of the two bastions (±11.5)
+const FX = VAUBAN.PLOT_C - VAUBAN.G; // the inner flanks of the two bastions (±10.2)
 const RCUT = 2.5; // half-width of the way cut through the ravelin
 const { gorge: RG } = VAUBAN.ravelin;
 
@@ -126,7 +126,7 @@ export const vaubanGateStage: BuildingDef = {
     'Lille, refortified by Vauban after its capture in 1667, with the Porte de Paris (Simon Vollant, 1685 to 1692), a triumphal arch with trophies and the king’s emblems; the citadel of Lille (1667 to 1670) for the bastions. The fronts are compressed: Vauban’s bastions stood about 350 m apart, not 100, and the ditches were many times wider.',
   influences: ['bastions', 'vauban'],
   lookFor: [
-    { label: 'Angled bastion', note: 'An arrowhead of rampart thrust out from the line: its two faces glance off shot, and every foot of ground in front can be swept by fire.', at: [13.9, 7.9, 5.0] },
+    { label: 'Angled bastion', note: 'An arrowhead of rampart thrust out from the line: its two faces glance off shot, and every foot of ground in front can be swept by fire.', at: [13.6, 8.0, 4.6] },
     { label: 'Flank', note: 'The short side of the bastion facing along the wall, where guns fire across the ditch and the face of the gate.', at: [FX - 0.4, 4.0, 1.2] },
     { label: 'Demi-lune (ravelin)', note: 'A low triangular outwork in the ditch covering the gate and the curtain: the attacker has to take it first.', at: [-4.2, VAUBAN.ravelin.h + 1.2, RG + 1.8] },
     { label: 'Triumphal-arch gate', note: 'Paired columns, statues of Mars and Hercules and a great arch: the gate tells every traveller whose town this is.', at: [0, VGATE.oh + 0.8, VGATE.front + 0.5] },
@@ -173,7 +173,7 @@ export const vaubanGateStage: BuildingDef = {
 
     // ---------------------------------------------------------------- cannon on the bastions, trained along the ditch
     b.sym((s) => {
-      b.group({ at: [s * 13.4, VAUBAN.top, 0.9], rotY: -s * 1.35 }, () => {
+      b.group({ at: [s * 12.4, VAUBAN.top, 0.9], rotY: -s * 1.35 }, () => {
         b.box(0.9, 0.5, 1.8, P.oak, { at: [0, 0.32, 0] });
         b.sym((t) => b.log(0.4, 0.14, P.oakDark, { at: [t * 0.55, 0, 0.35], segs: 10 }));
         b.log(0.2, 2.6, P.castIron, { at: [0, 0.82, 0.6], axis: 'z', segs: 8 });

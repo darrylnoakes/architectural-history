@@ -449,8 +449,8 @@ export function concreteMarket(b: Builder, restored: boolean, open: boolean): vo
       b.box(1.8, 2.5, 0.12, P.windowDark, { at: [dx, 0.05, z] });
     }
     b.box(2 * A + 1.2, 0.25, 1.6, conc, { at: [0, 3.2, z + s * 0.8] });
-    for (const sx of [-1, 1]) b.collider(1.8, 0.4, { at: [sx * 1.45, 0, z] });
-    for (const sx of [-1, 1]) b.collider(2.0, 0.4, { at: [sx * 6.3, 0, z] });
+    for (const sx of [-1, 1]) b.collider(1.1, 0.4, { at: [sx * 1.45, 0, z] });
+    for (const sx of [-1, 1]) b.collider(4.0, 0.4, { at: [sx * 5.8, 0, z] });
     if (s > 0) {
       // the name in letters standing on the canopy
       for (let k = 0; k < 11; k++) {
