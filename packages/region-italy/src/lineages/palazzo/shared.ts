@@ -417,7 +417,7 @@ export function latialHut(
     }
     // smoke hole in the front gable end
     const zs = ridgeHalf + (0.9 / (yR - yE)) * (o.c + ov - ridgeHalf);
-    b.box(0.7, 0.45, 0.5, P.windowDark, { at: [0, yR - 1.05, zs - 0.1] });
+    b.box(0.7, 0.45, 0.5, 0x2a2420, { at: [0, yR - 1.05, zs - 0.1] });
     // door and porch
     b.panel(0.9, 1.7, P.oakDark, { at: [0, 0.2, o.c - 0.02], facing: '+z', depth: 0.08 });
     if (o.porch) {

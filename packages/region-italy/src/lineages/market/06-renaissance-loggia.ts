@@ -80,7 +80,7 @@ export const renaissanceLoggia: BuildingDef = {
     for (const [x, z] of colAt) {
       b.box(0.85, PED, 0.85, grey, { at: [x, y0, z] });
       b.box(0.95, 0.12, 0.95, greyL, { at: [x, y0 + PED - 0.12, z] });
-      b.column(0.3, CH, grey, { at: [x, y0 + PED, z], order: 'corinthian', segs: 8 });
+      b.column(0.3, CH, grey, { at: [x, y0 + PED, z], order: 'corinthian', segs: 6 });
       b.box(0.85, IMP, 0.85, grey, { at: [x, y0 + PED + CH, z] });
       b.collider(0.9, 0.9, { at: [x, 0, z] });
     }

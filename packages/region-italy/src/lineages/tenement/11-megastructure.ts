@@ -27,7 +27,7 @@ export const megastructure: BuildingDef = {
   modelledOn: 'Corviale, Rome (1972 to 1984; Mario Fiorentino and team for the IACP of Rome), reduced',
   lookFor: [
     { label: 'Open internal street', note: 'A whole floor set back behind the columns, planned for shops, clinics and meeting rooms; it was later filled with homes built by squatters.', at: [-6.5, BASE + OPEN * FH + 1.4, ZF - REC + 0.3] },
-    { label: 'Stair and lift tower', note: 'Lifts and stairs rise in towers standing out from the slab; each serves hundreds of flats along the corridors.', at: [3.25, 18.0, ZF + 1.9] },
+    { label: 'Stair and lift tower', note: 'Lifts and stairs rise in towers standing out from the slab; each serves hundreds of flats along the corridors.', at: [3.25, 18.0, ZF + 2.5] },
     { label: 'Industrialised facade', note: 'A repeating grid of concrete panels and windows, the same on every floor and every bay: housing as a product of the factory.', at: [-9.5, 22.0, ZF + 0.2] },
     { label: 'Loggias', note: 'Each flat has a recessed loggia, a balcony cut into the face of the block.', at: [8.1, 8.0, ZF + 0.1] },
     { label: 'The slab goes on', note: 'The real building carries on for nearly a kilometre in a straight line across the countryside.', at: [-12.8, TOP - 2, 0] },
@@ -104,13 +104,13 @@ export const megastructure: BuildingDef = {
       [ZB, -1],
     ] as const) {
       const tx = s > 0 ? 3.25 : -6.5;
-      const tz = z + s * 1.4;
-      b.box(3.6, TOP + 2.2, 2.8, tint(conc, 0.03), { at: [tx, 0, tz] });
+      const tz = z + s * 1.2;
+      b.box(3.6, TOP + 2.2, 2.4, tint(conc, 0.03), { at: [tx, 0, tz] });
       for (let fl = 0; fl < NF + 1; fl++) {
-        b.window(0.5, 2.2, { at: [tx - 0.9, 0.6 + fl * FH, tz + s * 1.4], facing: s > 0 ? '+z' : '-z', frame: conc, glass: P.windowDark, border: 0.05 });
-        b.window(0.5, 2.2, { at: [tx + 0.9, 0.6 + fl * FH, tz + s * 1.4], facing: s > 0 ? '+z' : '-z', frame: conc, glass: P.windowDark, border: 0.05 });
+        b.window(0.5, 2.2, { at: [tx - 0.9, 0.6 + fl * FH, tz + s * 1.2], facing: s > 0 ? '+z' : '-z', frame: conc, glass: P.windowDark, border: 0.05 });
+        b.window(0.5, 2.2, { at: [tx + 0.9, 0.6 + fl * FH, tz + s * 1.2], facing: s > 0 ? '+z' : '-z', frame: conc, glass: P.windowDark, border: 0.05 });
       }
-      b.box(4.0, 0.2, 3.2, dark, { at: [tx, TOP + 2.2, tz] });
+      b.box(4.0, 0.2, 2.6, dark, { at: [tx, TOP + 2.2, tz] });
     }
     // the cut end: a blank end wall with a vertical joint
     for (const s of [-1, 1]) b.box(0.12, TOP, 0.3, dark, { at: [(s * L) / 2, 0, ZC], jitter: false });
@@ -135,7 +135,7 @@ export const megastructure: BuildingDef = {
       ]) b.log(0.28, 0.18, P.black, { at: [x + wx, 0, -6.6 + wz], segs: 8 });
     }
     b.collider(L, D, { at: [0, 0, ZC] });
-    b.collider(3.6, 2.8, { at: [3.25, 0, ZF + 1.4] });
-    b.collider(3.6, 2.8, { at: [-6.5, 0, ZB - 1.4] });
+    b.collider(3.6, 2.4, { at: [3.25, 0, ZF + 1.2] });
+    b.collider(3.6, 2.4, { at: [-6.5, 0, ZB - 1.2] });
   },
 };

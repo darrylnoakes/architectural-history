@@ -55,7 +55,7 @@ export const casaDelFascio: BuildingDef = {
     const gx1 = x0 + gridW;
 
     // the plinth: a low marble platform the whole building stands on
-    b.box(W + 1.6, 0.35, D + 1.8, tint(marble, -0.04), { at: [xc, 0, zc + 0.1] });
+    b.box(W + 0.6, 0.35, D + 1.8, tint(marble, -0.04), { at: [xc, 0, zc + 0.1] });
     // the body behind the grid
     b.box(W, H + 0.5, D - frameD, marble, { at: [xc, 0.35, zc - frameD / 2] });
     // right-hand part of the front: a solid wall flush with the grid face

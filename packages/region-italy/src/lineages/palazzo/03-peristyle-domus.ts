@@ -77,7 +77,7 @@ export const peristyleDomus: BuildingDef = {
     b.sym((s) => {
       block(b, 6, 4.6, za1 - za0, plaster, s * 8, zac);
       b.gable(6, za1 - za0, 1.1, tile, { at: [s * 8, 4.6, zac], ridge: 'z', overhang: 0.35, wall: plaster });
-      b.box(0.4, Ha, za1 - za0, plaster, { at: [s * 4.8, 0, zac] });
+      b.box(0.4, Ha + 0.6, za1 - za0, plaster, { at: [s * 4.8, 0, zac] });
       // doorways into the side rooms (cubicula and alae), with the painted dado below
       b.box(0.06, 1.0, za1 - za0, dado, { at: [s * 4.58, 0, zac] });
       for (const z of [2.6, 5.2, 7.8]) b.panel(1.1, 2.5, P.oakDark, { at: [s * 4.58, 0, z], facing: s > 0 ? '-x' : '+x', depth: 0.06 });

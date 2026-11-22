@@ -231,12 +231,13 @@ export function letterBoard(
 
 /**
  * Block letters for a sign, as rectangles on a 3 × 5 grid per letter. Supported letters:
- * A B C E F G H I L N O P R S T Z and space. `at` is the bottom centre of the word on the wall.
+ * A B C D E F G H I L N O P R S T Z and space. `at` is the bottom centre of the word on the wall.
  */
 const GLYPHS: Record<string, string[]> = {
   A: ['111', '101', '111', '101', '101'],
   B: ['110', '101', '110', '101', '110'],
   C: ['111', '100', '100', '100', '111'],
+  D: ['110', '101', '101', '101', '110'],
   E: ['111', '100', '110', '100', '111'],
   F: ['111', '100', '110', '100', '100'],
   G: ['111', '100', '101', '101', '111'],

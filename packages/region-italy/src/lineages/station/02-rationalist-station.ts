@@ -36,7 +36,7 @@ export const rationalistStation: BuildingDef = {
     { label: 'Diesel railcar', note: 'A light streamlined railcar of the 1930s, nicknamed the Littorina, for fast services on branch lines.', at: [-9, 4.1, TRACKS[0] - 1.5] },
   ],
   build(b) {
-    const stone = tint(mix(P.pietraForte, P.sandstone, 0.3), b.range(-0.02, 0.02));
+    const stone = tint(mix(P.pietraForte, P.peperino, 0.3), b.range(-0.02, 0.02));
     const joint = tint(stone, -0.12);
     const glass = mix(P.glass, P.glassGreen, 0.3);
     const frame = P.steel;
@@ -123,7 +123,7 @@ export const rationalistStation: BuildingDef = {
     clock(b, 0.9, [-6, PLAT.y + 2.7, zc + 0.19], { facing: '+z', rim: P.steel });
     clock(b, 0.9, [-6, PLAT.y + 2.7, zc - 0.19], { facing: '-z', rim: P.steel });
     littorina(b, [-4, 0, TRACKS[0]]);
-    catenary(b, TRACKS[0], [-17, -5, 7, 18], -11.85);
+    catenary(b, TRACKS[0], [-17, -5, 7, 18], -11.7);
 
     // ---------------------------------------------------------------- around it
     for (const x of [3.8, 9, 14.2]) {

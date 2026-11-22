@@ -415,7 +415,7 @@ export const PORTAL_X = (PAL.cx0 + PAL.cx1) / 2;
  * A Gothic three-light window (trifora) of the civic palace: a pointed arch of white stone round three
  * dark lights divided by slender colonnettes, the arch head filled with stone.
  */
-export function trifora(b: Builder, at: V3, facing: Facing, w = 2.4, h = 3.4, stone = P.travertine): void {
+export function trifora(b: Builder, at: V3, facing: Facing, w = 2.4, h = 3.4, stone: number = P.travertine): void {
   b.group({ at, rotY: facingAngle(facing) }, () => {
     arch(b, w + 0.4, h + 0.35, stone, { at: [0, -0.15, 0], depth: 0.08, n: 2 });
     const lh = h * 0.6;
@@ -428,7 +428,7 @@ export function trifora(b: Builder, at: V3, facing: Facing, w = 2.4, h = 3.4, st
 }
 
 /** A two-light window (bifora), used on the back and sides. */
-export function bifora(b: Builder, at: V3, facing: Facing, w = 1.7, h = 3, stone = P.travertine): void {
+export function bifora(b: Builder, at: V3, facing: Facing, w = 1.7, h = 3, stone: number = P.travertine): void {
   b.group({ at, rotY: facingAngle(facing) }, () => {
     flatArch(b, w + 0.3, h + 0.25, stone, { at: [0, -0.1, 0], off: 0.04, n: 2 });
     const lw = (w - 0.3) / 2;

@@ -115,7 +115,10 @@ export const baroqueTownhouse: BuildingDef = {
     b.sym((s) => b.extrude([[0, 0], [0, -0.6], [0.2, -0.6], [0.8, -0.1], [0.8, 0]], 0.25, trav, { at: [s * 1.1, g, zf], rotY: -Math.PI / 2 }));
     b.box(3.0, 0.06, 0.06, P.iron, { at: [0, g + 1.0, zf + 0.87] });
     for (const x of spread(14, -1.45, 1.45)) b.box(0.03, 0.82, 0.03, P.iron, { at: [x, g + 0.2, zf + 0.87], jitter: false });
-    b.sym((s) => b.box(0.06, 1.0, 0.85, P.iron, { at: [s * 1.48, g + 0.06, zf + 0.45] }));
+    b.sym((s) => {
+      b.box(0.05, 0.05, 0.85, P.iron, { at: [s * 1.48, g + 1.0, zf + 0.45] });
+      for (const z of [0.25, 0.55]) b.box(0.03, 0.82, 0.03, P.iron, { at: [s * 1.48, g + 0.2, zf + z], jitter: false });
+    });
 
     // ---- piano nobile: eared frames, alternating pediments; balcony door in the middle
     for (const [i, x] of bays.entries()) {
@@ -153,7 +156,7 @@ export const baroqueTownhouse: BuildingDef = {
     b.box(4.4, 0.08, 0.06, P.iron, { at: [ax, ay + 1.05, az + 1.6] });
     for (const x of spread(16, -1.8, 1.8)) b.box(0.03, 0.9, 0.03, P.iron, { at: [ax + x, ay + 0.15, az + 1.6], jitter: false });
     b.box(4.6, 0.25, 3.9, stucco, { at: [ax, ay + 2.55, az] });
-    coppiRoof(b, 4.6, 3.9, 0.9, tile, { at: [ax, ay + 2.8, az], overhang: 0.35, wall: ochre, thick: 0.1, step: 0.45 });
+    coppiRoof(b, 4.6, 3.9, 0.9, tile, { at: [ax, ay + 2.8, az], overhang: 0.35, wall: ochre, thick: 0.1, step: 0.6 });
     pot(b, [ax - 1.4, ay + 0.15, az - 1.0], 0.8);
     b.box(0.03, 0.03, 3.0, P.white, { at: [ax + 0.5, ay + 1.9, az] }); // a washing line
 
@@ -176,7 +179,7 @@ export const baroqueTownhouse: BuildingDef = {
     // wall fountain: a basin, a niche and a mask spout
     b.panel(2.2, 2.6, stucco, { at: [0, 0, cz1 + 0.35], facing: '+z', shape: 'round', depth: 0.06 });
     b.panel(1.5, 1.9, tint(ochre, -0.12), { at: [0, 0.9, cz1 + 0.35], facing: '+z', shape: 'round', depth: 0.08 });
-    b.lathe([[0.01, 0], [0.9, 0.1], [1.0, 0.7], [0.92, 0.72], [0.8, 0.25], [0.01, 0.25]], trav, { at: [0, 0, cz1 + 0.6], segs: 14, start: Math.PI / 2, sweep: Math.PI });
+    b.lathe([[0.01, 0], [0.9, 0.1], [1.0, 0.7], [0.92, 0.72], [0.8, 0.25], [0.01, 0.25]], trav, { at: [0, 0, cz1 + 0.36], segs: 10, start: -Math.PI / 2, sweep: Math.PI });
     b.box(1.6, 0.05, 0.7, P.water, { at: [0, 0.55, cz1 + 0.75], jitter: false });
     b.sphere(0.16, trav, { at: [0, 1.6, cz1 + 0.5], segs: 6 });
     // lemons in pots, a well, a small pergola
