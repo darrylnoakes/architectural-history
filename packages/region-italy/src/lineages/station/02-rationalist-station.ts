@@ -33,7 +33,7 @@ export const rationalistStation: BuildingDef = {
     { label: 'Stone-faced horizontal mass', note: 'A long, low, flat-roofed block clad in sandstone, its plain walls barely broken by windows.', at: [12, 4, ZF + 0.3] },
     { label: 'Flat cantilevered canopy', note: 'A thin concrete slab on slender columns shelters cars and taxis setting down passengers.', at: [-13, 4.1, 9.8] },
     { label: 'Concrete platform canopy', note: 'A slab balanced on a single row of columns, with no ties or brackets: reinforced concrete at its simplest.', at: [8, 4.6, -5.3] },
-    { label: 'Diesel railcar', note: 'A light streamlined railcar of the 1930s, nicknamed the Littorina, for fast services on branch lines.', at: [-4, 4.1, TRACKS[1]] },
+    { label: 'Diesel railcar', note: 'A light streamlined railcar of the 1930s, nicknamed the Littorina, for fast services on branch lines.', at: [-9, 4.1, TRACKS[0] - 1.5] },
   ],
   build(b) {
     const stone = tint(mix(P.pietraForte, P.sandstone, 0.3), b.range(-0.02, 0.02));
@@ -122,7 +122,7 @@ export const rationalistStation: BuildingDef = {
     b.box(33, 0.35, 0.18, concrete, { at: [-1, PLAT.y + 3.85, PLAT.edge - 0.15] });
     clock(b, 0.9, [-6, PLAT.y + 2.7, zc + 0.19], { facing: '+z', rim: P.steel });
     clock(b, 0.9, [-6, PLAT.y + 2.7, zc - 0.19], { facing: '-z', rim: P.steel });
-    littorina(b, [-4, 0, TRACKS[1]]);
+    littorina(b, [-4, 0, TRACKS[0]]);
     catenary(b, TRACKS[0], [-17, -5, 7, 18], -11.85);
 
     // ---------------------------------------------------------------- around it
@@ -133,8 +133,6 @@ export const rationalistStation: BuildingDef = {
 
     // ---------------------------------------------------------------- walking: the ticket hall is open
     b.sym((s) => b.collider(18.6 - HW, ZF - ZB, { at: [s * (18.6 + HW) / 2, 0, (ZF + ZB) / 2] }));
-    b.collider(17, 3.0, { at: [-4, 0, TRACKS[1]] });
+    b.collider(17, 3.0, { at: [-4, 0, TRACKS[0]] });
   },
 };
-
-export function unused(_b: Builder): void {}
