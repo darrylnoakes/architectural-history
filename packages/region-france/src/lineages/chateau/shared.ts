@@ -26,7 +26,7 @@ export const RESID = 3;
 export const RESTORED = 4;
 
 export const STONE = mix(P.pierreBlonde, P.limestone, 0.4);
-export const STONE_NEW = mix(P.craie, P.pierreBlonde, 0.45);
+export const STONE_NEW = mix(P.craie, P.pierreBlonde, 0.12);
 export const DARK = P.windowDark;
 export const SLIT = P.black;
 export const SLATE = P.ardoise;
@@ -265,25 +265,41 @@ export function roundTower(
     }
     return;
   }
-  // machicolations: corbels in shadow under a projecting parapet
-  const R = r + 0.55;
-  b.lathe([[r, top - 1.3], [R - 0.05, top - 0.45], [R, top - 0.45], [R, top + 1.3], [r - 0.2, top + 1.3]], stone, { at: [x, 0, z], segs });
-  b.lathe([[r + 0.02, top - 1.25], [R - 0.03, top - 0.5]], tint(stone, -0.35), { at: [x, 0, z], segs, jitter: false });
-  const roofH = o.roofH ?? r * 2.4;
+  // machicolations: a parapet carried out on corbels, the gaps between them dark
+  const R = r + 0.75;
+  const yb = top - 1.8;
+  const yp = top - 0.5;
   const restored = o.top === 'restored';
-  b.cone(R + 0.25, roofH, SLATE, { at: [x, top + 1.25, z], segs });
+  b.lathe([[r + 0.03, yb], [r + 0.03, yp]], tint(stone, -0.45), { at: [x, 0, z], segs, jitter: false });
+  const n = Math.max(10, Math.round((2 * Math.PI * r) / 0.95));
+  const pos: number[] = [];
+  for (let k = 0; k < n; k++) {
+    const t = ((k + 0.5) / n) * Math.PI * 2;
+    const dl = 0.19 / r;
+    const [ax, az] = pol(x, z, r + 0.04, t - dl);
+    const [bx, bz] = pol(x, z, r + 0.04, t + dl);
+    const [cx, cz] = pol(x, z, R - 0.06, t + dl);
+    const [dx, dz] = pol(x, z, R - 0.06, t - dl);
+    pos.push(ax, yb, az, bx, yb, bz, cx, yp - 0.3, cz, ax, yb, az, cx, yp - 0.3, cz, dx, yp - 0.3, dz);
+    pos.push(dx, yp - 0.3, dz, cx, yp - 0.3, cz, cx, yp, cz, dx, yp - 0.3, dz, cx, yp, cz, dx, yp, dz);
+  }
+  soup(b, pos, tint(stone, 0.03));
+  b.lathe([[r, yp], [R, yp], [R, top + 1.3], [r - 0.2, top + 1.3]], stone, { at: [x, 0, z], segs });
+  const roofH = o.roofH ?? r * 2.2;
+  b.cone(R + 0.25, roofH, restored ? SLATE : P.slate, { at: [x, top + 1.25, z], segs });
   if (restored) {
-    b.cyl(R + 0.3, 0.18, P.lead, { at: [x, top + 1.2, z], segs, jitter: false });
+    b.cyl(R + 0.3, 0.2, P.lead, { at: [x, top + 1.2, z], segs, jitter: false });
     b.cyl(0.12, 2.0, P.lead, { at: [x, top + 1.25 + roofH - 0.3, z], segs: 5 });
     b.sphere(0.25, P.gold, { at: [x, top + 1.25 + roofH + 0.9, z], segs: 6 });
     b.box(0.7, 0.4, 0.03, P.gold, { at: [x + 0.25, top + 1.25 + roofH + 1.25, z], jitter: false });
-    // a dormer in the roof
+    // a dormer in the roof, towards the court
     const t = (o.outward ?? 0) + Math.PI;
-    const [dx, dz] = pol(x, z, R * 0.55, t);
-    b.group({ at: [dx, top + 1.6, dz], rotY: t }, () => {
-      b.box(0.9, 1.3, 1.2, stone);
-      b.extrude([[-0.6, 0], [0.6, 0], [0, 1.1]], 0.2, stone, { at: [0, 1.3, 0.55] });
-      flat(b, rectPts(-0.28, 0.1, 0.28, 1.05), DARK, [0, 0, 0.6], '+z', 0.02);
+    const rr = (R + 0.25) * (1 - 1.9 / roofH) - 0.15;
+    const [dx, dz] = pol(x, z, rr, t);
+    b.group({ at: [dx, top + 1.5, dz], rotY: t }, () => {
+      b.box(0.9, 1.5, 1.6, stone, { at: [0, 0, -0.4] });
+      b.extrude([[-0.6, 0], [0.6, 0], [0, 1.1]], 0.2, stone, { at: [0, 1.5, 0.35] });
+      flat(b, rectPts(-0.28, 0.15, 0.28, 1.25), DARK, [0, 0, 0.4], '+z', 0.02);
     });
   }
 }
@@ -306,7 +322,8 @@ export function curtain(
   const dx = q[0] - p[0];
   const dz = q[1] - p[1];
   const L = Math.hypot(dx, dz);
-  const n = Math.max(1, Math.ceil(L / 4.2));
+  const onMound = Math.min(Math.hypot(p[0] - MOTTE.x, p[1] - MOTTE.z), Math.hypot(q[0] - MOTTE.x, q[1] - MOTTE.z)) < MOTTE.rBase + 1;
+  const n = Math.max(1, Math.ceil(L / (onMound ? 3.2 : 9)));
   const ang = Math.atan2(-dz, dx);
   let nx = dz / L;
   let nz = -dx / L;
@@ -341,20 +358,29 @@ export function curtain(
       b.box(len, 0.06, t - 0.6, tint(stone, -0.08), { at: [mx, top, mz], rotY: ang, jitter: false });
       continue;
     }
-    // machicolated parapet standing out from the outer face, with crenels
-    b.box(len, 0.5, 0.55, dark, { at: [ox + nx * 0.1, top - 0.8, oz + nz * 0.1], rotY: ang, jitter: false });
-    b.box(len, 1.6, 0.5, stone, { at: [ox + nx * 0.3, top - 0.3, oz + nz * 0.3], rotY: ang });
-    if (o.top === 'mach') {
-      const m = Math.max(1, Math.round(len / 1.5));
-      for (let j = 0; j < m; j++) {
-        const u = (j + 0.5) / m - 0.5;
-        b.box(0.75, 0.7, 0.5, stone, { at: [ox + nx * 0.3 + (dx / L) * u * len, top + 1.3, oz + nz * 0.3 + (dz / L) * u * len], rotY: ang, jitter: false });
-      }
-      b.box(len, 0.06, t - 0.6, tint(stone, -0.08), { at: [mx, top, mz], rotY: ang, jitter: false });
-    } else {
-      // restored: the wall-walk covered by a slate roof on a timber gallery
-      b.group({ at: [mx + nx * 0.15, top + 1.3, mz + nz * 0.15], rotY: ang }, () => {
-        b.gable(len, t + 0.6, 1.5, SLATE, { ridge: 'x', overhang: 0.15, wall: stone });
+    // machicolated parapet standing out from the outer face on corbels
+    const ux = dx / L;
+    const uz = dz / L;
+    const yb = top - 1.9;
+    const yp = top - 0.6;
+    b.box(len, yp - yb, 0.06, dark, { at: [ox + nx * 0.03, yb, oz + nz * 0.03], rotY: ang, jitter: false });
+    const m = Math.max(2, Math.round(len / 0.95));
+    const pos: number[] = [];
+    for (let j = 0; j < m; j++) {
+      const u = ((j + 0.5) / m - 0.5) * (len - 0.3);
+      const cx = ox + ux * u;
+      const cz = oz + uz * u;
+      const w = 0.18;
+      pos.push(cx - ux * w, yb, cz - uz * w, cx + ux * w, yb, cz + uz * w, cx + ux * w + nx * 0.32, yp, cz + uz * w + nz * 0.32);
+      pos.push(cx - ux * w, yb, cz - uz * w, cx + ux * w + nx * 0.32, yp, cz + uz * w + nz * 0.32, cx - ux * w + nx * 0.32, yp, cz - uz * w + nz * 0.32);
+    }
+    soup(b, pos, tint(stone, 0.03));
+    b.box(len, 1.9, 0.5, stone, { at: [ox + nx * 0.55, yp, oz + nz * 0.55], rotY: ang });
+    b.box(len, 0.06, t - 0.6, tint(stone, -0.08), { at: [mx, top, mz], rotY: ang, jitter: false });
+    if (o.top === 'restored') {
+      // restored: the wall-walk covered by a slate roof
+      b.group({ at: [mx + nx * 0.25, top + 1.3, mz + nz * 0.25], rotY: ang }, () => {
+        b.gable(len, t + 1.0, 1.7, SLATE, { ridge: 'x', overhang: 0.15, wall: stone });
       });
     }
   }
@@ -386,7 +412,7 @@ export function chemise(b: Builder, stone: number, top: TopStyle, gap = 0.0) {
     wallSeg(b, p, q, y - 1.2, 5.2, 0.9, stone, 0.25);
     const m = pol(MOTTE.x, MOTTE.z, CHEMISE_R + 0.25, tm);
     if (top === 'crenel') b.box(0.9, 0.9, 0.4, stone, { at: [m[0], y + 4.0, m[1]], rotY: tm, jitter: false });
-    else b.box(2.6, 1.0, 0.5, stone, { at: [m[0], y + 4.0, m[1]], rotY: tm + Math.PI / 2, jitter: false });
+    else wallSeg(b, pol(MOTTE.x, MOTTE.z, CHEMISE_R + 0.25, t0), pol(MOTTE.x, MOTTE.z, CHEMISE_R + 0.25, t1), y + 3.6, 1.2, 0.5, stone, 0.3);
   }
 }
 
@@ -470,10 +496,10 @@ export function curtainLines(): Pt[][] {
 }
 
 /** The ditch outside the circuit, from the mound round to the mound. */
-export function castleDitch(b: Builder, wet: boolean) {
+export function castleDitch(b: Builder, wet: boolean, color?: number) {
   const o = 5;
   const pts: Pt[] = [[-2, C.z0 - o], [C.x1 + o, C.z0 - o], [C.x1 + o, C.z1 + o], [C.x0 - o, C.z1 + o], [C.x0 - o, -2]];
-  strip(b, pts, 3.6, 0.03, wet ? P.water : DITCH, wet ? 'glass' : undefined);
+  strip(b, pts, 3.6, 0.03, color ?? (wet ? P.water : DITCH), wet ? 'glass' : undefined);
 }
 
 /**
@@ -497,8 +523,13 @@ export function gatehouse(b: Builder, stone: number, top: TopStyle, wallH: numbe
       b.gable(w + 0.6, 4.8, 2.6, SLATE, { ridge: 'x', at: [0, wallH + 2, 0], overhang: 0.2, wall: stone });
     }
     // the bridge over the ditch: fixed span and a drawbridge let down on to it
-    b.box(3.2, 0.3, 5.5, P.oak, { at: [0, 0.25, 4.85] });
-    b.sym((sx) => b.box(0.14, 1, 5.5, P.oakDark, { at: [sx * 1.55, 0.55, 4.85] }));
+    if (top === 'restored') {
+      b.box(3.8, 0.6, 5.5, stone, { at: [0, -0.3, 4.85] });
+      b.sym((sx) => b.box(0.35, 0.9, 5.5, stone, { at: [sx * 1.75, 0.3, 4.85] }));
+    } else {
+      b.box(3.2, 0.3, 5.5, P.oak, { at: [0, 0.25, 4.85] });
+      b.sym((sx) => b.box(0.14, 1, 5.5, P.oakDark, { at: [sx * 1.55, 0.55, 4.85] }));
+    }
   });
 }
 

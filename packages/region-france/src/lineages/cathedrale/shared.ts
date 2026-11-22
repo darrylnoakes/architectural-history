@@ -96,7 +96,7 @@ export interface Ctx {
 
 export function ctx(ph: Phase): Ctx {
   const wall =
-    ph === ROMANESQUE ? STONE_R : ph === REVOLUTION ? tint(STONE, -0.03) : ph === SHELLED ? mix(STONE, BURNT, 0.22) : ph === REBUILT ? mix(STONE, BURNT, 0.08) : STONE;
+    ph === ROMANESQUE ? STONE_R : ph === REVOLUTION ? tint(STONE, -0.03) : ph === SHELLED ? mix(STONE, BURNT, 0.32) : ph === REBUILT ? mix(STONE, BURNT, 0.08) : STONE;
   const glass = ph === SHELLED ? VOID : ph === REBUILT ? GRISAILLE : GLASS;
   const statue =
     ph === RESTORED ? NEW_STONE : ph === SHELLED ? BURNT : ph === REBUILT ? mix(STONE, BURNT, 0.4) : tint(STONE, 0.03);
@@ -864,15 +864,17 @@ export function gothicNave(b: Builder, c: Ctx) {
     }
   });
   // buttress piers and two tiers of flyers
-  for (const z of NAVE_DIV.slice(1, 5)) {
+  NAVE_DIV.slice(1, 5).forEach((z, i) => {
     for (const s of [1, -1]) {
+      const broken = shelled && (i + (s > 0 ? 0 : 1)) % 3 === 0;
       radial(b, 0, z, SIDE(s), () => {
-        culee(b, AW - 0.2, AW + 2.4, 17.5, 0.95, tint(wall, 0.03), 'pinnacle');
+        culee(b, AW - 0.2, AW + 2.4, 17.5, 0.95, tint(wall, 0.03), broken ? 'none' : 'pinnacle');
+        if (broken) b.box(0.85, 1.1, 0.85, tint(wall, 0.03), { at: [AW + 1.65, 17.5, 0] });
         flyer(b, NW, 16.3, AW, 13.7, 0.65, tint(wall, 0.06));
         flyer(b, NW, 20.6, AW, 17.4, 0.65, tint(wall, 0.06));
       });
     }
-  }
+  });
   b.collider(2 * AW + 4.8, len, { at: [0, 0, zc] });
 }
 
@@ -1287,6 +1289,30 @@ export function shelled(b: Builder, c: Ctx) {
     for (const dz of [-1, 1]) b.beam([sx - r, yy, TZC + dz * r], [sx + r, yy + (dz > 0 ? 0 : -0.6), TZC + dz * r], 0.13, 0.13, char);
     b.beam([sx - r, yy, TZC - r], [sx - r, yy - 0.4, TZC + r], 0.13, 0.13, char);
   }
+  // soot from the fire, and scars where shells struck the walls
+  const soot = mix(BURNT, 0x101010, 0.45);
+  const blot = (cx: number, cy: number, r: number, k: number): Pt[] =>
+    Array.from({ length: 9 }, (_, i) => {
+      const t = (i / 9) * Math.PI * 2;
+      const rr = r * (0.7 + 0.3 * Math.abs(Math.sin(i * 2.3 + k)));
+      return [cx + rr * Math.cos(t), cy + rr * Math.sin(t) * 1.4] as Pt;
+    });
+  b.group({ at: [-TX, 0, TZC + BEL / 2], rotY: 0 }, () => {
+    flat(b, blot(-1.4, 31.0, 1.6, 1), soot, 0.08);
+    flat(b, blot(1.2, 34.5, 1.4, 2), soot, 0.08);
+  });
+  b.group({ at: [0, 0, FZ], rotY: 0 }, () => {
+    flat(b, blot(-7.2, 23.5, 1.5, 3), soot, 0.03);
+    flat(b, blot(5.2, 25.6, 0.9, 4), soot, 0.03);
+    flat(b, blot(-2.6, 19.0, 0.8, 5), soot, 0.03);
+  });
+  b.group({ at: [0, 0, PZ], rotY: 0 }, () => {
+    flat(b, blot(-1.4, 9.2, 1.2, 6), soot, 0.03);
+    flat(b, blot(2.0, 9.6, 0.8, 7), soot, 0.03);
+  });
+  for (const [x, y, z, rot, r] of [[NW, 18.5, 7.0, Math.PI / 2, 0.7], [-NW, 13.0, -0.7, -Math.PI / 2, 0.6], [AW, 6.5, 10.0, Math.PI / 2, 0.5], [TW, 19.0, CZ - 2.2, Math.PI / 2, 0.6]] as const) {
+    b.group({ at: [x, 0, z], rotY: rot }, () => flat(b, blot(0, y, r, x), VOID, 0.1));
+  }
   // fallen stone
   for (const [x, z, rr] of [[9.2, 4.5, 0.9], [-9.4, -2.5, 0.8], [12.0, 9.0, 0.6], [-6.5, PZ + 3.0, 0.7]] as const) {
     b.blob(rr, c.wall, { at: [x, 0.1, z], stretch: [1.4, 0.5, 1.1], detail: 0 });
@@ -1321,4 +1347,23 @@ export function cathedral(b: Builder, ph: Phase) {
   if (ph === REVOLUTION) revolution(b);
   if (ph >= RESTORED) chimeras(b, ph === RESTORED ? NEW_STONE : c.statue);
   if (ph === SHELLED) shelled(b, c);
+  if (ph === REBUILT) repairs(b);
+}
+
+/** New stone let into the old after the war: pale patches where the fire and the shells struck. */
+export function repairs(b: Builder) {
+  const fresh = tint(NEW_STONE, -0.02);
+  const r = (x0: number, y0: number, x1: number, y1: number) => rectPts(x0, y0, x1, y1);
+  b.group({ at: [0, 0, FZ], rotY: 0 }, () => {
+    flat(b, r(-8.6, 22.4, -6.2, 25.2), fresh, 0.03);
+    flat(b, r(4.8, 24.6, 6.0, 26.3), fresh, 0.03);
+    flat(b, r(-3.3, 18.2, -1.6, 19.6), fresh, 0.03);
+  });
+  b.group({ at: [-TX, 0, TZC + BEL / 2], rotY: 0 }, () => {
+    flat(b, r(-2.6, 29.6, -0.4, 32.4), fresh, 0.08);
+    flat(b, r(0.4, 33.4, 2.4, 35.6), fresh, 0.08);
+  });
+  for (const [x, z, rot, y0, y1] of [[NW, 7.0, Math.PI / 2, 17.6, 19.6], [-NW, -0.7, -Math.PI / 2, 12.2, 13.9], [TW, CZ - 2.2, Math.PI / 2, 18.2, 19.9]] as const) {
+    b.group({ at: [x, 0, z], rotY: rot }, () => flat(b, r(-0.9, y0, 0.9, y1), fresh, 0.1));
+  }
 }

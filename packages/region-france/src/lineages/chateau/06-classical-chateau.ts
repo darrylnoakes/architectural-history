@@ -172,16 +172,21 @@ function build(b: Builder) {
     b.hip(6.4, 8.4, 4.2, SLATE, { at: [cx, 7.7, 18.6] });
     const f: Facing = s > 0 ? '-x' : '+x';
     for (const z of [15.8, 18.6, 21.4]) {
-      win(b, 'rect', 1.1, 2.2, [cx - s * 3, 1.0, z], f, { frame: TRIM, bd: 0.14 });
+      if (z !== 18.6) win(b, 'rect', 1.1, 2.2, [cx - s * 3, 1.0, z], f, { frame: TRIM, bd: 0.14 });
       win(b, 'rect', 1.1, 2.0, [cx - s * 3, 4.5, z], f, { frame: TRIM, bd: 0.14 });
     }
-    for (const x of [cx - 1.4, cx + 1.4]) win(b, 'rect', 1.1, 2.0, [x, 4.5, 22.6], '+z', { frame: TRIM, bd: 0.14 });
+    for (const x of [cx - 1.4, cx + 1.4]) {
+      win(b, 'rect', 1.1, 2.0, [x, 4.5, 22.6], '+z', { frame: TRIM, bd: 0.14 });
+      win(b, 'rect', 1.1, 2.0, [x, 4.5, 14.6], '-z', { frame: TRIM, bd: 0.14 });
+    }
+    for (const z of [16.2, 21]) win(b, 'rect', 1.1, 2.0, [cx + s * 3, 4.5, z], s > 0 ? '+x' : '-x', { frame: TRIM, bd: 0.14 });
+    win(b, 'rect', 1.6, 2.6, [cx - s * 3, 0, 18.6], f, { frame: TRIM, glass: P.doorGreen, bd: 0.14 });
     b.collider(6, 8, { at: [cx, 0, 18.6] });
   });
 
   // ---------------------------------------------------------------- the garden: parterres, yews, basin, canal
   const gz0 = ISLE.z0 - MOAT - 0.5;
-  b.box(42, 0.03, 12, mix(P.gravel, P.sand, 0.45), { at: [0, 0, gz0 - 6], jitter: false });
+  b.box(42, 0.03, 9, mix(P.gravel, P.sand, 0.45), { at: [0, 0, gz0 - 4.5], jitter: false });
   const red = mix(P.brickRed, P.sand, 0.35);
   b.sym((s) => {
     const cx = s * 8.5;
@@ -216,7 +221,8 @@ function build(b: Builder) {
   // the canal across the bottom of the garden, as at Vaux
   const cz0 = -21.2;
   const cz1 = -23.8;
-  b.box(43.6, 0.05, cz0 - cz1, mix(P.water, P.glassGreen, 0.2), { at: [0, -0.02, (cz0 + cz1) / 2], mat: 'glass', jitter: false });
+  b.box(43.6, 0.06, cz0 - cz1, mix(P.water, P.glassGreen, 0.2), { at: [0, 0, (cz0 + cz1) / 2], mat: 'glass', jitter: false });
+  b.box(43.6, 0.3, 0.35, TRIM, { at: [0, 0, cz1 - 0.17], jitter: false });
   b.box(43.6, 0.3, 0.35, TRIM, { at: [0, 0, cz0 + 0.17], jitter: false });
   b.collider(43.6, cz0 - cz1, { at: [0, 0, (cz0 + cz1) / 2] });
 }

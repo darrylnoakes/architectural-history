@@ -2,7 +2,8 @@ import { P, mix, tint, type BuildingDef, type Builder, type Facing, type Vec3 } 
 import { DARK, SLATE, archPts, dormer, flat, rectPts, win } from './shared';
 
 const TUFFEAU = mix(P.craie, P.pierreBlonde, 0.35);
-const TRIM = tint(TUFFEAU, 0.04);
+const TRIM = tint(TUFFEAU, 0.05);
+const PILASTER = mix(TUFFEAU, P.pierreBlonde, 0.6);
 /** The island the château stands on, inside its moat. */
 export const ISLE = { x0: -16, x1: 16, z0: -16.5, z1: 14.5 };
 const MOAT = 4.2;
@@ -61,7 +62,7 @@ function bays(b: Builder, us: number[], fixed: number, f: Facing, along: 'x' | '
     // pilasters either side of the window bay, both storeys
     for (const du of [-1.15, 1.15]) {
       const at: Vec3 = along === 'x' ? [u + du, 0, fixed] : [fixed, 0, u + du];
-      flat(b, rectPts(-0.14, 0.2, 0.14, EAVES - 0.9), TRIM, at, f, 0.05);
+      flat(b, rectPts(-0.15, 0.5, 0.15, EAVES - 0.95), PILASTER, at, f, 0.05);
     }
   }
 }

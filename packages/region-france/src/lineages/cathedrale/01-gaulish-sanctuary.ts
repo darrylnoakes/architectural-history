@@ -53,7 +53,7 @@ export const gaulishSanctuary: BuildingDef = {
     b.box(32, 0.03, 50, P.grass, { at: [0, 0, 0], jitter: false });
     b.box(2 * E, 0.05, 2 * E, g, { at: [0, 0, ZC], jitter: false });
     // the ditch just inside the palisade, with bones and broken iron in it
-    const ditch = tint(P.soil, -0.08);
+    const ditch = mix(P.soil, P.earth, 0.35);
     const dw = 1.6;
     for (const [w, d, x, z] of [
       [2 * E - 1, dw, 0, ZC + E - 1.3], [2 * E - 1, dw, 0, ZC - E + 1.3], [dw, 2 * E - 4.2, E - 1.3, ZC], [dw, 2 * E - 4.2, -E + 1.3, ZC],
@@ -116,8 +116,8 @@ export const gaulishSanctuary: BuildingDef = {
     for (const s of [-1, 1]) b.box(0.06, 1.0, 0.06, IRON, { at: [tp[0] + s * 0.85, 1.6, tp[2]], jitter: false });
     b.beam([tp[0] - 1.2, 0, tp[2] - 0.3], [tp[0] + 0.4, 3.9, tp[2] - 0.2], 0.06, 0.06, P.oak);
     // trees beyond the fence
-    for (const [x, z, h] of [[-15, -22, 9], [14, -21, 10], [-14.5, 18, 8], [15, 17, 7], [-10, 22, 6]] as const) b.tree(h, { at: [x, 0, z], kind: 'round' });
-    for (const z of lin(3, -20, -12)) b.tree(5, { at: [-15.5, 0, z + 2], kind: 'bush' });
+    for (const [x, z, h] of [[-11, -22, 9], [10, -24, 10], [-3, -27, 8], [14.5, -18.5, 6], [-14.5, -18, 7]] as const) b.tree(h, { at: [x, 0, z], kind: 'round' });
+    for (const x of lin(3, -6, 6)) b.tree(4, { at: [x, 0, -21], kind: 'bush' });
     b.collider(2 * E, 0.4, { at: [0, 0, ZC - E] });
     b.collider(0.4, 2 * E, { at: [E, 0, ZC] });
     b.collider(0.4, 2 * E, { at: [-E, 0, ZC] });

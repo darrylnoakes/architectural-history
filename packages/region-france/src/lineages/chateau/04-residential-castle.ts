@@ -49,12 +49,12 @@ export function residentialCastle(b: Builder, restored: boolean) {
   const top: TopStyle = restored ? 'restored' : 'mach';
   const fr = tint(stone, 0.06);
   motte(b, restored ? P.grass : mix(P.turf, P.grassDry, 0.3), false);
-  castleDitch(b, false);
+  castleDitch(b, false, restored ? mix(P.grass, P.hedge, 0.3) : undefined);
   chemise(b, tint(stone, -0.03), 'mach', 0.24);
   roundKeep(b, stone, top);
   for (const line of curtainLines()) curtain(b, line[0], line[1], 11, 2, stone, { top, inside: C.inside });
   for (const [x, z, r, out] of TOWERS) {
-    roundTower(b, x, z, r, 0, 16.5, stone, { top, outward: out, roofH: r * (restored ? 3.1 : 2.5), windows: 2 });
+    roundTower(b, x, z, r, 0, 16.5, stone, { top, outward: out, roofH: r * (restored ? 3.3 : 2.1), windows: 2 });
     if (restored) {
       const [sx, sz] = pol(x, z, r + 0.02, out);
       statue(b, [sx, 10.5, sz], out, stone);
@@ -124,12 +124,6 @@ export function residentialCastle(b: Builder, restored: boolean) {
   b.sym((s) => b.box(0.14, 2.2, 0.14, P.iron, { at: [1.5 + s * 0.7, 0.9, 6], jitter: false }));
   b.box(1.6, 0.12, 0.14, P.iron, { at: [1.5, 3.05, 6], jitter: false });
 
-  if (restored) {
-    // the drawbridge replaced by a stone bridge on two arches
-    const bz = C.z1 + 5;
-    b.box(3.6, 0.6, 5.5, stone, { at: [C.gateX, -0.3, bz] });
-    b.sym((s) => b.box(0.35, 0.9, 5.5, stone, { at: [C.gateX + s * 1.65, 0.3, bz] }));
-  }
   void SLATE;
 }
 

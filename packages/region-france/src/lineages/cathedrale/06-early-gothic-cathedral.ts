@@ -18,7 +18,7 @@ export const earlyGothicCathedral: BuildingDef = {
     { label: 'Flying buttresses', note: 'Half arches springing from piers outside the aisle to prop the clerestory wall where the vault pushes outward. This is one of their first appearances anywhere.', at: [AW + 1.0, 17.2, -16.5] },
     { label: 'Four storeys', note: 'Aisle windows, tribune windows, a ring of round openings and the clerestory: the four-storey elevation of the first Gothic cathedrals, seen from outside.', at: [AW + 0.3, 8.6, -18.5] },
     { label: 'Radiating chapels', note: 'The chapels round the ambulatory are now many-sided and lit by pointed windows, and the walls between them are thinner than before.', at: [chapel.x, 7.6, chapel.z] },
-    { label: 'Building site', note: 'The transept walls are going up in scaffolding, with a treadwheel crane on the north arm lifting blocks cut in the masons’ lodge below.', at: [-TW - 2.8, 14.8, CZ - 0.6] },
+    { label: 'Building site', note: 'The transept walls are going up in scaffolding, with a treadwheel crane on the north arm lifting blocks cut in the masons’ lodge below.', at: [-TW - 1.4, 16.0, CZ - 0.6] },
     { label: 'Old Romanesque nave', note: 'The round-arched nave still stands, much lower than the new choir; it was kept for services until the money for its replacement came in.', at: [-(NW + 0.3), 13.6, 6.0] },
   ],
   modelledOn:

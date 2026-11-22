@@ -38,7 +38,7 @@ export const cathedralGroup: BuildingDef = {
   lookFor: [
     { label: 'Town wall', note: 'The late Roman wall, of small stone with bands of brick on a base of reused blocks, with a round tower.', at: [-13.0, 5.0, 4.0] },
     { label: 'Twin halls', note: 'Two churches side by side, the larger to the south: the “double cathedral” of the first Christian centuries.', at: [8.5, 10.5, 13.3] },
-    { label: 'Baptistery', note: 'The small building between the halls, with its own apse, where converts were baptised in a pool.', at: [-0.75, 7.2, -0.2] },
+    { label: 'Baptistery', note: 'The small building between the halls, with its own apse, where converts were baptised in a pool.', at: [-0.75, 7.2, 6.2] },
     { label: 'Apses', note: 'Each hall ends in a half-round apse to the east, where the bishop’s chair and the altar stood.', at: [8.5, 6.0, -19.2] },
   ],
   modelledOn:
@@ -64,7 +64,7 @@ export const cathedralGroup: BuildingDef = {
     hall(b, 8.5, 10, -15, 13, 9.4, 3.8, 7);
     // the baptistery: a tall square room, a polygonal apse, a lower porch
     const bx = -0.75;
-    const bz = -3.0;
+    const bz = 3.0;
     const bw = 6;
     const bh = 7.6;
     b.box(bw + 0.3, 0.4, bw + 0.3, tint(WALL, -0.05), { at: [bx, 0, bz] });
