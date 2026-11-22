@@ -33,7 +33,7 @@ export const artNouveauVilla: BuildingDef = {
   modelledOn: 'The Villa Majorelle (Villa Jika), Nancy (Henri Sauvage with Lucien Weissenburger, 1901 to 1902), built for the furniture maker Louis Majorelle, with ironwork from his workshops and stoneware by Alexandre Bigot: the stone and brick, the great studio window in the gable, the balconies and the ceramic. Simplified',
   influences: ['art-nouveau'],
   lookFor: [
-    { label: 'Great studio window', note: 'One huge round-headed window fills the main gable, lighting the studio on the top floor.', at: [-2.2, 9.4, 1.9] },
+    { label: 'Great studio window', note: 'One huge round-headed window fills the main gable, lighting the studio on the top floor.', at: [-2.2, 8.8, 1.9] },
     { label: 'Asymmetry', note: 'No two sides alike: blocks, roofs and windows are placed where the rooms inside need them, not to a pattern.', at: [4.4, 9.0, -1.0] },
     { label: 'Flowing ironwork', note: 'Balcony rails of iron bent into stems and whiplash curves, from the owner’s own workshops.', at: [4.2, 4.8, 1.4] },
     { label: 'Glazed stoneware', note: 'Ceramic in deep greens and browns frames the door and the bow window, made in the kilns of Alexandre Bigot.', at: [1.0, 2.0, 2.2] },
@@ -59,7 +59,7 @@ export const artNouveauVilla: BuildingDef = {
     b.box(aw, F, ad, brick, { at: [ax, G, az] });
     b.box(aw + 0.15, 0.3, ad + 0.15, tint(stone, 0.05), { at: [ax, G - 0.1, az] });
     b.collider(aw, ad, { at: [ax, 0, az] });
-    const aR = 5.8;
+    const aR = 7.0;
     b.gable(aw, ad, aR, tile, { at: [ax, H, az], ridge: 'z', overhang: 0.7, wall: brick, thick: 0.2 });
     // the front gable flares forward on curved wooden brackets
     for (const s of [-1, 1]) {
@@ -68,13 +68,13 @@ export const artNouveauVilla: BuildingDef = {
     }
     onFace(b, '+z', [ax, 0, azf], () => {
       // the studio window
-      archRing(b, 0, H + 0.1, 5.0, 4.4, 0.3, 0.1, tint(stone, 0.04));
-      plate(b, archPts(0, H + 0.1, 5.0, 4.4, 'round', 12), 0.08, P.windowDark);
-      for (const x of [-1.25, 0, 1.25]) b.box(0.08, x === 0 ? 4.2 : 3.4, 0.08, wood, { at: [x, H + 0.1, 0.12], jitter: false });
-      b.box(5.0, 0.08, 0.08, wood, { at: [0, H + 1.6, 0.12], jitter: false });
-      bar(b, -2.5, H + 1.9, 0, H + 2.7, 0.07, 0.08, wood, 0.12);
-      bar(b, 2.5, H + 1.9, 0, H + 2.7, 0.07, 0.08, wood, 0.12);
-      b.box(5.6, 0.25, 0.35, tint(stone, 0.04), { at: [0, H, 0.15] });
+      archRing(b, 0, H + 0.1, 4.4, 3.8, 0.2, 0.1, tint(stone, 0.04));
+      plate(b, archPts(0, H + 0.1, 4.4, 3.8, 'round', 12), 0.08, P.windowDark);
+      for (const x of [-1.1, 0, 1.1]) b.box(0.08, x === 0 ? 3.7 : 3.0, 0.08, wood, { at: [x, H + 0.1, 0.12], jitter: false });
+      b.box(4.4, 0.08, 0.08, wood, { at: [0, H + 1.3, 0.12], jitter: false });
+      bar(b, -2.2, H + 1.6, 0, H + 2.4, 0.07, 0.08, wood, 0.12);
+      bar(b, 2.2, H + 1.6, 0, H + 2.4, 0.07, 0.08, wood, 0.12);
+      b.box(5.0, 0.25, 0.35, tint(stone, 0.04), { at: [0, H, 0.15] });
       // first floor: a wide segmental window and a narrow one
       plate(b, archPts(-1.4, G + 0.6, 2.6, 2.0, 'segmental', 6), 0.07, tint(stone, 0.05));
       plate(b, archPts(-1.4, G + 0.7, 2.3, 1.8, 'segmental', 6), 0.1, P.windowDark);
