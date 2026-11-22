@@ -31,7 +31,7 @@ olives (`b.tree(h, { kind: 'cypress' | 'pine' | 'olive' })`).
 
 ## Timing: each author sets it
 
-Stage ids are fixed. The `from` years below are a careful first proposal: **if a year is wrong for
+Stage ids are fixed. The `from` years below were a first proposal, since corrected where the authors and the fact-check found better ones: **if a year is wrong for
 the type in central Italy, correct it (keeping the order) and say so in your report.** In
 `index.ts` each stage must also carry, where they apply (see "Timing rules" in `docs/LINEAGES.md`
 and the England `index.ts` files for examples):
@@ -42,6 +42,21 @@ and the England `index.ts` files for examples):
   about 550), `renewedBy(year)` for flimsy types that were always rebuilt, or a custom
   `{ year, fate: 'ruin' | 'cleared', note }` for a datable event (a flood, an earthquake, a
   demolition, a war). Durable types that could still stand today get no `end`.
+
+---
+
+## The town plan
+
+`packages/region-italy/src/site.ts` is the ground (river, relief, streets, squares, scenery) and
+`plots.ts` says which lineage stands where. Because the city keeps what it builds, most plots in the
+old centre carry `keep` and stop at a medieval, Renaissance or Baroque building, and the later stages
+of each lineage stand on plots that appear later (`since`): villas outside the north gate, the
+theatre and prefecture on the boulevard, the quarter of united Italy and the station south of the
+river, the housing estates beyond the east gate. Every stage of every lineage stands somewhere.
+
+Three stages of the power lineage (`prefecture`, `casa-del-fascio`, `regional-offices`) are modelled
+beside the old civic palace when they are on the main plot and as free-standing buildings anywhere
+else (`b.variant > 0`), which is how they come to stand on their own plots in the town.
 
 ---
 
@@ -123,7 +138,7 @@ tower stay where they are from stage to stage. The temples before it face the sa
 | 400 | `early-christian-basilica` | The temple closed and quarried; a basilica built from its columns: nave, aisles, clerestory, apse, a forecourt, and an octagonal baptistery. Cameo: Santa Sabina, Rome |
 | 1120 | `romanesque-duomo` | A new cathedral: a front of tiered arcades, bands of coloured marble, round arches, and a freestanding bell tower. Cameo: Pisa; Lucca |
 | 1310 | `gothic-duomo` | The front remade in Italian Gothic: three gables, a rose window, mosaic, pinnacles; the nave raised on pointed arcades. Cameo: Siena; Orvieto |
-| 1440 | `dome` | A ribbed, pointed, eight-sided dome with a lantern raised over the crossing. Cameo: Brunelleschi's dome, Florence |
+| 1480 | `dome` | A ribbed, pointed, eight-sided dome with a lantern raised over the crossing. Cameo: Brunelleschi's dome, Florence |
 | 1630 | `baroque-duomo` | Baroque additions: a domed side chapel, a curved flight of steps, a new top to the bell tower, statues along the front |
 | 1887 | `completed-facade` | The nineteenth century "completes" the cathedral: a new marble front in a revived medieval style, and the houses crowding it are cleared. Cameo: the façade of Florence Cathedral |
 
@@ -145,7 +160,7 @@ and its tower are never demolished**; later stages alter it and build beside it 
 | 1210 | `broletto` | The commune's first town hall: an open arcaded ground floor for assemblies, the council hall above, an outside stair and a speaking balcony. Cameo: the Broletto, Como |
 | 1300 | `palazzo-pubblico` | The civic palace: brick and stone, battlements, a tall slender tower with a bell chamber on brackets. Cameo: Siena; Palazzo Vecchio, Florence |
 | 1480 | `signoria-palace` | A lord takes over: a Renaissance arcaded courtyard and a new wing with twin turrets are added to the old palace. Cameo: the Ducal Palace, Urbino |
-| 1875 | `prefecture` | United Italy: a Neo-Renaissance prefecture wing beside the old palace and a bronze monument to the king in front |
+| 1885 | `prefecture` | United Italy: a Neo-Renaissance prefecture wing beside the old palace and a bronze monument to the king in front |
 | 1934 | `casa-del-fascio` | A Rationalist party headquarters beside the old palace: a white marble grid of frame and void. Cameo: Terragni's Casa del Fascio, Como |
 | 1975 | `regional-offices` | Concrete offices for the new regional government (the regions date from 1970), at the edge of the centre |
 | 2012 | `civic-restoration` | The medieval palace restored as museum and council chamber, with a glass link and a paved, car-free square |
@@ -159,7 +174,7 @@ later market halls stand on new plots.
 | from | id | building |
 |---|---|---|
 | -750 | `cattle-market` | Open ground by the ford with pens and an altar: the cattle market that is the town's reason to exist |
-| -250 | `forum-shops` | Rows of shops under a portico, with a stone table of standard measures |
+| -200 | `forum-shops` | Rows of shops under a portico, with a stone table of standard measures |
 | 60 | `macellum` | A purpose-built food market: a courtyard with a round kiosk and fountain in the middle, shops round it, marble fish counters. Cameo: Pompeii; Pozzuoli |
 | 950 | `stalls-in-the-ruins` | Stalls and awnings among the standing columns on market day |
 | 1290 | `grain-loggia` | A Gothic open loggia on stone piers for the grain market, with a granary above. Cameo: Orsanmichele, Florence |
@@ -178,7 +193,7 @@ its near bank at local z = -11** (water at y = -1.2), so wheels, quays and mills
 | -750 | `potters-yard` | An open workshop: a kiln, a clay pit, a hearth for casting bronze |
 | -250 | `fullery-and-kilns` | Republican workshops: fulling vats, kilns for black-gloss pottery, an oil press |
 | 60 | `bakery` | A pistrinum: hourglass-shaped lava mills turned by donkeys, a big domed oven, a shop counter. Cameo: Pompeii |
-| 250 | `horrea` | A river warehouse round a courtyard: buttressed brick walls, a ramp, a quay with travertine mooring rings. Cameo: the Horrea Epagathiana, Ostia |
+| 150 | `horrea` | A river warehouse round a courtyard: buttressed brick walls, a ramp, a quay with travertine mooring rings. Cameo: the Horrea Epagathiana, Ostia |
 | 540 | `floating-mills` | The warehouse in ruin; mills on moored boats grind corn in the current, as Belisarius ordered during the siege of Rome in 537 |
 | 1150 | `fulling-mill` | A stone watermill with undershot wheels driving fulling hammers, a weir across the river, drying ground |
 | 1350 | `wool-works` | The wool guild's works: a dye house and a tiratoio, a tall drying shed with open timber galleries |
@@ -262,7 +277,7 @@ walkable (colliders either side).
 |---|---|---|
 | -750 | `rampart` | An earth bank, a ditch and a timber gate |
 | -400 | `etruscan-gate` | A wall of huge squared blocks laid without mortar and an arched gate with carved heads. Cameo: the Porta all'Arco, Volterra |
-| -80 | `roman-gate` | A city gate with two carriage arches, a windowed gallery above and flanking towers. Cameo: the Porta Praetoria, Aosta; the Porta Venere, Spello |
+| -30 | `roman-gate` | A city gate with two carriage arches, a windowed gallery above and flanking towers. Cameo: the Porta Praetoria, Aosta; the Porta Venere, Spello |
 | 275 | `aurelian-gate` | A brick-faced concrete wall with square towers and a gate between round-fronted towers. Cameo: the Aurelian Walls and Porta San Sebastiano, Rome |
 | 1150 | `communal-gate` | A tall gate-tower in the commune's new wall, with a fresco of the Virgin over the arch and a customs post. Cameo: the Porta San Niccolò, Florence |
 | 1540 | `bastion-gate` | Low, thick, angled bastions for the age of cannon, with a rusticated gate. Cameo: Sanmicheli's Porta Nuova, Verona |
@@ -287,4 +302,4 @@ about z = -9, on the ground).
 | from | id | building |
 |---|---|---|
 | 1278 | `civic-fountain` | A many-sided medieval fountain of two stacked marble basins with carved panels and a bronze bowl. Cameo: the Fontana Maggiore, Perugia |
-| 1630 | `baroque-fountain` | A Baroque fountain: figures, shells and rockwork round a jet of water. Cameo: Bernini's fountains in Rome |
+| 1643 | `baroque-fountain` | A Baroque fountain: figures, shells and rockwork round a jet of water. Cameo: Bernini's fountains in Rome |

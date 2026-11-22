@@ -343,6 +343,8 @@ ul, ol { list-style: none; }
   .tl-now { gap: 10px; }
   .tl-year { font-size: 25px; }
   .tl-era-tag { display: none; }
+  .tl-pair-region { display: none; }
+  .tl-bar-wrap.pair { margin-left: 46px; }
   .tl-speed button { padding: 3px 6px; }
   .tl-ideas { padding: 6px 8px; }
   .tl-ideas span { display: none; }

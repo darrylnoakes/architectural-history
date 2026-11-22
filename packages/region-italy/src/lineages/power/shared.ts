@@ -588,14 +588,16 @@ export function palazzoPubblico(b: Builder, o: PalaceOpts): void {
     if (st >= 1480) {
       b.panel(2.4, 2.4, P.white, { at: [0, shaft - 5.5, tw / 2], facing: '+z', shape: 'circle', depth: 0.08 });
       b.box(0.12, 0.95, 0.04, P.black, { at: [0, shaft - 4.3, tw / 2 + 0.14], jitter: false });
-      b.box(0.7, 0.12, 0.04, P.black, { at: [0.3, shaft - 4.3, tw / 2 + 0.14], jitter: false });
+      // an early public clock has a single hour hand; the minute hand comes with later mechanisms
+      if (st > 1480) b.box(0.7, 0.12, 0.04, P.black, { at: [0.3, shaft - 4.3, tw / 2 + 0.14], jitter: false });
     }
   });
 
   // ------------------------------------------------------------ the flag of the day on the centre block
   const fy = CENTRE_TOP + 0.5;
-  if (st === 1300) flag(b, [PORTAL_X, fy, zc], 5, [P.white, P.black], { w: 1.6, h: 1.4 });
-  else if (st === 1480) flag(b, [PORTAL_X, fy, zc], 5, [0x2f466b, P.gold, 0x2f466b], { w: 1.8, h: 1.4 });
+  // the town's own colours until united Italy: lords and popes came and went under them, and this
+  // stage stands on the main plot until the restoration of 2012, so no one ruler's banner would do
+  if (st <= 1480) flag(b, [PORTAL_X, fy, zc], 5, [P.white, P.black], { w: 1.6, h: 1.4 });
   else flag(b, [PORTAL_X, fy, zc], 5, TRICOLORE, { w: 2.1, h: 1.4 });
 }
 

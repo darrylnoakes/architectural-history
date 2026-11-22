@@ -29,7 +29,7 @@ export const signoriaPalace: BuildingDef = {
     { label: 'Twin turrets (torricini)', note: 'Two slender round towers with conical roofs flank the lord’s new front, more for show than for defence.', at: [WING.x0 - 1.8, WING.h + 3, TORRICINI_Z - 3.3] },
     { label: 'Stacked loggias', note: 'Three open arched balconies one above another, from which the lord looked out over his lands.', at: [WING.x0 - 0.8, 7.5, TORRICINI_Z] },
     { label: 'Inscription frieze', note: 'A band of white stone over the arcade, where the lord’s name and titles were carved in Roman capitals.', at: [COURT.x1 - 2.6, 7.4, (COURT.z0 + COURT.z1) / 2] },
-    { label: 'Tower clock', note: 'A mechanical clock on the old civic tower tells the hours to the whole town; public clocks had spread through Italian towns since the fourteenth century.', at: [TWR.x, TWR.shaft - 4.5, TWR.z + TWR.w / 2 + 0.4] },
+    { label: 'Tower clock', note: 'A mechanical clock on the old civic tower tells the hours to the whole town with a single hand; public clocks had spread through Italian towns since the fourteenth century.', at: [TWR.x, TWR.shaft - 4.5, TWR.z + TWR.w / 2 + 0.4] },
   ],
   modelledOn: 'The Ducal Palace of Urbino (courtyard by Luciano Laurana, c. 1468 to 1472; the Facciata dei Torricini), much reduced',
   influences: ['renaissance-birth'],

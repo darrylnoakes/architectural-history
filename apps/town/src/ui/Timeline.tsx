@@ -94,7 +94,8 @@ export function Timeline() {
             <div className="tl-era tl-era-pair">
               {regions.map((r, i) => (
                 <span key={r.id} className="tl-era-name" style={{ ['--era' as string]: css(here[i]?.color ?? 0xb9b4a8) }}>
-                  {r.name}: {here[i]?.name ?? (year < r.start ? 'not begun' : 'ended')}
+                  <span className="tl-pair-region">{r.name}: </span>
+                  {here[i]?.name ?? (year < r.start ? 'not begun' : 'ended')}
                 </span>
               ))}
             </div>
