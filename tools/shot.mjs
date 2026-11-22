@@ -2,7 +2,7 @@
 /**
  * Screenshot buildings from the gallery page.
  *
- *   node tools/shot.mjs <lineage> [buildingId|all|row] [views] [--seed=N]
+ *   node tools/shot.mjs <lineage> [buildingId|all|row] [views] [--seed=N] [--variant=N] [--closed]
  *   node tools/shot.mjs extra <buildingId> [views]
  *
  *   node tools/shot.mjs home roundhouse            -> shots/home/roundhouse-iso.png, -front.png
@@ -27,7 +27,11 @@ const BASE = process.env.GALLERY_URL ?? 'http://127.0.0.1:5173';
 
 const args = process.argv.slice(2).filter((a) => !a.startsWith('--'));
 const flags = Object.fromEntries(
-  process.argv.slice(2).filter((a) => a.startsWith('--')).map((a) => a.slice(2).split('=')),
+  process.argv
+    .slice(2)
+    .filter((a) => a.startsWith('--'))
+    .map((a) => a.slice(2).split('='))
+    .map(([k, v]) => [k, v ?? '1']),
 );
 const [target, which = 'all', viewArg] = args;
 const [region, lineage] = target?.includes('/') ? target.split('/') : ['england', target];
@@ -106,15 +110,17 @@ async function shootOnce(params, file, size) {
 
 try {
   const seed = flags.seed ?? '1';
+  // --variant=1 builds as on a plot other than the main one; --closed shows the form a building has in the townscape
+  const more = { ...(flags.variant ? { variant: flags.variant } : {}), ...(flags.closed ? { cutaway: '0' } : {}) };
   if (lineage === 'extra') {
     const views = (viewArg ?? 'iso,front').split(',');
     for (const view of views) {
-      const r = await shoot({ extra: which, view, seed }, `${which}-${view}.png`, { width: 1000, height: 750 });
+      const r = await shoot({ extra: which, view, seed, ...more }, `${which}-${view}.png`, { width: 1000, height: 750 });
       console.log(r.path);
       if (view === views[0] && r.info) console.log('  ' + r.info.join('\n  '));
     }
   } else if (which === 'row') {
-    const r = await shoot({ lineage, view: viewArg ?? 'iso', seed, marks: '0' }, `_row.png`, { width: 2400, height: 800 });
+    const r = await shoot({ lineage, view: viewArg ?? 'iso', seed, marks: '0', ...more }, `_row.png`, { width: 2400, height: 800 });
     console.log(r.path);
     if (r.info) console.log('  ' + r.info.join('\n  '));
   } else {
@@ -132,7 +138,7 @@ try {
     const views = (viewArg ?? 'iso,front').split(',');
     for (const id of ids) {
       for (const view of views) {
-        const r = await shoot({ lineage, id, view, seed }, `${id}-${view}.png`, { width: 1000, height: 750 });
+        const r = await shoot({ lineage, id, view, seed, ...more }, `${id}-${view}${flags.variant ? '-v' + flags.variant : ''}${flags.closed ? '-closed' : ''}.png`, { width: 1000, height: 750 });
         console.log(r.path);
         if (view === views[0] && r.info) console.log('  ' + r.info.join('\n  '));
       }

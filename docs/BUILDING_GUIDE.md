@@ -92,6 +92,8 @@ node tools/shot.mjs <lineage> <buildingId> iso,back,eye,top,side
 node tools/shot.mjs <lineage> all                     # every stage
 node tools/shot.mjs <lineage> row                     # the whole lineage side by side
 node tools/shot.mjs italy/<lineage> <buildingId>      # a lineage of another region
+node tools/shot.mjs <lineage> <buildingId> iso --closed      # the closed form of a building with a cut-away
+node tools/shot.mjs <lineage> <buildingId> iso --variant=1   # as built on a plot other than the main one
 ```
 
 PNGs land in `shots/<lineage>/` (or `shots/<region>/<lineage>/`). The tool queues itself: at most
