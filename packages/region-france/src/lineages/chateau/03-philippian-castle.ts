@@ -35,7 +35,7 @@ export const philippianCastle: BuildingDef = {
     { label: 'Great round keep', note: 'A cylindrical donjon about ten metres across and twenty-five high, the king’s signature, here on the old motte.', at: [MOTTE.x + 3.6, 20, MOTTE.z + 3.6] },
     { label: 'Round flanking towers', note: 'Towers at the corners and along the walls, projecting so that defenders can shoot along the face of the curtain.', at: [C.x1 + 2.2, 9, C.z1 + 2.2] },
     { label: 'Twin-towered gate', note: 'The entrance between two round towers, closed by a portcullis behind a bridge over the ditch.', at: [C.gateX, 5.2, C.z1 + 2.3] },
-    { label: 'Arrow loops', note: 'Tall narrow slits with a short cross-slot, through which crossbowmen could shoot without being hit.', at: [C.x1 + 3.1, 4.5, C.z0 - 0.4] },
+    { label: 'Arrow loops', note: 'Tall narrow slits, splayed wide on the inside, through which crossbowmen could shoot without being hit.', at: [C.x1 + 3.1, 4.5, C.z0 - 0.4] },
     { label: 'Regular plan', note: 'A near-rectangle of straight curtain walls, laid out at once rather than grown piece by piece.', at: [8, 11, C.z1 + 1.1] },
   ],
   modelledOn:

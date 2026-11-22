@@ -215,8 +215,7 @@ function slits(b: Builder, x: number, z: number, r: number, ys: number[], n: num
     for (let k = 0; k < n; k++) {
       const t = a0 + ((k + 0.5 + (j % 2) * 0.5) / n) * sweep;
       const [px, pz] = pol(x, z, r * 0.985, t);
-      flat(b, rectPts(-0.09, 0, 0.09, 1.5), SLIT, [px, y, pz], t, 0.03);
-      flat(b, rectPts(-0.3, 0.6, 0.3, 0.8), SLIT, [px, y, pz], t, 0.03);
+      flat(b, rectPts(-0.09, 0, 0.09, 1.6), SLIT, [px, y, pz], t, 0.03);
     }
   }
 }

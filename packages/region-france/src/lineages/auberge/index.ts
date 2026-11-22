@@ -8,6 +8,7 @@ import { hotelDieu } from './05-hotel-dieu';
 import { relaisDePoste } from './06-relais-de-poste';
 import { cafeRestaurant } from './07-cafe-restaurant';
 import { brasserie } from './08-brasserie';
+import { relaisRoutier } from './09-relais-routier';
 import { bistroToday } from './10-bistro-today';
 
 const lineage: Lineage = {
@@ -25,6 +26,7 @@ const lineage: Lineage = {
     { from: 1690, def: relaisDePoste },
     { from: 1800, builtUntil: 1860, def: cafeRestaurant },
     { from: 1905, builtUntil: 1914, def: brasserie },
+    { from: 1955, builtUntil: 1975, def: relaisRoutier },
     { from: 2014, def: bistroToday },
   ],
 };

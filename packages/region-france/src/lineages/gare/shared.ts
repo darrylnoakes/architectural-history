@@ -245,7 +245,7 @@ export function pacificTrain(b: Builder, at: Vec3): void {
       b.box(7.0, 2.1, 2.7, brown, { at: [0, 1.3, 0] });
       for (const x of [-2.6, -1.6, 1.6, 2.6]) wheels(b, x, 0.48, P.black);
     });
-    for (const cx of [27.0, 41.0]) {
+    for (const cx of [27.0]) {
       b.group({ at: [cx, 0, 0] }, () => {
         const L = 13.4;
         b.box(L, 2.5, 2.8, mix(P.doorGreen, P.black, 0.35), { at: [0, 1.1, 0] });

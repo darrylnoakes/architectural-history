@@ -173,7 +173,7 @@ export const vaubanGateStage: BuildingDef = {
 
     // ---------------------------------------------------------------- cannon on the bastions, trained along the ditch
     b.sym((s) => {
-      b.group({ at: [s * 13.6, VAUBAN.top, 1.4], rotY: s * (Math.PI / 2 + 0.25) }, () => {
+      b.group({ at: [s * 13.4, VAUBAN.top, 0.9], rotY: -s * 1.35 }, () => {
         b.box(0.9, 0.5, 1.8, P.oak, { at: [0, 0.32, 0] });
         b.sym((t) => b.log(0.4, 0.14, P.oakDark, { at: [t * 0.55, 0, 0.35], segs: 10 }));
         b.log(0.2, 2.6, P.castIron, { at: [0, 0.82, 0.6], axis: 'z', segs: 8 });

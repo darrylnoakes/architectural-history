@@ -336,11 +336,11 @@ export const VAUBAN = {
   PLOT_C: 11.5 + 13,
   spacing: 105,
   top: 6.2, // the terreplein behind the parapet
-  cs: 7.7, // the counterscarp wall
+  cs: 7.6, // the counterscarp wall
   // the brick scarp, battered, up to the stone cordon; then a parapet of turf
   scarp: [[0, 0], [1.0, 6.0], [4.5, 6.0], [4.5, 0]] as XY[],
   parapet: [[1.05, 6.0], [1.5, 7.55], [3.9, 7.3], [4.6, 6.15]] as XY[],
-  ravelin: { gorge: 2.4, half: 5.6, tip: 7.4, h: 4.2 },
+  ravelin: { gorge: 2.4, half: 5.6, tip: 7.2, h: 3.1 },
 };
 
 /** Centres of the bastions that touch the stretch x0..x1. */
@@ -475,8 +475,8 @@ function counterscarp(b: Builder, line: XY[]): void {
 export function ravelin(b: Builder, c: number, x0: number, x1: number): void {
   const { grass } = WALL_COLOURS.vauban;
   const { gorge, half, tip, h } = VAUBAN.ravelin;
-  const scarp: XY[] = [[0, 0], [0.7, h - 0.2], [2.6, h - 0.2], [2.6, 0]];
-  const parapet: XY[] = [[0.75, h - 0.2], [1.1, h + 0.9], [2.4, h + 0.75], [2.9, h - 0.1]];
+  const scarp: XY[] = [[0, 0], [0.5, h - 0.2], [2.2, h - 0.2], [2.2, 0]];
+  const parapet: XY[] = [[0.55, h - 0.2], [0.9, h + 0.7], [2.0, h + 0.6], [2.4, h - 0.1]];
   // faces drawn from the left shoulder to the tip to the right shoulder, outside to the left of travel
   scarpRuns(b, [[c - half, gorge], [c, tip], [c + half, gorge]], x0, x1, { scarp, parapet, cordon: h - 0.2 });
   const fill = clipPolyX([[c - half + 1.6, gorge + 0.3], [c, tip - 2.4], [c + half - 1.6, gorge + 0.3]], x0, x1);
