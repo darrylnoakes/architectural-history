@@ -18,7 +18,7 @@ export function soup(b: Builder, pos: number[], color: number, o?: Opts): void {
   const g = new THREE.BufferGeometry();
   g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
   g.computeVertexNormals();
-  b.add(g, color, o);
+  b.add(g, color, { jitter: false, ...o });
 }
 
 /** Push a quad (a, b, c, d in order around its edge) as two triangles. */
@@ -167,8 +167,11 @@ export function blockWall(
   t: number,
   h: number,
   color: number,
-  o?: { course?: [number, number]; len?: [number, number]; y0?: number; jitterZ?: number; tone?: number },
+  o?: { course?: [number, number]; len?: [number, number]; y0?: number; jitterZ?: number; tone?: number; rnd?: () => number },
 ): void {
+  // a private random source keeps the layout deterministic without touching the builder's own
+  const rnd = o?.rnd;
+  const range = (a: number, c: number) => (rnd ? a + rnd() * (c - a) : b.range(a, c));
   const [cMin, cMax] = o?.course ?? [0.55, 0.75];
   const [lMin, lMax] = o?.len ?? [1.2, 2.0];
   const jz = o?.jitterZ ?? 0.05;
@@ -176,20 +179,20 @@ export function blockWall(
   let y = o?.y0 ?? 0;
   let row = 0;
   while (y < h - 0.05) {
-    const ch = Math.min(h - y, b.range(cMin, cMax));
+    const ch = Math.min(h - y, range(cMin, cMax));
     let x = x0;
     // stagger the joints: every other course starts with a part block
-    let first = row % 2 ? b.range(lMin * 0.4, lMin * 0.8) : b.range(lMin, lMax);
+    let first = row % 2 ? range(lMin * 0.4, lMin * 0.8) : range(lMin, lMax);
     while (x < x1 - 0.02) {
       const L = Math.min(x1 - x, first);
-      first = b.range(lMin, lMax);
+      first = range(lMin, lMax);
       if (x1 - (x + L) < lMin * 0.35) {
         // do not leave a sliver at the end: stretch this block to the end instead
         const L2 = x1 - x;
-        b.box(L2 - 0.03, ch - 0.03, t + b.range(-jz, jz), tint(color, b.range(-tone, tone)), { at: [x + L2 / 2, y, z + b.range(-jz, jz) * 0.5], jitter: false });
+        b.box(L2 - 0.03, ch - 0.03, t + range(-jz, jz), tint(color, range(-tone, tone)), { at: [x + L2 / 2, y, z + range(-jz, jz) * 0.5], jitter: false });
         break;
       }
-      b.box(L - 0.03, ch - 0.03, t + b.range(-jz, jz), tint(color, b.range(-tone, tone)), { at: [x + L / 2, y, z + b.range(-jz, jz) * 0.5], jitter: false });
+      b.box(L - 0.03, ch - 0.03, t + range(-jz, jz), tint(color, range(-tone, tone)), { at: [x + L / 2, y, z + range(-jz, jz) * 0.5], jitter: false });
       x += L;
     }
     y += ch;
@@ -251,7 +254,7 @@ export function gateLeaves(b: Builder, w: number, h: number, z: number, color: n
  */
 export function slab(b: Builder, plan: XY[], y0: number, y1: number, color: number, o?: Opts): void {
   b.group({ at: [0, (y0 + y1) / 2, 0], rot: [-Math.PI / 2, 0, 0] }, () => {
-    b.extrude(plan.map(([x, z]) => [x, -z] as XY), y1 - y0, color, { jitter: o?.jitter, mat: o?.mat });
+    b.extrude(plan.map(([x, z]) => [x, -z] as XY), y1 - y0, color, { jitter: o?.jitter ?? false, mat: o?.mat });
   });
 }
 
@@ -260,12 +263,15 @@ export function slab(b: Builder, plan: XY[], y0: number, y1: number, color: numb
  * where d is measured inward from the outer foot line (the side given by `inward`, a unit plan vector).
  * The section must be convex; ends are capped.
  */
-export function run(b: Builder, p: XY, q: XY, inward: XY, section: XY[], color: number, o?: Opts & { clipQ?: boolean }): void {
+export function run(b: Builder, p: XY, q: XY, inward: XY, section: XY[], color: number, o?: Opts & { clipP?: boolean; clipQ?: boolean }): void {
   const out: number[] = [];
   const L = Math.hypot(q[0] - p[0], q[1] - p[1]) || 1;
   const u: XY = [(q[0] - p[0]) / L, (q[1] - p[1]) / L];
-  const P0 = (d: number, y: number) => [p[0] + inward[0] * d, y, p[1] + inward[1] * d];
-  // with clipQ the far end is cut square to X (x stays at q's x) instead of square to the run
+  // with clipP / clipQ an end is cut square to X (x stays at that end's x) instead of square to the run
+  const P0 = (d: number, y: number) => {
+    const t = o?.clipP && Math.abs(u[0]) > 1e-6 ? -(inward[0] * d) / u[0] : 0;
+    return [p[0] + inward[0] * d + u[0] * t, y, p[1] + inward[1] * d + u[1] * t];
+  };
   const P1 = (d: number, y: number) => {
     const t = o?.clipQ && Math.abs(u[0]) > 1e-6 ? -(inward[0] * d) / u[0] : 0;
     return [q[0] + inward[0] * d + u[0] * t, y, q[1] + inward[1] * d + u[1] * t];
@@ -292,6 +298,67 @@ export function inwardOf(p: XY, q: XY, toward: XY): XY {
   const mz = (p[1] + q[1]) / 2;
   if ((toward[0] - mx) * n[0] + (toward[1] - mz) * n[1] < 0) n = [-n[0], -n[1]];
   return n;
+}
+
+/** Pointed stakes (a palisade) along X at plan depth z, standing on height y. */
+export function stakes(b: Builder, x0: number, x1: number, z: number, y: number, h: number, color: number): void {
+  const out: number[] = [];
+  const s = 0.34;
+  const n = Math.max(1, Math.round(Math.abs(x1 - x0) / s));
+  const t = 0.16;
+  for (let k = 0; k < n; k++) {
+    const ax = x0 + ((x1 - x0) * k) / n;
+    const bx = x0 + ((x1 - x0) * (k + 1)) / n;
+    const mx = (ax + bx) / 2;
+    const top = y + h * (0.92 + 0.08 * (((k * 7) % 5) / 4));
+    quad(out, [ax, y - 0.4, z + t], [bx, y - 0.4, z + t], [bx, top, z + t], [ax, top, z + t]);
+    quad(out, [bx, y - 0.4, z - t], [ax, y - 0.4, z - t], [ax, top, z - t], [bx, top, z - t]);
+    out.push(ax, top, z + t, bx, top, z + t, mx, top + 0.42, z);
+    out.push(bx, top, z - t, ax, top, z - t, mx, top + 0.42, z);
+  }
+  soup(b, out, color);
+}
+
+/** A box between two plan points (a wall segment at any angle), `w` thick and `h` tall, base at y. */
+export function segBox(b: Builder, p: XY, q: XY, w: number, h: number, color: number, y = 0): void {
+  const dx = q[0] - p[0];
+  const dz = q[1] - p[1];
+  const L = Math.hypot(dx, dz);
+  if (L < 1e-4) return;
+  b.box(L, h, w, color, { at: [(p[0] + q[0]) / 2, y, (p[1] + q[1]) / 2], rotY: Math.atan2(-dz, dx), jitter: false });
+}
+
+/** Clip an x-monotonic polyline of [x, z] points to x0 <= x <= x1. */
+export function clipX(pts: XY[], x0: number, x1: number): XY[] {
+  const out: XY[] = [];
+  const at = (p: XY, q: XY, x: number): XY => [x, p[1] + ((q[1] - p[1]) * (x - p[0])) / (q[0] - p[0] || 1)];
+  for (let i = 0; i < pts.length - 1; i++) {
+    const p = pts[i];
+    const q = pts[i + 1];
+    if (q[0] < x0 || p[0] > x1) continue;
+    const a: XY = p[0] < x0 ? at(p, q, x0) : p;
+    const c: XY = q[0] > x1 ? at(p, q, x1) : q;
+    if (!out.length || out[out.length - 1][0] !== a[0] || out[out.length - 1][1] !== a[1]) out.push(a);
+    out.push(c);
+  }
+  return out;
+}
+
+/** Clip a polygon to the slab x0 <= x <= x1 (Sutherland-Hodgman against the two lines). */
+export function clipPolyX(poly: XY[], x0: number, x1: number): XY[] {
+  const cut = (pts: XY[], inside: (p: XY) => boolean, x: number): XY[] => {
+    const res: XY[] = [];
+    for (let i = 0; i < pts.length; i++) {
+      const a = pts[i];
+      const c = pts[(i + 1) % pts.length];
+      const ia = inside(a);
+      const ic = inside(c);
+      if (ia) res.push(a);
+      if (ia !== ic) res.push([x, a[1] + ((c[1] - a[1]) * (x - a[0])) / (c[0] - a[0] || 1)]);
+    }
+    return res;
+  };
+  return cut(cut(poly, (p) => p[0] >= x0, x0), (p) => p[0] <= x1, x1);
 }
 
 export { mix, tint };

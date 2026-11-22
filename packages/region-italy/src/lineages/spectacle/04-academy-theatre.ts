@@ -43,7 +43,7 @@ export const academyTheatre: BuildingDef = {
     'The town’s learned academy, a club of nobles and scholars devoted to reviving antiquity, built itself a theatre to stage the tragedies of ancient Greece in the Roman manner described by Vitruvius. ' +
     'From outside it is a plain plastered hall squeezed into older buildings. Inside, a half-oval of thirteen wooden tiers, crowned by a colonnade with statues, faces a permanent stage front of two storeys of columns, ' +
     'and through its openings streets of houses recede in forced perspective. It is all timber, brick and stucco painted to look like marble. ' +
-    'On the model the roof and the front wall are cut away to show the auditorium; the real theatre is fully roofed.',
+    'Select it or open it in the library to see inside: the roof and the upper front wall lift off.',
   materials: ['plastered brick', 'timber seating and stage', 'stucco painted as marble', 'coppi roof tiles'],
   modelledOn:
     'Teatro Olimpico, Vicenza: designed by Andrea Palladio in 1580 for the Accademia Olimpica, completed after his death by Vincenzo Scamozzi, who added the perspective streets; opened on 3 March 1585 with Oedipus Rex',
@@ -76,6 +76,7 @@ export const academyTheatre: BuildingDef = {
     },
   ],
   build(b) {
+    const cutaway = b.cutaway && false;
     const plaster = tint(b.pick([P.intonacoCream, P.plaster, mix(P.intonacoOchre, P.plaster, 0.5)]), b.range(-0.03, 0.02));
     const stone = tint(P.pietraSerena, 0.12);
     const roof = tint(P.coppi, b.range(-0.03, 0.02));
@@ -86,11 +87,10 @@ export const academyTheatre: BuildingDef = {
 
     // ------------------------------------------------ the hall: four plain walls, gable ends front and back
     const t = 0.7;
-    // back wall and gable to the ridge; the front wall is shown cut down to show the interior
+    // back wall and gable to the ridge; the front wall to the height of the cut (the rest is added last)
     b.box(2 * HX, EAVES, t, plaster, { at: [0, 0, HZ0 + t / 2] });
     b.extrude([[-HX, EAVES], [HX, EAVES], [0, RIDGE]], t, plaster, { at: [0, 0, HZ0 + t / 2] });
     b.box(2 * HX, CUT, t, plaster, { at: [0, 0, HZ1 - t / 2] });
-    b.box(2 * HX, 0.06, t + 0.02, P.brickRed, { at: [0, CUT, HZ1 - t / 2] }); // the cut face, in section colour
     b.sym((s) => {
       b.box(t, EAVES, HZ1 - HZ0, plaster, { at: [s * (HX - t / 2), 0, (HZ0 + HZ1) / 2] });
       // eaves cornice
@@ -100,18 +100,13 @@ export const academyTheatre: BuildingDef = {
     });
     b.box(2 * HX - 1.4, 0.25, HZ1 - HZ0 - 1.4, mix(wood, P.oakDark, 0.3), { at: [0, 0, (HZ0 + HZ1) / 2] }); // floor
 
-    // ------------------------------------------------ roof: on the model the tiles are lifted off, leaving a few trusses
+    // ------------------------------------------------ roof trusses (the tiles are added last, whole or cut away)
     for (const z of [HZ0 + 1.0, -1.2, 5.4, HZ1 - 1.0]) {
       b.beam([-HX + 0.3, EAVES, z], [HX - 0.3, EAVES, z], 0.3, 0.32, oak); // tie beam
       b.sym((s) => b.beam([s * (HX - 0.2), EAVES + 0.15, z], [0, RIDGE - 0.15, z], 0.26, 0.3, oak)); // rafters
       b.beam([0, EAVES, z], [0, RIDGE - 0.1, z], 0.24, 0.24, oak); // king post
     }
     b.beam([0, RIDGE - 0.2, HZ0], [0, RIDGE - 0.2, HZ1], 0.3, 0.3, oak);
-    // the edges of the roof left on the gables and the eaves, so its pitch still reads
-    b.sym((s) => {
-      b.beam([s * (HX + 0.5), EAVES - 0.05, HZ0 - 0.4], [s * (HX + 0.5), EAVES - 0.05, HZ1 + 0.4], 1.4, 0.22, roof);
-      for (const z of [HZ0 - 0.1]) b.beam([s * (HX + 0.6), EAVES - 0.1, z], [0, RIDGE + 0.12, z], 0.7, 0.24, roof);
-    });
 
     // ------------------------------------------------ front range (entrance rooms) with a rusticated portal
     const fz0 = HZ1;
@@ -235,6 +230,23 @@ export const academyTheatre: BuildingDef = {
       const z = CZ + 13.8 * Math.cos(a) * SQ;
       b.column(0.2, 4.0, stucco, { at: [x, topY, z], order: 'corinthian', segs: 5 });
       if (i % 2 === 0) statue(b, [x, topY + 5.4, z], 1.3, stucco);
+    }
+
+    // ------------------------------------------------ roof and upper front wall: whole in the town, lifted off when selected
+    if (cutaway) {
+      b.box(2 * HX, 0.06, t + 0.02, P.brickRed, { at: [0, CUT, HZ1 - t / 2], jitter: false }); // the cut face, in section colour
+      // the edges of the roof left on the gables and the eaves, so its pitch still reads
+      b.sym((s) => {
+        b.beam([s * (HX + 0.5), EAVES - 0.05, HZ0 - 0.4], [s * (HX + 0.5), EAVES - 0.05, HZ1 + 0.4], 1.4, 0.22, roof, { jitter: false });
+        b.beam([s * (HX + 0.6), EAVES - 0.1, HZ0 - 0.1], [0, RIDGE + 0.12, HZ0 - 0.1], 0.7, 0.24, roof, { jitter: false });
+      });
+    } else {
+      b.box(2 * HX, EAVES - CUT, t, plaster, { at: [0, CUT, HZ1 - t / 2], jitter: false });
+      b.extrude([[-HX, EAVES], [HX, EAVES], [0, RIDGE]], t, plaster, { at: [0, 0, HZ1 - t / 2], jitter: false });
+      for (const x of [-9, 9]) b.window(1.3, 2.0, { at: [x, 8.9, HZ1], frame: stone, bars: [2, 3] });
+      const len = HZ1 - HZ0 + 0.8;
+      b.sym((s) => b.beam([s * (HX + 0.7), EAVES - 0.2, RZ], [0, RIDGE + 0.12, RZ], len, 0.24, roof, { jitter: false }));
+      b.beam([0, RIDGE + 0.2, HZ0 - 0.4], [0, RIDGE + 0.2, HZ1 + 0.4], 0.5, 0.2, tint(roof, -0.1), { jitter: false }); // ridge tiles
     }
 
     // ------------------------------------------------ walk collisions: the outer volumes

@@ -68,7 +68,7 @@ export const operaHouse: BuildingDef = {
     'Opera was born in Italy around 1600 and by the eighteenth century every town of any size wanted a public opera house. ' +
     'This one, built with money from the noble families who bought its boxes, follows the Italian pattern: a horseshoe of stacked boxes round the stalls, so the audience can watch itself as much as the stage, ' +
     'and a tall stage house behind the proscenium for the scenery. Outside, a sober neoclassical front with a carriage porch, so that ladies could step down from their coaches under cover. ' +
-    'On the model the auditorium roof is cut away.',
+    'Select it or open it in the library to see inside: the auditorium roof lifts off.',
   materials: ['stucco over brick', 'stone dressings', 'timber boxes and stage', 'gilded and painted plaster', 'coppi roof tiles'],
   modelledOn:
     'Teatro alla Scala, Milan, by Giuseppe Piermarini (1776-78; opened 3 August 1778), much reduced',
@@ -101,6 +101,7 @@ export const operaHouse: BuildingDef = {
     },
   ],
   build(b) {
+    const cutaway = b.cutaway && false;
     const stucco = tint(b.pick([P.stucco, mix(P.stucco, P.intonacoCream, 0.5)]), b.range(-0.03, 0.01));
     const stone = tint(P.travertine, -0.06);
     const roof = tint(P.coppi, b.range(-0.03, 0.02));
@@ -130,12 +131,11 @@ export const operaHouse: BuildingDef = {
       b.box(0.5, 0.4, ad, tint(stucco, -0.08), { at: [s * (AUD_W / 2 + 0.05), AUD_H - 0.4, (AUD_Z0 + FOYER_Z0) / 2] });
       for (const z of [-3, 2, 7]) b.window(1.2, 2.0, { at: [s * AUD_W / 2, 3.0, z], facing: s > 0 ? '+x' : '-x', frame: stone, bars: [2, 3] });
     });
-    // roof cut away: a few trusses and the tiled edges
+    // roof trusses (the roof itself is added last, whole or cut away)
     for (const z of [AUD_Z0 + 1.0, 1.5, FOYER_Z0 - 0.6]) {
       b.beam([-AUD_W / 2, AUD_H, z], [AUD_W / 2, AUD_H, z], 0.3, 0.32, oak);
       b.sym((s) => b.beam([s * AUD_W / 2, AUD_H + 0.1, z], [0, AUD_H + 4.0, z], 0.26, 0.3, oak));
     }
-    b.sym((s) => b.beam([s * (AUD_W / 2 + 0.4), AUD_H, AUD_Z0], [s * (AUD_W / 2 + 0.4), AUD_H, FOYER_Z0], 1.3, 0.22, roof));
 
     // ------------------------------------------------ inside: proscenium, stalls, the horseshoe of boxes
     b.box(AUD_W - 1.4, 0.4, ad - 0.6, tint(oak, -0.05), { at: [0, 0, (AUD_Z0 + FOYER_Z0) / 2] }); // stalls floor
@@ -222,6 +222,13 @@ export const operaHouse: BuildingDef = {
     b.box(12.6, 0.15, 0.3, stone, { at: [0, 7.15, PORCH_Z - 0.15] });
     b.panel(2.2, 3.4, P.doorBlack, { at: [0, 0, fz + 0.6], shape: 'round' });
     b.sym((s) => b.panel(1.8, 3.0, P.doorBlack, { at: [s * 4.0, 0, fz + 0.6], shape: 'round' }));
+
+    // ------------------------------------------------ the auditorium roof: whole in the town, lifted off when selected
+    if (cutaway) {
+      b.sym((s) => b.beam([s * (AUD_W / 2 + 0.4), AUD_H, AUD_Z0], [s * (AUD_W / 2 + 0.4), AUD_H, FOYER_Z0], 1.3, 0.22, roof));
+    } else {
+      b.gable(AUD_W, ad, 4.0, roof, { at: [0, AUD_H, (AUD_Z0 + FOYER_Z0) / 2], ridge: 'z', overhang: 0.4, wall: stucco, jitter: false });
+    }
 
     // ------------------------------------------------ walk collisions
     b.collider(24, sd, { at: [0, 0, (STAGE_Z0 + AUD_Z0) / 2] });
