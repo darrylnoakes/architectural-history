@@ -69,6 +69,7 @@ export class Town {
   private allColliders: WorldCollider[] = [];
   private allDecks: WorldDeck[] = [];
   private dirty = true;
+  private openId: string | null = null;
   /** Fired when the building on a plot changes (after the swap). */
   onSwap: ((p: PlotState) => void) | null = null;
 
@@ -127,15 +128,20 @@ export class Town {
     return e.state === 'ruin' ? `${name} (in ruins)` : name;
   }
 
-  private build(p: PlotState, i: number): Built {
-    let b = p.cache.get(i);
+  /**
+   * `open` builds the cut-away form of a building that has one (cached beside the closed form, half
+   * an index along).
+   */
+  private build(p: PlotState, i: number, open = false): Built {
+    const key = open ? i + 0.5 : i;
+    let b = p.cache.get(key);
     if (!b) {
       const def = p.lineage.stages[p.schedule[i].index].def;
       try {
-        b = construct(def, p.plot.seed, p.variant);
+        b = construct(def, p.plot.seed, p.variant, open);
       } catch (err) {
         console.error(`Failed to build ${def.id}`, err);
-        b = { object: new THREE.Group(), bounds: new THREE.Box3(), colliders: [], decks: [], triangles: 0 };
+        b = { object: new THREE.Group(), bounds: new THREE.Box3(), colliders: [], decks: [], triangles: 0, hasCutaway: false };
       }
       const ruin = p.schedule[i].state === 'ruin' ? getRuinMaterials() : null;
       b.object.traverse((o) => {
@@ -148,9 +154,21 @@ export class Town {
       });
       // nobody walks along the top of a ruin
       if (ruin) b.decks = [];
-      p.cache.set(i, b);
+      p.cache.set(key, b);
     }
     return b;
+  }
+
+  /**
+   * In the townscape every building is whole. The selected one is opened up if it has an inside to
+   * show (a theatre's roof comes off), and closed again when the selection moves on.
+   */
+  setOpen(plotId: string | null) {
+    if (plotId === this.openId) return;
+    const was = this.openId ? this.byId.get(this.openId) : undefined;
+    this.openId = plotId;
+    const now = plotId ? this.byId.get(plotId) : undefined;
+    for (const p of [was, now]) if (p && p.current?.hasCutaway && p.phase === 'idle') this.place(p, p.shown);
   }
 
   private trim(p: PlotState) {
@@ -165,6 +183,8 @@ export class Town {
     if (p.current) p.holder.remove(p.current.object);
     p.shown = i;
     p.current = i >= 0 ? this.build(p, i) : null;
+    // the closed form says whether there is an open one; a ruin is open to the sky already
+    if (p.current?.hasCutaway && p.plot.id === this.openId && p.schedule[i].state !== 'ruin') p.current = this.build(p, i, true);
     if (p.current) {
       p.current.object.scale.set(1, 1, 1);
       p.current.object.position.y = 0;

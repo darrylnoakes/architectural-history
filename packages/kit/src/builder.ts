@@ -47,6 +47,8 @@ export interface Built {
   colliders: Collider[];
   decks: Deck[];
   triangles: number;
+  /** True if the building asked whether to cut itself open (see `Builder.cutaway`): it has two forms. */
+  hasCutaway: boolean;
 }
 
 const FACING: Record<string, number> = {
@@ -220,8 +222,21 @@ export class Builder {
     public readonly seed = 1,
     /** 0 for the hero plot; other plots get 1, 2, 3… Use it (or rand()) to vary repeated buildings. */
     public readonly variant = 0,
+    private readonly _cutaway = true,
   ) {
     this.rng = mulberry32(seed * 7919 + 13);
+  }
+
+  private _askedCutaway = false;
+  /**
+   * Whether to leave part of the building off so its inside can be studied (the roof of a theatre,
+   * a corner of a mill). True wherever a building is shown on its own or selected; false in the
+   * townscape, where it must look as it really did. A building with nothing to show inside never
+   * needs to ask. Everything outside the cut must be identical in both forms.
+   */
+  get cutaway(): boolean {
+    this._askedCutaway = true;
+    return this._cutaway;
   }
 
   // ---------------------------------------------------------------- utilities
@@ -954,6 +969,6 @@ export class Builder {
       const s = bounds.getSize(new THREE.Vector3());
       colliders = [{ x: c.x, z: c.z, w: s.x, d: s.z, rotY: 0 }];
     }
-    return { object, bounds, colliders, decks: this._decks, triangles };
+    return { object, bounds, colliders, decks: this._decks, triangles, hasCutaway: this._askedCutaway };
   }
 }

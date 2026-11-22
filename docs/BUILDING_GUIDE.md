@@ -39,6 +39,11 @@ the named features up close on foot.
 - Walk collisions default to the bounding box. If the building has a courtyard, an open ground
   floor or separate blocks, call `b.collider(w, d, { at })` per solid block instead, or
   `b.noCollide()` for things you can wander through. Use `b.deck(...)` for walkable raised surfaces.
+- If the inside is the point (a theatre's auditorium, the machine in a mill), build it, and leave the
+  roof or a corner off only `if (b.cutaway)`. In the townscape that is false and the building must
+  be whole; it is true when the building is selected or shown on its own (the gallery shows the
+  open form; add `&cutaway=0` to its URL for the closed one). Everything outside the cut must be
+  the same in both.
 
 Useful helpers: `b.beam(p0, p1, w, h, colour)` for any bar between two points (rafters, braces,
 struts, cables, railings), `b.lathe(profile, colour, { start, sweep })` for part of a turn (an apse,

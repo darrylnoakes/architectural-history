@@ -39,6 +39,8 @@ async function main() {
   const view = q.get('view') ?? 'iso';
   const seed = Number(q.get('seed') ?? 1);
   const variant = Number(q.get('variant') ?? 0);
+  // &cutaway=0 shows the closed form of a building that can open itself up
+  const cutaway = q.get('cutaway') !== '0';
 
   let defs: { def: BuildingDef; from?: number }[] = [];
   let plot: [number, number] | null = null;
@@ -71,7 +73,7 @@ async function main() {
   const lines: string[] = [];
 
   defs.forEach((entry, i) => {
-    const built = construct(entry.def, seed, variant);
+    const built = construct(entry.def, seed, variant, cutaway);
     const x = (i - (defs.length - 1) / 2) * spacing;
     built.object.position.x = x;
     scene.add(built.object);

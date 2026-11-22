@@ -113,7 +113,10 @@ export class Engine {
       if (s.mode !== prev.mode) this.nav.setMode(s.mode);
       if (s.street !== prev.street) this.switchView(s.street, prev.street);
       if (s.focusTick !== prev.focusTick) this.focusPending = 3;
-      if (s.selected !== prev.selected) this.calloutKey = STALE;
+      if (s.selected !== prev.selected) {
+        this.town.setOpen(s.selected);
+        this.calloutKey = STALE;
+      }
       if (s.intro !== prev.intro) this.nav.orbit.autoRotate = s.intro;
     });
     this.nav.orbit.autoRotate = useApp.getState().intro;

@@ -22,7 +22,7 @@ function safeConstruct(def: BuildingDef, seed: number): Built {
     return construct(def, seed, 0);
   } catch (err) {
     console.error(`Failed to build ${def.id}`, err);
-    return { object: new THREE.Group(), bounds: new THREE.Box3(), colliders: [], decks: [], triangles: 0 };
+    return { object: new THREE.Group(), bounds: new THREE.Box3(), colliders: [], decks: [], triangles: 0, hasCutaway: false };
   }
 }
 
