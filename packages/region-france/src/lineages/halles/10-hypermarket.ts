@@ -33,13 +33,13 @@ export const hypermarket: BuildingDef = {
     { label: 'Canopy', note: 'A long flat canopy shelters the entrance and the trolleys.', at: [3.0, 3.8, 2.6] },
     { label: 'Sign on a mast', note: 'The name on a tall mast is meant to be read from a car on the main road.', at: [10.6, 13.0, 9.4] },
     { label: 'Car park', note: 'Parking for hundreds of cars, free, was the heart of the formula.', at: [-4.0, 0.6, 7.6] },
-    { label: 'Loading dock', note: 'At the back, lorries deliver straight from the warehouse to the sales floor.', at: [-6.0, 2.0, -10.8] },
+    { label: 'Loading dock', note: 'At the back, lorries deliver straight from the warehouse to the sales floor.', at: [-6.0, 2.0, -9.8] },
   ],
   modelledOn: 'The first Carrefour hypermarket, Sainte-Geneviève-des-Bois (1963), and the first Auchan hypermarket at Roncq (1967), as a type; no real sign or brand is shown, and the shed is far smaller than any real one',
   influences: ['american-way'],
   build(b) {
     const X = 11.6;
-    const Z0 = -10.4;
+    const Z0 = -9.2;
     const Z1 = 0.6;
     const H = 6.4;
     // the car park in asphalt with white lines, a kerb round the shed
@@ -64,8 +64,8 @@ export const hypermarket: BuildingDef = {
     for (let z = Z0 + 0.6; z < Z1; z += 1.0) for (const s of [-1, 1]) b.box(0.06, H - 1.3, 0.08, tint(CLAD, -0.06), { at: [s * (X + 0.03), 0.12, z], jitter: false });
     // roof: a parapet, rooflights and plant
     b.box(2 * X - 0.4, 0.1, Z1 - Z0 - 0.4, P.asphalt, { at: [0, H + 0.12, (Z0 + Z1) / 2] });
-    for (const x of [-8, -4, 0, 4, 8]) for (const z of [-7.6, -2.6]) b.dome(0.7, P.glass, { at: [x, H + 0.22, z], squash: 0.5, segs: 8, mat: 'glass' });
-    b.box(2.6, 1.2, 1.6, P.aluminium, { at: [6.0, H + 0.22, -5.0] });
+    for (const x of [-8, -4, 0, 4, 8]) for (const z of [-6.6, -2.2]) b.dome(0.7, P.glass, { at: [x, H + 0.22, z], squash: 0.5, segs: 8, mat: 'glass' });
+    b.box(2.6, 1.2, 1.6, P.aluminium, { at: [6.0, H + 0.22, -4.4] });
     b.box(1.4, 0.8, 1.4, P.aluminium, { at: [-9.0, H + 0.22, -1.2] });
 
     // ---- the entrance: a glazed front in aluminium frames, and the long canopy
@@ -88,13 +88,13 @@ export const hypermarket: BuildingDef = {
     trolley(b, [-6.2, 0.06, 5.2], 2.4);
 
     // ---- the loading dock at the back
-    b.box(9.0, 1.2, 1.4, P.concrete, { at: [-5.0, 0, Z0 - 0.5] });
+    b.box(9.0, 1.2, 1.2, P.concrete, { at: [-5.0, 0, Z0 - 0.6] });
     for (const x of [-7.6, -2.4]) {
       b.box(3.0, 3.4, 0.08, P.aluminium, { at: [x, 1.2, Z0 - 0.02] });
       for (let y = 1.4; y < 4.5; y += 0.3) b.box(3.0, 0.03, 0.04, tint(P.aluminium, -0.1), { at: [x, y, Z0 - 0.07], jitter: false });
     }
-    b.box(9.4, 0.15, 1.8, P.cladGrey, { at: [-5.0, 4.8, Z0 - 0.9] });
-    b.collider(9.0, 1.4, { at: [-5.0, 0, Z0 - 0.5] });
+    b.box(9.4, 0.15, 1.6, P.cladGrey, { at: [-5.0, 4.8, Z0 - 0.8] });
+    b.collider(9.0, 1.2, { at: [-5.0, 0, Z0 - 0.6] });
 
     // ---- the sign on its mast by the road
     b.group({ at: [10.6, 0.06, 9.4] }, () => {

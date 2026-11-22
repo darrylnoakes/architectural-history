@@ -2,7 +2,7 @@ import { P, mix, type BuildingDef, type Builder } from '@ah/kit';
 import { DARK, DITCH, MOTTE, flat, motte, motteY, palisade, pol, rectPts, segCollider, strip, win, type Pt } from './shared';
 
 /** The bailey boundary, from the foot of the mound at the back round to the mound on the left. */
-export const BAILEY_A: Pt[] = [[-2.5, -19], [10, -20], [17.5, -12], [18.5, 6], [13, 17], [6.6, 18.2]];
+export const BAILEY_A: Pt[] = [[-2.5, -19], [10, -20], [17.5, -12], [18, 6], [13, 17], [6.6, 18.2]];
 export const BAILEY_B: Pt[] = [[2.4, 18.2], [-8, 17], [-16.5, 9], [-18.5, -5]];
 export const GATE: Pt = [4.5, 18.2];
 

@@ -27,9 +27,9 @@ export const marketToday: BuildingDef = {
     nave(b, true);
 
     // ---- the square: trees in the corners, café tables, a few stalls outside, bicycles, new lamps
-    for (const [x, z] of [[-12.0, -9.6], [12.0, -9.6], [-12.0, 6.6], [12.0, 6.6], [-12.0, -1.6], [12.0, -1.6]] as [number, number][]) {
+    for (const [x, z] of [[-11.2, -8.6], [11.2, -8.6], [-11.2, 6.0], [11.2, 6.0], [-11.2, -1.4], [11.2, -1.4]] as [number, number][]) {
       b.cyl(0.6, 0.12, P.castIron, { at: [x, 0.08, z], segs: 8 });
-      b.tree(5.2, { at: [x, 0.1, z], kind: 'round' });
+      b.tree(4.4, { at: [x, 0.1, z], kind: 'round' });
     }
     for (const [x, z] of [[-11.0, 10.2], [-9.4, 10.4], [-11.2, 8.8]] as [number, number][]) {
       b.cyl(0.35, 0.04, P.white, { at: [x, 0.78, z], segs: 8 });
@@ -37,7 +37,7 @@ export const marketToday: BuildingDef = {
       for (const dx of [-0.55, 0.55]) b.box(0.4, 0.45, 0.4, P.cladRed, { at: [x + dx, 0.08, z] });
     }
     b.cyl(0.04, 2.5, P.timberBlack, { at: [-10.3, 0.08, 9.5], segs: 4 });
-    b.cone(1.6, 0.5, P.cream, { at: [-10.3, 2.2, 9.5], segs: 8 });
+    b.cone(1.3, 0.45, P.cream, { at: [-10.3, 2.2, 9.5], segs: 8 });
     // a weekend stall under a white awning by the side door
     b.group({ at: [9.2, 0.08, 10.2], rotY: 0 }, () => {
       b.box(2.4, 0.85, 0.9, P.cladWhite);

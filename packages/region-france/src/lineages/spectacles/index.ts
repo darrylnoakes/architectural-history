@@ -7,6 +7,7 @@ import { museum } from './04-museum';
 import { cirque } from './05-cirque';
 import { carnegieLibrary } from './06-carnegie-library';
 import { maisonDeLaCulture } from './07-maison-de-la-culture';
+import { artCentre } from './08-art-centre';
 
 const lineage: Lineage = {
   id: 'spectacles',
@@ -28,6 +29,7 @@ const lineage: Lineage = {
     { from: 1927, builtUntil: 1939, def: carnegieLibrary },
     // Malraux's maisons de la culture opened from 1961 (Le Havre) to the mid-1970s
     { from: 1966, builtUntil: 1975, def: maisonDeLaCulture },
+    { from: 2010, def: artCentre },
   ],
 };
 

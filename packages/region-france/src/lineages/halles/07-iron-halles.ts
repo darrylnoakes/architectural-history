@@ -101,7 +101,7 @@ export const ironHalles: BuildingDef = {
         });
         b.collider(rotY === 0 || Math.abs(rotY) === Math.PI ? w - 0.3 : 0.3, rotY === 0 || Math.abs(rotY) === Math.PI ? 0.3 : w - 0.3, { at: [cx, 0, cz] });
       }
-      louvres(b, w - 0.3, y0 + DADO + 0.1 + (door ? 0.9 : 0), YE - 0.45, [cx, 0, cz], rotY, door ? 3 : 4);
+      louvres(b, w - 0.3, y0 + DADO + 0.1 + (door ? 0.9 : 0), YE - 0.45, [cx, 0, cz], rotY, door ? 2 : 3);
     };
     for (let i = 0; i < xs.length - 1; i++) {
       const cx = (xs[i] + xs[i + 1]) / 2;

@@ -13,7 +13,8 @@ const SPIRE_TOP = 33.0;
 /** Distance from the centre to the hexagon edge in direction a (0 = +Z, turning toward +X). */
 function rimDist(a: number): number {
   const sector = Math.PI / 3;
-  let d = ((a % sector) + sector) % sector;
+  // mid-sides at 0, 60, 120 degrees..., corners half way between
+  let d = (((a + sector / 2) % sector) + sector) % sector;
   d -= sector / 2;
   return AP / Math.cos(d);
 }
@@ -49,9 +50,9 @@ function inside(x: number, z: number, m = 0): boolean {
 
 /** The three galleries: direction of the end that projects, height of the floor, length beyond the centre. */
 const GALLERIES = [
-  { dir: (2 * Math.PI) / 3, y: 5.2, out: 18.0, back: 8.0 },
-  { dir: (4 * Math.PI) / 3, y: 9.6, out: 18.0, back: 8.0 },
-  { dir: 0, y: 14.0, out: 17.2, back: 6.0 },
+  { dir: (2 * Math.PI) / 3, y: 5.2, out: 18.0, back: 7.0 },
+  { dir: (4 * Math.PI) / 3, y: 9.6, out: 18.0, back: 5.0 },
+  { dir: 0, y: 14.0, out: 17.2, back: -3.2 },
 ];
 const GW = 6.0;
 const GH = 4.2;
@@ -125,8 +126,8 @@ export const artCentre: BuildingDef = {
     const glassC = mix(P.glass, P.glassDark, 0.3);
 
     // ------------------------------------------------ the roof membrane: rings round the centre
-    const ringsN = 9;
-    const perSide = 6;
+    const ringsN = 14;
+    const perSide = 8;
     const dirs: [number, number][] = [];
     for (let k = 0; k < 6; k++) {
       const c0 = corner(k);
@@ -176,14 +177,14 @@ export const artCentre: BuildingDef = {
           if (run.length > 1) ribbon(lt, run, 0.2, 0.1);
           run = [];
         };
-        for (let s = -HR; s <= HR + 0.01; s += 1.45) {
+        for (let s = -HR; s <= HR + 0.01; s += 1.2) {
           const x = nx * o + ux * s;
           const z = nz * o + uz * s;
           if (!inside(x, z, 0.25)) {
             flush();
             continue;
           }
-          run.push([x, roofAt(x, z) + 0.04, z]);
+          run.push([x, roofAt(x, z) + 0.12, z]);
         }
         flush();
       }
@@ -207,7 +208,7 @@ export const artCentre: BuildingDef = {
     // their supports: slim steel columns under the lower ends
     for (const g of GALLERIES) {
       for (const d of [11.0, 15.0]) {
-        if (g.y < 6) continue;
+        if (g.y < 6 || g.y > 12) continue;
         const sx = Math.sin(g.dir);
         const sz = Math.cos(g.dir);
         b.sym((s) => b.cyl(0.18, g.y, steel, { at: [sx * d + s * sz * (GW / 2 - 0.4), 0, sz * d - s * sx * (GW / 2 - 0.4)], segs: 6 }));
@@ -225,7 +226,7 @@ export const artCentre: BuildingDef = {
     const wall: [number, number, number, number][] = [];
     const wallS = 0.72;
     for (let j = 0; j <= dirs.length; j++) {
-      if (j % perSide === 3 && Math.abs(Math.atan2(dirs[j % dirs.length][0], dirs[j % dirs.length][1])) < 0.1) {
+      if (j % perSide === 4 && Math.abs(Math.atan2(dirs[j % dirs.length][0], dirs[j % dirs.length][1])) < 0.1) {
         // leave the front entrance open
         wall.push([NaN, NaN, NaN, NaN]);
         continue;
@@ -260,7 +261,7 @@ export const artCentre: BuildingDef = {
       const top = roofH(s, a);
       tulips.push([x, z]);
       b.lathe(
-        [[0.35, 0], [0.4, top * 0.45], [0.9, top * 0.8], [2.0, top + 0.02]],
+        [[0.35, 0], [0.4, top * 0.45], [0.8, top * 0.8], [1.5, top - 0.25], [0.01, top - 0.25]],
         tint(P.larch, -0.02),
         { at: [x, 0, z], segs: 8, jitter: false },
       );

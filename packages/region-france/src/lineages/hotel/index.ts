@@ -11,6 +11,7 @@ import { hotelParticulier } from './08-hotel-particulier';
 import { neoclassicalHotel } from './09-neoclassical-hotel';
 import { artNouveauVilla } from './10-art-nouveau-villa';
 import { modernVilla } from './11-modern-villa';
+import { contemporaryHouse } from './12-contemporary-house';
 
 const lineage: Lineage = {
   id: 'hotel',
@@ -31,6 +32,7 @@ const lineage: Lineage = {
     { from: 1780, builtUntil: 1820, def: neoclassicalHotel },
     { from: 1902, builtUntil: 1914, def: artNouveauVilla },
     { from: 1930, builtUntil: 1960, def: modernVilla },
+    { from: 2005, def: contemporaryHouse },
   ],
 };
 

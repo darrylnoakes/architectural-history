@@ -202,7 +202,8 @@ export function motte(b: Builder, color: number, ditch: boolean): void {
   b.deck(MOTTE.rTop * 1.4, MOTTE.rTop * 1.4, MOTTE.h, { at: [MOTTE.x, 0, MOTTE.z] });
   if (ditch) {
     const pts: Pt[] = [];
-    for (let i = 0; i <= 14; i++) pts.push(pol(MOTTE.x, MOTTE.z, MOTTE.rBase + 1.2, Math.PI * 0.62 + (i / 14) * Math.PI * 1.08));
+    // only the inner arc, between the mound and the bailey: the rest lies off the plot
+    for (let i = 0; i <= 12; i++) pts.push(pol(MOTTE.x, MOTTE.z, MOTTE.rBase + 1.1, -0.8 + (i / 12) * 3.05));
     strip(b, pts, 2.2, 0.03, DITCH);
   }
 }

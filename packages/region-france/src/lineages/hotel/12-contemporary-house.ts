@@ -51,9 +51,9 @@ function greenhouse(
   if (o.vents) {
     // roof flaps propped open along the ridge for summer ventilation
     for (let i = 0; i < n; i += 2) {
-      const z = z0 + ((i + 0.5) * len) / n;
-      b.group({ at: [x + 0.05, eave + rise - 0.02, z + 1.0], rot: [0, 0, -0.75] }, () => b.box(0.03, 0.03 + 0, 0.03, steel));
-      b.beam([x + 0.05, eave + rise + 0.02, z], [x + 1.1, eave + rise + 0.25, z], 1.2 * 0 + 1.9, 0.03, sheet, { mat: 'glass' });
+      const z = z0 + ((i + 1) * len) / n;
+      b.group({ at: [x, eave + rise + 0.02, z], rot: [0, 0, 0.18] }, () => b.box(w * 0.3, 0.04, 1.7, sheet, { at: [w * 0.15, 0, 0], mat: 'glass' }));
+      b.beam([x + w * 0.25, eave + rise * 0.55, z], [x + w * 0.25, eave + rise + 0.25, z], 0.04, 0.04, steel);
     }
   }
 }
@@ -128,7 +128,7 @@ export const contemporaryHouse: BuildingDef = {
     b.collider(W, 0.3, { at: [rx, 0, L / 2] });
 
     // ---- the garden: a few trees, a hedge to the street, a bicycle shed
-    for (const [x, z, h] of [[-10.5, -11.5, 6.0], [10.6, -11.0, 5.0], [10.4, 11.2, 4.5]] as [number, number, number][]) b.tree(h, { at: [x, 0, z], kind: 'round' });
+    for (const [x, z, h] of [[-10.2, -11.0, 4.6], [10.2, -11.0, 4.4], [10.0, 11.0, 4.2]] as [number, number, number][]) b.tree(h, { at: [x, 0, z], kind: 'round' });
     b.box(9.0, 1.2, 0.6, P.hedge, { at: [6.4, 0, 12.4] });
     b.box(7.0, 1.2, 0.6, P.hedge, { at: [-8.3, 0, 12.4] });
   },

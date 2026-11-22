@@ -79,6 +79,7 @@ export const VOID = 0x17181b;
 export const GRISAILLE = mix(P.windowDark, P.enduitGris, 0.34);
 export const LOUVRE = mix(P.ardoise, P.black, 0.35);
 export const OAK = P.oakDark;
+export const BOARDS = mix(P.oak, P.pine, 0.5);
 export const HAY = P.thatch;
 export const SANDBAG = mix(P.sand, P.earth, 0.35);
 
@@ -634,7 +635,7 @@ export function gothicChoir(b: Builder, c: Ctx) {
   b.box(2 * NW + 0.3, 0.4, cl, dress, { at: [0, H - 0.4, cz], jitter: false });
   b.lathe([[NW + 0.15, H - 0.4], [NW + 0.15, H]], dress, { ...HALF, segs: 5, at: [0, 0, HZ], jitter: false });
   if (!shelled) {
-    roofZ(b, 0, HZ, CZ1, NW, H, RISE, c.roof, { ovEnd: 0, g1: ph === EARLY ? P.oak : undefined });
+    roofZ(b, 0, HZ, CZ1, NW, H, RISE, c.roof, { ovEnd: 0, g1: ph === EARLY ? BOARDS : undefined });
     apseRoof(b, HZ, NW, H, RISE, c.roof, 5);
     b.sym((s) => aisleRoof(b, s, HZ, CZ1, AH_E, 1.7, c.roof));
     ringRoof(b, AH_E, 1.7, c.roof, 5);
@@ -645,8 +646,9 @@ export function gothicChoir(b: Builder, c: Ctx) {
   }
   if (ph === EARLY) {
     // the choir is finished first: its open west end is boarded up until the crossing is built
-    b.box(2 * NW, H, 0.3, P.oak, { at: [0, 0, CZ1 + 0.15] });
-    b.sym((s) => b.box(AW - NW, AH_E, 0.3, P.oak, { at: [(s * (AW + NW)) / 2, 0, CZ1 + 0.15] }));
+    b.box(2 * NW, H, 0.3, BOARDS, { at: [0, 0, CZ1 + 0.15] });
+    b.sym((s) => b.box(AW - NW, AH_E, 0.3, BOARDS, { at: [(s * (AW + NW)) / 2, 0, CZ1 + 0.15] }));
+    for (const x of lin(7, -NW + 0.3, NW - 0.3)) b.box(0.14, H + RISE * (1 - Math.abs(x) / NW) - 0.4, 0.1, P.oak, { at: [x, 0, CZ1 + 0.33], jitter: false });
   }
   // straight bays: aisle and tribune windows, roundels, clerestory lancets
   b.sym((s) => {
@@ -687,8 +689,8 @@ export function gothicChoir(b: Builder, c: Ctx) {
   for (let k = 1; k < 5; k++) piers.push([0, HZ, Math.PI / 2 + (k * Math.PI) / 5]);
   for (const [ox, oz, phi] of piers) {
     radial(b, ox, oz, phi, () => {
-      culee(b, AW - 0.3, AW + 2.4, 14.6, 0.9, wall, 'cap');
-      flyer(b, NW, 19.0, AW - 0.2, 14.7, 0.55, wall);
+      culee(b, AW - 0.3, AW + 2.4, 14.6, 0.9, tint(wall, 0.03), 'cap');
+      flyer(b, NW, 19.0, AW - 0.2, 14.7, 0.6, tint(wall, 0.06));
     });
   }
   b.collider(2 * AW + 4, cl + 11, { at: [0, 0, cz - 5] });
@@ -724,10 +726,10 @@ export function transeptSite(b: Builder, c: Ctx) {
   const wx = -TW + 0.6;
   b.box(1.6, 0.3, 3.2, P.oak, { at: [wx, top + 1.6, CZ - 0.6] });
   b.cyl(1.8, 1.1, P.oak, { at: [wx - 0.55, top + 1.9 + 1.8, CZ - 0.6], rot: [0, 0, Math.PI / 2], segs: 12 });
-  b.beam([wx, top + 1.9, CZ - 0.6], [wx - 4.2, top + 6.5, CZ - 0.6], 0.28, 0.28, P.oak);
-  b.beam([wx, top + 5.6, CZ - 0.6], [wx - 2.4, top + 4.5, CZ - 0.6], 0.16, 0.16, P.oak);
-  b.beam([wx - 4.1, top + 6.4, CZ - 0.6], [wx - 4.1, 7.0, CZ - 0.6], 0.05, 0.05, P.iron);
-  b.box(0.9, 0.6, 0.6, wall, { at: [wx - 4.1, 6.4, CZ - 0.6] });
+  b.beam([wx, top + 1.9, CZ - 0.6], [wx - 2.4, top + 6.5, CZ - 0.6], 0.28, 0.28, P.oak);
+  b.beam([wx, top + 5.6, CZ - 0.6], [wx - 1.6, top + 4.9, CZ - 0.6], 0.16, 0.16, P.oak);
+  b.beam([wx - 2.3, top + 6.4, CZ - 0.6], [wx - 2.3, 7.0, CZ - 0.6], 0.05, 0.05, P.iron);
+  b.box(0.9, 0.6, 0.6, wall, { at: [wx - 2.3, 6.4, CZ - 0.6] });
   // the masons' lodge and stone waiting to be laid
   b.box(6, 3.0, 3.4, P.torchis, { at: [12.2, 0, 1.6] });
   b.shed(6.4, 3.8, 1.3, TILE, { at: [12.2, 3.0, 1.6], high: '-z' });
@@ -865,9 +867,9 @@ export function gothicNave(b: Builder, c: Ctx) {
   for (const z of NAVE_DIV.slice(1, 5)) {
     for (const s of [1, -1]) {
       radial(b, 0, z, SIDE(s), () => {
-        culee(b, AW - 0.2, AW + 2.4, 17.5, 0.95, wall, 'pinnacle');
-        flyer(b, NW, 16.3, AW, 13.7, 0.55, wall);
-        flyer(b, NW, 20.6, AW, 17.4, 0.55, wall);
+        culee(b, AW - 0.2, AW + 2.4, 17.5, 0.95, tint(wall, 0.03), 'pinnacle');
+        flyer(b, NW, 16.3, AW, 13.7, 0.65, tint(wall, 0.06));
+        flyer(b, NW, 20.6, AW, 17.4, 0.65, tint(wall, 0.06));
       });
     }
   }
