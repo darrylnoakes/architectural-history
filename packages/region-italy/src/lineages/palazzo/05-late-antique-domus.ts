@@ -34,12 +34,12 @@ export const lateAntiqueDomus: BuildingDef = {
     block(b, 10, Hh, 8.5, brick, 0, -5.75);
     bands(10, 8.5, 0, -5.75, Hh);
     b.gable(10, 8.5, 1.8, tile, { at: [0, Hh, -5.75], ridge: 'z', overhang: 0.4, wall: brick });
-    b.lathe([[3.2, 0], [3.2, 6.0]], brick, { at: [0, 0, -10], segs: 8, start: Math.PI / 2, sweep: Math.PI });
-    b.lathe([[3.4, 6.0], [2.6, 6.9], [1.4, 7.4], [0.01, 7.6]], tile, { at: [0, 0, -10], segs: 8, start: Math.PI / 2, sweep: Math.PI });
+    b.lathe([[2.9, 0], [2.9, 6.0]], brick, { at: [0, 0, -10], segs: 8, start: Math.PI / 2, sweep: Math.PI });
+    b.lathe([[3.05, 6.0], [2.5, 6.9], [1.4, 7.4], [0.01, 7.6]], tile, { at: [0, 0, -10], segs: 8, start: Math.PI / 2, sweep: Math.PI });
     for (const a of [Math.PI * 0.75, Math.PI, Math.PI * 1.25]) {
-      b.group({ at: [3.2 * Math.sin(a), 0, -10 + 3.2 * Math.cos(a)], rotY: a }, () => win(b, 0, 3.4, 0.9, 1.8, tufa, { shape: 'round', border: 0.12 }));
+      b.group({ at: [2.9 * Math.sin(a), 0, -10 + 2.9 * Math.cos(a)], rotY: a }, () => win(b, 0, 3.4, 0.9, 1.8, tufa, { shape: 'round', border: 0.12 }));
     }
-    b.collider(6.4, 3.2, { at: [0, 0, -11.6] });
+    b.collider(5.8, 2.9, { at: [0, 0, -11.45] });
     for (const s of [-1, 1] as const) {
       onFace(b, s > 0 ? '+x' : '-x', [s * 5, 0, -5.75], () => {
         for (const x of [-2.5, 0.5, 3.0]) win(b, x, 4.2, 1.1, 2.2, tufa, { shape: 'round', border: 0.14 });

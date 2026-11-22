@@ -173,7 +173,7 @@ export const locanda: BuildingDef = {
     }
     b.box(1.6, 0.1, 0.8, wood, { at: [-3.8, BH + 0.3, ZBI + 0.4] });
     for (const x of spread(6, -XO + 1, XO - 1)) b.panel(0.3, 0.6, P.timberBlack, { at: [x, 2.0, ZB], facing: '-z' });
-    tiledGable(b, 2 * XO, ZBI - ZB, ((ZBI - ZB) / 2) * 0.42, tile, { at: [0, BTOP, bz], overhang: 0.5, wall: stone, step: 0.9 });
+    tiledGable(b, 2 * XO, ZBI - ZB, ((ZBI - ZB) / 2) * 0.42, tile, { at: [0, BTOP, bz], overhang: 0.3, wall: stone, step: 0.9 });
 
     // ---------------- the yard: a well with its pulley arch, a trough, a mounting block
     b.cyl(0.7, 0.9, P.travertine, { at: [-1.6, 0, -1.6], segs: 8 });

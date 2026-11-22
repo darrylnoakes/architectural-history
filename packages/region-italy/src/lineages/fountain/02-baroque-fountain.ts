@@ -37,14 +37,33 @@ function basin(b: Builder, color: number, water: number): void {
   add(wat, water, 'glass');
 }
 
-/** A chain of tapering segments through the given points (a dolphin’s body, a fish tail). */
+/** A smooth tapering body through the given points (a dolphin, a fish tail), built from overlapping spheres. */
 function chain(b: Builder, pts: V3[], r0: number, r1: number, color: number): void {
+  const segL: number[] = [];
+  let total = 0;
   for (let i = 0; i < pts.length - 1; i++) {
-    const t = i / (pts.length - 1);
-    const r = r0 + (r1 - r0) * t;
-    b.beam(pts[i], pts[i + 1], r * 2, r * 2, color);
-    b.sphere(r * 1.02, color, { at: pts[i + 1], segs: 6 });
+    const L = Math.hypot(pts[i + 1][0] - pts[i][0], pts[i + 1][1] - pts[i][1], pts[i + 1][2] - pts[i][2]);
+    segL.push(L);
+    total += L;
   }
+  let done = 0;
+  for (let i = 0; i < pts.length - 1; i++) {
+    const rl = r0 + (r1 - r0) * ((done + segL[i] / 2) / total);
+    const n = Math.max(1, Math.round(segL[i] / (rl * 1.25)));
+    for (let k = 0; k < n; k++) {
+      const u = k / n;
+      const t = (done + segL[i] * u) / total;
+      const r = r0 + (r1 - r0) * t;
+      const p: V3 = [
+        pts[i][0] + (pts[i + 1][0] - pts[i][0]) * u,
+        pts[i][1] + (pts[i + 1][1] - pts[i][1]) * u,
+        pts[i][2] + (pts[i + 1][2] - pts[i][2]) * u,
+      ];
+      b.sphere(r, color, { at: p, segs: 7 });
+    }
+    done += segL[i];
+  }
+  b.sphere(r1, color, { at: pts[pts.length - 1], segs: 6 });
 }
 
 /** A scallop valve: a ribbed fan of radius r, opening upward, hinged at the origin of its group. */
@@ -84,7 +103,7 @@ export const baroqueFountain: BuildingDef = {
   influences: ['baroque-export'],
   lookFor: [
     { label: 'Triton', note: 'A sea god of Greek myth, half man and half fish, kneeling on the shell and blowing through a conch.', at: [0, 4.4, 0.6] },
-    { label: 'Water jet', note: 'Water is forced up through the conch and falls back over the figure: the water is part of the sculpture.', at: [0, 7.1, 0] },
+    { label: 'Water jet', note: 'Water is forced up through the conch and falls back over the figure: the water is part of the sculpture.', at: [0, 7.3, 0.3] },
     { label: 'Dolphins', note: 'Four dolphins dive head down into the basin, their tails knotted together under the shell.', at: [1.5, 1.6, 1.5] },
     { label: 'Open scallop shell', note: 'The two valves of a giant shell open like a stage for the Triton.', at: [1.6, 3.3, 0] },
     { label: 'Papal arms with bees', note: 'Between the tails, the arms of Urban VIII: the bees of the Barberini family under the papal crossed keys and tiara.', at: [0, 2.4, 1.0] },
@@ -149,16 +168,16 @@ export const baroqueFountain: BuildingDef = {
       for (const s of [1, -1]) chain(b, [[s * 0.35, 1.45, 0], [s * 0.45, 1.75, 0.25], [s * 0.12, 2.0, 0.22]], 0.09, 0.07, trav);
       b.cone(0.17, 0.75, trav, { at: [0, 1.95, 0.12], segs: 6, rot: [-0.25, 0, 0] });
     });
-    // the jet: up from the conch, then falling back as spray
+    // the jet: up from the conch, then falling back as spray onto the shell and into the pool
     const J0: V3 = [0, S0 + 2.8, 0.3];
-    b.cyl(0.07, 3.3, spray, { at: J0, segs: 6, ...W });
-    for (let i = 0; i < 6; i++) {
-      const a = (i / 6) * Math.PI * 2;
-      const top: V3 = [J0[0] + Math.sin(a) * 0.35, J0[1] + 3.3, J0[2] + Math.cos(a) * 0.35];
-      const mid: V3 = [Math.sin(a) * 1.4, J0[1] + 2.2, Math.cos(a) * 1.4];
-      b.beam([J0[0], J0[1] + 3.3, J0[2]], top, 0.06, 0.06, spray, W);
-      b.beam(top, mid, 0.06, 0.06, spray, W);
-      b.beam(mid, [Math.sin(a) * 2.6, RIM_H - 0.2, Math.cos(a) * 2.6], 0.05, 0.05, spray, W);
+    const JH = 1.9;
+    b.cyl(0.07, JH, spray, { at: J0, segs: 6, ...W });
+    for (let i = 0; i < 5; i++) {
+      const a = (i / 5) * Math.PI * 2 + 0.3;
+      const top: V3 = [J0[0], J0[1] + JH, J0[2]];
+      const mid: V3 = [Math.sin(a) * 0.55, J0[1] + JH + 0.15, J0[2] + Math.cos(a) * 0.55];
+      b.beam(top, mid, 0.04, 0.04, spray, W);
+      b.beam(mid, [Math.sin(a) * 1.3, S0 + 1.6, Math.cos(a) * 1.3], 0.04, 0.04, spray, W);
     }
 
     // ---------------------------------------------------------------- solid

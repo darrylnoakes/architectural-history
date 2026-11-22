@@ -10,6 +10,8 @@ import { casaASchiera } from './07-casa-a-schiera';
 import { renaissanceHouse } from './08-renaissance-house';
 import { baroqueTownhouse } from './09-baroque-townhouse';
 import { umbertineApartments } from './10-umbertine-apartments';
+import { palazzina } from './11-palazzina';
+import { lowEnergyFlats } from './12-low-energy-flats';
 
 const lineage: Lineage = {
   id: 'home',
@@ -28,6 +30,8 @@ const lineage: Lineage = {
     { from: 1480, builtUntil: 1600, def: renaissanceHouse },
     { from: 1680, builtUntil: 1780, def: baroqueTownhouse },
     { from: 1885, builtUntil: 1914, def: umbertineApartments },
+    { from: 1962, builtUntil: 1980, def: palazzina },
+    { from: 2016, def: lowEnergyFlats },
   ],
 };
 

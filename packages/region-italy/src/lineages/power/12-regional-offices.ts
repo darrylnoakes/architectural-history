@@ -1,5 +1,5 @@
 import { P, mix, spread, tint, type BuildingDef, type Builder } from '@ah/kit';
-import { MON, PAL, PORTAL_X, brickSquare, kingMonument, lordsColliders, lordsCourt, palaceColliders, palazzoPubblico, pave } from './shared';
+import { MON, PAL, brickSquare, kingMonument, lordsColliders, lordsCourt, palaceColliders, palazzoPubblico, pave } from './shared';
 
 /** The regional office block in zone C. */
 const RO = { x0: 7.5, x1: 20.5, z0: -18, z1: 5, piloti: 4, f: 3.3, floors: 4 };
@@ -28,23 +28,34 @@ export const regionalOffices: BuildingDef = {
     { label: 'Pilotis', note: 'The office floors stand on a row of concrete columns, leaving a covered space and a glass entrance hall beneath.', at: [RO.x1 - 0.6, 2.4, RO.z1 - 3] },
     { label: 'Ribbon windows and sun fins', note: 'Each floor is a continuous band of glass between concrete spandrels, shaded by upright concrete fins.', at: [RO.x1 + 0.6, 8.8, -6] },
     { label: 'Stair and lift tower', note: 'A windowless concrete shaft holding the stairs, lift and services, set against the block like a tower.', at: [RO.x0 + 2, 15, RO.z0 - 0.5] },
-    { label: 'Car park in the square', note: 'In the boom years the old square filled with parked cars; they would be cleared only decades later.', at: [-12, 1.8, 14] },
-    { label: 'The old palace, kept', note: 'The Palazzo Pubblico still houses the comune, the town council, under its medieval tower.', at: [PORTAL_X, 21.5, PAL.zf + 0.6] },
+    { label: 'Car park', note: 'In the boom years every square and forecourt filled with parked cars; on the main square they would be cleared only decades later.', at: [8.6, 1.8, 18.6] },
+    { label: 'Plant room on the roof', note: 'Boxes for the lift machinery and the air-conditioning, which modern offices now needed, sit on the flat roof.', at: [16, (RO.piloti + RO.f * RO.floors) + 2.4, (RO.z0 + RO.z1) / 2] },
   ],
   build(b) {
-    palazzoPubblico(b, { stage: 1975 });
-    lordsCourt(b);
-    brickSquare(b, -21.5, 21.5, PAL.zf, 21.5);
-    // tarmac laid over the brick for the car park
-    pave(b, 34, 11, -4.5, 15.6, mix(P.tarmac, P.cobble, 0.35), 0.03);
-    for (const x of spread(10, -20, 10)) b.box(0.1, 0.1, 4, P.white, { at: [x, 0.03, 18.5], jitter: false });
-    kingMonument(b);
+    // on the main plot it stands beside the old palace; elsewhere it stands alone with its own car park
+    const alone = b.variant > 0;
     const colours = [0xe0e0d8, 0xc23b2e, 0x3f6f9c, 0xd8a93a, 0x5c8f6a, 0x8a8f94, 0xe0e0d8, 0x9c6b3e];
-    spread(8, -18.6, 8.6).forEach((x, i) => {
-      if (Math.abs(x - MON[0]) < 3.4) return;
-      car(b, x, 18.6, i % 2 ? 0.05 : -0.04, colours[i]);
-    });
-    car(b, -14, 11.6, Math.PI / 2, colours[3]);
+    if (!alone) {
+      palazzoPubblico(b, { stage: 1975 });
+      lordsCourt(b);
+      brickSquare(b, -21.5, 21.5, PAL.zf, 21.5);
+      // tarmac laid over the brick for the car park
+      pave(b, 34, 11, -4.5, 15.6, mix(P.tarmac, P.cobble, 0.35), 0.03);
+      for (const x of spread(10, -20, 10)) b.box(0.1, 0.1, 4, P.white, { at: [x, 0.03, 18.5], jitter: false });
+      kingMonument(b);
+      spread(8, -18.6, 8.6).forEach((x, i) => {
+        if (Math.abs(x - MON[0]) < 3.4) return;
+        car(b, x, 18.6, i % 2 ? 0.05 : -0.04, colours[i]);
+      });
+      car(b, -14, 11.6, Math.PI / 2, colours[3]);
+    } else {
+      // a forecourt car park of its own in front of the block
+      pave(b, 18.5, 15, 12.25, 14, mix(P.tarmac, P.cobble, 0.35), 0.03);
+      for (const x of spread(6, 2.75, 21.25)) b.box(0.1, 0.1, 4, P.white, { at: [x, 0.03, 18.5], jitter: false });
+      [4.7, 8.6, 12.5, 16.4, 20.1].forEach((x, i) => car(b, x, 18.6, i % 2 ? 0.05 : -0.04, colours[i + 1]));
+      car(b, 6, 11.2, Math.PI / 2, colours[6]);
+      pave(b, 15, 3.5, 14, -19.75, mix(P.paving, P.concrete, 0.4));
+    }
 
     const { x0, x1, z0, z1, piloti, f, floors } = RO;
     const W = x1 - x0;
@@ -73,8 +84,10 @@ export const regionalOffices: BuildingDef = {
     // a sign over the entrance
     b.box(5, 0.6, 0.1, P.cladBlue, { at: [xc, piloti - 0.8, z1 + 0.05], jitter: false });
 
-    palaceColliders(b, true);
-    lordsColliders(b);
+    if (!alone) {
+      palaceColliders(b, true);
+      lordsColliders(b);
+    }
     for (const x of [x0 + 0.6, x1 - 0.6]) for (const z of spread(5, z0 + 0.6, z1 - 0.6)) b.collider(0.8, 0.8, { at: [x, 0, z] });
     b.collider(W - 4, D - 4, { at: [xc, 0, zc] });
     b.collider(4, 4, { at: [x0 + 2, 0, z0 - 1] });

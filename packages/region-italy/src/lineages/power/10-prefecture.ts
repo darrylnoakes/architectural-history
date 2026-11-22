@@ -37,7 +37,7 @@ function aedicule(b: Builder, at: [number, number, number], rotY: number, ped: '
  * The prefecture of the 1880s: a Neo-Renaissance palazzo in stucco with a rusticated ground floor,
  * pedimented windows on the piano nobile, a balcony over the portal, a deep cornice and the Savoy arms.
  */
-export function prefecture(b: Builder): void {
+export function prefecture(b: Builder, o?: { alone?: boolean }): void {
   const { x0, x1, z0, z1, g, n, t } = PREF;
   const W = x1 - x0;
   const D = z1 - z0;
@@ -95,6 +95,16 @@ export function prefecture(b: Builder): void {
     rectWindow(b, 1.3, 2.7, { at: [x1, g + 0.9, z], facing: '+x', frame: stone, cornice: true, sill: true });
     rectWindow(b, 1.1, 1.8, { at: [x1, g + n + 0.8, z], facing: '+x', frame: stone, cornice: true });
   }
+  // standing free, the side that met the old palace gets windows like the street side
+  if (o?.alone) {
+    for (const z of spread(6, z0 + 1.8, z1 - 1.8)) {
+      rectWindow(b, 1.2, 2.0, { at: [x0, 1.6, z], facing: '-x', frame: stone });
+      rectWindow(b, 1.3, 2.7, { at: [x0, g + 0.9, z], facing: '-x', frame: stone, cornice: true, sill: true });
+      rectWindow(b, 1.1, 1.8, { at: [x0, g + n + 0.8, z], facing: '-x', frame: stone, cornice: true });
+    }
+    corbels(b, [x1, z0], [x0, z0], H - 0.6, 0.7, stone, { pitch: 0.8, h: 0.6 });
+    for (let y = g + 0.3; y < H - 0.6; y += 1.1) b.box(0.9, 0.55, 0.9, tint(stucco, -0.08), { at: [x0 + 0.4, y, z0 + 0.4], jitter: false });
+  }
   for (const x of bays) {
     rectWindow(b, 1.2, 2.2, { at: [x, g + 0.9, z0], facing: '-z', frame: stone, cornice: true });
     rectWindow(b, 1.1, 1.8, { at: [x, g + n + 0.8, z0], facing: '-z', frame: stone });
@@ -119,14 +129,21 @@ export const prefectureDef: BuildingDef = {
     { label: 'Alternating pediments', note: 'The main-floor windows are framed like little temples, capped by triangular and curved pediments in turn.', at: [PREF.x0 + 5.4, PREF.g + 4.4, PREF.z1 + 0.4] },
     { label: 'Rusticated ground floor', note: 'The stucco of the ground floor is scored in deep horizontal channels to look like heavy blocks of stone.', at: [PREF.x0 + 1.6, 2.4, PREF.z1 + 0.3] },
     { label: 'Balcony and Savoy arms', note: 'The prefect’s balcony over the portal, below the white cross on red of the royal house of Savoy.', at: [(PREF.x0 + PREF.x1) / 2, PREF.g + 1.4, PREF.z1 + 1.6] },
-    { label: 'The old palace, kept', note: 'The medieval Palazzo Pubblico and its tower are kept as the town hall, now flying the Italian tricolour.', at: [PAL.x1 - 1, 17.2, PAL.zf + 0.6] },
+    { label: 'Main cornice', note: 'A deep projecting cornice on stone brackets crowns the building, as on the Florentine palaces it imitates.', at: [PREF.x1 + 1.0, PREF.g + PREF.n + PREF.t - 0.2, PREF.z1 - 2] },
   ],
   modelledOn: 'The prefectures and equestrian monuments to Victor Emmanuel II raised in Italian provincial capitals after unification',
   build(b) {
-    palazzoPubblico(b, { stage: 1885 });
-    lordsCourt(b);
-    prefecture(b);
-    brickSquare(b, -21.5, 21.5, PAL.zf, 21.5);
+    // on the main plot it stands beside the old palace; elsewhere it stands alone on its own square
+    const alone = b.variant > 0;
+    if (!alone) {
+      palazzoPubblico(b, { stage: 1885 });
+      lordsCourt(b);
+      brickSquare(b, -21.5, 21.5, PAL.zf, 21.5);
+    } else {
+      pave(b, 31, 14.5, 6, 14.25, mix(P.paving, P.travertine, 0.4));
+      pave(b, 2.4, 19.4, PREF.x0 - 1.2, -2.5, mix(P.paving, P.travertine, 0.4));
+    }
+    prefecture(b, { alone });
     kingMonument(b);
     // a small public garden behind the prefecture, with palms and a gravel walk
     pave(b, 14, 9.4, PREF.x0 + 7, -16.8, mix(P.gravel, P.grassDry, 0.3));
@@ -137,11 +154,13 @@ export const prefectureDef: BuildingDef = {
     b.tree(5, { kind: 'round', at: [14, 0, -17] });
     b.box(14, 1.2, 0.3, P.castIron, { at: [PREF.x0 + 7, 0, -21.4], jitter: false });
     // gas lamps in the square
-    for (const [x, z] of [[-14, 12], [2, 12], [12, 12]] as const) {
+    for (const [x, z] of (alone ? [[2, 12], [12, 12]] : [[-14, 12], [2, 12], [12, 12]]) as [number, number][]) {
       b.cyl(0.1, 3.6, P.castIron, { at: [x, 0, z], segs: 6 });
       b.box(0.4, 0.5, 0.4, P.glass, { at: [x, 3.6, z], mat: 'glass' });
     }
-    palaceColliders(b, true);
-    lordsColliders(b);
+    if (!alone) {
+      palaceColliders(b, true);
+      lordsColliders(b);
+    }
   },
 };

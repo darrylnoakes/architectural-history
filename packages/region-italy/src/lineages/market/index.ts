@@ -7,6 +7,7 @@ import { stallsInTheRuins } from './04-stalls-in-the-ruins';
 import { grainLoggia } from './05-grain-loggia';
 import { renaissanceLoggia } from './06-renaissance-loggia';
 import { galleria } from './07-galleria';
+import { rationalistMarket } from './08-rationalist-market';
 
 const lineage: Lineage = {
   id: 'market',
@@ -22,6 +23,7 @@ const lineage: Lineage = {
     { from: 1290, def: grainLoggia },
     { from: 1550, def: renaissanceLoggia },
     { from: 1877, builtUntil: 1922, def: galleria },
+    { from: 1936, def: rationalistMarket },
   ],
 };
 

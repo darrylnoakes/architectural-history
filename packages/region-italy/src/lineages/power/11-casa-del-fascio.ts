@@ -3,7 +3,6 @@ import {
   MON,
   MON_TOP,
   PAL,
-  TWR,
   brickSquare,
   kingMonument,
   lordsColliders,
@@ -31,15 +30,19 @@ export const casaDelFascio: BuildingDef = {
     { label: 'Blank wall', note: 'The right-hand part of the front is a plain marble plane, meant as a surface for propaganda images.', at: [CF.x1 - 2.2, 9, CF.z1 + 0.3] },
     { label: 'Glass doors', note: 'A continuous row of glazed doors on the ground floor, to join the hall inside to the square outside.', at: [CF.x1 - 4, 1.4, CF.z1 + 0.4] },
     { label: 'Flat roof and glass-block skylight', note: 'No roof tiles and no cornice: the hall in the middle is lit from above through a ceiling of glass blocks.', at: [(CF.x0 + CF.x1) / 2, CF.g + CF.f * (CF.floors - 1) + 1.2, (CF.z0 + CF.z1) / 2] },
-    { label: 'The old palace, kept', note: 'The medieval palace and its tower stand beside the new building, the podestà’s seat, with the tower’s bell still ringing the hours.', at: [TWR.x + 2.6, 26, TWR.z + 2.6] },
+    { label: 'Marble platform', note: 'The whole building stands on a low marble plinth, a step up from the square, like a temple on its podium.', at: [CF.x0 + 1.5, 0.6, CF.z1 + 1.0] },
   ],
   modelledOn: 'Giuseppe Terragni’s Casa del Fascio, Como (1932 to 1936), much reduced and less wide',
   influences: ['rationalism'],
   build(b) {
-    palazzoPubblico(b, { stage: 1934 });
-    lordsCourt(b);
-    brickSquare(b, -21.5, 21.5, PAL.zf, 21.5);
-    kingMonument(b);
+    // on the main plot it stands beside the old palace; elsewhere it stands alone on its own forecourt
+    const alone = b.variant > 0;
+    if (!alone) {
+      palazzoPubblico(b, { stage: 1934 });
+      lordsCourt(b);
+      brickSquare(b, -21.5, 21.5, PAL.zf, 21.5);
+      kingMonument(b);
+    } else pave(b, 15, 7, 14, 10.5, mix(P.paving, P.travertine, 0.4));
 
     const { x0, x1, z0, z1, g, f, floors } = CF;
     const W = x1 - x0;
@@ -104,8 +107,10 @@ export const casaDelFascio: BuildingDef = {
     b.cyl(0.08, 12, P.steel, { at: [14, 0, -12], segs: 6 });
     b.box(1.8, 1.2, 0.04, P.black, { at: [14.95, 10.6, -12], jitter: false });
 
-    palaceColliders(b, true);
-    lordsColliders(b);
+    if (!alone) {
+      palaceColliders(b, true);
+      lordsColliders(b);
+    }
     b.collider(W, D - 0.9, { at: [xc, 0, zc - 0.45] });
     void MON;
     void MON_TOP;

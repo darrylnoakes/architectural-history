@@ -53,7 +53,7 @@ export const stadium: BuildingDef = {
   summary:
     'Football and athletics became mass entertainment between the wars, and the Fascist regime promoted sport and paid for stadiums in town after town. ' +
     'This one shows the engineer’s art more than the architect’s: the concrete is left bare, and every part is shaped by the forces in it. ' +
-    'The roof over the main stand is a thin slab hung from cantilevered beams, so no columns block the view; spiral stairs wind up to the upper terraces, and a slender tower marks the stadium across the town. ' +
+    'The roof over the main stand is a thin slab carried by cantilevered beams, so no columns block the view; spiral stairs wind up to the upper terraces, and a slender tower marks the stadium across the town. ' +
     'Where the opera house seated two thousand by rank, the stand and the open terraces hold everyone together.',
   materials: ['reinforced concrete, left exposed', 'steel railings', 'cinder running track', 'grass'],
   modelledOn:
@@ -62,7 +62,7 @@ export const stadium: BuildingDef = {
   lookFor: [
     {
       label: 'Cantilevered roof',
-      note: 'The canopy is carried only from behind: each beam is deep where it meets its column and tapers to a knife edge over the front rows.',
+      note: 'The canopy is carried only from behind: each beam rises above the thin roof slab, deep where it meets its column, and tapers to a point over the front rows.',
       at: [8.0, ROOF_Y + 0.6, -3.0],
     },
     {
@@ -99,9 +99,9 @@ export const stadium: BuildingDef = {
     for (let i = 1; i < 5; i++) b.box(40, 0.02, 0.06, P.white, { at: [0, 0.06, -2.8 + i * 1.12] });
     b.box(40, 0.02, 0.12, P.white, { at: [0, 0.06, 3.6] }); // touchline
     b.box(0.12, 0.02, 14.4, P.white, { at: [0, 0.06, 10.8] }); // halfway line
-    for (let i = 0; i <= 14; i++) {
+    for (let i = 1; i < 14; i++) {
       const a = -Math.PI / 2 + (i / 14) * Math.PI;
-      b.box(1.4, 0.02, 0.12, P.white, { at: [6.2 * Math.sin(a), 0.06, 18 - 6.2 * Math.cos(a) * 0.98], rotY: a + Math.PI / 2 });
+      b.box(1.4, 0.02, 0.12, P.white, { at: [6.2 * Math.sin(a), 0.06, 18 - 6.2 * Math.cos(a) * 0.98], rotY: -a });
     }
     b.box(W, 1.1, 0.25, concDark, { at: [0, 0, SZ0 + 0.4] }); // the low wall in front of the stand
 
@@ -132,8 +132,9 @@ export const stadium: BuildingDef = {
       // the beam: deep at the root, tapering to the tip, with a knee down to the column
       b.extrude(
         [
-          [-(SZ1 - 1.05), ROOF_Y + 0.1],
-          [-ROOF_TIP, ROOF_Y - 0.25],
+          [-(SZ1 - 1.05), ROOF_Y + 1.5],
+          [-(SZ1 + 3.0), ROOF_Y + 1.0],
+          [-ROOF_TIP, ROOF_Y - 0.3],
           [-ROOF_TIP, ROOF_Y - 0.55],
           [-(SZ1 + 2.5), ROOF_Y - 1.9],
           [-(SZ1 - 0.15), ROOF_Y - 3.2],
@@ -145,7 +146,7 @@ export const stadium: BuildingDef = {
       );
     }
     // the thin roof slab on the beams, falling slightly to the front
-    b.beam([0, ROOF_Y + 0.12, SZ1 - 1.1], [0, ROOF_Y - 0.2, ROOF_TIP], W + 1.2, 0.18, tint(conc, 0.04));
+    b.beam([0, ROOF_Y - 0.25, SZ1 - 1.1], [0, ROOF_Y - 0.47, ROOF_TIP], W + 1.2, 0.16, tint(conc, 0.04));
 
     // ------------------------------------------------ the spiral stairs at the ends of the stand
     b.sym((s) => {
@@ -156,14 +157,14 @@ export const stadium: BuildingDef = {
     // ------------------------------------------------ the tower
     {
       const tx = -6;
-      const tz = -16.2;
+      const tz = -15.7;
       const H = 26;
       b.box(2.2, H, 2.2, conc, { at: [tx, 0, tz] });
       b.sym((s) => b.box(0.35, H + 1.2, 0.6, concDark, { at: [tx + s * 1.25, 0, tz] })); // fins
       b.box(0.5, H - 6, 0.06, P.windowDark, { at: [tx, 3, tz + 1.12] }); // the slot of the stair
       b.box(3.6, 0.3, 3.6, conc, { at: [tx, H, tz] });
-      b.box(3.6, 1.0, 0.1, P.castIron, { at: [tx, H + 0.3, tz + 1.75] });
-      b.box(3.6, 1.0, 0.1, P.castIron, { at: [tx, H + 0.3, tz - 1.75] });
+      b.box(3.6, 0.08, 0.08, P.steel, { at: [tx, H + 1.2, tz + 1.75] });
+      b.box(3.6, 0.08, 0.08, P.steel, { at: [tx, H + 1.2, tz - 1.75] });
       b.box(3.0, 0.25, 3.0, conc, { at: [tx, H + 2.6, tz] });
       b.sym((s) => b.box(0.25, 2.3, 0.25, conc, { at: [tx + s * 1.3, H + 0.3, tz + 1.3] }));
       b.sym((s) => b.box(0.25, 2.3, 0.25, conc, { at: [tx + s * 1.3, H + 0.3, tz - 1.3] }));
@@ -179,6 +180,6 @@ export const stadium: BuildingDef = {
     b.collider(W, SZ0 - SZ1 + 0.4, { at: [0, 0, (SZ0 + SZ1) / 2] });
     for (const x of xs) b.collider(0.8, 1.0, { at: [x, 0, SZ1 - 0.6] });
     b.sym((s) => b.collider(1.2, 1.2, { at: [s * 18, 0, -9] }));
-    b.collider(3.0, 3.0, { at: [-6, 0, -16.2] });
+    b.collider(3.0, 3.0, { at: [-6, 0, -15.7] });
   },
 };

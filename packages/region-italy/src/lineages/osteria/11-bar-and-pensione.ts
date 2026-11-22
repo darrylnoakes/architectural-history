@@ -158,4 +158,3 @@ export const barAndPensione: BuildingDef = {
   },
 };
 
-void ({} as Builder);
