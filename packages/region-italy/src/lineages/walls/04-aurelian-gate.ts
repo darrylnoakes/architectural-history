@@ -1,8 +1,9 @@
-import { P, mix, tint, type Builder, type BuildingDef } from '@ah/kit';
-import { HALF, archPanel, gateMass, merlonsX, road, voussoirs } from './shared';
+import { P, mix, tint, type BuildingDef } from '@ah/kit';
+import { HALF, archPanel, gateMass, road, voussoirs } from './shared';
+import { AURELIAN, WALL_COLOURS, aurelianTower, curtain } from './curtain';
 
-const WALL_T = 3.4;
-const WALL_H = 8.0;
+const WALL_T = AURELIAN.t;
+const WALL_H = AURELIAN.h;
 const WF = WALL_T / 2; // outer face of the curtain
 const OW = 3.8; // gate opening
 const OH = 6.0;
@@ -10,13 +11,7 @@ const GX = 3.6; // half-width of the gate block
 const GH = 11.2;
 const GF = WF + 0.5; // the gate front stands a little forward
 const RT = { x: 5.9, r: 2.8, h: 14.2, z: WF + 0.6 }; // round-fronted gate towers
-const ST = { x: 13.2, w: 3.6, h: 11.2, out: 3.0 }; // square interval towers
-
-/** A crenellated parapet round the top of a w × d rectangle with brick merlons. */
-function battlements(b: Builder, w: number, d: number, y: number, color: number, at: [number, number]) {
-  b.crenel(w, d, color, { at: [at[0], y, at[1]], merlonW: 0.8, merlonH: 1.1, t: 0.5 });
-  b.box(w, 0.5, d, color, { at: [at[0], y - 0.5, at[1]] });
-}
+const ST = { x: 13.2, ...AURELIAN.tower }; // the square interval towers nearest the gate
 
 export const aurelianGate: BuildingDef = {
   id: 'aurelian-gate',
@@ -38,7 +33,7 @@ export const aurelianGate: BuildingDef = {
     { label: 'Gate chamber', note: 'A room over the arch, lit by a row of windows, from which the guard watched the road and defended the gate.', at: [0, 9.2, GF + 0.3] },
   ],
   build(b) {
-    const brick = tint(mix(mix(P.brickRed, P.brickDark, 0.3), P.brickBuff, 0.28), b.range(-0.03, 0.02));
+    const brick = WALL_COLOURS.aurelian.brick;
     const band = tint(brick, -0.08);
     const stone = P.travertine;
     const roof = P.coppi;
@@ -46,40 +41,10 @@ export const aurelianGate: BuildingDef = {
     road(b, 5.2, mix(P.peperino, P.cobble, 0.4));
     for (let z = -7.5; z < 8; z += 1.1) b.box(5.2, 0.01, 0.05, tint(P.peperino, -0.12), { at: [0, 0.04, z], jitter: false });
 
-    // ---------------------------------------------------------------- the curtain wall
+    // ---------------------------------------------------------------- the curtain wall and its square towers
     b.sym((s) => {
-      const x0 = GX;
-      const xc = s * (x0 + HALF) / 2;
-      const L = HALF - x0;
-      b.box(L, WALL_H, WALL_T, brick, { at: [xc, 0, 0] });
-      // levelling courses where the gangs stopped, and putlog holes for their scaffolding
-      for (const y of [1.9, 3.9, 5.9]) b.box(L, 0.08, WALL_T + 0.04, band, { at: [xc, y, 0], jitter: false });
-      for (let x = x0 + 1; x < HALF; x += 1.6) for (const y of [2.5, 4.5]) b.panel(0.18, 0.18, P.black, { at: [s * x, y, WF], depth: 0.02 });
-      // parapet with merlons on the outer edge and a low wall on the inner edge
-      b.box(L, 0.25, WALL_T + 0.15, tint(brick, 0.03), { at: [xc, WALL_H - 0.25, 0] });
-      merlonsX(b, s > 0 ? x0 : -HALF, s > 0 ? HALF : -x0, WALL_H, WF - 0.3, brick, { w: 0.85, h: 1.3, t: 0.6, gap: 0.75 });
-      b.box(L, 0.4, 0.35, brick, { at: [xc, WALL_H, -WF + 0.18] });
-    });
-
-    // ---------------------------------------------------------------- square interval towers
-    b.sym((s) => {
-      b.group({ at: [s * ST.x, 0, 0] }, () => {
-        const d = WALL_T + ST.out;
-        const zc = -WF + d / 2;
-        b.box(ST.w, ST.h, d, brick, { at: [0, 0, zc] });
-        for (const y of [1.9, 3.9, 5.9]) b.box(ST.w + 0.04, 0.08, d + 0.04, band, { at: [0, y, zc], jitter: false });
-        battlements(b, ST.w, d, ST.h, brick, [0, zc]);
-        // the chamber: two ballista windows to the field, one to each side
-        const zf = WF + ST.out;
-        for (const x of [-0.75, 0.75]) {
-          archPanel(b, 1.0, 1.7, stone, { at: [x, ST.h - 4.2, zf], depth: 0.04 });
-          archPanel(b, 0.8, 1.55, P.windowDark, { at: [x, ST.h - 4.15, zf], depth: 0.07 });
-        }
-        archPanel(b, 0.8, 1.55, P.windowDark, { at: [-s * ST.w / 2, ST.h - 4.15, WF + ST.out / 2], facing: s > 0 ? '-x' : '+x', depth: 0.07 });
-        b.panel(0.18, 1.1, P.black, { at: [0, 3.2, zf], depth: 0.04 });
-        // the door into the tower from the wall-walk, on the town side
-        b.panel(0.9, 1.9, P.oakDark, { at: [-s * 0.6, WALL_H, -WF], facing: '-z', shape: 'round' });
-      });
+      curtain(b, 'aurelian', s > 0 ? GX : -HALF, s > 0 ? HALF : -GX, { towers: false, detail: true });
+      aurelianTower(b, s * ST.x, s);
     });
 
     // ---------------------------------------------------------------- the gate block

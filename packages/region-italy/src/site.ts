@@ -1,11 +1,14 @@
 import { P, car, lamp, smoothstep, tint, type Road, type Site, type SiteProp } from '@ah/kit';
+import { wallClearings, wallProps } from './town-walls';
 
 /**
  * The ground the Italian city stands on. +x east, +z south. Two Roman streets cross at the origin:
  * the cardo north-south along x = 0 and the decumanus east-west along z = 0. The river flows west
  * to east along z = 96, twenty-four metres wide. North of the decumanus, Piazza Grande opens off the
  * east side of the cardo and the cathedral square off the west; the market square lies to the
- * south-west. The quarters of united Italy, the station and the railway are south of the river.
+ * south-west. A wall runs round the city on three sides, between three gates (`town-walls.ts`); the
+ * river closes the fourth. The quarters of united Italy, the station and the railway are south of
+ * the river.
  * The plots that line these streets are in `plots.ts`.
  */
 
@@ -60,6 +63,8 @@ const roads: Road[] = [
   // (it runs on the line of the east wall, pulled down after 1870, and steps aside round the old gate)
   { id: 'boulevard-north', kind: 'main', pts: [[146, -128], [146, -26], [134, -17], [134, 17], [146, 26], [146, 79]], since: 1880 },
   { id: 'via-dei-mulini-east', kind: 'lane', pts: [[128, 55], [146, 55]], since: 1880 },
+  // ...and round the north-east corner to join the old road outside the north gate
+  { id: 'boulevard-ring', kind: 'main', pts: [[146, -128], [132, -142], [0, -142]], since: 1880 },
   { id: 'boulevard-south', kind: 'main', pts: [[146, 113], [146, 136]], since: 1880 },
   { id: 'footbridge-path-north', kind: 'lane', pts: [[-36, 74], [-36, 79]], since: 2008 },
   { id: 'footbridge-path-south', kind: 'lane', pts: [[-36, 113], [-36, 136]], since: 2008 },
@@ -324,7 +329,8 @@ export const site: Site = {
   clearings: [
     { x: ROCCA.x, z: ROCCA.z, r: 30 },
     { x: 0, z: RAIL_Z, r: 60 },
+    ...wallClearings,
   ],
-  props,
+  props: [...wallProps, ...props],
   view: { target: [4, 4, 14], distance: 250, azimuth: 0.55, polar: 0.98 },
 };

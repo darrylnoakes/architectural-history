@@ -54,6 +54,11 @@ of each lineage stand on plots that appear later (`since`): villas outside the n
 theatre and prefecture on the boulevard, the quarter of united Italy and the station south of the
 river, the housing estates beyond the east gate. Every stage of every lineage stands somewhere.
 
+The city wall is drawn by the site, not by plots (`town-walls.ts`): it runs between the three gate
+plots on the west, north and east, built from the same pieces as the gates (`lineages/walls/curtain.ts`)
+and replaced in the same years, so wall and gates always match. After 1870 the east side and most
+of the rest come down for the boulevard; the north-western stretch is kept.
+
 Three stages of the power lineage (`prefecture`, `casa-del-fascio`, `regional-offices`) are modelled
 beside the old civic palace when they are on the main plot and as free-standing buildings anywhere
 else (`b.variant > 0`), which is how they come to stand on their own plots in the town.

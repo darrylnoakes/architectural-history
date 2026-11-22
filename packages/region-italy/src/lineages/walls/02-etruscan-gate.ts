@@ -1,5 +1,6 @@
 import { P, mix, tint, type BuildingDef } from '@ah/kit';
 import { HALF, blockWall, gateMass, road, voussoirs } from './shared';
+import { ETRUSCAN, WALL_COLOURS, curtain } from './curtain';
 
 // Gate block: the passage is OW wide, springs at SPRING and is ZF..ZB deep.
 const OW = 4.0;
@@ -8,8 +9,8 @@ const GW = 9.8; // width of the gate block
 const ZF = 2.6; // outer face of the gate block
 const ZB = -3.6; // inner face
 const GH = 8.8;
-const WALL_T = 3.2;
-const WALL_H = 7.4;
+const WALL_T = ETRUSCAN.t;
+const WALL_H = ETRUSCAN.h;
 
 export const etruscanGate: BuildingDef = {
   id: 'etruscan-gate',
@@ -31,22 +32,13 @@ export const etruscanGate: BuildingDef = {
     { label: 'Deep gate passage', note: 'The gate is a tunnel through the thickened wall, with a second arch on the town side where the doors were hung.', at: [0, 2.2, -0.5] },
   ],
   build(b) {
-    const stone = mix(P.tufa, P.pietraForte, b.range(0.35, 0.6));
+    const stone = WALL_COLOURS.etruscan.stone;
     const dark = mix(P.peperino, P.tufa, 0.25);
 
     road(b, 4.0, mix(P.gravel, P.earth, 0.3));
 
     // ---------------------------------------------------------------- the wall either side
-    b.sym((s) => {
-      const x0 = s > 0 ? GW / 2 : -HALF;
-      const x1 = s > 0 ? HALF : -GW / 2;
-      blockWall(b, x0, x1, 0, WALL_T, WALL_H, stone, { course: [0.62, 0.9], len: [1.3, 2.4], tone: 0.06 });
-      // a parapet of single blocks on the outer edge, the wall-walk behind it
-      b.group({ at: [0, WALL_H, 0] }, () => blockWall(b, x0, x1, WALL_T / 2 - 0.35, 0.7, 1.1, stone, { course: [1.1, 1.1], len: [1.4, 2.2], tone: 0.05 }));
-      b.box(Math.abs(x1 - x0), 0.05, WALL_T - 0.8, tint(stone, -0.12), { at: [(x0 + x1) / 2, WALL_H, -0.35], jitter: false });
-      // the footing course steps out a little
-      b.box(Math.abs(x1 - x0), 0.5, WALL_T + 0.5, tint(stone, -0.06), { at: [(x0 + x1) / 2, 0, 0] });
-    });
+    b.sym((s) => curtain(b, 'etruscan', s > 0 ? GW / 2 : -HALF, s > 0 ? HALF : -GW / 2, { detail: true }));
 
     // ---------------------------------------------------------------- the gate block
     const depth = ZF - ZB;

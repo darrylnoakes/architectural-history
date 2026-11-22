@@ -1,5 +1,6 @@
 import { P, mix, tint, type Builder, type BuildingDef } from '@ah/kit';
-import { HALF, gateMass, inwardOf, prismX, road, run, slab, voussoirs, type XY } from './shared';
+import { HALF, gateMass, road, slab, voussoirs } from './shared';
+import { BASTION, WALL_COLOURS, curtain } from './curtain';
 
 // ------------------------------------------------------------------ the gate block (kept in 1870)
 
@@ -79,23 +80,12 @@ export function gateBlock(b: Builder, stone: number): void {
   b.sym((s) => b.box(0.16, spring + 1.4, ow / 2, P.oakDark, { at: [s * (ow / 2 - 0.1), 0, back + ow / 4 + 0.6] }));
 }
 
-// ------------------------------------------------------------------ the ramparts
+// ------------------------------------------------------------------ the ramparts (drawn by curtain.ts)
 
-const CF = -0.6; // the foot of the curtain’s scarp
-const FX = 8.6; // the flanks of the two bastions
-const SH = 3.4; // the shoulder, where flank meets face
-const FACE_END: XY = [HALF, 7.2]; // the face runs off the plot towards the salient
-// scarp, magistral cordon, then a thick rounded parapet of earth faced with brick
-const SECTION: XY[] = [
-  [0, 0],
-  [1.0, 6.0],
-  [1.05, 7.3],
-  [1.9, 7.9],
-  [3.9, 7.55],
-  [4.5, 6.3],
-  [4.5, 0],
-];
-const TOP = 6.2; // the terreplein behind the parapet
+const { CF, SH } = BASTION;
+const FX = BASTION.PLOT_C - BASTION.G; // the inner flanks of the two bastions
+const SX = GATE.w / 2 - 0.2; // where the curtain meets the gate
+const TOP = BASTION.top;
 
 export const bastionGate: BuildingDef = {
   id: 'bastion-gate',
@@ -117,17 +107,16 @@ export const bastionGate: BuildingDef = {
     { label: 'Sentry box', note: 'A little stone turret (garitta) at the angle of the bastion, for a sentry to watch the ditch.', at: [FX + 0.9, 10.2, SH + 0.6] },
   ],
   build(b) {
-    const brick = tint(mix(P.brickRed, P.brickBuff, 0.25), b.range(-0.03, 0.02));
+    const { brick } = WALL_COLOURS.bastion;
     const trav = P.travertine;
-    const grass = mix(P.turf, P.grassDry, 0.45);
     const gateStone = mix(P.travertine, P.tufa, 0.35);
 
     // ---------------------------------------------------------------- the ditch and the bridge over it
     road(b, 5.4, mix(P.gravel, P.cobble, 0.4), { z0: -8, z1: GATE.back });
-    slab(b, [[-HALF, CF + 0.2], [HALF, CF + 0.2], [HALF, 8], [-HALF, 8]], 0, 0.03, mix(P.turf, P.hedge, 0.5));
-    // counterscarp: a low brick wall on the far side of the ditch
-    b.box(HALF * 2, 0.9, 0.6, brick, { at: [0, 0, 7.6] });
-    b.box(HALF * 2, 0.15, 0.7, trav, { at: [0, 0.9, 7.6] });
+    // the ditch and counterscarp under the bridge; either side they come with the ramparts
+    slab(b, [[-SX, CF + 0.2], [SX, CF + 0.2], [SX, BASTION.cs + 0.3], [-SX, BASTION.cs + 0.3]], 0, 0.03, WALL_COLOURS.bastion.ditch);
+    b.box(SX * 2, 0.9, 0.6, brick, { at: [0, 0, BASTION.cs], jitter: false });
+    b.box(SX * 2, 0.15, 0.7, trav, { at: [0, 0.9, BASTION.cs], jitter: false });
     // the bridge: masonry piers and a timber drawbridge span next to the gate
     b.box(4.6, 0.45, 8 - 3.2, mix(P.cobble, P.gravel, 0.3), { at: [0, 0, (8 + 3.2) / 2] });
     b.sym((s) => {
@@ -141,49 +130,7 @@ export const bastionGate: BuildingDef = {
 
     // ---------------------------------------------------------------- the ramparts either side
     b.sym((s) => {
-      const X = (p: XY): XY => [s * p[0], p[1]];
-      const inside: XY = X([12, -4]);
-      // curtain from the gate to the flank, the flank, and the face running off to the salient
-      const runs: [XY, XY][] = [
-        [X([GATE.w / 2 - 0.2, CF]), X([FX, CF])],
-        [X([FX, CF]), X([FX, SH])],
-        [X([FX, SH]), X(FACE_END)],
-      ];
-      for (const [p, q] of runs) {
-        const n = inwardOf(p, q, inside);
-        const clipQ = Math.abs(q[0]) === HALF;
-        run(b, p, q, n, SECTION, brick, { clipQ });
-        // the travertine cordon at the top of the scarp
-        const c0: [number, number, number] = [p[0] + n[0] * 1.0, 5.9, p[1] + n[1] * 1.0];
-        const c1: [number, number, number] = [q[0] + n[0] * 1.0, 5.9, q[1] + n[1] * 1.0];
-        const c1x = clipQ ? q[0] - s * 0.25 : c1[0] - n[0] * 0.15;
-        const c1z = clipQ ? c1[2] - n[1] * 0.15 + (c1x - (c1[0] - n[0] * 0.15)) * ((q[1] - p[1]) / (q[0] - p[0])) : c1[2] - n[1] * 0.15;
-        b.beam([c0[0] - n[0] * 0.15, c0[1] + 0.2, c0[2] - n[1] * 0.15], [c1x, c1[1] + 0.2, c1z], 0.45, 0.45, trav);
-        // the earth parapet top in turf
-        run(b, p, q, n, [[1.6, 7.92], [1.9, 7.93], [3.9, 7.58], [4.3, 6.9]], grass, { clipQ });
-      }
-      // the terreplein: one solid fill behind the parapets
-      slab(b, [X([GATE.w / 2, -1.5]), X([FX + 1, -1.5]), X([FX + 1, SH - 0.4]), X([HALF, 6.0]), X([HALF, -6.0]), X([GATE.w / 2, -6.0])], 0, TOP, grass);
-      // inner slope down to the town
-      prismX(b, s > 0 ? GATE.w / 2 : -HALF, s > 0 ? HALF : -GATE.w / 2, [[-6.0, TOP], [-8, 0], [-6.0, 0]], tint(grass, -0.04));
-      // casemate gunports low in the flank, aimed across the front of the gate
-      for (const z of [0.6, 2.2]) {
-        b.group({ at: [s * (FX + 0.42), 2.2, z], rotY: s > 0 ? -Math.PI / 2 : Math.PI / 2 }, () => {
-          b.panel(1.3, 1.1, trav, { shape: 'round', depth: 0.1 });
-          b.panel(0.9, 0.85, P.black, { at: [0, 0.05, 0], shape: 'round', depth: 0.14 });
-        });
-      }
-      // a sentry box (garitta) at the shoulder
-      b.group({ at: [s * (FX + 1.0), 7.0, SH + 0.4] }, () => {
-        b.cyl(0.8, 0.6, trav, { segs: 10, rTop: 0.95 });
-        b.cyl(0.95, 0.2, trav, { at: [0, 0.6, 0], segs: 10 });
-        b.cyl(0.8, 1.9, brick, { at: [0, 0.8, 0], segs: 10 });
-        b.panel(0.18, 0.7, P.black, { at: [0, 1.5, 0.8], depth: 0.04 });
-        b.panel(0.18, 0.7, P.black, { at: [s * 0.8, 1.5, 0], facing: s > 0 ? '+x' : '-x', depth: 0.04 });
-        b.cyl(0.95, 0.15, trav, { at: [0, 2.7, 0], segs: 10 });
-        b.dome(0.9, trav, { at: [0, 2.85, 0], segs: 10, squash: 0.8 });
-        b.cone(0.12, 0.5, trav, { at: [0, 3.55, 0], segs: 6 });
-      });
+      curtain(b, 'bastion', s > 0 ? SX : -HALF, s > 0 ? HALF : -SX);
       // a bronze cannon on its carriage, run up to the parapet of the face
       b.group({ at: [s * 12.2, TOP, 2.6], rotY: s * -0.5 }, () => {
         b.box(0.9, 0.55, 1.8, P.oak, { at: [0, 0.35, 0] });

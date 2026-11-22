@@ -81,7 +81,7 @@ export const wallProps: SiteProp[] = [
   ...STAGES.map(
     (stage, i): SiteProp => ({
       id: `walls-${stage}`,
-      since: i === 0 ? undefined : years[i],
+      since: years[i],
       until: years[i + 1],
       solid: true,
       build: (b) => buildWall(b, stage, false),

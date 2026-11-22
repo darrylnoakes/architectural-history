@@ -1,8 +1,9 @@
 import { P, mix, tint, type BuildingDef } from '@ah/kit';
-import { HALF, archPanel, gateMass, merlonsX, road, voussoirs } from './shared';
+import { HALF, archPanel, gateMass, road, voussoirs } from './shared';
+import { COMMUNAL, WALL_COLOURS, curtain } from './curtain';
 
-const WALL_T = 2.2;
-const WALL_H = 10.5;
+const WALL_T = COMMUNAL.t;
+const WALL_H = COMMUNAL.h;
 const TW = 9.4; // tower width (X)
 const TF = 3.4; // tower front face (z)
 const TB = -4.6; // back edge of the side walls: the tower is open on the town side
@@ -31,27 +32,14 @@ export const communalGate: BuildingDef = {
     { label: 'Customs post', note: 'Where officials weighed carts and collected the gabella, the commune’s toll on goods entering the town.', at: [6.8, 3.2, -5.4] },
   ],
   build(b) {
-    const stone = mix(P.pietraForte, P.rubble, b.range(0.3, 0.5));
-    const dress = tint(P.pietraForte, 0.04);
+    const { stone, dress } = WALL_COLOURS.communal;
     const shade = tint(stone, -0.1);
     const oak = mix(P.oak, P.oakDark, 0.3);
 
     road(b, 5.0, mix(P.cobble, P.pietraForte, 0.35));
 
     // ---------------------------------------------------------------- the curtain wall
-    b.sym((s) => {
-      const x0 = TW / 2;
-      const L = HALF - x0;
-      const xc = s * (x0 + HALF) / 2;
-      b.box(L, WALL_H, WALL_T, stone, { at: [xc, 0, 0] });
-      b.box(L, 1.2, WALL_T + 0.6, shade, { at: [xc, 0, 0.3] }); // battered foot
-      for (const y of [3.2, 6.4]) b.box(L, 0.07, WALL_T + 0.04, tint(stone, -0.14), { at: [xc, y, 0], jitter: false });
-      // the wall-walk, carried out on a row of corbels, with square (Guelph) merlons
-      for (let x = x0 + 0.5; x < HALF; x += 1.1) b.box(0.35, 0.6, 0.6, dress, { at: [s * x, WALL_H - 0.6, WALL_T / 2 + 0.25], jitter: false });
-      b.box(L, 0.35, 0.6, dress, { at: [xc, WALL_H, WALL_T / 2 + 0.25] });
-      merlonsX(b, s > 0 ? x0 : -HALF, s > 0 ? HALF : -x0, WALL_H + 0.35, WALL_T / 2 + 0.2, stone, { w: 1.0, h: 1.5, t: 0.5, gap: 0.8 });
-      b.box(L, 0.08, WALL_T + 0.3, tint(stone, -0.2), { at: [xc, WALL_H, 0.2], jitter: false });
-    });
+    b.sym((s) => curtain(b, 'communal', s > 0 ? TW / 2 : -HALF, s > 0 ? HALF : -TW / 2, { towers: false }));
 
     // ---------------------------------------------------------------- the tower: front wall
     gateMass(b, TW, TH, FT, stone, { at: [0, 0, TF - FT / 2], xs: [0], openW: OW, openH: OH });

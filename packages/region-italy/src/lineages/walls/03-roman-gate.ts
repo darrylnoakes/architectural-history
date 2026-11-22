@@ -1,5 +1,6 @@
 import { P, mix, tint, type BuildingDef } from '@ah/kit';
-import { HALF, archPanel, gateMass, merlonsX, road, voussoirs } from './shared';
+import { HALF, archPanel, gateMass, road, voussoirs } from './shared';
+import { ROMAN, WALL_COLOURS, curtain } from './curtain';
 
 const FW = 12.4; // width of the gate front between the towers
 const FT = 3.2; // its thickness
@@ -10,8 +11,8 @@ const TX = 8.5; // tower centres
 const TR = 3.0; // tower radius
 const TH = 14.0; // tower height to the eaves
 const TZ = 1.6; // towers stand forward of the wall
-const WALL_H = 7.2;
-const WALL_T = 2.6;
+const WALL_H = ROMAN.h;
+const WALL_T = ROMAN.t;
 
 const CARRIAGE = { x: 2.15, w: 3.2, h: 5.7 };
 const FOOT = { x: 4.85, w: 1.3, h: 3.1 };
@@ -35,7 +36,7 @@ export const romanGate: BuildingDef = {
     { label: 'Pilasters and cornice', note: 'Flat classical pilasters framing the arches and a moulded cornice: architecture borrowed from temples to dignify a gate.', at: [3.5, H1 + 0.2, FZ + FT / 2 + 0.4] },
   ],
   build(b) {
-    const stone = mix(P.travertine, P.limestone, 0.5);
+    const stone = WALL_COLOURS.roman.stone;
     const shade = tint(stone, -0.07);
     const wallFace = mix(P.rubble, P.tufa, 0.35);
     const roof = P.coppi;
@@ -47,17 +48,7 @@ export const romanGate: BuildingDef = {
     for (let z = -7.5; z < 8; z += 1.1) b.box(7.0, 0.01, 0.05, tint(P.peperino, -0.12), { at: [0, 0.04, z], jitter: false });
 
     // ---------------------------------------------------------------- the wall either side
-    b.sym((s) => {
-      const x0 = TX + TR - 0.6;
-      const L = HALF - x0;
-      const xc = s * (x0 + L / 2);
-      b.box(L, WALL_H, WALL_T, wallFace, { at: [xc, 0, 0] });
-      b.box(L, 0.4, WALL_T + 0.3, shade, { at: [xc, 0, 0] });
-      // regular courses of small stones in the facing; the core is concrete
-      for (const y of [1.6, 3.2, 4.8]) b.box(L, 0.06, WALL_T + 0.04, tint(wallFace, -0.1), { at: [xc, y, 0], jitter: false });
-      b.box(L, 0.3, WALL_T + 0.2, stone, { at: [xc, WALL_H - 0.3, 0] });
-      merlonsX(b, s > 0 ? x0 : -HALF, s > 0 ? HALF : -x0, WALL_H, WALL_T / 2 - 0.25, stone, { w: 0.9, h: 1.1, t: 0.5, gap: 0.8 });
-    });
+    b.sym((s) => curtain(b, 'roman', s > 0 ? TX + TR - 0.6 : -HALF, s > 0 ? HALF : -(TX + TR - 0.6), { towers: false }));
 
     // ---------------------------------------------------------------- the front: arched storey
     gateMass(b, FW, H1, FT, stone, {
