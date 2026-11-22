@@ -35,7 +35,7 @@ export const umbertineApartments: BuildingDef = {
     {
       label: 'Louvred shutters',
       note: 'Persiane: slatted wooden shutters that keep out the sun but let the air through, now on every window in the street.',
-      at: [-3.85, 10.6, 8.5],
+      at: [-3.61, 9.6, 8.5],
     },
     {
       label: 'Bracketed cornice',

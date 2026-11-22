@@ -9,6 +9,7 @@ import { domusSolarata } from './06-domus-solarata';
 import { casaASchiera } from './07-casa-a-schiera';
 import { renaissanceHouse } from './08-renaissance-house';
 import { baroqueTownhouse } from './09-baroque-townhouse';
+import { umbertineApartments } from './10-umbertine-apartments';
 
 const lineage: Lineage = {
   id: 'home',
@@ -26,6 +27,7 @@ const lineage: Lineage = {
     { from: 1200, builtUntil: 1400, def: casaASchiera },
     { from: 1480, builtUntil: 1600, def: renaissanceHouse },
     { from: 1680, builtUntil: 1780, def: baroqueTownhouse },
+    { from: 1885, builtUntil: 1914, def: umbertineApartments },
   ],
 };
 

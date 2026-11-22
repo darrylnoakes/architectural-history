@@ -2,7 +2,7 @@ import { P, spread, tint, type Builder, type BuildingDef } from '@ah/kit';
 import { cafeTable, ground, palm, shutteredWindow, word } from './shared';
 
 const XO = 10.0;
-const ZF = 9.6; // street front
+const ZF = 9.3; // street front
 const ZFI = 2.4; // garden face of the front range
 const SX = 3.2; // garden face of the side range (the side street is at +X)
 const ZB = -9.8;
@@ -38,7 +38,7 @@ export const grandHotel: BuildingDef = {
   materials: ['brick, stuccoed', 'artificial stone', 'cast and wrought iron', 'glass', 'zinc'],
   lookFor: [
     { label: 'Corner cupola', note: 'A domed tower on the corner marks the hotel from far off, borrowed from the palaces and exhibition buildings of Paris and Vienna.', at: [(TX + XO) / 2, TOP + 4.6, ZF + 0.2] },
-    { label: 'Iron-and-glass canopy', note: 'A pensilina of glass on iron brackets shelters guests stepping down from their carriage at the door.', at: [-3.0, 4.4, ZF + 1.6] },
+    { label: 'Iron-and-glass canopy', note: 'A pensilina of glass on iron brackets shelters guests stepping down from their carriage at the door.', at: [-3.0, 4.4, ZF + 1.0] },
     { label: 'Balconies', note: 'A continuous balcony runs along the first floor, where the best rooms were; every guest wanted a view.', at: [-7.0, G + 0.5, ZF + 0.7] },
     { label: 'Rusticated base', note: 'Deep horizontal grooves in the stucco of the ground floor give the hotel a solid, palatial footing.', at: [-8.6, 2.2, ZF + 0.1] },
     { label: 'Palm garden', note: 'Canary palms were the fashionable tree of the age, planted round hotels from the Riviera to the lakes.', at: [-5.5, 2.5, -4.0] },
@@ -54,7 +54,7 @@ export const grandHotel: BuildingDef = {
     const sz = (ZFI + ZB) / 2;
     const sxm = (SX + XO) / 2;
 
-    ground(b, 21.6, 1.4, P.paving, [0, ZF + 0.75], 0.1);
+    ground(b, 21.6, 1.6, P.paving, [0, ZF + 0.8], 0.1);
     ground(b, XO + SX, ZFI - ZB, P.gravel, [(SX - XO) / 2, (ZFI + ZB) / 2], 0.03);
 
     // ---------------- the two ranges
@@ -72,7 +72,7 @@ export const grandHotel: BuildingDef = {
       b.box(2 * XO + o * 2, h, ZF - ZFI + o * 2, stone, { at: [0, y, fz] });
       b.box(XO - SX + o * 2, h, ZFI - ZB + o * 2, stone, { at: [sxm, y, sz] });
     }
-    for (const x of spread(22, -XO + 0.3, XO - 0.3)) b.box(0.2, 0.3, 0.4, stone, { at: [x, TOP - 0.75, ZF + 0.15] });
+    for (const x of spread(22, -XO + 0.3, XO - 0.3)) b.box(0.2, 0.22, 0.4, stone, { at: [x, TOP - 0.67, ZF + 0.15] });
     b.hip(2 * XO, ZF - ZFI, 1.6, roof, { at: [0, TOP + 0.05, fz] });
     b.hip(XO - SX, ZFI - ZB + 1, 1.6, roof, { at: [sxm, TOP + 0.05, sz - 0.5] });
 
@@ -88,15 +88,16 @@ export const grandHotel: BuildingDef = {
     b.stairs(2.6, 0.1, 0.5, 1, stone, { at: [-3.0, 0.1, ZF + 0.3] });
     // the pensilina: a glass roof on iron brackets, hung from the wall by rods
     const cy = 4.1;
-    b.box(4.8, 0.06, 2.6, P.glass, { at: [-3.0, cy, ZF + 1.3], rot: [-0.12, 0, 0], mat: 'glass' });
+    b.box(4.8, 0.06, 1.6, P.glass, { at: [-3.0, cy + 0.05, ZF + 0.8], rot: [-0.12, 0, 0], mat: 'glass' });
     for (const x of spread(4, -5.3, -0.7)) {
-      b.beam([x, cy - 0.15, ZF], [x, cy + 0.1, ZF + 2.6], 0.06, 0.1, P.castIron);
-      b.beam([x, cy + 1.6, ZF], [x, cy + 0.15, ZF + 2.5], 0.03, 0.03, P.castIron);
-      b.beam([x, cy - 0.9, ZF], [x, cy - 0.1, ZF + 0.8], 0.05, 0.05, P.castIron);
+      b.beam([x, cy - 0.15, ZF], [x, cy + 0.05, ZF + 1.6], 0.06, 0.1, P.castIron);
+      b.beam([x, cy + 1.4, ZF], [x, cy + 0.12, ZF + 1.55], 0.03, 0.03, P.castIron);
+      b.beam([x, cy - 0.8, ZF], [x, cy - 0.1, ZF + 0.6], 0.05, 0.05, P.castIron);
     }
-    b.box(4.9, 0.18, 0.08, P.castIron, { at: [-3.0, cy - 0.25, ZF + 2.65] });
+    b.box(4.9, 0.18, 0.08, P.castIron, { at: [-3.0, cy - 0.15, ZF + 1.62] });
     // the name in gilt letters under the cornice
-    word(b, 'GRAND HOTEL', 0.16, P.gold, { at: [-1.5, TOP - 1.25, ZF + 0.05], facing: '+z' });
+    b.box(10.6, 0.95, 0.06, P.cream, { at: [-2.4, TOP - 1.55, ZF + 0.03], jitter: false });
+    word(b, 'GRAND HOTEL', 0.15, P.doorBlue, { at: [-2.4, TOP - 1.43, ZF + 0.06], facing: '+z' });
 
     // ---------------- upper floors: windows, balconies on the first floor
     const fxs = [-8.4, -6.0, -3.6, -1.2, 1.2, 3.6];
@@ -114,7 +115,7 @@ export const grandHotel: BuildingDef = {
         b.box(len, 0.18, 1.0, stone, { at: [0, 0, 0.5] });
         for (const x of spread(Math.round(len / 1.2), -len / 2, len / 2)) b.box(0.18, 0.35, 0.8, stone, { at: [x, -0.35, 0.4] });
         b.box(len, 0.06, 0.06, P.castIron, { at: [0, 1.15, 0.95] });
-        for (const x of spread(Math.round(len / 0.25), -len / 2, len / 2)) b.box(0.03, 0.97, 0.03, P.castIron, { at: [x, 0.18, 0.95], jitter: false });
+        for (const x of spread(Math.round(len / 0.4), -len / 2, len / 2)) b.box(0.03, 0.97, 0.03, P.castIron, { at: [x, 0.18, 0.95], jitter: false });
       });
     };
     rail(TX + XO - 0.2, [(TX - XO) / 2, by, ZF], 0);
@@ -131,7 +132,8 @@ export const grandHotel: BuildingDef = {
       b.window(1.4, 2.2, { at: [tx + 0.15, y, ZF + 0.3], facing: '+z', frame: stone, border: 0.12, bars: [2, 3] });
       b.window(1.4, 2.2, { at: [XO + 0.3, y, tz + 0.15], facing: '+x', frame: stone, border: 0.12, bars: [2, 3] });
       b.box(2.4, 0.15, 0.9, stone, { at: [tx + 0.15, y - 0.2, ZF + 0.7] });
-      b.box(2.4, 0.9, 0.04, P.castIron, { at: [tx + 0.15, y - 0.05, ZF + 1.12] });
+      b.box(2.4, 0.05, 0.05, P.castIron, { at: [tx + 0.15, y + 0.85, ZF + 1.1] });
+      for (const x of spread(6, -1.1, 1.1)) b.box(0.03, 0.9, 0.03, P.castIron, { at: [tx + 0.15 + x, y - 0.05, ZF + 1.1], jitter: false });
     }
     b.window(1.2, 1.2, { at: [tx + 0.15, TOP + 0.9, ZF + 0.3], facing: '+z', frame: stone, shape: 'circle', border: 0.15 });
     b.window(1.2, 1.2, { at: [XO + 0.3, TOP + 0.9, tz + 0.15], facing: '+x', frame: stone, shape: 'circle', border: 0.15 });

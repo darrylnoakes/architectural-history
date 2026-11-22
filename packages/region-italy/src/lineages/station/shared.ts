@@ -247,7 +247,7 @@ export function highSpeedTrain(b: Builder, at: [number, number, number], len = 3
     b.group({ at: [0, 0, 0] }, () => {
       b.extrude(nose, W, silver, { at: [0, 0, 0] });
       // the windscreen band and a red stripe along the side
-      b.beam([1.65, 2.25, 0], [4.35, 3.75, 0], W + 0.02, 0.28, dark, { mat: 'glass' });
+      b.extrude([[1.75, 2.12], [4.35, 3.86], [4.0, 3.98], [1.35, 2.3]], W - 0.4, dark, { mat: 'glass' });
       b.sym((s) => b.box(6.0, 0.4, 0.04, red, { at: [3.6, 1.3, s * (W / 2 + 0.01)], jitter: false }));
       b.extrude([[0.25, 1.05], [1.6, 1.15], [1.6, 1.6], [0.35, 1.4]], W - 0.6, red, { at: [0, 0, 0] });
     });

@@ -19,7 +19,7 @@ function sign(b: Builder, text: string, size: number, color: number, at: [number
     for (const [a, c, d, e] of GLYPHS[ch] ?? []) {
       b.box((d - a) * u, (e - c) * u, 0.12, color, { at: [x0 + ((a + d) / 2) * u, at[1] + c * u, at[2]], jitter: false });
     }
-    if (ch === 'N') b.box(u * 0.9, 5.1 * u, 0.1, color, { at: [x0 + 1.5 * u, at[1], at[2]], rot: [0, 0, 0.45], jitter: false });
+    if (ch === 'N') b.box(u * 0.9, 5.4 * u, 0.1, color, { at: [x0 + 1.5 * u, at[1] - 0.1 * u, at[2]], rot: [0, 0, 0.38], jitter: false });
   });
 }
 
@@ -46,7 +46,7 @@ export const libertyCinema: BuildingDef = {
     {
       label: 'Curving gable',
       note: 'The roofline swells and dips in a whiplash curve, a favourite Liberty outline, hiding the plain vault behind.',
-      at: [0, 17.6, FZ + 0.2],
+      at: [0, 18.4, FZ + 0.2],
     },
     {
       label: 'Ceramic frieze',
@@ -84,6 +84,14 @@ export const libertyCinema: BuildingDef = {
         else b.window(1.2, 2.2, { at: [s * 11, 6.0, z], facing: s > 0 ? '+x' : '-x', shape: 'round', frame: trim });
       }
     });
+    {
+      const arc: [number, number][] = [];
+      for (let i = 0; i <= 10; i++) {
+        const a = Math.PI - (i / 10) * Math.PI;
+        arc.push([11.2 * Math.cos(a), 10 + 11.2 * Math.sin(a) * 0.32]);
+      }
+      b.extrude([[-11.2, 0], ...arc, [11.2, 0]], 0.3, stucco, { at: [0, 0, az0 + 0.15] });
+    }
     b.box(16, 15, 5.5, stucco, { at: [0, 0, az0 + 2.75] });
     b.gable(16, 5.5, 2.2, P.coppi, { at: [0, 15, az0 + 2.75], overhang: 0.3, wall: stucco });
     b.panel(3.2, 3.6, P.doorGreen, { at: [0, 0, az0], facing: '-z' });
@@ -97,7 +105,7 @@ export const libertyCinema: BuildingDef = {
     const gable: [number, number][] = [[-9, 0]];
     for (let i = 0; i <= 16; i++) {
       const u = -1 + (i / 16) * 2;
-      const y = 2.0 * Math.pow(Math.cos((u * Math.PI) / 2), 1.6) + 1.3 * Math.exp(-Math.pow(u * 3.2, 2)) - 0.25 * Math.sin(Math.abs(u) * Math.PI);
+      const y = 2.4 * Math.pow(Math.cos((u * Math.PI) / 2), 1.2) + 2.2 * Math.exp(-Math.pow(u * 3.0, 2)) - 0.5 * Math.sin(Math.abs(u) * Math.PI);
       gable.push([u * 9, Math.max(0, y) + 0.2]);
     }
     gable.push([9, 0]);
