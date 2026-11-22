@@ -105,11 +105,11 @@ export const lowEnergyFlats: BuildingDef = {
     b.box(W, 0.6, zf - zb, render, { at: [0, H, (zf + zb) / 2] });
     b.box(W - 0.6, 0.62, zf - zb - 0.6, tint(P.gravel, -0.05), { at: [0, H, (zf + zb) / 2] });
     for (const z of [5.4, 3.0, 0.6, -1.8]) {
-      b.group({ at: [0.6, H + 0.75, z], rot: [-0.3, 0, 0] }, () => {
+      b.group({ at: [0.6, H + 0.75, z], rot: [0.3, 0, 0] }, () => {
         b.box(10.4, 0.06, 1.7, P.solar, { at: [0, 0, 0], mat: 'glass' });
         for (const x of spread(6, -5.2, 5.2)) b.box(0.03, 0.07, 1.7, P.aluminium, { at: [x + 0.87, 0, 0] });
       });
-      b.box(10.4, 0.15, 0.1, P.aluminium, { at: [0.6, H + 0.6, z - 0.8] });
+      b.box(10.4, 0.15, 0.1, P.aluminium, { at: [0.6, H + 0.6, z + 0.8] });
     }
     b.box(2.0, 2.0, 2.4, larch, { at: [-5.4, H + 0.6, -1.4] }); // lift head and plant room
 

@@ -54,7 +54,7 @@ const roads: Road[] = [
   // united Italy: a boulevard where the walls stood, a second bridge, an avenue to the station
   { id: 'viale', kind: 'main', pts: [[-150, 136], [128, 136]], since: 1864 },
   { id: 'new-south-road', kind: 'main', pts: [[128, 136], [131, 200], [112, 300], [84, 380], [70, 480]], since: 1864 },
-  { id: 'boulevard-north', kind: 'main', pts: [[128, 0], [128, 79]], since: 1880 },
+  { id: 'boulevard-north', kind: 'main', pts: [[128, -92], [128, 79]], since: 1880 },
   { id: 'boulevard-south', kind: 'main', pts: [[128, 113], [128, 136]], since: 1880 },
   { id: 'footbridge-path-north', kind: 'lane', pts: [[-36, 74], [-36, 79]], since: 2008 },
   { id: 'footbridge-path-south', kind: 'lane', pts: [[-36, 113], [-36, 136]], since: 2008 },

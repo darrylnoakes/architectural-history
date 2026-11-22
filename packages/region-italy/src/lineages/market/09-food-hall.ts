@@ -28,7 +28,7 @@ function endFront(b: Builder, stone: number, wall: number, main: boolean): void 
   // the gable with its lunette
   const R = 3.3;
   const hole = archOutline(2 * R, R, 'round', 6).map(([x, y]) => [x, y + 0.4] as [number, number]);
-  b.extrude([[-W / 2, 0], [W / 2, 0], [W / 2, EH - GH], [0, EH - GH + RISE], [-W / 2, EH - GH]], 0.7, wall, { at: [0, GH + 0.35, 0], holes: [hole.slice(2).concat(hole.slice(0, 2)).reverse()] });
+  b.extrude([[-W / 2, 0], [W / 2, 0], [W / 2, EH - GH], [0, EH - GH + RISE], [-W / 2, EH - GH]], 0.7, wall, { at: [0, GH + 0.35, 0], holes: [hole] });
   b.extrude(archOutline(2 * R, R, 'round', 6), 0.06, P.glass, { at: [0, GH + 0.75, -0.1], mat: 'glass' });
   archivolt(b, R, 0.35, GH + 0.75, 0.12, stone, [0, 0, 0.35], '+z', 10);
   for (let i = 1; i < 8; i++) {
@@ -155,15 +155,15 @@ export const foodHall: BuildingDef = {
     }
 
     // ---- outside: a new steel and glass canopy over the main door, tables in the street
-    b.box(6.0, 0.12, 1.4, P.steel, { at: [0, y0 + 4.4, D / 2 + 0.45] });
-    b.box(6.0, 0.04, 1.3, P.glass, { at: [0, y0 + 4.52, D / 2 + 0.45], mat: 'glass' });
-    b.box(4.4, 0.5, 0.08, P.timberBlack, { at: [0, y0 + 4.55, D / 2 + 1.15] });
-    b.box(3.6, 0.22, 0.04, P.white, { at: [0, y0 + 4.69, D / 2 + 1.2], jitter: false });
+    b.box(6.0, 0.12, 0.9, P.steel, { at: [0, y0 + 4.4, D / 2 + 0.35] });
+    b.box(6.0, 0.04, 0.8, P.glass, { at: [0, y0 + 4.52, D / 2 + 0.35], mat: 'glass' });
+    b.box(4.4, 0.5, 0.08, P.timberBlack, { at: [0, y0 + 4.55, D / 2 + 0.78] });
+    b.box(3.6, 0.22, 0.04, P.white, { at: [0, y0 + 4.69, D / 2 + 0.83], jitter: false });
     for (const [x, z] of [
-      [-8.4, 10.6],
-      [-5.8, 10.6],
-      [6.0, 10.6],
-      [8.6, 10.6],
+      [-11.6, 6.4],
+      [-11.6, 2.6],
+      [11.6, 6.4],
+      [11.6, -1.4],
     ] as [number, number][]) {
       b.cyl(0.4, 0.04, P.white, { at: [x, 0.78, z], segs: 8 });
       b.cyl(0.04, 0.7, P.timberBlack, { at: [x, 0.08, z], segs: 4 });

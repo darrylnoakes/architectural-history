@@ -19,8 +19,13 @@ const N = Math.PI; // front faces north (-z)
  */
 export const plots: Plot[] = [
   // --- the seat of power: on the north side of Piazza Grande, with the fountain in front of it
-  { id: 'power', lineage: 'power', x: 32, z: -73, rotY: S, seed: 11, hero: true, skip: ['regional-offices'] },
-  { id: 'regione', lineage: 'power', x: 86, z: 163.5, rotY: N, seed: 12, since: 1975, keep: 'regional-offices' },
+  // (the old palace goes from the lord's works of 1480 straight to its restoration; the offices of
+  // united Italy, the party and the region are separate buildings on their own ground, built without
+  // the palace because they are not on the main plot)
+  { id: 'power', lineage: 'power', x: 32, z: -73, rotY: S, seed: 11, hero: true, skip: ['prefecture', 'casa-del-fascio', 'regional-offices'] },
+  { id: 'prefettura', lineage: 'power', x: 101, z: -60, rotY: E, seed: 12, since: 1885, keep: 'prefecture' },
+  { id: 'casa-del-fascio', lineage: 'power', x: 110, z: 155.5, rotY: N, seed: 34, since: 1934, keep: 'casa-del-fascio' },
+  { id: 'regione', lineage: 'power', x: 86, z: 163.5, rotY: N, seed: 35, since: 1975, keep: 'regional-offices' },
   { id: 'fountain', lineage: 'fountain', x: 32, z: -28, rotY: S, seed: 13, hero: true },
 
   // --- the temple, then the cathedral, on its own square west of the cardo
