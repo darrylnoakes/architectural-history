@@ -5,6 +5,7 @@ import { castrumWall } from './03-castrum-wall';
 import { philippianGate } from './04-philippian-gate';
 import { fortifiedGate } from './05-fortified-gate';
 import { vaubanGateStage } from './06-vauban-gate';
+import { gateAndBoulevard } from './07-gate-and-boulevard';
 
 const lineage: Lineage = {
   id: 'remparts',
@@ -28,6 +29,7 @@ const lineage: Lineage = {
     { from: 1200, builtUntil: 1300, def: philippianGate },
     { from: 1420, builtUntil: 1500, def: fortifiedGate },
     { from: 1680, builtUntil: 1720, def: vaubanGateStage },
+    { from: 1885, builtUntil: 1914, def: gateAndBoulevard },
   ],
 };
 

@@ -115,15 +115,15 @@ export const cafeRestaurant: BuildingDef = {
       b.box(1.9, 0.12, 0.45, stone, { at: [x, G + 0.3, ZF + 0.18] });
       b.window(1.3, 2.1, { at: [x, G + F1 + 0.4, ZF], facing: '+z', frame: P.white, bars: [2, 3], border: 0.1 });
       // the back: plainer windows with shutters
-      b.window(1.2, 2.2, { at: [x, G + 0.6, ZB], facing: '-z', frame: P.white, bars: [2, 1], border: 0.1 });
+      b.window(1.2, 2.2, { at: [x, G + 0.6, ZB], facing: '-z', frame: P.white, border: 0.1 });
       b.sym((s) => b.panel(0.6, 2.2, shutter, { at: [x + s * 0.95, G + 0.6, ZB], facing: '-z', depth: 0.05 }));
-      b.window(1.2, 1.9, { at: [x, G + F1 + 0.4, ZB], facing: '-z', frame: P.white, bars: [2, 1], border: 0.1 });
-      b.window(1.2, 2.2, { at: [x, 1.0, ZB], facing: '-z', frame: P.white, bars: [2, 1], border: 0.1 });
+      b.window(1.2, 1.9, { at: [x, G + F1 + 0.4, ZB], facing: '-z', frame: P.white, border: 0.1 });
+      b.window(1.2, 2.2, { at: [x, 1.0, ZB], facing: '-z', frame: P.white, border: 0.1 });
     }
     b.sym((s) => {
       for (const z of [4.0, 0.6]) {
-        b.window(1.2, 2.4, { at: [s * XO, G + 0.5, z], facing: s > 0 ? '+x' : '-x', frame: P.white, bars: [2, 1], border: 0.1 });
-        b.window(1.2, 2.0, { at: [s * XO, G + F1 + 0.4, z], facing: s > 0 ? '+x' : '-x', frame: P.white, bars: [2, 1], border: 0.1 });
+        b.window(1.2, 2.4, { at: [s * XO, G + 0.5, z], facing: s > 0 ? '+x' : '-x', frame: P.white, border: 0.1 });
+        b.window(1.2, 2.0, { at: [s * XO, G + F1 + 0.4, z], facing: s > 0 ? '+x' : '-x', frame: P.white, border: 0.1 });
       }
     });
     // entablature, balustrade with vases, and the low slate roof behind
@@ -132,7 +132,7 @@ export const cafeRestaurant: BuildingDef = {
     const by = TOP + 0.92;
     b.box(2 * XO, 0.18, 0.4, stone, { at: [0, by, ZF + 0.05] });
     b.box(2 * XO, 0.15, 0.45, stone, { at: [0, by + 0.8, ZF + 0.05] });
-    for (const x of spread(34, -XO + 0.3, XO - 0.3)) b.box(0.16, 0.62, 0.14, stone, { at: [x, by + 0.18, ZF + 0.05], jitter: false });
+    for (const x of spread(26, -XO + 0.3, XO - 0.3)) b.box(0.2, 0.62, 0.14, stone, { at: [x, by + 0.18, ZF + 0.05], jitter: false });
     b.box(2 * XO, 0.95, 0.3, stone, { at: [0, by, ZB + 0.15] });
     b.sym((s) => b.box(0.3, 0.95, ud, stone, { at: [s * (XO - 0.15), by, uz] }));
     for (let i = 0; i <= N; i++) {

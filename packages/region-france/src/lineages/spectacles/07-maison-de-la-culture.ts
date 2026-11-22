@@ -119,7 +119,9 @@ export const maisonDeLaCulture: BuildingDef = {
     const right: Pt[] = [[HCX + PW / 2, PZ], [HCX + BW / 2, BZ]];
     strip(b, left.map(([x, z]) => [x, z, 0.3, HALL_H] as [number, number, number, number]), conc);
     strip(b, right.map(([x, z]) => [x, z, 0.3, HALL_H] as [number, number, number, number]), conc);
-    strip(b, [[HCX - BW / 2, BZ, 0.3, HALL_H], [HCX + BW / 2, BZ, 0.3, HALL_H]], conc);
+    // (when the roof is lifted, the back wall of the hall is cut down to show the seats)
+    const backH = cutaway ? 6.9 : HALL_H;
+    strip(b, [[HCX - BW / 2, BZ, 0.3, backH], [HCX + BW / 2, BZ, 0.3, backH]], conc);
     // the outer faces, thickened and marked by their boards
     b.sym((s) => {
       const p0 = s > 0 ? right[0] : left[0];
@@ -127,8 +129,8 @@ export const maisonDeLaCulture: BuildingDef = {
       const a = Math.atan2(p1[0] - p0[0], p1[1] - p0[1]);
       b.box(0.5, HALL_H, Math.hypot(p1[0] - p0[0], p1[1] - p0[1]), conc, { at: [(p0[0] + p1[0]) / 2 + s * 0.25, 0.3, (p0[1] + p1[1]) / 2], rotY: a });
     });
-    b.box(BW + 1.0, HALL_H, 0.5, conc, { at: [HCX, 0.3, BZ + 0.25] });
-    boards(b, [HCX, 0.3, BZ + 0.5], BW + 1.0, HALL_H, 0, concDk);
+    b.box(BW + 1.0, backH, 0.5, conc, { at: [HCX, 0.3, BZ + 0.25] });
+    boards(b, [HCX, 0.3, BZ + 0.5], BW + 1.0, backH, 0, concDk);
     b.panel(2.0, 2.4, P.doorBlack, { at: [HCX - 5.5, 0.3, BZ + 0.5] });
     b.panel(2.0, 2.4, P.doorBlack, { at: [HCX + 5.5, 0.3, BZ + 0.5] });
     // seats: raked rows, every one facing the stage

@@ -52,10 +52,10 @@ export const relaisRoutier: BuildingDef = {
   materials: ['rendered brick', 'machine-made clay tiles', 'painted lettering', 'enamelled steel', 'concrete forecourt'],
   lookFor: [
     { label: 'Tabac carotte', note: 'The red double cone over the door marks a licensed tobacconist; it is said to recall the twists of tobacco once sold for chewing or grating.', at: [-6.8, G + 0.3, ZF + 1.0] },
-    { label: 'Les Routiers sign', note: 'A round red-and-blue sign: the drivers’ own recommendation of a good, cheap place to eat.', at: [0.6, G + 1.5, ZF + 0.3] },
-    { label: 'Petrol pumps', note: 'Two pumps on an island at the edge of the road, each with a dial and a lit glass globe on top.', at: [6.2, 2.4, 7.6] },
+    { label: 'Les Routiers sign', note: 'A round red-and-blue sign on a bracket: the drivers’ own recommendation of a good, cheap place to eat.', at: [X1 - 0.5, G + 1.2, ZF + 1.4] },
+    { label: 'Petrol pumps', note: 'Two pumps on an island at the edge of the road, each with a dial and a lit glass globe on top.', at: [-6.4, 2.4, 8.4] },
     { label: 'Rooms above', note: 'A row of small rooms over the café, for drivers who must sleep before the next stage, as travellers slept over the posting inn.', at: [-3.0, G + 1.6, ZF + 0.2] },
-    { label: 'Lorry park', note: 'The forecourt is wide enough to pull a lorry off the road: the yard of the old inns, open to the street.', at: [-6.0, 3.0, 6.4] },
+    { label: 'Lorry park', note: 'The forecourt is wide enough to pull a lorry off the road: the yard of the old inns, open to the street.', at: [4.0, 3.0, 7.4] },
   ],
   build(b) {
     const render = b.pick([P.enduitGris, P.cream, tint(P.ochreWash, 0.12)]);
@@ -78,20 +78,20 @@ export const relaisRoutier: BuildingDef = {
     b.chimney(0.7, 2.4, 0.6, brick, { at: [-6.0, TOP + 1.0, bz - 1.0] });
     b.chimney(0.7, 2.4, 0.6, brick, { at: [2.6, TOP + 1.0, bz - 1.0] });
     // café front: a wide window, the door, the tabac door with its carotte
-    b.window(3.6, 2.0, { at: [-3.4, 0.7, ZF], facing: '+z', frame: P.white, glass: P.glassDark, bars: [3, 1], border: 0.08, mat: 'glass' });
+    b.window(3.6, 1.7, { at: [-3.4, 0.7, ZF], facing: '+z', frame: P.white, glass: P.glassDark, bars: [3, 1], border: 0.08, mat: 'glass' });
     b.panel(1.1, 2.4, P.doorRed, { at: [-0.8, 0, ZF], facing: '+z' });
     b.window(0.8, 1.4, { at: [-0.8, 0.8, ZF + 0.02], facing: '+z', frame: P.doorRed, border: 0.06, glass: P.glassDark });
     b.panel(1.0, 2.3, P.doorRed, { at: [-6.8, 0, ZF], facing: '+z' });
     b.window(1.6, 1.8, { at: [-8.6, 0.8, ZF], facing: '+z', frame: P.white, bars: [2, 1], border: 0.08 });
     for (const x of [2.0, 4.4]) b.window(1.6, 1.8, { at: [x, 0.8, ZF], facing: '+z', frame: P.white, bars: [2, 2], border: 0.08 });
     // a striped awning over the café window
-    b.box(4.2, 0.08, 1.4, P.postRed, { at: [-3.4, 2.75, ZF + 0.7], rot: [0.3, 0, 0] });
-    for (const x of spread(5, -5.1, -1.7)) b.box(0.35, 0.09, 1.42, P.white, { at: [x, 2.76, ZF + 0.7], rot: [0.3, 0, 0], jitter: false });
-    b.box(4.2, 0.25, 0.04, P.postRed, { at: [-3.4, 2.3, ZF + 1.36] });
+    b.box(4.2, 0.08, 1.4, P.postRed, { at: [-3.4, 2.4, ZF + 0.7], rot: [0.3, 0, 0] });
+    for (const x of spread(5, -5.1, -1.7)) b.box(0.35, 0.09, 1.42, P.white, { at: [x, 2.41, ZF + 0.7], rot: [0.3, 0, 0], jitter: false });
+    b.box(4.2, 0.25, 0.04, P.postRed, { at: [-3.4, 1.95, ZF + 1.36] });
     // lettering painted on the render: CAFE TABAC over the ground floor, HOTEL RESTAURANT above
-    word(b, 'CAFE TABAC', 0.1, P.doorRed, { at: [-4.6, G - 0.62, ZF], facing: '+z', depth: 0.02 });
+    word(b, 'CAFE TABAC', 0.09, P.doorRed, { at: [-4.6, G - 0.55, ZF], facing: '+z', depth: 0.02 });
     word(b, 'RESTAURANT', 0.09, P.doorBlue, { at: [3.2, G - 0.6, ZF], facing: '+z', depth: 0.02 });
-    word(b, 'HOTEL', 0.12, P.doorBlue, { at: [-2.2, TOP - 0.7, ZF], facing: '+z', depth: 0.02 });
+    word(b, 'HOTEL', 0.12, P.doorBlue, { at: [-0.6, TOP - 0.75, ZF], facing: '+z', depth: 0.02 });
     // the carotte on its bracket
     b.box(0.06, 0.06, 0.9, P.iron, { at: [-6.8, G + 0.55, ZF + 0.45] });
     b.group({ at: [-6.8, G - 0.35, ZF + 0.9] }, () => {
@@ -100,9 +100,13 @@ export const relaisRoutier: BuildingDef = {
       b.box(0.06, 0.2, 0.06, P.iron, { at: [0, 0.9, 0] });
     });
     // the Les Routiers roundel, red and blue
-    b.panel(1.0, 1.0, P.doorBlue, { at: [0.6, G + 1.0, ZF], facing: '+z', shape: 'circle', depth: 0.06 });
-    b.panel(0.7, 0.7, P.postRed, { at: [0.6, G + 1.15, ZF], facing: '+z', shape: 'circle', depth: 0.08 });
-    b.panel(0.5, 0.12, P.white, { at: [0.6, G + 1.44, ZF], facing: '+z', depth: 0.1 });
+    // the Les Routiers roundel, red and blue, on a bracket at the corner so drivers see it from the road
+    b.box(0.06, 0.06, 1.3, P.iron, { at: [X1 - 0.5, G + 1.55, ZF + 0.65] });
+    b.group({ at: [X1 - 0.5, G + 0.45, ZF + 1.0], rotY: Math.PI / 2 }, () => {
+      b.panel(1.1, 1.1, P.doorBlue, { shape: 'circle', depth: 0.04, at: [0, 0, -0.02] });
+      b.panel(0.8, 0.8, P.postRed, { shape: 'circle', depth: 0.06, at: [0, 0.15, -0.03] });
+      b.panel(0.6, 0.12, P.white, { depth: 0.08, at: [0, 0.49, -0.04] });
+    });
     // the rooms upstairs: louvred shutters
     for (const x of [-8.6, -6.0, -3.4, 2.0, 4.4]) shutteredWindow(b, 0.9, 1.5, { at: [x, G + 0.6, ZF], facing: '+z', frame: P.white, shutter, louvred: true, bars: [2, 2] });
     for (const x of [-8.0, -4.0, 0, 4.0]) {
@@ -124,13 +128,13 @@ export const relaisRoutier: BuildingDef = {
     b.window(1.4, 0.8, { at: [GX1, 2.4, gz], facing: '+x', frame: P.steel, bars: [3, 1], border: 0.06 });
 
     // ---------------- the forecourt: pumps on an island, the lorry, a table outside
-    b.box(3.0, 0.2, 1.2, P.concreteWhite, { at: [6.2, 0, 7.6] });
-    pump(b, 5.4, 7.6, P.postRed);
-    pump(b, 7.0, 7.6, P.cladYellow);
-    b.cyl(0.06, 3.2, P.steel, { at: [8.6, 0, 7.6], segs: 5 });
-    b.panel(1.0, 1.0, P.white, { at: [8.6, 3.2, 7.6], facing: '+z', shape: 'circle', depth: 0.06 });
-    b.panel(0.7, 0.7, P.postRed, { at: [8.6, 3.35, 7.62], facing: '+z', shape: 'circle', depth: 0.08 });
-    lorry(b, [-4.8, 0, 6.6], Math.PI / 2, b.pick([P.cladBlue, P.doorRed, 0xc9a23a]));
+    b.box(3.0, 0.2, 1.2, P.concreteWhite, { at: [-6.4, 0, 8.4] });
+    pump(b, -7.2, 8.4, P.postRed);
+    pump(b, -5.6, 8.4, P.cladYellow);
+    b.cyl(0.06, 3.2, P.steel, { at: [-9.4, 0, 8.4], segs: 5 });
+    b.panel(1.0, 1.0, P.white, { at: [-9.4, 3.2, 8.4], facing: '+z', shape: 'circle', depth: 0.06 });
+    b.panel(0.7, 0.7, P.postRed, { at: [-9.4, 3.35, 8.42], facing: '+z', shape: 'circle', depth: 0.08 });
+    lorry(b, [5.4, 0, 7.4], Math.PI / 2, b.pick([P.cladBlue, P.doorRed, 0xc9a23a]));
     for (const x of [-8.4, 3.4]) cafeTable(b, [x, 0.05, ZF + 1.6], P.white, P.castIron, 2, Math.PI / 2);
     barrel(b, [GX1 - 0.6, 0, ZB - 0.6], P.cladRed);
     barrel(b, [GX1 - 1.4, 0, ZB - 0.5], P.cladRed);
@@ -146,8 +150,8 @@ export const relaisRoutier: BuildingDef = {
     b.collider(bw, bd, { at: [bx, 0, bz] });
     b.collider(gw, gd, { at: [(GX0 + GX1) / 2, 0, gz] });
     b.collider(6.0, 3.0, { at: [-6.6, 0, -9.0] });
-    b.collider(3.0, 1.2, { at: [6.2, 0, 7.6] });
-    b.collider(8.6, 2.5, { at: [-4.8, 0, 6.6] });
+    b.collider(3.0, 1.2, { at: [-6.4, 0, 8.4] });
+    b.collider(9.2, 2.5, { at: [5.25, 0, 7.4] });
   },
 };
 

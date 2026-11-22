@@ -304,11 +304,11 @@ export function windowRow(b: Builder, xs: number[], y: number, w: number, h: num
    can never drift apart. Front faces +Z. The nave is vaulted across X and runs along Z; a range of
    shops lines each side under a flat roof. */
 export const CM = {
-  A: 8, // half span of the vault
+  A: 7.2, // half span of the vault
   YS: 4.2, // springing of the vault, on the piers between nave and shops
-  HR: 8.3, // rise of the vault
-  Z: 10, // half length
-  XS: 11.5, // outer face of the side ranges
+  HR: 8.0, // rise of the vault
+  Z: 8.6, // half length
+  XS: 10.2, // outer face of the side ranges
   T: 0.14, // shell thickness (the real one is 7 cm over a span seven times as wide)
 };
 /** Height of the underside of the vault at x. */
@@ -379,11 +379,11 @@ export function concreteMarket(b: Builder, restored: boolean, open: boolean): vo
 
   // ---- the vault: concrete with two bands of glazing each side, the ribs over it
   const bands: [number, number, boolean][] = [
-    [0, 2.2, false],
-    [2.2, 3.5, true],
-    [3.5, 5.3, false],
-    [5.3, 6.3, true],
-    [6.3, A, false],
+    [0, 2.0, false],
+    [2.0, 3.2, true],
+    [3.2, 4.8, false],
+    [4.8, 5.8, true],
+    [5.8, A, false],
   ];
   for (const s of [-1, 1]) {
     if (open && s > 0) continue;
@@ -441,7 +441,7 @@ export function concreteMarket(b: Builder, restored: boolean, open: boolean): vo
   for (const s of [-1, 1] as const) {
     const z = s * (Z - 0.05);
     b.box(2 * A - 0.4, YS - 0.45, 0.08, glass, { at: [0, 0, z], mat: 'glass' });
-    for (let x = -A + 0.2; x <= A - 0.2 + 0.01; x += 1.95) b.box(0.08, YS - 0.45, 0.14, frame, { at: [x, 0, z] });
+    for (let x = -A + 0.2; x <= A - 0.2 + 0.01; x += 1.75) b.box(0.08, YS - 0.45, 0.14, frame, { at: [x, 0, z] });
     b.box(2 * A - 0.4, 0.1, 0.14, frame, { at: [0, 2.6, z] });
     // doors, folded open by day
     for (const dx of [-2.9, 0, 2.9]) {
@@ -450,13 +450,31 @@ export function concreteMarket(b: Builder, restored: boolean, open: boolean): vo
     }
     b.box(2 * A + 1.2, 0.25, 1.6, conc, { at: [0, 3.2, z + s * 0.8] });
     for (const sx of [-1, 1]) b.collider(1.1, 0.4, { at: [sx * 1.45, 0, z] });
-    for (const sx of [-1, 1]) b.collider(4.0, 0.4, { at: [sx * 5.8, 0, z] });
+    for (const sx of [-1, 1]) b.collider(3.2, 0.4, { at: [sx * 5.4, 0, z] });
     if (s > 0) {
       // the name in letters standing on the canopy
       for (let k = 0; k < 11; k++) {
         if (k === 3 || k === 6) continue;
         b.box(0.55, 0.75, 0.1, restored ? P.cladRed : P.bronze, { at: [-4.0 + k * 0.8, 3.45, z + 1.45] });
       }
+    }
+  }
+}
+
+/** Rows of market counters down the nave: tiled fronts, marble tops, produce. */
+export function nave(b: Builder, restored: boolean): void {
+  const kinds: Parameters<typeof goods>[4][] = [['fish'], ['cheese', 'basket'], ['fruit', 'basket'], ['basket', 'pot'], ['cheese']];
+  for (const x of [-4.6, 0, 4.6]) {
+    for (const z of [-5.2, -1.6, 2.0, 5.4]) {
+      if (x === 0 && z > 4) continue;
+      const front = restored ? b.pick([P.cladWhite, P.timberBlack, P.cladGreen]) : P.cladWhite;
+      b.box(2.8, 0.9, 1.1, front, { at: [x, 0.1, z] });
+      b.box(2.9, 0.06, 1.2, P.marble, { at: [x, 1.0, z] });
+      goods(b, 2.5, [x, 1.06, z], 0, b.pick(kinds));
+      // a light on a rod over every counter
+      b.box(0.02, 2.4, 0.02, P.castIron, { at: [x, 2.6, z] });
+      b.cyl(0.3, 0.2, restored ? P.timberBlack : P.doorGreen, { at: [x, 2.45, z], rTop: 0.08, segs: 6 });
+      b.collider(2.8, 1.1, { at: [x, 0, z] });
     }
   }
 }

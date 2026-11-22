@@ -192,18 +192,18 @@ export function buildBrasserie(b: Builder, restored: boolean): void {
     b.group({ at: [x, my + 0.1, ZF + 0.02] }, () => {
       const prof = bayOutline(1.4, 2.1, 0.5);
       b.extrude(prof, 1.2, stone, { at: [0, 0, -0.6] });
-      b.window(0.9, 1.5, { at: [0, 0.25, 0.01], facing: '+z', frame: P.white, bars: [2, 1], border: 0.06 });
+      b.window(0.9, 1.5, { at: [0, 0.25, 0.01], facing: '+z', frame: P.white, border: 0.06 });
     });
   }
   b.sym((s) => {
     b.box(0.6, mh + 1.4, ud - 1.0, brick, { at: [s * (XO - 0.3), my, bz] });
-    for (const z of [bz - 2.4, bz, bz + 2.4]) b.cyl(0.12, 0.5, P.terracotta, { at: [s * (XO - 0.3), my + mh + 1.4, z], segs: 6 });
+    for (const z of [bz - 1.5, bz + 1.5]) b.cyl(0.12, 0.5, P.terracotta, { at: [s * (XO - 0.3), my + mh + 1.4, z], segs: 6 });
   });
 
   // ---------------- behind: a brick back wing for the kitchen, and the yard
   b.box(6.0, 4.2, 5.6, brick, { at: [-7.2, 0, -7.0] });
   b.gable(6.0, 5.6, 1.6, zinc, { at: [-7.2, 4.2, -7.0], overhang: 0.3, wall: brick });
-  for (const x of [-8.6, -5.8]) b.window(1.1, 1.8, { at: [x, 1.2, -9.8], facing: '-z', frame: P.white, bars: [2, 2], border: 0.08 });
+  for (const x of [-8.6, -5.8]) b.window(1.1, 1.8, { at: [x, 1.2, -9.8], facing: '-z', frame: P.white, border: 0.08 });
   b.window(1.1, 1.8, { at: [-4.2, 1.2, -7.0], facing: '+x', frame: P.white, bars: [2, 2], border: 0.08 });
   b.panel(1.1, 2.3, wood, { at: [-4.2, 0, -5.4], facing: '+x' });
   b.box(0.4, 2.8, 6.0, brick, { at: [XO - 0.2, 0, -7.2] });
