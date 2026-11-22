@@ -23,6 +23,9 @@ importers:
       '@ah/england':
         specifier: workspace:*
         version: link:../../packages/region-england
+      '@ah/france':
+        specifier: workspace:*
+        version: link:../../packages/region-france
       '@ah/italy':
         specifier: workspace:*
         version: link:../../packages/region-italy
@@ -118,6 +121,22 @@ importers:
         version: 5.9.3
 
   packages/region-england:
+    dependencies:
+      '@ah/kit':
+        specifier: workspace:*
+        version: link:../kit
+      three:
+        specifier: ^0.187.0
+        version: 0.187.0
+    devDependencies:
+      '@types/three':
+        specifier: ^0.187.0
+        version: 0.187.0
+      typescript:
+        specifier: ^5.7.0
+        version: 5.9.3
+
+  packages/region-france:
     dependencies:
       '@ah/kit':
         specifier: workspace:*

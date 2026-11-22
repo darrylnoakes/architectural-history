@@ -1,4 +1,5 @@
 import england from '@ah/england';
+import france from '@ah/france';
 import italy from '@ah/italy';
 import { TimeScale, formatYear } from '@ah/engine';
 import type { Region } from '@ah/kit';
@@ -27,7 +28,7 @@ function hasTown(region: Region | undefined): region is Region {
  * Regions whose content is built and loaded. A region joins the list when its town plan is laid out;
  * until then its buildings can be worked on in the gallery without showing here.
  */
-export const REGIONS: Record<string, Region> = Object.fromEntries([england, italy].filter(hasTown).map((r) => [r.id, r]));
+export const REGIONS: Record<string, Region> = Object.fromEntries([england, italy, france].filter(hasTown).map((r) => [r.id, r]));
 
 const scales = new Map<string, TimeScale>();
 /** The timeline of a region: its eras laid out on a 0..1 bar. */
@@ -56,15 +57,7 @@ function built(region: Region, blurb: string): RegionInfo {
 export const REGION_LIST: RegionInfo[] = [
   built(england, 'Roundhouses, a Roman town and its ruin, Saxon timber, Norman stone, Gothic, Tudor, Georgian, Victorian and modern, all on the same plots.'),
   built(italy, 'Etruscan and Roman beginnings, the classical orders at their source, the communes and their towers, the Renaissance, the Baroque and after: a city that was never abandoned.'),
-  {
-    id: 'france',
-    name: 'France',
-    subtitle: 'A cathedral town',
-    span: '300 BC to today',
-    location: [48.4, 2.6],
-    status: 'planned',
-    blurb: 'Gallo-Roman town to the birthplace of Gothic, then châteaux, Baroque grandeur, Haussmann’s boulevards, Art Nouveau and Le Corbusier.',
-  },
+  built(france, 'A Gaulish stronghold and a Gallo-Roman town, the birthplace of Gothic, châteaux and Vauban’s bastions, the Revolution, a centre shelled in 1914 and rebuilt in Art Deco, and the slab blocks of the boom years.'),
   {
     id: 'greece',
     name: 'Greece',

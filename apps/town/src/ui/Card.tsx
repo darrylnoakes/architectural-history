@@ -91,7 +91,8 @@ function useCurrent(): Current | null {
     def: st.def,
     from: st.entry.from,
     to: st.entry.to,
-    end: st.stage.end,
+    // a plot's own disaster (shellfire, a fire) takes the place of the building type's usual ending
+    end: st.kind === 'ruin' && st.entry.note ? { year: st.entry.from, fate: 'ruin', note: st.entry.note } : st.stage.end,
     prev: step(i - 1),
     next: step(i + 1),
     survivor: st.kind === 'standing' && !!p.plot.keep && st.entry.to === Infinity && year - st.entry.from > 120,

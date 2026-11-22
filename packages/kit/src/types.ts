@@ -75,7 +75,9 @@ export type BuildingKind =
   | 'hospitality'
   | 'farm'
   | 'defence'
-  | 'transport';
+  | 'transport'
+  | 'castle'
+  | 'monastery';
 
 export const KINDS: Record<BuildingKind, { label: string; blurb: string }> = {
   home: { label: 'Family home', blurb: 'The house of an ordinary, middling household' },
@@ -91,6 +93,8 @@ export const KINDS: Record<BuildingKind, { label: string; blurb: string }> = {
   farm: { label: 'Farm', blurb: 'Rural buildings at the edge of the town' },
   defence: { label: 'Walls and gates', blurb: 'What kept the town safe, and marked where it ended' },
   transport: { label: 'Station', blurb: 'Where the railway and its successors arrive' },
+  castle: { label: 'Castle and château', blurb: 'The lord’s stronghold, and the country house it turned into' },
+  monastery: { label: 'Abbey', blurb: 'A religious community and its buildings' },
 };
 
 export interface Lineage {
@@ -175,6 +179,13 @@ export interface Plot {
   keep?: string;
   /** Building ids this plot never has: it goes straight from the stage before to the stage after. */
   skip?: string[];
+  /**
+   * A disaster that struck this plot and not its neighbours (shellfire, a bomb, a great fire):
+   * whatever stood here in that year is left a ruin until the plot is next rebuilt. A plot that is
+   * struck goes on to the later stages of its lineage; give it `keep` only for a building put up
+   * after the disaster.
+   */
+  struck?: { year: number; note: string };
   /** The plot shown first when the lineage is referred to. */
   hero?: boolean;
 }

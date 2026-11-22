@@ -72,6 +72,8 @@ export interface PlotStage {
   to: number;
   /** standing = in use; ruin = abandoned and roofless, waiting for whatever comes next. */
   state: 'standing' | 'ruin';
+  /** Why it is a ruin, when that is this plot's own story (see `Plot.struck`) and not the building type's. */
+  note?: string;
 }
 
 /**
@@ -114,9 +116,16 @@ export function plotSchedule(plot: Plot, lineage: Lineage, regionEnd: number): P
   }
 
   const out: PlotStage[] = [];
+  const hit = plot.struck;
   adopted.forEach((a, k) => {
     const next = adopted[k + 1]?.from ?? Infinity;
     const end = stages[a.index].end;
+    // struck while this building stood: it is a ruin from then until the plot is rebuilt
+    if (hit && a.from <= hit.year && hit.year < next && !(end && end.fate !== 'renew' && end.year <= hit.year)) {
+      out.push({ index: a.index, from: a.from, to: hit.year, state: 'standing' });
+      out.push({ index: a.index, from: hit.year, to: next, state: 'ruin', note: hit.note });
+      return;
+    }
     if (end && end.fate !== 'renew' && end.year < next) {
       out.push({ index: a.index, from: a.from, to: end.year, state: 'standing' });
       if (end.fate === 'ruin') out.push({ index: a.index, from: end.year, to: next, state: 'ruin' });
