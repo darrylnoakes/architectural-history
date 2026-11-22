@@ -23,7 +23,7 @@ export const CASTLE_HILL = { x: -245, z: -62, top: 38, foot: 94, h: 11 };
 
 export const GRAND_PLACE = { x0: -58, x1: -6, z0: -50, z1: -6 };
 export const PARVIS = { x0: 6, x1: 27, z0: -57, z1: -23, since: 380 };
-export const MARKET_PLACE = { x0: -66, x1: -26, z0: 36, z1: 74 };
+export const MARKET_PLACE = { x0: -68, x1: -28, z0: 36, z1: 74 };
 export const STATION_SQUARE = { x0: -26, x1: 26, z0: 156, z1: 172, since: 1849 };
 
 /** Centre line of the river: straight through the town, winding away across the plain beyond it. */
@@ -56,23 +56,30 @@ const roads: Road[] = [
   // the road from the west, bending round the foot of the castle hill, and on to Reims
   { id: 'route-ouest', kind: 'main', pts: [[0, 0], [-170, 0], [-250, 40], [-350, 30], [-480, -10]] },
   { id: 'route-de-reims', kind: 'main', pts: [[0, 0], [250, 0], [310, -14], [370, 10], [480, 30]] },
-  { id: 'rue-des-moulins', kind: 'lane', pts: [[-26, 55], [128, 55]], since: 20 },
+  { id: 'rue-des-moulins', kind: 'lane', pts: [[0, 55], [128, 55]], since: 20 },
   { id: 'rue-du-marche', kind: 'lane', pts: [[-64, 0], [-64, 36]], since: 20 },
-  { id: 'chemin-du-chateau', kind: 'lane', pts: [[-222, 26], [-245, -2], [-245, -36]], since: 960 },
+  { id: 'chemin-du-chateau', kind: 'lane', pts: [[-222, 26], [-245, -2], [-245, -34]], since: 960 },
   { id: 'rue-de-l-abbaye', kind: 'lane', pts: [[187, 0], [187, -34]], since: 560 },
-  { id: 'allee-du-chateau', kind: 'lane', pts: [[-6, -200], [-12, -200]], since: 1520 },
+  { id: 'allee-du-chateau', kind: 'lane', pts: [[-5, -200], [-12, -200]], since: 1520 },
   // the railway age: an avenue to the station along the south bank, and a second bridge
+  { id: 'chemin-du-faubourg', kind: 'lane', pts: [[-60, 136], [128, 136]], until: 1849 },
   { id: 'boulevard-de-la-gare', kind: 'main', pts: [[-150, 136], [146, 136]], since: 1849 },
   { id: 'new-paris-road', kind: 'main', pts: [[-150, 136], [-153, 200], [-130, 300], [-96, 380], [-90, 480]], since: 1849 },
-  { id: 'rue-du-pont-neuf', kind: 'main', pts: [[128, 55], [128, 79]], since: 1849 },
-  { id: 'rue-du-pont-neuf-sud', kind: 'main', pts: [[128, 113], [128, 136]], since: 1849 },
+  { id: 'rue-du-pont-neuf', kind: 'main', pts: [[128, 55], [128, 79]], since: 1830 },
+  { id: 'rue-du-pont-neuf-sud', kind: 'main', pts: [[128, 113], [128, 136]], since: 1830 },
   // after 1885: boulevards on the line of the western and north-western ramparts
   { id: 'boulevard-ouest', kind: 'main', pts: [[-150, 55], [-150, 26], [-138, 17], [-138, -17], [-150, -26], [-150, -128]], since: 1890 },
   { id: 'boulevard-nord', kind: 'main', pts: [[-150, -128], [-136, -142], [0, -142]], since: 1890 },
   { id: 'rue-neuve', kind: 'lane', pts: [[-150, 55], [-66, 55]], since: 1890 },
-  { id: 'avenue-est', kind: 'main', pts: [[146, 136], [146, 113]], since: 1962 },
-  { id: 'footbridge-path-north', kind: 'lane', pts: [[-36, 74], [-36, 79]], since: 2006 },
-  { id: 'footbridge-path-south', kind: 'lane', pts: [[-36, 113], [-36, 136]], since: 2006 },
+  { id: 'footbridge-path-north', kind: 'lane', pts: [[-62, 74], [-62, 79]], since: 2006 },
+  { id: 'footbridge-path-south', kind: 'lane', pts: [[-62, 113], [-62, 136]], since: 2006 },
+  // the intendant's quarter of the 1760s, behind the cathedral
+  { id: 'rue-royale', kind: 'lane', pts: [[128, 0], [128, -62], [96, -62]], since: 1760 },
+  // the edges of the twentieth-century town
+  { id: 'route-nationale', kind: 'main', pts: [[-250, 136], [-150, 136]], since: 1955 },
+  { id: 'avenue-de-la-zup', kind: 'main', pts: [[146, 136], [290, 136]], since: 1962 },
+  { id: 'rue-des-lilas', kind: 'lane', pts: [[-2, -210], [156, -210]], since: 1930 },
+  { id: 'rue-du-centre-d-art', kind: 'lane', pts: [[128, 55], [150, 55]], since: 2010 },
 ];
 
 // ---------------------------------------------------------------- street furniture
@@ -278,8 +285,8 @@ const props: SiteProp[] = [
     id: 'water-tower',
     since: 1964,
     build(b, ground) {
-      const x = 236;
-      const z = 150;
+      const x = 250;
+      const z = 176;
       b.group({ at: [x, ground(x, z), z] }, () => {
         b.cyl(2.2, 24, P.concrete, { segs: 12, rTop: 1.8 });
         b.cyl(2, 5, P.concrete, { at: [0, 24, 0], rTop: 7.5, segs: 16 });

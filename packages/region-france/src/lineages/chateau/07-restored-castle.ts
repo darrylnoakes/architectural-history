@@ -1,5 +1,5 @@
 import type { BuildingDef, Builder } from '@ah/kit';
-import { C, MOTTE, TOWERS } from './shared';
+import { C, TOWERS } from './shared';
 import { residentialCastle } from './04-residential-castle';
 
 function build(b: Builder) {
@@ -30,4 +30,3 @@ export const restoredCastle: BuildingDef = {
   build,
 };
 
-void MOTTE;

@@ -1,5 +1,4 @@
 import type { Lineage } from '@ah/kit';
-import { invasions } from '../../ends';
 import { theatreAmphitheatre } from './01-theatre-amphitheatre';
 import { jeuDePaume } from './02-jeu-de-paume';
 import { grandTheatre } from './03-grand-theatre';
@@ -17,7 +16,19 @@ const lineage: Lineage = {
   plotSize: [40, 36],
   stages: [
     // Gallo-Roman theatre-amphitheatres were built from the later 1st century to the early 3rd
-    { from: 80, builtUntil: 200, end: invasions, def: theatreAmphitheatre },
+    {
+      from: 80,
+      builtUntil: 200,
+      // not left as a ruin like the forum: it lay outside the new wall and was its nearest quarry
+      end: {
+        year: 290,
+        fate: 'cleared',
+        note:
+          'Burned in the raids of 275 and 276, the theatre was then taken down block by block for the town wall of about 290, as the arena of Paris was. ' +
+          'Only the hollow of the arena was left, under gardens and sheds.',
+      },
+      def: theatreAmphitheatre,
+    },
     // covered tennis courts multiplied from the mid-16th century; few were built after about 1650,
     // and many were turned into playhouses or warehouses as the game went out of fashion
     { from: 1560, builtUntil: 1650, def: jeuDePaume },

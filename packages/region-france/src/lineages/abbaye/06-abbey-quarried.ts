@@ -1,5 +1,5 @@
-import { P, tint, type BuildingDef, type Builder } from '@ah/kit';
-import { CX, GATE_X, NZ, QUAR, RANGE, STONE, abbey, cart } from './shared';
+import { P, type BuildingDef, type Builder } from '@ah/kit';
+import { CX, GATE_X, NZ, QUAR, RANGE, abbey, cart } from './shared';
 
 function build(b: Builder) {
   abbey(b, QUAR);
@@ -21,8 +21,6 @@ function build(b: Builder) {
   });
   b.collider(1.1, 1.1, { at: [GATE_X + 2.4, 0, W.z1 + 1.4] });
   cart(b, [11.5, 0, -15], 0.3, false);
-  void tint;
-  void STONE;
 }
 
 export const abbeyQuarried: BuildingDef = {

@@ -220,7 +220,7 @@ function build(b: Builder) {
   b.collider(3.8, 3.8, { at: [0, 0, bz] });
   // the canal across the bottom of the garden, as at Vaux
   const cz0 = -21.2;
-  const cz1 = -23.8;
+  const cz1 = -23.55;
   b.box(43.6, 0.06, cz0 - cz1, mix(P.water, P.glassGreen, 0.2), { at: [0, 0, (cz0 + cz1) / 2], mat: 'glass', jitter: false });
   b.box(43.6, 0.3, 0.35, TRIM, { at: [0, 0, cz1 - 0.17], jitter: false });
   b.box(43.6, 0.3, 0.35, TRIM, { at: [0, 0, cz0 + 0.17], jitter: false });

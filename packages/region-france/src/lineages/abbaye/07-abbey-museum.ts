@@ -16,10 +16,6 @@ function build(b: Builder) {
   b.box(18, 0.04, 4.4, mix(P.paving, P.gravel, 0.4), { at: [2, 0, 19.6], jitter: false });
   for (const x of [-3, 9.5, 14.5]) b.tree(6.5, { at: [x, 0, 20.2], kind: 'round' });
   for (const x of [-1, 11.8]) b.box(1.8, 0.45, 0.5, P.oak, { at: [x, 0, 18.6] });
-  // the outline of the lost church explained on a lectern
-  void GARTH;
-  void NZ;
-  void CX;
 }
 
 export const abbeyMuseum: BuildingDef = {

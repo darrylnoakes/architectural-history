@@ -1,7 +1,6 @@
 import { P, mix, tint, type BuildingDef, type Builder, type Vec3 } from '@ah/kit';
 import {
   C,
-  MOTTE,
   SLATE,
   STONE,
   STONE_NEW,
@@ -124,7 +123,6 @@ export function residentialCastle(b: Builder, restored: boolean) {
   b.sym((s) => b.box(0.14, 2.2, 0.14, P.iron, { at: [1.5 + s * 0.7, 0.9, 6], jitter: false }));
   b.box(1.6, 0.12, 0.14, P.iron, { at: [1.5, 3.05, 6], jitter: false });
 
-  void SLATE;
 }
 
 function build(b: Builder) {
@@ -153,4 +151,3 @@ export const residentialCastleDef: BuildingDef = {
   build,
 };
 
-void MOTTE;

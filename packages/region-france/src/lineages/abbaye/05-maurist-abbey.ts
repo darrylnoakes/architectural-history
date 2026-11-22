@@ -1,5 +1,5 @@
 import type { BuildingDef, Builder } from '@ah/kit';
-import { CX, GATE_X, GARTH, G, GH, MAUR, RANGE, abbey } from './shared';
+import { CX, GATE_X, G, GH, MAUR, RANGE, abbey } from './shared';
 
 function build(b: Builder) {
   abbey(b, MAUR);
@@ -27,4 +27,3 @@ export const mauristAbbey: BuildingDef = {
   build,
 };
 
-void GARTH;
