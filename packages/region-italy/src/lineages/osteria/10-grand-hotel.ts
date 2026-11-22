@@ -135,6 +135,8 @@ export const grandHotel: BuildingDef = {
       b.box(2.4, 0.05, 0.05, P.castIron, { at: [tx + 0.15, y + 0.85, ZF + 1.1] });
       for (const x of spread(6, -1.1, 1.1)) b.box(0.03, 0.9, 0.03, P.castIron, { at: [tx + 0.15 + x, y - 0.05, ZF + 1.1], jitter: false });
     }
+    b.window(1.5, 3.2, { at: [tx + 0.15, 0.9, ZF + 0.3], facing: '+z', shape: 'round', frame: P.white, border: 0.1, bars: [2, 4] });
+    b.window(1.5, 3.2, { at: [XO + 0.3, 0.9, tz + 0.15], facing: '+x', shape: 'round', frame: P.white, border: 0.1, bars: [2, 4] });
     b.window(1.2, 1.2, { at: [tx + 0.15, TOP + 0.9, ZF + 0.3], facing: '+z', frame: stone, shape: 'circle', border: 0.15 });
     b.window(1.2, 1.2, { at: [XO + 0.3, TOP + 0.9, tz + 0.15], facing: '+x', frame: stone, shape: 'circle', border: 0.15 });
     b.box(tw + 0.8, 0.3, tw + 0.8, stone, { at: [tx + 0.15, TOP + 3.0, tz + 0.15] });

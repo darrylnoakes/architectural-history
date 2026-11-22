@@ -5,7 +5,7 @@ import { coppiRoof, FRONT, pave, persiane, plasterPick, shutterPick, washing } f
 function railing(b: Builder, x: number, y: number, z: number, w: number, d: number): void {
   b.box(w, 0.06, 0.06, P.castIron, { at: [x, y + 0.95, z + d - 0.05] });
   b.box(w, 0.05, 0.05, P.castIron, { at: [x, y + 0.12, z + d - 0.05] });
-  for (const u of spread(Math.round(w / 0.14), -w / 2, w / 2)) b.box(0.025, 0.85, 0.025, P.castIron, { at: [x + u, y + 0.1, z + d - 0.05], jitter: false });
+  for (const u of spread(Math.round(w / 0.24), -w / 2, w / 2)) b.box(0.025, 0.85, 0.025, P.castIron, { at: [x + u, y + 0.1, z + d - 0.05], jitter: false });
   b.sym((s) => b.box(0.05, 0.05, d, P.castIron, { at: [x + s * (w / 2), y + 0.95, z + d / 2] }));
 }
 
@@ -25,22 +25,22 @@ export const umbertineApartments: BuildingDef = {
     {
       label: 'Stucco rustication',
       note: 'The ground floor is plastered and cut with deep horizontal channels so that it looks like heavy blocks of stone.',
-      at: [-6.0, 2.6, 8.5],
+      at: [-6.0, 2.6, 8.1],
     },
     {
       label: 'Iron balconies',
       note: 'Stone slabs on brackets carry railings of cast iron, made cheaply by the new foundries; the longest balcony marks the best flat.',
-      at: [0, 5.9, 9.3],
+      at: [0, 5.9, 8.9],
     },
     {
       label: 'Louvred shutters',
       note: 'Persiane: slatted wooden shutters that keep out the sun but let the air through, now on every window in the street.',
-      at: [-3.61, 9.6, 8.5],
+      at: [-3.61, 9.6, 8.1],
     },
     {
       label: 'Bracketed cornice',
       note: 'A deep cornice on a row of carved brackets, borrowed from the Renaissance palaces of Florence and Rome.',
-      at: [3.0, 17.8, 9.1],
+      at: [3.0, 17.8, 8.7],
     },
     {
       label: 'Courtyard',
@@ -51,7 +51,7 @@ export const umbertineApartments: BuildingDef = {
   build(b) {
     const W = 13.6;
     const X = W / 2;
-    const zf = FRONT;
+    const zf = FRONT - 0.4;
     const zb = -0.6;
     const D = zf - zb;
     const zc = (zf + zb) / 2;
@@ -78,7 +78,7 @@ export const umbertineApartments: BuildingDef = {
     b.sym((s) => b.box(0.5, H - g, 0.06, stucco, { at: [s * (X - 0.25), g, zf + 0.03] }));
     // bracketed cornice
     b.box(W, 0.5, 0.12, stucco, { at: [0, H - 0.55, zf + 0.06] });
-    for (const x of spread(20, -X + 0.15, X - 0.15)) {
+    for (const x of spread(15, -X + 0.15, X - 0.15)) {
       b.extrude([[0, 0], [0.7, 0], [0.7, -0.12], [0.25, -0.2], [0.12, -0.45], [0, -0.45]], 0.16, stucco, { at: [x, H, zf], rotY: -Math.PI / 2 });
     }
     b.box(W, 0.22, 0.85, stucco, { at: [0, H, zf + 0.42] });
@@ -112,8 +112,8 @@ export const umbertineApartments: BuildingDef = {
       const h = [2.5, 2.3, 2.1, 1.8][f - 1];
       for (const [i, x] of bays.entries()) {
         b.panel(1.45, h + 0.25, stucco, { at: [x, y0 - 0.1, zf], facing: '+z', depth: 0.05 });
-        b.window(1.15, h, { at: [x, y0, zf], facing: '+z', frame: P.white, glass, bars: [2, 3] });
-        persiane(b, 1.15, h, [x, y0, zf + 0.05], '+z', shut, { slats: f === 1 ? 4 : 3, closed: f === 4 && i % 2 === 1 });
+        b.window(1.15, h, { at: [x, y0, zf], facing: '+z', frame: P.white, glass, bars: [2, 2] });
+        persiane(b, 1.15, h, [x, y0, zf + 0.05], '+z', shut, { slats: 3, closed: f === 4 && i % 2 === 1 });
         if (f === 1) {
           // aedicule: pediment over every window
           b.box(1.8, 0.14, 0.24, stucco, { at: [x, y0 + h + 0.2, zf + 0.12] });
@@ -150,8 +150,7 @@ export const umbertineApartments: BuildingDef = {
         const y0 = f === 0 ? 0 : ys[f - 1] + 0.6;
         if (f === 0) b.panel(1.0, 2.3, P.oakDark, { at: [cx - s * (ww / 2), 0, (zb + wz) / 2], facing: fx });
         else {
-          b.window(1.0, 1.7, { at: [cx - s * (ww / 2), y0, (zb + wz) / 2], facing: fx, frame: P.white, glass, bars: [2, 2] });
-          persiane(b, 1.0, 1.7, [cx - s * (ww / 2), y0, (zb + wz) / 2], fx, shut, { slats: 1 });
+          b.window(1.0, 1.7, { at: [cx - s * (ww / 2), y0, (zb + wz) / 2], facing: fx, frame: P.white, glass });
         }
       }
       b.window(1.0, 1.6, { at: [cx, ys[1] + 0.6, wz], facing: '-z', frame: P.white, glass, bars: [2, 2] });
@@ -159,7 +158,7 @@ export const umbertineApartments: BuildingDef = {
     for (const x of [-2.0, 0, 2.0]) {
       for (let f = 1; f <= 4; f++) {
         const y0 = ys[f - 1] + 0.5;
-        b.window(1.05, 1.8, { at: [x, y0, zb], facing: '-z', frame: P.white, glass, bars: [2, 2] });
+        b.window(1.05, 1.8, { at: [x, y0, zb], facing: '-z', frame: P.white, glass });
         persiane(b, 1.05, 1.8, [x, y0, zb - 0.05], '-z', shut, { slats: 1 });
       }
     }

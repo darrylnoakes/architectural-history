@@ -11,22 +11,20 @@ const STONE = P.travertine;
  */
 function elevation(b: Builder, len: number, at: [number, number, number], rotY: number, inner: boolean): void {
   b.group({ at, rotY }, () => {
-    const n = Math.max(2, Math.round(len / 2.6));
+    const n = Math.max(2, Math.round(len / 3.2));
     const pitch = len / n;
     for (let i = 0; i < n; i++) {
       const x = -len / 2 + (i + 0.5) * pitch;
       // shopfront: a stone arch framing glass, an iron transom with the mezzanine light above
-      archPanel(b, 2.5, 4.75, STONE, [x, 0, 0], '+z', 'round', 0.05, undefined, 2);
-      archPanel(b, 2.1, 4.5, P.glassDark, [x, 0.1, 0], '+z', 'round', 0.08, 'glass', 2);
+      archPanel(b, 2.5, 4.75, STONE, [x, 0, 0], '+z', 'round', 0.05, undefined, 3);
+      archPanel(b, 2.1, 4.5, P.glassDark, [x, 0.1, 0], '+z', 'round', 0.08, 'glass', 3);
       b.box(2.1, 0.12, 0.12, P.castIron, { at: [x, 3.2, 0.1] });
-      b.box(0.08, 3.1, 0.1, P.castIron, { at: [x, 0.1, 0.1] });
       if (inner) b.box(1.9, 0.38, 0.06, P.timberBlack, { at: [x, 2.7, 0.14] }); // shop name board
       if (inner) b.box(1.5, 0.12, 0.04, P.gold, { at: [x, 2.83, 0.18], jitter: false });
       // first floor: tall window with a pediment; second floor: smaller window
       b.panel(1.5, 2.45, STONE, { at: [x, 5.9, 0], depth: 0.05 });
       b.panel(1.15, 2.2, P.windowDark, { at: [x, 6.0, 0], depth: 0.07 });
       b.extrude([[-0.95, 0], [0.95, 0], [0, 0.45]], 0.2, STONE, { at: [x, 8.4, 0.1] });
-      b.panel(1.35, 1.95, STONE, { at: [x, 9.55, 0], depth: 0.05 });
       b.panel(1.05, 1.7, P.windowDark, { at: [x, 9.65, 0], depth: 0.07 });
       if (inner) b.box(1.5, 0.08, 0.35, P.castIron, { at: [x, 5.9, 0.17] }); // balcony rail
     }
@@ -115,8 +113,8 @@ export const galleria: BuildingDef = {
     // ---- iron and glass: a barrel vault over each arm, ribs, and the dome over the crossing
     b.vault(2 * A, 2 * HZ - 0.6, P.glass, { at: [0, H, -0.3], axis: 'z', segs: 10, mat: 'glass' });
     b.vault(2 * A, 2 * HX - 0.6, P.glass, { at: [0, H, 0], axis: 'x', segs: 10, mat: 'glass' });
-    for (const z of [-9, -7.5, -6, -4.5, -3, 3, 4.5, 6, 7.5, 9]) archivolt(b, A - 0.05, 0.12, 0, 0.14, P.castIron, [0, H, z], '+z', 8);
-    for (const x of [-11, -9.5, -8, -6.5, -5, -3.5, 3.5, 5, 6.5, 8, 9.5, 11]) archivolt(b, A - 0.05, 0.12, 0, 0.14, P.castIron, [x, H, 0], '+x', 8);
+    for (const z of [-9, -7, -5, -3, 3, 5, 7, 9]) archivolt(b, A - 0.05, 0.12, 0, 0.14, P.castIron, [0, H, z], '+z', 6);
+    for (const x of [-11, -9, -7, -5, -3, 3, 5, 7, 9, 11]) archivolt(b, A - 0.05, 0.12, 0, 0.14, P.castIron, [x, H, 0], '+x', 6);
     for (const s of [-1, 1]) {
       b.box(0.3, 0.3, 2 * HZ, P.castIron, { at: [s * A, H - 0.15, 0] });
       b.box(2 * HX, 0.3, 0.3, P.castIron, { at: [0, H - 0.15, s * A] });
@@ -152,7 +150,7 @@ export const galleria: BuildingDef = {
     b.group({ at: [0, 0, HZ + 0.35] }, () => {
       b.archWall(10, 17, 0.7, WALL, { openings: 1, openW: 2 * A - 0.2, openH: 11, shape: 'round' });
       archivolt(b, A - 0.1, 0.5, 11 - A + 0.1, 0.14, STONE, [0, 0, 0.35], '+z', 10);
-      b.box(10.3, 0.6, 0.9, STONE, { at: [0, 0, 0] });
+      for (const s of [-1, 1]) b.box(2.6, 0.6, 0.9, STONE, { at: [s * 3.85, 0, 0] });
       for (const s of [-1, 1]) {
         for (const x of [3.3, 4.4]) {
           b.box(0.9, 1.6, 0.9, STONE, { at: [s * x, 0, 0.35] });
