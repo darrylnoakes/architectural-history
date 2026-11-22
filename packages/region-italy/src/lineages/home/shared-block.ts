@@ -196,7 +196,7 @@ export function ostiaBlock(b: Builder, ruin: boolean): void {
       b.blob(r, c, { at: [x, floors[1] + 0.1, z], stretch: [1.3, 0.4, 1.0], detail: 0 });
     }
     // weeds and a fig on the wall tops
-    for (const [x, y, z] of [[-6.2, 13.9, 7.4], [-3.2, 11.0, 7.4], [6.6, 5.6, -1.2], [-6.6, 11.8, 1.6]] as Vec3[]) {
+    for (const [x, y, z] of [[-6.2, 13.9, 7.4], [-3.2, 11.0, 7.4], [6.6, 5.6, -1.2], [-6.2, 11.8, 1.6]] as Vec3[]) {
       b.blob(0.5, P.leafDark, { at: [x, y, z], stretch: [1.2, 0.7, 1.0], detail: 0 });
     }
     // a little shelter of reused tiles over the stair head

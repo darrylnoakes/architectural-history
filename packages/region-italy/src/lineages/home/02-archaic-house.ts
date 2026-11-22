@@ -155,7 +155,7 @@ export const archaicHouse: BuildingDef = {
       b.cyl(0.3, 0.75, tint(P.terracotta, -0.05), { at: [x, 0.18, z], rTop: 0.18, segs: 8 });
     }
     vegBed(b, -2.0, -6.6, 4.2, 3.4, { rows: 6 });
-    b.tree(b.range(3.6, 4.4), { at: [5.6, 0, -7.4], kind: 'olive' });
+    b.tree(b.range(3.6, 4.4), { at: [4.6, 0, -7.2], kind: 'olive' });
     // the yard enclosed by a low wall of rubble
     b.box(13.4, 0.9, 0.45, tint(tufa, -0.03), { at: [0, 0, -8.6] });
     b.sym((s) => b.box(0.45, 0.9, 5.6, tint(tufa, -0.03), { at: [s * 6.5, 0, -5.8] }));
