@@ -144,7 +144,7 @@ export const maisonDeLaCulture: BuildingDef = {
     b.panel(PW - 2.0, 7.0, P.windowDark, { at: [HCX, 1.5, PZ + 0.02] }); // proscenium opening
     b.panel(PW - 2.4, 6.4, tint(P.doorRed, -0.05), { at: [HCX, 1.5, PZ + 0.06], depth: 0.04 }); // curtain
     // acoustic panels hanging over the hall (the ceiling, seen when the roof is lifted)
-    for (let i = 0; i < 4; i++) {
+    for (let i = 0; i < 4 && !cutaway; i++) {
       const z = -4.6 + i * 2.8;
       b.box(halfW(z) * 2 - 1.6, 0.15, 1.6, tint(P.cladWhite, -0.05), { at: [HCX, HALL_H - 1.0 + i * 0.15, z], rot: [0.15, 0, 0] });
     }
@@ -186,12 +186,19 @@ export const maisonDeLaCulture: BuildingDef = {
     boards(b, [0, ROOF_Y, RZ1], rw, ROOF_T, 0, concDk, 0.45);
     b.sym((s) => boards(b, [s * RX, ROOF_Y, rzm], rd, ROOF_T, s > 0 ? Math.PI / 2 : -Math.PI / 2, concDk, 0.45));
     // the cross beams under the roof
-    for (let x = -RX + 6; x < RX - 1; x += 6) b.box(0.5, 0.9, rd - 0.4, concDk, { at: [x, ROOF_Y - 0.9, rzm] });
     if (!cutaway) {
+      for (let x = -RX + 6; x < RX - 1; x += 6) b.box(0.5, 0.9, rd - 0.4, concDk, { at: [x, ROOF_Y - 0.9, rzm] });
       b.box(rw - 2 * fascia + 0.02, ROOF_T * 0.5, rd - 2 * fascia + 0.02, conc, { at: [0, ROOF_Y + ROOF_T * 0.5, rzm] });
       b.box(rw - 2 * fascia, 0.06, rd - 2 * fascia, tint(conc, -0.04), { at: [0, ROOF_Y + ROOF_T, rzm] });
       // rooflights over the foyer
       for (const x of [-12, 0, 12]) b.box(3.0, 0.5, 2.4, mix(P.glass, P.white, 0.2), { at: [x, ROOF_Y + ROOF_T, 9.0], mat: 'glass' });
+      // the roof steps up over each hall, so that their shapes read from outside
+      const ry = ROOF_Y + ROOF_T;
+      const fan: Pt[] = [[HCX - PW / 2 - 0.5, PZ], [HCX + PW / 2 + 0.5, PZ], [HCX + BW / 2 + 0.5, BZ + 0.5], [HCX - BW / 2 - 0.5, BZ + 0.5]];
+      b.extrude(fan.map(([x, z]) => [x, -z] as Pt), 2.4, conc, { at: [0, ry + 1.2, 0], rot: [-Math.PI / 2, 0, 0] });
+      b.extrude(fan.map(([x, z]) => [x * 1.0, -z] as Pt), 0.3, concDk, { at: [0, ry + 2.4 + 0.15, 0], rot: [-Math.PI / 2, 0, 0] });
+      boards(b, [HCX, ry, BZ + 0.5], BW + 1.0, 2.4, 0, concDk, 0.8);
+      b.lathe([[SR + 0.25, ry], [SR + 0.25, ry + 1.8], [SR + 0.6, ry + 1.8], [SR + 0.6, ry + 2.2], [0.01, ry + 2.2]], conc, { at: [SCX, 0, SCZ], segs: 6, start: Math.PI / 6, jitter: false });
     }
     // the columns along the front, outside the glass
     for (let x = -RX + 1.4; x <= RX - 1.3; x += 5.6) b.cyl(0.32, ROOF_Y, concDk, { at: [x, 0, RZ1 - 1.0], segs: 8 });

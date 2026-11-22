@@ -1,4 +1,4 @@
-import { P, tint, type Builder, type Facing, type Vec3 } from '@ah/kit';
+import { P, mix, tint, type Builder, type Facing, type Vec3 } from '@ah/kit';
 import * as THREE from 'three';
 
 // Local helpers for the halles lineage.
@@ -293,6 +293,169 @@ export function windowRow(b: Builder, xs: number[], y: number, w: number, h: num
       for (const s of [-1, 1]) {
         const off = s * (w / 2 + w * 0.27);
         b.panel(w * 0.5, h, shutter, { at: alongZ ? [z, y, c + off * (facing === '+x' ? -1 : 1)] : [c + off, y, z], facing, depth: 0.05 });
+      }
+    }
+  }
+}
+
+// ---------------------------------------------------------------- the concrete market of 1929
+
+/* Shared by `concrete-market` (as built) and `market-today` (the same hall restored), so the two
+   can never drift apart. Front faces +Z. The nave is vaulted across X and runs along Z; a range of
+   shops lines each side under a flat roof. */
+export const CM = {
+  A: 8, // half span of the vault
+  YS: 4.2, // springing of the vault, on the piers between nave and shops
+  HR: 8.3, // rise of the vault
+  Z: 10, // half length
+  XS: 11.5, // outer face of the side ranges
+  T: 0.14, // shell thickness (the real one is 7 cm over a span seven times as wide)
+};
+/** Height of the underside of the vault at x. */
+export const vaultY = (x: number, off = 0) => CM.YS + CM.HR * (1 - (x / CM.A) ** 2) + off;
+
+/** A strip of the shell between x0 and x1, the full length of the hall. */
+function shellStrip(b: Builder, x0: number, x1: number, color: number, mat?: 'glass'): void {
+  const n = Math.max(2, Math.ceil((x1 - x0) / 0.9));
+  const outer: [number, number][] = [];
+  const inner: [number, number][] = [];
+  for (let i = 0; i <= n; i++) {
+    const x = x0 + ((x1 - x0) * i) / n;
+    outer.push([x, vaultY(x, CM.T)]);
+    inner.push([x, vaultY(x)]);
+  }
+  b.extrude([...outer, ...inner.reverse()], 2 * CM.Z, color, { at: [0, 0, 0], mat, jitter: mat ? false : undefined });
+}
+
+/** A stiffening arch standing up out of the shell, from one springing to the other, at z. */
+function shellRib(b: Builder, z: number, color: number): void {
+  const n = 16;
+  const outer: [number, number][] = [];
+  const inner: [number, number][] = [];
+  for (let i = 0; i <= n; i++) {
+    const x = -CM.A - 0.2 + ((2 * CM.A + 0.4) * i) / n;
+    const xx = Math.max(-CM.A, Math.min(CM.A, x));
+    outer.push([x, vaultY(xx, CM.T + 0.5) - (Math.abs(x) > CM.A ? 0.4 : 0)]);
+    inner.push([xx, vaultY(xx, CM.T - 0.02)]);
+  }
+  b.extrude([...outer, ...inner.reverse()], 0.32, color, { at: [0, 0, z] });
+}
+
+/** The glazed end of the vault: glass in a grid of thin concrete bars. Wall face at z, facing sign s. */
+function tympanum(b: Builder, z: number, s: 1 | -1, conc: number, glass: number): void {
+  const pts: [number, number][] = [];
+  for (let i = 0; i <= 16; i++) {
+    const x = -CM.A + (2 * CM.A * i) / 16;
+    pts.push([x, vaultY(x) - 0.02]);
+  }
+  pts.reverse();
+  b.extrude([[-CM.A, CM.YS], [CM.A, CM.YS], ...pts.slice(1, -1)], 0.1, glass, { at: [0, 0, z], mat: 'glass', jitter: false });
+  const zf = z + s * 0.09;
+  for (let x = -CM.A + 1; x < CM.A - 0.5; x += 1.0) b.box(0.1, vaultY(x) - CM.YS - 0.05, 0.12, conc, { at: [x, CM.YS, zf], jitter: false });
+  for (let y = CM.YS + 1.0; y < CM.YS + CM.HR - 0.4; y += 1.0) {
+    const hw = CM.A * Math.sqrt(Math.max(0, 1 - (y - CM.YS) / CM.HR));
+    b.box(2 * hw - 0.1, 0.1, 0.12, conc, { at: [0, y, zf], jitter: false });
+  }
+  // a heavier frame along the edge of the vault
+  for (let i = 0; i < 16; i++) {
+    const x0 = -CM.A + (2 * CM.A * i) / 16;
+    const x1 = x0 + (2 * CM.A) / 16;
+    b.beam([x0, vaultY(x0, 0.05), zf], [x1, vaultY(x1, 0.05), zf], 0.35, 0.3, conc);
+  }
+}
+
+/**
+ * The covered market of 1929: a thin concrete vault on stiffening ribs, glazed in bands and at both
+ * ends, over a nave of market stalls, with a range of shops under a flat roof down each side.
+ * `restored` gives the hall after its restoration: cleaned concrete, new clear glazing and fresh paint.
+ * The square outside and the stalls are left to the caller. `open` leaves the right half of the shell
+ * off (the ribs stay) so the nave can be seen.
+ */
+export function concreteMarket(b: Builder, restored: boolean, open: boolean): void {
+  const conc = restored ? tint(P.concreteWhite, 0.02) : mix(P.concrete, P.concreteDark, 0.35);
+  const glass = restored ? P.glass : mix(P.glassGreen, P.glassDark, 0.35);
+  const frame = restored ? P.doorGreen : P.castIron;
+  const { A, YS, Z, XS } = CM;
+
+  // ---- the vault: concrete with two bands of glazing each side, the ribs over it
+  const bands: [number, number, boolean][] = [
+    [0, 2.2, false],
+    [2.2, 3.5, true],
+    [3.5, 5.3, false],
+    [5.3, 6.3, true],
+    [6.3, A, false],
+  ];
+  for (const s of [-1, 1]) {
+    if (open && s > 0) continue;
+    for (const [x0, x1, g] of bands) {
+      const [p, q] = s > 0 ? [x0, x1] : [-x1, -x0];
+      shellStrip(b, p, q, g ? glass : conc, g ? 'glass' : undefined);
+    }
+  }
+  const ribs = 9;
+  for (let i = 0; i < ribs; i++) shellRib(b, -Z + 0.2 + ((2 * Z - 0.4) * i) / (ribs - 1), conc);
+  // a thin edge beam along each springing line, the piers under every rib
+  for (const s of [-1, 1]) {
+    b.box(0.5, 0.45, 2 * Z, conc, { at: [s * A, YS - 0.45, 0] });
+    for (let i = 0; i < ribs; i++) {
+      const z = -Z + 0.2 + ((2 * Z - 0.4) * i) / (ribs - 1);
+      b.box(0.4, YS - 0.45, 0.4, conc, { at: [s * A, 0, z] });
+      b.collider(0.45, 0.45, { at: [s * A, 0, z] });
+    }
+  }
+
+  // ---- the glazed ends
+  tympanum(b, Z - 0.05, 1, conc, glass);
+  tympanum(b, -Z + 0.05, -1, conc, glass);
+
+  // ---- the shop ranges either side, flat-roofed, opening onto the streets
+  for (const s of [-1, 1] as const) {
+    const xc = s * (A + 0.4 + (XS - A - 0.4) / 2);
+    const w = XS - A - 0.4;
+    b.box(w, YS - 0.1, 2 * Z, conc, { at: [xc, 0, 0] });
+    b.collider(w, 2 * Z, { at: [xc, 0, 0] });
+    b.box(w + 0.9, 0.3, 2 * Z + 0.6, conc, { at: [xc + s * 0.2, YS - 0.1, 0] }); // the roof slab, oversailing
+    b.box(w + 0.9, 0.4, 0.15, conc, { at: [xc + s * 0.2, YS + 0.2, Z + 0.25] });
+    const facing = s > 0 ? '+x' : '-x';
+    const xf = s * XS;
+    const n = 6;
+    for (let i = 0; i < n; i++) {
+      const z = -Z + ((i + 0.5) * 2 * Z) / n;
+      const pw = (2 * Z) / n - 0.6;
+      // shopfront: a steel-framed window and door, a fascia for the shop’s name
+      b.panel(pw, 2.6, frame, { at: [xf, 0.1, z], facing, depth: 0.06 });
+      b.panel(pw - 0.2, 2.4, glass, { at: [xf, 0.2, z], facing, depth: 0.08, mat: 'glass' });
+      b.panel(0.9, 2.3, frame, { at: [xf, 0.1, z + (pw / 2 - 0.6) * (s > 0 ? -1 : 1)], facing, depth: 0.1 });
+      b.panel(pw, 0.55, restored ? b.pick([P.cladRed, P.doorBlue, P.cladYellow, P.doorGreen]) : P.timberBlack, { at: [xf, 2.95, z], facing, depth: 0.08 });
+      // a glass-block light over each shop
+      b.panel(pw - 0.4, 0.5, mix(P.glassGreen, P.white, 0.45), { at: [xf, 3.55, z], facing, depth: 0.05, mat: 'glass' });
+    }
+    // the ends of the ranges: plain concrete with a door
+    for (const sz of [-1, 1] as const) {
+      b.panel(1.2, 2.4, frame, { at: [xc, 0.1, sz * Z], facing: sz > 0 ? '+z' : '-z', depth: 0.06 });
+      b.panel(w - 0.6, 0.06, tint(conc, -0.1), { at: [xc, 3.0, sz * Z], facing: sz > 0 ? '+z' : '-z', depth: 0.05 });
+    }
+  }
+
+  // ---- the entrances under the tympana: glazed screens with doors, a canopy, the name
+  for (const s of [-1, 1] as const) {
+    const z = s * (Z - 0.05);
+    b.box(2 * A - 0.4, YS - 0.45, 0.08, glass, { at: [0, 0, z], mat: 'glass' });
+    for (let x = -A + 0.2; x <= A - 0.2 + 0.01; x += 1.95) b.box(0.08, YS - 0.45, 0.14, frame, { at: [x, 0, z] });
+    b.box(2 * A - 0.4, 0.1, 0.14, frame, { at: [0, 2.6, z] });
+    // doors, folded open by day
+    for (const dx of [-2.9, 0, 2.9]) {
+      for (const sx of [-1, 1]) b.box(0.85, 2.5, 0.05, frame, { at: [dx + sx * 0.85, 0.05, z + s * 0.5], rotY: sx * s * 1.2 });
+      b.box(1.8, 2.5, 0.12, P.windowDark, { at: [dx, 0.05, z] });
+    }
+    b.box(2 * A + 1.2, 0.25, 1.6, conc, { at: [0, 3.2, z + s * 0.8] });
+    for (const sx of [-1, 1]) b.collider(1.8, 0.4, { at: [sx * 1.45, 0, z] });
+    for (const sx of [-1, 1]) b.collider(2.0, 0.4, { at: [sx * 6.3, 0, z] });
+    if (s > 0) {
+      // the name in letters standing on the canopy
+      for (let k = 0; k < 11; k++) {
+        if (k === 3 || k === 6) continue;
+        b.box(0.55, 0.75, 0.1, restored ? P.cladRed : P.bronze, { at: [-4.0 + k * 0.8, 3.45, z + 1.45] });
       }
     }
   }

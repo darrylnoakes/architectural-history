@@ -7,9 +7,9 @@ export const suspensionBridge: BuildingDef = {
   style: 'Restoration and July Monarchy',
   date: 'c. 1830',
   summary:
-    'In 1814 the stone bridge was blown up in the fighting before Paris, as many in the north were, and the town cannot afford another of masonry. Instead a company builds a suspension bridge and is paid back by a toll on everyone who crosses. ' +
+    'The town wants a second crossing where no bridge has stood, but cannot pay for one of stone. Instead a private company is granted the right to build a suspension bridge and to take a toll from everyone who crosses until its money is repaid. ' +
     'Its timber road hangs on iron rods from cables, each made of hundreds of thin iron wires bound together, slung over two masonry pylons and anchored in the ground behind them. Marc Seguin of Annonay and his brothers showed that wire was lighter, cheaper and stronger than the iron chains the British used, and opened their bridge over the Rhône at Tournon in 1825. ' +
-    'Hundreds followed across France in the next twenty-five years, until in 1850 the bridge at Angers collapsed under a battalion marching across it in a storm, killing more than two hundred soldiers, and the fashion ended.',
+    'Cheap and quick to put up, bridges like this were built in their hundreds across France between about 1825 and 1850, many of them at places that had only ever had a ferry, until in 1850 the bridge at Angers collapsed under a battalion marching across it in a storm, killing more than two hundred soldiers, and the fashion ended.',
   materials: ['iron wire cables', 'wrought-iron rods', 'oak deck', 'limestone pylons'],
   modelledOn: 'The bridges of Marc Seguin and his brothers, first at Tournon-Tain over the Rhône (1825): wire cables, masonry pylons, a light timber deck. Generic in its details',
   lookFor: [

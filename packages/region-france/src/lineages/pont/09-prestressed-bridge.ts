@@ -7,7 +7,7 @@ export const prestressedBridge: BuildingDef = {
   style: 'Reconstruction engineering',
   date: '1947',
   summary:
-    'After two wars in which every bridge of the town was blown up, once in each, the crossing is rebuilt with one very flat span of prestressed concrete and nothing standing in the river. ' +
+    'In June 1940 the bridge that stood here was blown up, with the town’s other crossings, to slow the German advance. After the war it is replaced by one very flat span of prestressed concrete with nothing standing in the river. ' +
     'Prestressing was Eugène Freyssinet’s invention, patented in 1928: steel wires threaded through the concrete are stretched hard and anchored at the ends, squeezing it so that it never goes into tension and cracks, which lets a beam be far thinner and longer than ordinary reinforced concrete allows. ' +
     'Freyssinet’s first bridge of this kind, over the Marne at Luzancy (1941 to 1946), was assembled from segments cast on the bank and tied together by the wires, and stands on hinges at each end; five more followed down the Marne between 1947 and 1951.',
   materials: ['prestressed concrete', 'high-tensile steel wire', 'asphalt', 'steel railings'],
