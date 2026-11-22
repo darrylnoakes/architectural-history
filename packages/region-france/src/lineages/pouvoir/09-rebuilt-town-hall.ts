@@ -27,7 +27,7 @@ export const rebuiltTownHall: BuildingDef = {
   style: 'Reconstruction: Flamboyant restored, Art Deco wing',
   date: 'c. 1928',
   summary:
-    'From 1914 the front lay a few kilometres away, and shellfire left the belfry and town hall burnt-out shells. After much debate the town decides, as Arras did, to rebuild them as they were, stone by stone from photographs and drawings, but around a hidden frame of reinforced concrete, under new slate roofs. ' +
+    'From 1914 the front lay a few kilometres away, and shellfire left the belfry and town hall burnt-out shells. After much debate the town decides, as Arras did, to rebuild them as they were, in new stone copied from photographs, casts and drawings, but around a hidden frame of reinforced concrete, under new slate roofs. ' +
     'Behind the hall it adds what the old building lacked, a council chamber wing in the modern manner of the 1920s, Art Deco: pale artificial stone, tall narrow windows between fluted piers, a stepped attic, a frieze of zigzags and bronze doors. ' +
     'The Third Republic’s town hall is now the centre of a busy commune with an elected council and mayor, and in the square in front stands the war memorial with the names of the town’s dead.',
   materials: ['limestone ashlar', 'reinforced concrete', 'artificial stone', 'slate', 'bronze'],

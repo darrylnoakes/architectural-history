@@ -9,7 +9,7 @@ export const frankishHouse: BuildingDef = {
   summary:
     'Under the Frankish kings the old Roman town was half empty, much of it gardens, vineyards and ruins, and ordinary houses were built of timber again. ' +
     'Posts set in the ground carry a hipped roof of thatch that comes down almost to head height, over low walls of wattle and daub. ' +
-    'Beside the house stands a sunken hut (fond de cabane): its floor is dug half a metre into the ground and its roof rests almost on the earth. The damp, even air suited weaving, and the loom weights of fired clay found on their floors are the commonest finds of the period in northern France.',
+    'Beside the house stands a sunken hut (fond de cabane): its floor is dug half a metre into the ground and its roof rests almost on the earth. The damp, even air suited weaving, and the loom weights of fired clay found on their floors are among the commonest finds of the period in northern France.',
   materials: ['oak posts set in the ground', 'wattle and daub', 'straw thatch', 'fired clay loom weights'],
   lookFor: [
     {

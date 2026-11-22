@@ -14,7 +14,6 @@ export const romanesqueHouse: BuildingDef = {
   materials: ['cut limestone front', 'rubble side and back walls', 'oak floors and roof', 'flat clay tiles'],
   modelledOn:
     'The front follows the twelfth- and thirteenth-century stone houses of Cluny (Saône-et-Loire): shop arches below and a continuous row of windows lighting the hall above. The proportions and details here are generic, not those of a particular house.',
-  influences: ['cluny'],
   lookFor: [
     {
       label: 'Shop arch with its counter',

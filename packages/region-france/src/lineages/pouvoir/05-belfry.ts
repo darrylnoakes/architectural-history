@@ -14,12 +14,12 @@ export const belfryDef: BuildingDef = {
   lookFor: [
     { label: 'Watch gallery', note: 'A crenellated walk on a row of corbels, from which the watchman kept a lookout over the town day and night.', at: [BEL.x + BEL.w / 2 + 0.6, BEL.shaft + 1.0, BEL.z + 2] },
     { label: 'Bell chamber and louvres', note: 'Tall pointed openings fitted with sloping louvre boards (abat-sons) throw the sound of the commune’s bells down into the streets.', at: [BEL.x, BEL_GALLERY + 2.4, BEL.z + 2.9] },
-    { label: 'Slate spire', note: 'An eight-sided spire covered in slate makes the belfry the tallest thing in town after the cathedral, a claim the bishop resented.', at: [BEL.x + 1.2, BEL_CHAMBER + 4, BEL.z + 1.2] },
+    { label: 'Slate spire', note: 'An eight-sided spire covered in slate makes the belfry the tallest thing in town after the cathedral: the commune’s tower set against the bishop’s.', at: [BEL.x + 1.2, BEL_CHAMBER + 4, BEL.z + 1.2] },
     { label: 'Open market hall', note: 'Pointed arches on three sides leave the ground floor open for stalls; the commune drew rents and tolls from the market.', at: [(HALLE.x0 + HALLE.x1) / 2 + 1.7, 2.0, HALLE.z1 + 0.3] },
     { label: 'Aldermen’s room', note: 'The échevins met in the room upstairs, lit by paired lancet windows and reached by its own outside stair.', at: [HALLE.x1 - 2.2, HALLE.g + 2.4, HALLE.z1 + 0.3] },
   ],
   modelledOn:
-    'The belfries of Picardy and Flanders, such as those of Abbeville and Boulogne-sur-Mer (thirteenth century, both much altered later); generic in its details',
+    'The belfries of Picardy and Flanders, such as those of Abbeville (begun 1209, rebuilt after 1940) and Boulogne-sur-Mer (the counts’ keep of about 1200 turned belfry, heightened in the eighteenth century); generic in its details',
   build(b) {
     square(b, -21.8, 21.8, HALLE.z1, 'earth');
     civicCentre(b, 1260);

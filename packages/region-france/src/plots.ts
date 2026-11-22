@@ -103,6 +103,15 @@ export const plots: Plot[] = [
   { id: 'maison-11', lineage: 'maison', x: 100, z: -14, rotY: S, seed: 73, since: 30, lag: 0.35, skip: ['immeuble-bourgeois'], struck: greatWar, keep: 'reconstruction-house' },
   { id: 'maison-12', lineage: 'maison', x: 114, z: -14, rotY: S, seed: 74, since: 1140, lag: 0.5, keep: 'classical-house' },
   { id: 'maison-13', lineage: 'maison', x: 118, z: 14.5, rotY: N, seed: 75, since: 1330, lag: 0.6, keep: 'maison-1900' },
+  // crowded against the south flank of the cathedral
+  { id: 'maison-18', lineage: 'maison', x: 50, z: -14, rotY: S, seed: 85, since: 300, lag: 0.4, keep: 'gothic-timber-house' },
+  { id: 'maison-19', lineage: 'maison', x: 64, z: -14, rotY: S, seed: 86, since: 1140, lag: 0.2, skip: ['immeuble-bourgeois'], struck: greatWar, keep: 'reconstruction-house' },
+  { id: 'maison-20', lineage: 'maison', x: 78, z: -14, rotY: S, seed: 87, since: 30, lag: 0.55, keep: 'renaissance-house' },
+  // the rue des Moulins, behind the hôtels
+  { id: 'maison-21', lineage: 'maison', x: 40, z: 41, rotY: S, seed: 88, since: 30, lag: 0.5, skip: ['maison-1900'], keep: 'immeuble-bourgeois' },
+  { id: 'maison-22', lineage: 'maison', x: 54, z: 41, rotY: S, seed: 89, since: 1140, lag: 0.35, keep: 'classical-house' },
+  { id: 'maison-23', lineage: 'maison', x: 68, z: 41, rotY: S, seed: 90, since: 1330, lag: 0.3, skip: ['immeuble-bourgeois', 'maison-1900'], struck: greatWar, keep: 'reconstruction-house' },
+  { id: 'maison-24', lineage: 'maison', x: 82, z: 41, rotY: S, seed: 98, since: 1330, lag: 0.6, keep: 'gothic-timber-house' },
   // beyond the river: the station quarter
   { id: 'maison-15', lineage: 'maison', x: -14.5, z: 148.5, rotY: E, seed: 77, since: 1868, lag: 0.2, keep: 'immeuble-bourgeois' },
   { id: 'maison-16', lineage: 'maison', x: 14.5, z: 148.5, rotY: W, seed: 78, since: 1903, keep: 'maison-1900' },

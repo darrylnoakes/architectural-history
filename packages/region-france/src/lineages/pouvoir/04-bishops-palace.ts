@@ -37,7 +37,7 @@ export const bishopsPalace: BuildingDef = {
   style: 'Early Gothic',
   date: 'c. 1180',
   summary:
-    'By the twelfth century the bishop is lord of the town: in several cities of the north (Laon, Beauvais, Noyon, Châlons) the king had granted him the powers of the count as well, so that he coins money, holds the courts and takes the tolls. ' +
+    'By the twelfth century the bishop is lord of the town: in several cities of the north the king had granted him the powers of the count as well (at Beauvais, Noyon and Châlons the bishop was a count, at Laon and Reims a duke), so that he coins money, holds the courts and takes the tolls. ' +
     'His palace beside the cathedral is built to show it, in cut stone: a great hall raised over a vaulted undercroft used for storage, reached by an outside stair and lit by tall paired lancets in the new pointed style, with a two-storey chapel at its end (the lower chapel for the household, the upper one for the bishop) and a tower. ' +
     'This is the power the townspeople will soon challenge by forming a commune.',
   materials: ['limestone ashlar', 'rubble', 'oak roof', 'flat clay tiles'],
@@ -49,7 +49,7 @@ export const bishopsPalace: BuildingDef = {
     { label: 'Gate in the precinct wall', note: 'A wall with a gateway closes the bishop’s court off from the town.', at: [2.4, 4.8, WALL_Z + 0.6] },
   ],
   modelledOn:
-    'The bishop’s palaces of Laon (twelfth-century double chapel) and Sens (the synodal hall, built a generation later, about 1230 to 1240), and the Palais du Tau, Reims (chapel about 1207); generic and reduced',
+    'The bishop’s palaces of Laon (two-storey chapel of the mid twelfth century) and Sens (the synodal hall over its vaulted ground floor, built a generation later, about 1230 to 1240), and the archbishop’s Palais du Tau, Reims (two-storey chapel of the early thirteenth century); generic and reduced',
   build(b) {
     // the court before the palace (the same building stands alone on any plot)
     pave(b, -21.5, 21.5, -21.5, WALL_Z + 0.6, mix(P.gravel, P.earth, 0.3), -0.02);

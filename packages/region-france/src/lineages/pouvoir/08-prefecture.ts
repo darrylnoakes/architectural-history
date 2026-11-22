@@ -92,7 +92,7 @@ export const prefectureDef: BuildingDef = {
   style: 'Neoclassical (Greek Revival)',
   date: 'c. 1835',
   summary:
-    'The Revolution abolishes the provinces, the intendants and the old privileges of the towns, and divides France into departments. From 1800 Napoleon puts a prefect at the head of each, appointed by Paris and answerable to it, with a sub-prefect in each lesser town; the mayor, now appointed too, governs only the commune. ' +
+    'The Revolution abolishes the provinces, the intendants and the old privileges of the towns, and divides France into departments. From 1800 Napoleon puts a prefect at the head of each, appointed by Paris and answerable to it, with a sub-prefect in each of its districts (arrondissements); the mayor, now appointed too, governs only the commune. ' +
     'Justice is reorganised in the same years with a court in each arrondissement. Prefects at first move into the intendance or the bishop’s palace, but by the 1830s the state is building, and its buildings are temples: a portico of six Greek Doric columns under a pediment on a flight of steps, with plain wings of offices either side. ' +
     'In most towns the prefecture and the law court were separate buildings; the model joins them under one roof for simplicity. The old town hall, the commune’s own, stands on beside them.',
   materials: ['limestone ashlar', 'slate', 'bronze', 'oak doors'],
@@ -104,7 +104,7 @@ export const prefectureDef: BuildingDef = {
     { label: 'Tricolour', note: 'The flag of the Revolution, restored in 1830, flies over the building of the state.', at: [XC + 1.1, TOP + 4.3, PRF.z0 + 1.2] },
   ],
   modelledOn:
-    'Generic: the temple-fronted law courts and prefectures built across France between about 1810 and 1850, in the line of the Chamber of Deputies’ portico in Paris (Poyet, 1806 to 1810)',
+    'Generic: the temple-fronted law courts and prefectures built across France between about 1810 and 1850, in the line of the temple front added to the Palais-Bourbon for the legislature in Paris (Bernard Poyet, 1806 to 1810), though that portico is Corinthian, not Doric',
   influences: ['neoclassicism'],
   build(b) {
     const alone = b.variant > 0;

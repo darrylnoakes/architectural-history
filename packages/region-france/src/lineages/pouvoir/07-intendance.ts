@@ -164,20 +164,20 @@ export const intendanceDef: BuildingDef = {
   style: 'Louis XV classicism',
   date: 'c. 1760',
   summary:
-    'Since the 1630s the real ruler of the province has been the intendant, a royal official sent from Versailles to oversee justice, police and above all taxes; the mayor and aldermen keep their hall and their ceremonies, but their elections and budgets are now watched by the king. ' +
+    'Since the 1630s the real ruler of the province has been the intendant, a royal official sent out by the king’s council to oversee justice, police and above all taxes; the mayor and aldermen keep their hall and their ceremonies, but their elections and budgets are now watched by the king. ' +
     'The intendant’s residence sets the tone: cut stone, an arcade on the ground floor, two storeys bound together by giant pilasters, a pediment with the arms of France, and a balustrade with urns hiding the roof. ' +
-    'In front of it the town clears a new square for a bronze statue of Louis XV, as Reims and Nancy did in the 1750s; like nearly all of them it was pulled down and melted in 1792.',
+    'In front of it the town clears a new square for a bronze statue of Louis XV, as Nancy and Reims did in the 1750s and 1760s; like nearly all of them it was pulled down and melted in 1792.',
   materials: ['limestone ashlar', 'slate', 'wrought iron', 'bronze', 'marble'],
   lookFor: [
     { label: 'Giant pilasters', note: 'Flat pilasters with Corinthian capitals run through two storeys at once, the colossal order that gives the front its grandeur.', at: [BAYS[1] + 2, INT.g + 5.5, INT.z1 + 0.65] },
     { label: 'Pediment with the royal arms', note: 'Over the middle three bays a pediment carries the shield of France, three gold lilies on blue under a crown.', at: [XC, TOP + 2.2, INT.z1 + 1.1] },
     { label: 'Balustrade and urns', note: 'A stone balustrade with urns runs along the top and hides the low slate roof, an Italian touch the French classical style made its own.', at: [INT.x0 + 1.6, TOP + 1.4, INT.z1 + 0.5] },
     { label: 'Arcade', note: 'Round arches on rusticated piers give a covered walk along the square, as on the uniform fronts of the royal squares.', at: [BAYS[0], 2.4, INT.z1 + 0.3] },
-    { label: 'Statue of Louis XV', note: 'The king in Roman armour on a tall pedestal with seated virtues, the reason the square was made; it was destroyed in the Revolution.', at: [KING.x + 0.4, 6.4, KING.z + 0.5] },
+    { label: 'Statue of Louis XV', note: 'The king in Roman armour on a tall pedestal with seated allegorical figures, the reason the square was made; the king was melted down in the Revolution.', at: [KING.x + 0.4, 6.4, KING.z + 0.5] },
   ],
   modelledOn:
-    'The Place Royale of Reims (Legendre, 1756 to 1760, with Pigalle’s statue of Louis XV, 1765) and the Place Stanislas, Nancy (Héré, 1752 to 1755); the intendance itself is generic, after the residences of the intendants of the 1750s and 1760s such as the intendance of Champagne at Châlons, now the prefecture of the Marne',
-  influences: ['versailles-export', 'neoclassicism'],
+    'The Place Royale of Reims (Jean-Gabriel Legendre, begun 1757, with Pigalle’s statue of Louis XV, unveiled 1765) and the Place Stanislas, Nancy (Héré, 1752 to 1755); the intendance itself is generic, after the residences of the intendants of the 1750s and 1760s such as the intendance of Champagne at Châlons (begun 1759), now the prefecture of the Marne',
+  influences: ['neoclassicism'],
   build(b) {
     const alone = b.variant > 0;
     if (!alone) {

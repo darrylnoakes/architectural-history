@@ -126,7 +126,7 @@ export const renaissanceHouse: BuildingDef = {
   style: 'Renaissance',
   date: 'c. 1530',
   summary:
-    'Houses were still framed in oak, but the fronts now rise flat from the street: in the sixteenth century more and more towns forbade new jetties, which spread fire and darkened the streets. ' +
+    'Houses were still framed in oak, but the fronts now rise flat from the street: from the sixteenth century town authorities discouraged and then forbade new jetties (Paris banned them in 1607), because they spread fire and darkened the streets. ' +
     'The ground floor is built of stone, and the new taste brought back from Italy shows in the carving: corner posts dressed as little pilasters with capitals, brackets under the eaves, a dormer (lucarne) with pinnacles. ' +
     'The windows are glazed casements divided by a mullion and transom (the croisée), and under them the braces cross as St Andrew’s crosses. Behind, a timber stair turret serves every floor.',
   materials: ['cut limestone ground floor', 'oak frame with carved posts', 'plastered torchis infill', 'glazed casements', 'tile or slate roof'],

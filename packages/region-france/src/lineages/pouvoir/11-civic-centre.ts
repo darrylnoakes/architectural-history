@@ -106,10 +106,10 @@ export const civicCentreDef: BuildingDef = {
     { label: 'Covered entrance', note: 'The ground floor is set back under the upper floors, giving a sheltered entrance on slim columns with a timber soffit.', at: [(CC.x0 + CC.x1) / 2 - 3, 2.4, CC.z1 - 0.4] },
     { label: 'Green roof and solar panels', note: 'A planted roof holds rainwater and insulates; rows of photovoltaic panels make some of the building’s electricity.', at: [(CC.x0 + CC.x1) / 2 + 1, TOP + 1.6, CC.z0 + 6] },
     { label: 'Planted forecourt', note: 'Raised beds of grasses and trees make the forecourt a small public garden instead of a car park.', at: [10.5, 1.2, 11.5 + 1.6] },
-    { label: 'Tram stop', note: 'French towns brought back the tram from the 1980s on, running on grassed track; the stop puts the offices on the line.', at: [ZC.x0 + 7.5, 3.1, TRAM_Z - 2.6] },
+    { label: 'Tram stop', note: 'French towns brought back the tram from 1985 (Nantes) on, the newer lines often running on grassed track; the stop puts the offices on the line.', at: [ZC.x0 + 7.5, 3.1, TRAM_Z - 2.6] },
   ],
   modelledOn: 'Generic: the intercommunal and departmental offices of the 2000s and 2010s, with the grassed tram tracks of Reims, Angers or Le Mans',
-  influences: ['high-tech'],
+  influences: [],
   build(b) {
     const alone = b.variant > 0;
     if (!alone) {

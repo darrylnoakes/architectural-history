@@ -11,7 +11,6 @@ export const classicalHouse: BuildingDef = {
     'The new house is a flat, ordered front of identical bays: tall windows with small panes (petits-bois) in strict rows, the same on every floor. ' +
     'A carriage door (porte cochère) leads through to the yard and the coach house, and the attic is a near-full storey under a mansard roof, steep below and shallow above, named after the architect François Mansart, with dormers in the steep slope.',
   materials: ['red brick', 'limestone quoins, bands and window surrounds', 'oak casements with small panes', 'slate mansard'],
-  influences: ['versailles-export'],
   lookFor: [
     {
       label: 'Mansard roof',

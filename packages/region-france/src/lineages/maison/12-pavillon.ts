@@ -21,9 +21,9 @@ export const pavillon: BuildingDef = {
   summary:
     'In the boom years after the war millions of French families wanted a house of their own on its own plot, and the town spread outwards in estates of pavillons. ' +
     'Firms such as Maisons Phénix sold them from a catalogue and put them up in weeks from factory-made parts: a light steel frame clad in panels of concrete, on a concrete slab, under a low roof of machine-made interlocking tiles. ' +
-    'The house stands alone in its garden behind a clipped hedge, with a garage for the car, roller shutters on every window and a television aerial on the ridge. For the first time in two thousand years the plot is not on the street.',
+    'The house stands alone in its garden behind a clipped hedge, with a garage for the car, roller shutters on every window and a television aerial on the ridge. Unlike every house on this plot since the twelfth century, it stands back from the street.',
   materials: ['steel frame', 'prefabricated concrete panels', 'interlocking clay tiles', 'roller shutters', 'privet hedge'],
-  modelledOn: 'The Maison Phénix type, steel-framed and clad in concrete panels, built in large numbers from the 1950s to the 1980s. The model is generic, not one catalogue design.',
+  modelledOn: 'The Maison Phénix type, steel-framed and clad in concrete panels: the firm was founded just after the war and built such houses in large numbers from the 1950s to the 1980s. The model is generic, not one catalogue design.',
   influences: ['american-way'],
   lookFor: [
     {

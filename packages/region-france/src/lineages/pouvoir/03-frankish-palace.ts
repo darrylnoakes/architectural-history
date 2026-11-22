@@ -26,18 +26,18 @@ export const frankishPalace: BuildingDef = {
   style: 'Merovingian',
   date: 'c. 600',
   summary:
-    'The forum is long gone, its stone built into the wall that the shrunken town threw up after 275. Under the Frankish kings the town is governed by a count (comes) appointed by the king to judge, raise troops and collect dues, while the bishop, a man of the old Gallo-Roman families, is the other great power within the walls. ' +
+    'The forum is long gone, its stone built into the wall that the shrunken town threw up after 275. Under the Frankish kings the town is governed by a count (comes) appointed by the king to judge, raise troops and collect dues, while the bishop, often still a man of the old Gallo-Roman families, is the other great power within the walls. ' +
     'The count lives in a corner of the Roman wall, using one of its round-fronted towers as his strongpoint, heightened in timber. His hall is a long timber building on a footing of reused stone, with a shingled roof and a smoke louvre, where he holds his court (mallus) and feasts his followers; beside it is a small stone chapel.',
   materials: ['oak', 'reused Roman stone and brick', 'oak shingles', 'rubble masonry'],
   lookFor: [
     { label: 'Roman wall with brick bands', note: 'The late Roman rampart of small squared stones laced with courses of red brick, still the town’s defence three centuries on.', at: [WX + WT / 2 + 0.2, 4.0, 2] },
-    { label: 'Tower on a Roman bastion', note: 'The round-fronted Roman tower at the corner, given a timber upper storey and a shingled roof as the count’s strongpoint.', at: [TW[0] + 1.5, WH + 3.5, TW[1] + TR + 0.3] },
+    { label: 'Roman tower heightened in timber', note: 'The round-fronted Roman tower at the corner, given a timber upper storey and a shingled roof as the count’s strongpoint.', at: [TW[0] + 1.5, WH + 3.5, TW[1] + TR + 0.3] },
     { label: 'Timber hall on stone footings', note: 'The count’s hall: oak posts and planks on a low wall of reused stone, under a steep roof of oak shingles.', at: [3, 1.0, HL.z1 + 0.3] },
     { label: 'Smoke louvre', note: 'No chimneys yet: smoke from the open hearth escapes through a little roofed louvre on the ridge.', at: [3, HL.wall + 6.4, (HL.z0 + HL.z1) / 2] },
     { label: 'Chapel', note: 'A small stone chapel with a rounded apse, built of rubble and Roman brick, for the count’s household.', at: [-8.5, 3.4, 9.2] },
   ],
   modelledOn:
-    'Generic: the reuse of late Roman walls and towers by Frankish counts and kings, as at Paris, Soissons and Senlis, where the royal palace stood in a corner of the Roman enceinte',
+    'Generic: the reuse of late Roman walls and towers by Frankish counts and kings, as at Paris, where the palace stood at the end of the walled Île de la Cité, and Senlis, where the royal castle stands against the Gallo-Roman wall',
   build(b) {
     pave(b, -21.8, 21.8, -21.8, 21.8, mix(P.earth, P.grassDry, 0.3), -0.02);
     // ---- the Roman wall: back and left, with a wall-walk and a parapet

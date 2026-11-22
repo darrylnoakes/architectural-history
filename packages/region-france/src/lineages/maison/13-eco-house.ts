@@ -7,7 +7,7 @@ export const ecoHouse: BuildingDef = {
   style: 'Contemporary',
   date: 'c. 2014',
   summary:
-    'In the 2000s French towns began to build écoquartiers, new neighbourhoods planned to save energy, often on old railway or factory land close to the centre, and since 2013 the building regulations (the RT 2012) have required every new house to use very little energy for heating. ' +
+    'In the 2000s French towns began to build écoquartiers, new neighbourhoods planned to save energy, often on old railway or factory land close to the centre, and from 2013 the building regulations (the RT 2012, followed by the RE 2020 in 2022) required every new house to use very little energy for heating. ' +
     'This one is a timber frame packed with insulation and clad in untreated larch, under a single-pitch roof turned to the sun and covered in solar panels. ' +
     'Its big south windows sit in deep reveals with sliding shutters of timber slats to keep out the summer sun. Cars stay at the edge of the quarter; the gardens behind run together into a shared garden of vegetable beds and compost bins.',
   materials: ['timber frame with thick insulation', 'larch cladding', 'high-performance glazing', 'photovoltaic panels', 'steel standing-seam roof'],
