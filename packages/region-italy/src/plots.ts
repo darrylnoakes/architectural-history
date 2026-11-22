@@ -26,7 +26,8 @@ export const plots: Plot[] = [
   { id: 'prefettura', lineage: 'power', x: 101, z: -60, rotY: E, seed: 12, since: 1885, keep: 'prefecture' },
   { id: 'casa-del-fascio', lineage: 'power', x: 110, z: 155.5, rotY: N, seed: 34, since: 1934, keep: 'casa-del-fascio' },
   { id: 'regione', lineage: 'power', x: 86, z: 163.5, rotY: N, seed: 35, since: 1975, keep: 'regional-offices' },
-  { id: 'fountain', lineage: 'fountain', x: 32, z: -28, rotY: S, seed: 13, hero: true },
+  { id: 'fountain', lineage: 'fountain', x: 32, z: -28, rotY: S, seed: 13, hero: true, keep: 'civic-fountain' },
+  { id: 'fountain-2', lineage: 'fountain', x: -38, z: -17, rotY: S, seed: 36, since: 1643 },
 
   // --- the temple, then the cathedral, on its own square west of the cardo
   { id: 'duomo', lineage: 'duomo', x: -54, z: -60, rotY: S, seed: 14, hero: true },
@@ -57,9 +58,9 @@ export const plots: Plot[] = [
   { id: 'bar', lineage: 'osteria', x: -60, z: 119.5, rotY: S, seed: 29, since: 1958, keep: 'bar-and-pensione' },
 
   // --- gates: north on the cardo, east and west on the decumanus (the bridge guards the south)
-  { id: 'gate-north', lineage: 'walls', x: 0, z: -128, rotY: N, seed: 30, hero: true },
+  { id: 'gate-north', lineage: 'walls', x: 0, z: -128, rotY: N, seed: 30, hero: true, keep: 'bastion-gate' },
   { id: 'gate-east', lineage: 'walls', x: 146, z: 0, rotY: E, seed: 31, since: -400, lag: 0.3 },
-  { id: 'gate-west', lineage: 'walls', x: -150, z: 0, rotY: W, seed: 32, since: -80, lag: 0.5 },
+  { id: 'gate-west', lineage: 'walls', x: -150, z: 0, rotY: W, seed: 32, since: -30, lag: 0.5, keep: 'communal-gate' },
 
   // --- the railway
   { id: 'station', lineage: 'station', x: 0, z: 184, rotY: N, seed: 33, hero: true },

@@ -157,8 +157,8 @@ export const sportsHall: BuildingDef = {
     b.lathe(seats, tint(P.cladBlue, 0.1), { segs: NT });
 
     // umbrella pines round the hall
-    b.tree(10, { at: [-17.5, 0, 15.5], kind: 'pine' });
-    b.tree(9, { at: [17.0, 0, -15.0], kind: 'pine' });
+    b.tree(7, { at: [-16.4, 0, 14.6], kind: 'pine' });
+    b.tree(6.5, { at: [16.4, 0, -14.6], kind: 'pine' });
 
     // ------------------------------------------------ walk collisions: the glass ring (doors open), the trestle feet
     for (let k = 0; k < NT; k++) {
@@ -168,7 +168,7 @@ export const sportsHall: BuildingDef = {
       const fa = k * step;
       b.collider(1.0, 1.0, { at: [16.2 * Math.sin(fa), 0, 16.2 * Math.cos(fa)], rotY: fa });
     }
-    b.collider(1.0, 1.0, { at: [-17.5, 0, 15.5] });
-    b.collider(1.0, 1.0, { at: [17.0, 0, -15.0] });
+    b.collider(0.8, 0.8, { at: [-16.4, 0, 14.6] });
+    b.collider(0.8, 0.8, { at: [16.4, 0, -14.6] });
   },
 };

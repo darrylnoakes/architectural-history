@@ -29,13 +29,13 @@ function endFront(b: Builder, stone: number, wall: number, main: boolean): void 
   const R = 3.3;
   const hole = archOutline(2 * R, R, 'round', 6).map(([x, y]) => [x, y + 0.4] as [number, number]);
   b.extrude([[-W / 2, 0], [W / 2, 0], [W / 2, EH - GH], [0, EH - GH + RISE], [-W / 2, EH - GH]], 0.7, wall, { at: [0, GH + 0.35, 0], holes: [hole] });
-  b.extrude(archOutline(2 * R, R, 'round', 6), 0.06, P.glass, { at: [0, GH + 0.75, -0.1], mat: 'glass' });
+  b.extrude(archOutline(2 * R, R, 'round', 6), 0.06, P.glass, { at: [0, GH + 0.75, 0.15], mat: 'glass' });
   archivolt(b, R, 0.35, GH + 0.75, 0.12, stone, [0, 0, 0.35], '+z', 10);
   for (let i = 1; i < 8; i++) {
     const a = (i / 8) * Math.PI;
-    b.beam([0, GH + 0.75, 0.0], [Math.cos(a) * R, GH + 0.75 + Math.sin(a) * R, 0.0], 0.08, 0.08, P.castIron);
+    b.beam([0, GH + 0.75, 0.22], [Math.cos(a) * R, GH + 0.75 + Math.sin(a) * R, 0.22], 0.08, 0.08, P.castIron);
   }
-  b.box(2 * R, 0.1, 0.1, P.castIron, { at: [0, GH + 0.75, 0.0] });
+  b.box(2 * R, 0.1, 0.1, P.castIron, { at: [0, GH + 0.75, 0.22] });
   // coping along the gable and the city arms at the apex
   const sl = Math.atan2(RISE, W / 2);
   for (const s of [-1, 1]) {

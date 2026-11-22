@@ -147,7 +147,7 @@ export const galleria: BuildingDef = {
     b.cone(0.85, 0.7, P.zinc, { at: [0, yD + 4.9, 0], segs: 8 });
 
     // ---- the entrances: a triumphal arch to the square, plainer arches at the other three ends
-    b.group({ at: [0, 0, HZ + 0.35] }, () => {
+    b.group({ at: [0, 0, HZ + 0.25] }, () => {
       b.archWall(10, 17, 0.7, WALL, { openings: 1, openW: 2 * A - 0.2, openH: 11, shape: 'round' });
       archivolt(b, A - 0.1, 0.5, 11 - A + 0.1, 0.14, STONE, [0, 0, 0.35], '+z', 10);
       for (const s of [-1, 1]) b.box(2.6, 0.6, 0.9, STONE, { at: [s * 3.85, 0, 0] });
@@ -170,9 +170,9 @@ export const galleria: BuildingDef = {
       b.panel(0.5, 0.15, P.white, { at: [0, 15.9, 0.36], depth: 0.12 });
       b.box(10.4, 0.5, 1.0, STONE, { at: [0, 16.6, 0] });
     });
-    portal(b, 7, 16.0, 2 * A - 0.2, 10.5, [0, 0, -HZ - 0.35], Math.PI);
-    portal(b, 7, 16.0, 2 * A - 0.2, 10.5, [HX + 0.0, 0, 0], Math.PI / 2);
-    portal(b, 7, 16.0, 2 * A - 0.2, 10.5, [-HX - 0.0, 0, 0], -Math.PI / 2);
+    portal(b, 7, 16.0, 2 * A - 0.2, 10.5, [0, 0, -HZ - 0.2], Math.PI);
+    portal(b, 7, 16.0, 2 * A - 0.2, 10.5, [HX - 0.3, 0, 0], Math.PI / 2);
+    portal(b, 7, 16.0, 2 * A - 0.2, 10.5, [-HX + 0.3, 0, 0], -Math.PI / 2);
     for (const t of [-1, 1]) {
       b.collider(1.0, 0.8, { at: [t * 3.0, 0, -HZ - 0.35] });
       for (const sx of [-1, 1]) b.collider(0.8, 1.0, { at: [sx * HX, 0, t * 3.0] });
