@@ -14,7 +14,7 @@ the plan for adding more.
   compare view read from `REGIONS`, so a new region's buildings appear in all three as soon as it is
   registered, before its town exists.
 - **Cross-pollination.** An influence can name the `region` it came from or went to, and where on
-  the globe (`at`). The region picker draws these as arcs. Once both ends exist, an influence can
+  the globe (`at`). They are listed with their dates under the Ideas button. Once both ends exist, an influence can
   become a link: "Gothic arrives from France" opens France in 1175.
 
 ## The site
@@ -73,7 +73,7 @@ Suggested, with reasons. Each is a town followed through time, like England.
 | 1 | **France**: a cathedral town | The birthplace of Gothic, and England's nearest neighbour in every century. With Italy it completes the main European exchanges already named in England's influences. |
 | 2 | **United States**: a town that becomes a city | The other end of England's exports (the Georgian house, the factory) and the source of the steel frame, the suburb and the mall. A short timeline, so a smaller build. |
 | 3 | **China**: a walled town on a canal | The first tradition that owes nothing to Rome: timber frame, courtyard plan, the roof as the main event. Needs the curved-roof and bracket work above. |
-| 4 | **Japan**, **the Islamic world**, **India** | Each a distinct tradition with its own logic; order by interest. |
+| 4 | **Japan**, **India**, **Egypt**, **Israel** | Each a distinct tradition with its own logic; order by interest. Egypt and Israel between them also carry the story of Islamic building in the eastern Mediterranean, which has no region of its own. |
 | later | **Greece**, **Germany**, **Mesoamerica** | Greece could instead be folded into Italy's early stages; Germany overlaps France and England more than the others. |
 
 A region does not have to be complete to be useful. A first pass with five or six lineages (home,

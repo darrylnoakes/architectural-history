@@ -39,8 +39,8 @@ What you can do in either:
   that stood on the plot.
 - **Compare.** Any two lineages side by side, sharing one timeline: the family home beside the great
   house, or the English home beside the Italian one, with each region's eras on its own row.
-- **Regions.** The title card opens a globe with the regions built and planned, and the routes the
-  ideas travelled. Choosing a built region goes to its town in the same year. `docs/REGIONS.md` is
+- **Regions.** The title card opens a globe, which turns and zooms, with the regions built and
+  planned. Choosing a built region goes to its town in the same year. `docs/REGIONS.md` is
   the plan for adding more.
 
 ## Layout

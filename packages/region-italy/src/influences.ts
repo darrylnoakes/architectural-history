@@ -74,7 +74,6 @@ export const influences: Influence[] = [
     year: 1063,
     dir: 'in',
     place: 'Islamic Sicily, North Africa and the Levant',
-    region: 'islamic',
     at: [38.12, 13.36],
     title: 'Ideas from the Islamic Mediterranean',
     text: 'The trading cities of Pisa, Amalfi and Venice, and Norman Sicily, pick up pointed arches, striped masonry, interlaced arcades and inlaid geometric ornament from the Islamic world, long before Gothic arrives from the north.',

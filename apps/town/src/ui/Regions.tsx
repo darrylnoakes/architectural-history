@@ -2,11 +2,9 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { geoDistance, geoGraticule10, geoOrthographic, geoPath, type GeoProjection } from 'd3-geo';
 import { feature } from 'topojson-client';
 import type { Topology, GeometryCollection } from 'topojson-specification';
-import type { Feature, FeatureCollection, Geometry, LineString } from 'geojson';
-import { formatYear } from '@ah/engine';
+import type { Feature, FeatureCollection, Geometry } from 'geojson';
 import { useApp } from '../state';
 import { REGION_LIST, type RegionInfo } from '../regions';
-import type { Region } from '@ah/kit';
 import { useRegion } from './useRegion';
 import { IconClose } from './icons';
 import './regions.css';
@@ -18,6 +16,8 @@ const SIZE = 440;
 const R = 188;
 /** How far north or south the globe may be tilted, in degrees. */
 const MAX_TILT = 70;
+/** How far in the globe can be zoomed: enough to pull the European regions well apart. */
+const MAX_ZOOM = 7;
 
 /** Which side of its marker each region's name sits, so the crowded European names do not collide. */
 const LABEL_SIDE: Record<string, Side> = {
@@ -26,7 +26,8 @@ const LABEL_SIDE: Record<string, Side> = {
   germany: 'right',
   italy: 'right',
   greece: 'below',
-  islamic: 'right',
+  israel: 'right',
+  egypt: 'left',
 };
 
 type Rotation = [number, number];
@@ -52,47 +53,6 @@ function useLand() {
     };
   }, []);
   return land;
-}
-
-interface Arc {
-  key: string;
-  dir: 'in' | 'out';
-  region?: string;
-  line: LineString;
-  at: [number, number];
-  /** The entries this arc stands for, for the tooltip. */
-  label: string;
-}
-
-function useArcs(region: Region): Arc[] {
-  return useMemo(() => {
-    const byKey = new Map<string, Arc>();
-    const [hLat, hLon] = region.location;
-    for (const inf of region.influences) {
-      if (!inf.at || inf.dir === 'home') continue;
-      const [lat, lon] = inf.at;
-      const key = `${inf.dir}:${lat},${lon}`;
-      const line = `${formatYear(inf.year)}: ${inf.title} (${inf.place})`;
-      const arc = byKey.get(key);
-      if (arc) {
-        arc.label += `\n${line}`;
-        arc.region ??= inf.region;
-      } else {
-        byKey.set(key, {
-          key,
-          dir: inf.dir,
-          region: inf.region,
-          at: [lat, lon],
-          line: {
-            type: 'LineString',
-            coordinates: inf.dir === 'in' ? [[lon, lat], [hLon, hLat]] : [[hLon, hLat], [lon, lat]],
-          },
-          label: line,
-        });
-      }
-    }
-    return [...byKey.values()];
-  }, [region]);
 }
 
 const ease = (t: number) => (t < 0.5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2);
@@ -165,15 +125,7 @@ function Dialog() {
         <div className="rg-body">
           <div className="rg-globe-col">
             <Globe hot={hot} onMarker={onMarker} />
-            <ul className="rg-legend">
-              <li>
-                <i className="rg-key dir-in" /> Ideas arriving in {region.name}
-              </li>
-              <li>
-                <i className="rg-key dir-out" /> Ideas leaving {region.name}
-              </li>
-              <li className="rg-hint">Drag to turn the globe</li>
-            </ul>
+            <p className="rg-hint">Drag to turn the globe. Scroll, pinch or use the buttons to zoom in where the regions crowd together.</p>
           </div>
           <div className="rg-list-col">
             <p className="rg-intro">
@@ -247,7 +199,10 @@ function Row({
 function Globe({ hot, onMarker }: { hot: string | null; onMarker: (r: RegionInfo) => void }) {
   const land = useLand();
   const { region } = useRegion();
-  const arcs = useArcs(region);
+  // start a little way in: at full-globe scale the European regions sit on top of one another
+  const [zoom, setZoom] = useState(1.6);
+  const zoomRef = useRef(zoom);
+  zoomRef.current = zoom;
   const [rot, setRot] = useState<Rotation>(() => rotationFor(region.location));
   const rotRef = useRef(rot);
   rotRef.current = rot;
@@ -279,11 +234,39 @@ function Globe({ hot, onMarker }: { hot: string | null; onMarker: (r: RegionInfo
     return () => cancelAnimationFrame(tween.current);
   }, [hot]);
 
-  // dragging: pointer events, one pointer, at most one redraw per frame
+  const clampZoom = (z: number) => Math.max(1, Math.min(MAX_ZOOM, z));
+
+  // the wheel zooms; it must be a real listener so the page behind does not scroll
+  useEffect(() => {
+    const el = svgRef.current;
+    if (!el) return;
+    const onWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      setZoom((z) => clampZoom(z * Math.exp(-e.deltaY * 0.0016)));
+    };
+    el.addEventListener('wheel', onWheel, { passive: false });
+    return () => el.removeEventListener('wheel', onWheel);
+  }, []);
+
+  // dragging turns the globe, two fingers pinch to zoom; at most one redraw per frame
+  const pointers = useRef(new Map<number, { x: number; y: number }>());
   const drag = useRef<{ id: number; x: number; y: number; start: Rotation; scale: number; moved: boolean; target: string | null } | null>(null);
+  const pinch = useRef<{ dist: number; zoom: number } | null>(null);
   const pending = useRef<Rotation | null>(null);
+  const spread = () => {
+    const [a, b] = [...pointers.current.values()];
+    return Math.hypot(a.x - b.x, a.y - b.y);
+  };
   const onPointerDown = (e: React.PointerEvent<SVGSVGElement>) => {
-    if (drag.current || (e.pointerType === 'mouse' && e.button !== 0)) return;
+    if (e.pointerType === 'mouse' && e.button !== 0) return;
+    pointers.current.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    e.currentTarget.setPointerCapture(e.pointerId);
+    if (pointers.current.size === 2) {
+      drag.current = null;
+      pinch.current = { dist: spread() || 1, zoom: zoomRef.current };
+      return;
+    }
+    if (drag.current || pointers.current.size > 2) return;
     cancelAnimationFrame(tween.current);
     tween.current = 0;
     const box = svgRef.current!.getBoundingClientRect();
@@ -294,13 +277,17 @@ function Globe({ hot, onMarker }: { hot: string | null; onMarker: (r: RegionInfo
       y: e.clientY,
       start: rotRef.current,
       // degrees per screen pixel: a drag across the globe's radius turns it about 57 degrees
-      scale: (180 / Math.PI) / (R * (box.width / SIZE)),
+      scale: (180 / Math.PI) / (R * zoomRef.current * (box.width / SIZE)),
       moved: false,
       target: hit?.getAttribute('data-id') ?? null,
     };
-    e.currentTarget.setPointerCapture(e.pointerId);
   };
   const onPointerMove = (e: React.PointerEvent<SVGSVGElement>) => {
+    if (pointers.current.has(e.pointerId)) pointers.current.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    if (pinch.current && pointers.current.size === 2) {
+      setZoom(clampZoom((pinch.current.zoom * spread()) / pinch.current.dist));
+      return;
+    }
     const d = drag.current;
     if (!d || d.id !== e.pointerId) return;
     const dx = e.clientX - d.x;
@@ -316,6 +303,8 @@ function Globe({ hot, onMarker }: { hot: string | null; onMarker: (r: RegionInfo
     }
   };
   const onPointerUp = (e: React.PointerEvent<SVGSVGElement>) => {
+    pointers.current.delete(e.pointerId);
+    if (pointers.current.size < 2) pinch.current = null;
     const d = drag.current;
     if (!d || d.id !== e.pointerId) return;
     drag.current = null;
@@ -327,21 +316,29 @@ function Globe({ hot, onMarker }: { hot: string | null; onMarker: (r: RegionInfo
 
   const { projection, path } = useMemo(() => {
     const projection = geoOrthographic()
-      .scale(R)
+      .scale(R * zoom)
       .translate([SIZE / 2, SIZE / 2])
       .rotate([rot[0], rot[1], 0])
       .clipAngle(90)
       .precision(0.7);
     return { projection, path: geoPath(projection) };
-  }, [rot]);
+  }, [rot, zoom]);
 
   const graticule = useMemo(() => geoGraticule10(), []);
   const centre: [number, number] = [-rot[0], -rot[1]];
-  const visible = (lat: number, lon: number) => geoDistance([lon, lat], centre) < Math.PI / 2 - 0.02;
   const hotRegion = hot ?? null;
   const markers = useMemo(() => placeMarkers(projection, centre, hotRegion, region.id), [projection, hotRegion, region.id]);
 
   return (
+    <div className="rg-globe-wrap">
+      <div className="rg-zoom" role="group" aria-label="Zoom the globe">
+        <button onClick={() => setZoom((z) => clampZoom(z * 1.5))} disabled={zoom >= MAX_ZOOM} aria-label="Zoom in">
+          +
+        </button>
+        <button onClick={() => setZoom((z) => clampZoom(z / 1.5))} disabled={zoom <= 1} aria-label="Zoom out">
+          −
+        </button>
+      </div>
     <svg
       ref={svgRef}
       className="rg-globe"
@@ -351,7 +348,8 @@ function Globe({ hot, onMarker }: { hot: string | null; onMarker: (r: RegionInfo
       onPointerUp={onPointerUp}
       onPointerCancel={onPointerUp}
       role="img"
-      aria-label={`A globe showing ${REGION_LIST.length} regions and the ideas that travelled to and from ${region.name}`}
+      onDoubleClick={() => setZoom((z) => (z >= MAX_ZOOM ? 1 : clampZoom(z * 1.6)))}
+      aria-label={`A globe showing ${REGION_LIST.length} regions`}
     >
       <defs>
         <radialGradient id="rg-shade" cx="42%" cy="38%" r="62%">
@@ -360,27 +358,11 @@ function Globe({ hot, onMarker }: { hot: string | null; onMarker: (r: RegionInfo
           <stop offset="100%" stopColor="#1f272a" stopOpacity="0.1" />
         </radialGradient>
       </defs>
-      <circle className="rg-sea" cx={SIZE / 2} cy={SIZE / 2} r={R} />
+      <circle className="rg-sea" cx={SIZE / 2} cy={SIZE / 2} r={R * zoom} />
       <path className="rg-grat" d={path(graticule) ?? ''} />
       {land && <path className="rg-land" d={path(land as Feature<Geometry>) ?? ''} />}
-      <circle className="rg-shade" cx={SIZE / 2} cy={SIZE / 2} r={R} fill="url(#rg-shade)" />
-      <circle className="rg-rim" cx={SIZE / 2} cy={SIZE / 2} r={R} />
-
-      <g className="rg-arcs">
-        {arcs.map((a) => {
-          const d = path(a.line);
-          if (!d) return null;
-          const end = visible(a.at[0], a.at[1]) ? projection([a.at[1], a.at[0]]) : null;
-          const lit = hotRegion != null && a.region === hotRegion;
-          return (
-            <g key={a.key} className={`rg-arc dir-${a.dir}${lit ? ' lit' : ''}`}>
-              <title>{a.label}</title>
-              <path d={d} />
-              {end && <circle cx={end[0]} cy={end[1]} r={lit ? 2.6 : 1.9} />}
-            </g>
-          );
-        })}
-      </g>
+      <circle className="rg-shade" cx={SIZE / 2} cy={SIZE / 2} r={R * zoom} fill="url(#rg-shade)" />
+      <circle className="rg-rim" cx={SIZE / 2} cy={SIZE / 2} r={R * zoom} />
 
       <g className="rg-markers">
         {markers.map(({ r, p, label }) => {
@@ -407,6 +389,7 @@ function Globe({ hot, onMarker }: { hot: string | null; onMarker: (r: RegionInfo
         })}
       </g>
     </svg>
+    </div>
   );
 }
 
