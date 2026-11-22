@@ -28,7 +28,7 @@ const lineage: Lineage = {
         year: 392,
         fate: 'ruin',
         note:
-          'In 391 and 392 the emperor Theodosius banned pagan sacrifice and the temples were shut. Left empty, they decayed and were stripped for their columns and stone, ' +
+          'In 391 and 392 the emperor Theodosius banned pagan sacrifice and ordered the temples shut. Left empty, they decayed and were stripped for their columns and stone, ' +
           'often to build churches.',
       },
       def: imperialTemple,
@@ -36,7 +36,8 @@ const lineage: Lineage = {
     { from: 400, def: earlyChristianBasilica },
     { from: 1120, builtUntil: 1260, def: romanesqueDuomo },
     { from: 1310, def: gothicDuomo },
-    { from: 1440, def: dome },
+    // a provincial copy of Brunelleschi's dome comes a generation or two after Florence (Loreto, 1499 to 1500)
+    { from: 1480, def: dome },
     { from: 1630, builtUntil: 1760, def: baroqueDuomo },
     { from: 1887, builtUntil: 1910, def: completedFacade },
   ],

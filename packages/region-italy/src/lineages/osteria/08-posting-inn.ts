@@ -44,7 +44,7 @@ export const postingInn: BuildingDef = {
     { label: 'Persiane', note: 'Louvred shutters, painted green, keep out the sun but let in the air. They became general in Italy during the eighteenth century.', at: [-6.5, G + 1.4, ZF + 0.3] },
     { label: 'Fontanile', note: 'A long stone trough fed by a spout, for watering the horses as they came in.', at: [0, 1.0, ZS + 0.6] },
   ],
-  influences: ['pompeii-neoclassicism'],
+  influences: [],
   build(b) {
     const plaster = b.pick([P.intonacoOchre, tint(P.intonacoOchre, 0.04), P.intonacoSienna]);
     const trim = b.pick([P.intonacoCream, P.travertine]);

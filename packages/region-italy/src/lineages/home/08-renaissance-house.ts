@@ -16,7 +16,7 @@ export const renaissanceHouse: BuildingDef = {
   date: 'c. 1480',
   summary:
     'The same row of houses, put in order. The jutting upper floors have been cut back and the fronts rebuilt flat and plastered, ' +
-    'because the new taste wanted streets of straight, regular walls, and town statutes encouraged it. Windows now stand on even axes, ' +
+    'because the new taste wanted streets of straight, regular walls, and town authorities ordered projections removed from the main streets. Windows now stand on even axes, ' +
     'framed in grey pietra serena and linked by a stone sill course, as in the palaces of the rich, only plainer. The shop keeps its ' +
     'opening with a stone counter, the roof has deep timber eaves to throw rain clear of the plaster, and a chimney serves a proper fireplace.',
   materials: ['lime plaster on stone and brick', 'pietra serena dressings', 'timber eaves and floors', 'clay pan-and-cover tiles'],
@@ -24,7 +24,7 @@ export const renaissanceHouse: BuildingDef = {
   lookFor: [
     {
       label: 'Pietra serena window frames',
-      note: 'Round-arched windows framed in smooth grey sandstone; the windows are filled with oiled cloth on a wooden lattice or, in better houses, small panes of glass.',
+      note: 'Round-arched windows on the first floor and square-headed ones above, framed in smooth grey sandstone; the windows are filled with oiled cloth on a wooden lattice or, in better houses, small panes of glass.',
       at: [-3.4, 6.9, 8.1],
     },
     {

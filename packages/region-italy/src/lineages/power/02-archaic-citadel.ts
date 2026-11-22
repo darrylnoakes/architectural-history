@@ -59,11 +59,11 @@ export const archaicCitadel: BuildingDef = {
   date: 'c. 500 BC',
   summary:
     'The village has grown into a town under Etruscan influence, and its hilltop citadel is now walled in great squared blocks of tufa, the soft volcanic stone of the region, cut and laid in courses without mortar. ' +
-    'Inside stands the house of the ruling family: tufa footings, walls of mud brick, rooms round a courtyard, and roofs of fired clay tiles, still a novelty learned from the Greeks, their eaves lined with painted terracotta. ' +
+    'Inside stands the house of the ruling family: tufa footings, walls of mud brick, rooms round a courtyard, and roofs of fired clay tiles, learned from the Greeks about a century before, their eaves lined with painted terracotta. ' +
     'A cistern cut into the rock stores rainwater against siege and drought. Whether the ruler is a king or the leading man of a few noble families, power now sits behind stone walls in a house built to last.',
   materials: ['tufa blocks', 'mud brick', 'fired clay tiles', 'painted terracotta', 'timber'],
   lookFor: [
-    { label: 'Squared-block wall', note: 'Courses of big rectangular tufa blocks fitted without mortar, a technique the Romans later called opus quadratum.', at: [12, 3.4, 19.8] },
+    { label: 'Squared-block wall', note: 'Courses of big rectangular tufa blocks fitted without mortar, a technique the Romans later called opus quadratum. Etruscan cities built walls like this from the sixth century BC, and most of the surviving ones date from the fifth and fourth.', at: [12, 3.4, 19.8] },
     { label: 'Gate between towers', note: 'The way in passes under a stone lintel between two square towers that project from the wall.', at: [0, 5, 20.8] },
     { label: 'Ruler’s house', note: 'Rooms on three sides of a courtyard, the main hall facing the entrance across it.', at: [-2, 5.2, -11.5] },
     { label: 'Painted antefixes', note: 'Terracotta plaques closing the ends of the roof tiles, painted with faces and palmettes in red, black and white.', at: [-8.6, 3.2, -1.8] },

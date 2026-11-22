@@ -20,9 +20,9 @@ export const megastructure: BuildingDef = {
   style: 'Late Modernism (megastructure)',
   date: 'c. 1978',
   summary:
-    'In the 1970s the public housing institutes tried to answer the sprawl of the boom years by building whole neighbourhoods as single buildings. The most famous, Corviale in Rome, is one concrete slab nearly a kilometre long and about thirty metres high, built in 1975 to 1984 for some 6,000 people. ' +
+    'In the 1970s the public housing institutes tried to answer the sprawl of the boom years by building whole neighbourhoods as single buildings. The most famous, Corviale in Rome, is one concrete slab nearly a kilometre long and about thirty metres high, built in 1975 to 1984 with some 1,200 flats; the first tenants moved in in 1982. ' +
     'It was built from industrial parts, with lifts and stairs in towers at intervals, and one whole floor part-way up was left open as an internal street for shops and services. ' +
-    'The shops never came; families without homes moved into the open floor in the 1980s, and Corviale became a byword for the failure of the big estate, though its tenants have fought for it and it is now being renovated. Here a short length of such a slab stands on the plot.',
+    'The shops never came; families without homes moved into the open floor in the 1980s, and Corviale became a byword for the failure of the big estate, though its tenants have fought for it and parts of it have since been renovated. Here a short length of such a slab stands on the plot.',
   materials: ['reinforced concrete', 'precast concrete panels', 'aluminium windows', 'steel railings'],
   modelledOn: 'Corviale, Rome (1972 to 1984; Mario Fiorentino and team for the IACP of Rome), reduced',
   lookFor: [

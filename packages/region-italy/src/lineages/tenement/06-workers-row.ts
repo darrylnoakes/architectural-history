@@ -7,15 +7,15 @@ export const workersRow: BuildingDef = {
   style: 'Medieval communal vernacular',
   date: 'c. 1250',
   summary:
-    'In the boom years of the communes, cloth-making drew thousands of spinners, weavers and dyers into the towns. Monasteries, hospitals and rich guild members bought land on the edge of the built-up area and laid out rows of identical narrow houses to let to them. ' +
+    'In the boom years of the communes, cloth-making drew thousands of spinners, weavers and dyers into the towns. Monasteries, hospitals and rich citizens bought land on the edge of the built-up area and laid out rows of identical narrow houses to let to them. ' +
     'Each house is one room deep on two floors: a ground-floor room for work or storage, and the family’s rooms above, reached by an outside stone stair, the profferlo, with a landing on an arch. ' +
     'They are built of the local stone with small round-headed windows, and the owner’s arms on every front showed whose rent was due. Behind, each house has a strip of yard for a tenter frame or a few vegetables.',
   materials: ['peperino, tufa or pietra forte rubble and squared stone', 'coppi roof tiles', 'oak doors and floors'],
-  modelledOn: 'The profferli of the San Pellegrino quarter, Viterbo, and the planned rows of rented houses in Florence and Siena',
+  modelledOn: 'The profferli of the San Pellegrino quarter, Viterbo, and the rows of houses built to let in the new suburbs of the communes',
   lookFor: [
     { label: 'Profferlo', note: 'An outside stair of stone rising along the front to a landing carried on an arch: the upper floor had its own door.', at: [rowX(1) + 0.4, 2.2, ROW.zf + 1.1] },
     { label: 'Identical houses', note: 'Five houses of exactly the same width and plan, built in one campaign by one landlord to let.', at: [rowX(3), 4.6, ROW.zf + 0.2] },
-    { label: 'Owner’s arms', note: 'A small carved shield on each front named the landlord, usually a monastery, a hospital or a guild.', at: [rowX(2) - 0.05, ROW.g + 1.7, ROW.zf + 0.15] },
+    { label: 'Owner’s arms', note: 'A small carved shield on each front named the landlord, often a monastery, a hospital or a guild.', at: [rowX(2) - 0.05, ROW.g + 1.7, ROW.zf + 0.15] },
     { label: 'Pan-and-cover tiles', note: 'A low roof of curved clay tiles (coppi), laid alternately face up and face down.', at: [rowX(0), 7.4, 1.0] },
     { label: 'Tenter frame', note: 'Woven cloth was stretched on hooks along a wooden frame to dry to the right width and length.', at: [5.0, 1.6, -5.6] },
   ],

@@ -23,17 +23,17 @@ export const rationalistStation: BuildingDef = {
   date: 'mid 1930s',
   summary:
     'In the 1930s the state railways rebuilt many stations, and a few were given to the young modernists. This one is long and low, a horizontal mass faced in the same brown sandstone as the old city so that it sits quietly beside it, with almost no ornament. ' +
-    'The ticket hall is lit by a cascade of glass that steps down from the roof over the entrance; the long concourse behind has a glazed roof, and the platforms are sheltered by thin canopies of reinforced concrete. ' +
+    'The ticket hall is lit by a cascade of glass that steps down from the roof over the entrance; the long concourse behind has a glazed roof, and the platforms are sheltered by thin canopies of reinforced concrete. Over the tracks run the wires of the electrified main line: the new Direttissima from Bologna to Florence opened in 1934 already electrified. ' +
     'Where the 1860s station hid a modern iron shed behind a classical palace, here the modern materials are the architecture.',
-  materials: ['reinforced concrete', 'pietraforte sandstone cladding', 'steel-framed glazing', 'marble floors'],
-  modelledOn: 'Santa Maria Novella station, Florence (Gruppo Toscano led by Giovanni Michelucci, built 1932 to 1935)',
+  materials: ['reinforced concrete', 'pietra forte sandstone cladding', 'steel-framed glazing', 'marble floors'],
+  modelledOn: 'Santa Maria Novella station, Florence (Gruppo Toscano led by Giovanni Michelucci; won in competition in 1932, built 1933 to 1935, opened 30 October 1935)',
   influences: ['rationalism'],
   lookFor: [
     { label: 'Cascade of glass', note: 'Bands of glass step down from the roof over the entrance, flooding the ticket hall with light.', at: [-HW - 0.3, HH - 2.5, HZ + 2.4] },
     { label: 'Stone-faced horizontal mass', note: 'A long, low, flat-roofed block clad in sandstone, its plain walls barely broken by windows.', at: [12, 4, ZF + 0.3] },
     { label: 'Flat cantilevered canopy', note: 'A thin concrete slab on slender columns shelters cars and taxis setting down passengers.', at: [-13, 4.1, 9.8] },
     { label: 'Concrete platform canopy', note: 'A slab balanced on a single row of columns, with no ties or brackets: reinforced concrete at its simplest.', at: [8, 4.6, -5.3] },
-    { label: 'Diesel railcar', note: 'A light streamlined railcar of the 1930s, nicknamed the Littorina, for fast services on branch lines.', at: [-9, 4.1, TRACKS[0] - 1.5] },
+    { label: 'Railcar', note: 'A light streamlined railcar of the 1930s, nicknamed the Littorina, for fast services on branch lines; the first, of 1932 to 1933, ran on petrol, later ones on diesel.', at: [-9, 4.1, TRACKS[0] - 1.5] },
   ],
   build(b) {
     const stone = tint(mix(P.pietraForte, P.peperino, 0.3), b.range(-0.02, 0.02));

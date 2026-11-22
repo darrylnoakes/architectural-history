@@ -38,7 +38,7 @@ export const pottersYard: BuildingDef = {
   date: 'c. 750 BC',
   summary:
     'In the first villages on the hill, making things happened in the open air, in a fenced yard close to the river where the clay was dug. ' +
-    'Potters shaped dark burnished impasto by hand, building up coils of clay on a slow turntable, dried the pots under a thatched shelter and fired them in a small updraught kiln. ' +
+    'Potters shaped dark burnished impasto by hand, building up coils of clay on a slow turntable, dried the pots under a thatched shelter and fired them in a small updraught kiln, probably a recent improvement on firing in an open bonfire. ' +
     'Beside them a bronzesmith melted metal in a clay crucible over a charcoal hearth blown by bellows, and cast brooches, razors and axes in stone moulds. ' +
     'Nothing here is meant to last: the shelter is posts and thatch, the kiln is clay that is patched after every firing.',
   materials: ['oak posts', 'reed thatch', 'wattle', 'clay', 'river stones'],

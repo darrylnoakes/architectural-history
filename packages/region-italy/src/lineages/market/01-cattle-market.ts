@@ -24,7 +24,7 @@ export const cattleMarket: BuildingDef = {
   id: 'cattle-market',
   name: 'Cattle market by the ford',
   style: 'Iron Age (Latial and early Etruscan)',
-  date: 'c. 750 to 300 BC',
+  date: 'c. 750 to 200 BC',
   summary:
     'The town exists because the river can be waded here, and wherever a road crosses a river people meet to trade. ' +
     'Herdsmen bring cattle, sheep and pigs down to pens of split timber on the open ground by the ford, and salt and pots change hands beside them. ' +

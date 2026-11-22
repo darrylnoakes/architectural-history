@@ -107,6 +107,7 @@ export const auditorium: BuildingDef = {
     'At the end of the century the town finally built proper halls for music, on open ground outside the old centre. ' +
     'Instead of one big building there are three separate halls of different sizes, each shaped round its own acoustics and lined inside with cherry wood, set round an open-air theatre like the cavea of a Roman one. ' +
     'Their roofs are curved shells clad in sheets of lead, stepped like the wing-cases of beetles, over walls of Roman-style brick, with gardens and umbrella pines between. ' +
+    'In Rome the foundations turned up the remains of a Roman villa, and the plan was changed to keep them on show. ' +
     'After the cinema and the sports hall, the plot is once more a place for a crowd to sit in a ring.',
   materials: ['lead sheet over timber and steel shells', 'thin Roman-style brick', 'travertine', 'glass', 'cherry wood inside'],
   modelledOn:

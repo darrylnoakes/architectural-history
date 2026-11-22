@@ -10,7 +10,7 @@ export const casaASchiera: BuildingDef = {
     'As trade revived and the self-governing commune grew, the streets filled with narrow houses built in rows on long, thin plots, ' +
     'each with only a few metres of street front and sharing its side walls with the neighbours. The ground floor is the shop or ' +
     'workshop, open to the street through a wide arch, with a narrow door beside it to the stair; the family lives above. To gain room ' +
-    'the upper floors jut out over the street on timber brackets, the sporti that town statutes later restricted. Behind lies a yard ' +
+    'the upper floors jut out over the street on timber brackets, the sporti that town governments later tried to clear from the main streets. Behind lies a yard ' +
     'with a well, a privy and a vegetable bed.',
   materials: ['squared stone ground floor', 'brick or stone upper walls', 'oak joists and brackets', 'clay pan-and-cover tiles'],
   lookFor: [

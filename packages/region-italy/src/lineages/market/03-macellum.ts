@@ -50,7 +50,7 @@ export const macellum: BuildingDef = {
   materials: ['brick-faced concrete', 'marble', 'travertine', 'tegulae and imbrices'],
   lookFor: [
     { label: 'Tholos', note: 'The round kiosk of twelve columns under a conical roof; at Pompeii fish scales were found in the drain under its basin.', at: [0, 4.2, 3.2] },
-    { label: 'Marble fish counters', note: 'Sloping marble slabs at the shop fronts let water and fish slime run off into a channel, as at Pozzuoli.', at: [-8.0, 1.2, 0] },
+    { label: 'Marble fish counters', note: 'Sloping marble slabs at the shop fronts let water and fish slime run off into a channel.', at: [-8.0, 1.2, 0] },
     { label: 'Shrine of the imperial cult', note: 'A raised room at the back with steps and a statue of the emperor, a reminder of who kept the peace and the grain supply.', at: [0, 4.6, -6.0] },
     { label: 'Entrance portico', note: 'A gabled porch on two columns marks the way in from the street, between shops that open outward.', at: [1.6, 4.6, 11.0] },
     { label: 'Brick-faced concrete', note: 'Concrete walls faced with thin fired bricks and finished with travertine: the standard imperial way of building.', at: [12.5, 2.6, -4.0] },

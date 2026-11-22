@@ -33,10 +33,10 @@ export const casePopolari: BuildingDef = {
   date: 'c. 1926',
   summary:
     'From 1903 a national law let towns set up institutes for "case popolari", public housing let at low rents, and after the First World War they built whole new quarters. ' +
-    'Rome’s Garbatella, begun in 1920, set the pattern: blocks of three storeys round shared gardens with wash-houses, in a homely style later nicknamed "barocchetto" (little Baroque), with curved gables, arched loggias, deep eaves and warm plaster. ' +
+    'Rome’s Garbatella, begun in 1920, set the pattern: houses and small blocks of two or three storeys round shared gardens with wash-houses, in a homely style later nicknamed "barocchetto" (little Baroque), with curved gables, arched loggias, deep eaves and warm plaster. ' +
     'It was meant to feel like a village rather than a barracks; from the later 1920s the Fascist regime used such estates, and the larger blocks that followed, to show what it was doing for workers.',
   materials: ['brick, plastered in ochre and red', 'travertine and plaster trim', 'coppi roofs', 'wooden persiane'],
-  modelledOn: 'The Garbatella, Rome (from 1920; Innocenzo Sabbatini, Plinio Marconi and others for the Istituto Case Popolari)',
+  modelledOn: 'The Garbatella, Rome (from 1920; planned by Gustavo Giovannoni and Massimo Piacentini, houses by Plinio Marconi, Innocenzo Sabbatini and others for the Istituto Case Popolari)',
   lookFor: [
     { label: 'Curved gable', note: 'The entrance bay rises into a curving gable with a round window: the "barocchetto" touch that gives each block its own face.', at: [0, 12.2, ZF + 0.6] },
     { label: 'Arched loggia', note: 'An open loggia of round arches on the top floor, a place to sit and dry washing out of the sun.', at: [9.6, G + FH + 1.4, ZF + 0.3] },

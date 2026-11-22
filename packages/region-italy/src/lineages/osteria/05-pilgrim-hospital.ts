@@ -46,7 +46,7 @@ export const pilgrimHospital: BuildingDef = {
     'The town lies on the Via Francigena, the pilgrim road from Canterbury and France to Rome, and the traffic of pilgrims has grown enough to need a proper hospital. ' +
     'A hospital (ospedale) was then a place of hospitality as much as of healing: canons or a lay brotherhood gave a free bed and food to pilgrims, the sick, the poor and abandoned children, paid for by gifts and bequests. ' +
     'Everything is bigger and better built than in the old hostel: a long, tall hall of dressed stone, an arcaded loggia on the street, and a chapel with a bell-gable, all with the round arches and blind arcading of the Romanesque.',
-  materials: ['dressed stone (pietra forte)', 'travertine', 'timber roof trusses', 'clay pan-and-cover tiles'],
+  materials: ['dressed stone (pietraforte)', 'travertine', 'timber roof trusses', 'clay pan-and-cover tiles'],
   lookFor: [
     { label: 'Long hall', note: 'The pellegrinaio, one great room for the pilgrims’ beds, lit by tall round-headed windows high above the loggia roof.', at: [-4.5, 6.6, HZ1 + 0.2] },
     { label: 'Loggia', note: 'An open arcade on columns along the street, where alms and bread were handed out and travellers waited for a bed.', at: [-6.0, 2.2, LZ + 0.5] },

@@ -36,7 +36,7 @@ export const carFactory: BuildingDef = {
   summary:
     'Mass production arrives: a car factory planned on the American model, in which the work flowed upwards floor by floor, from raw materials at the bottom to finished cars on the roof. ' +
     'The whole building is a frame of reinforced concrete, columns and floor slabs filled in with steel-framed windows, so every floor is light and open and can carry heavy machines. ' +
-    'Cars drove down from the roof by a spiral ramp, and the roof itself was a test track with banked curves at the ends, an image of the machine age that Le Corbusier published in admiration. ' +
+    'Cars drove down from the roof by a spiral ramp, and the roof itself was a test track with banked curves at the ends, an image of the machine age that Le Corbusier praised. ' +
     'Electricity from the river’s power stations now drives the machines; the river itself is only a view.',
   materials: ['reinforced concrete', 'steel windows', 'glass', 'asphalt'],
   modelledOn: 'The Fiat Lingotto factory, Turin (Giacomo Mattè-Trucco, 1916 to 1923, with spiral ramps added in the mid-1920s), much reduced',
@@ -47,7 +47,7 @@ export const carFactory: BuildingDef = {
     { label: 'Concrete frame and big windows', note: 'The walls carry no weight: the concrete columns do, leaving room for windows from pier to pier.', at: [-8, 9.0, 10.2] },
     { label: 'Railway siding', note: 'Steel, coal and parts came in by rail at the back of the works.', at: [-8, 1.4, -10.4] },
   ],
-  influences: ['rationalism'],
+  influences: [],
   build(b) {
     const concrete = b.pick([P.concreteWhite, tint(P.concrete, 0.05), P.cream]);
     const fl = 4.4;

@@ -56,7 +56,7 @@ export const romanPalazzo: BuildingDef = {
     'No columns or pilasters run up the front itself; the full sequence of orders is kept for the courtyard, stacked Doric, Ionic and Corinthian in half-columns and pilasters, as on the Colosseum. ' +
     'A single great cornice binds the long, even rows of windows together.',
   materials: ['plaster or brick', 'travertine dressings', 'coppi roof tiles', 'wrought iron'],
-  modelledOn: 'Palazzo Farnese, Rome (Antonio da Sangallo the Younger from 1517, completed by Michelangelo from 1546)',
+  modelledOn: 'Palazzo Farnese, Rome (Antonio da Sangallo the Younger from 1517, continued by Michelangelo from 1546 and finished by Giacomo della Porta in 1589)',
   influences: ['renaissance-export'],
   lookFor: [
     { label: 'Aedicule windows', note: 'On the main floor each window is framed like a tiny temple: half-columns carry an entablature and a pediment, triangular and segmental in turn.', at: [-4.4, 10.0, 11.5] },

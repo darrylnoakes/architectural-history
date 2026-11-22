@@ -51,19 +51,19 @@ export const foodHall: BuildingDef = {
   style: 'Nineteenth-century iron market, contemporary reuse',
   date: '1874; reopened 2014',
   summary:
-    'The covered market of the 1870s, a masonry base of round arches carrying an iron roof with glazed lanterns, has outlived the shops that emptied it. ' +
-    'Restored, it keeps butchers, greengrocers and cheesemongers on the ground floor, while a new mezzanine of steel and glass under the old roof is filled with counters selling food to eat on the spot. ' +
-    'The model is Florence’s Mercato Centrale, by Giuseppe Mengoni (architect of Milan’s Galleria), whose upper floor reopened as a food hall in 2014. ' +
+    'The town’s older covered market, an iron hall of the 1870s on a masonry base of round arches, outlived both the concrete market of the 1930s and the supermarkets that emptied them. ' +
+    'Restored, it keeps butchers, greengrocers and cheesemongers on the ground floor, while an upper deck of steel and glass under the old roof is filled with counters selling food to eat on the spot. ' +
+    'The model is Florence’s Mercato Centrale, by Giuseppe Mengoni (architect of Milan’s Galleria), opened in 1874, whose upper floor, inserted in a late twentieth-century restoration, reopened as a food hall in 2014. ' +
     'It is a typical recent Italian project: not a new building, but a new use inserted into an old one.',
   materials: ['stone and stucco base', 'cast iron', 'glass', 'clay tiles', 'steel and glass (new mezzanine)'],
   lookFor: [
     { label: 'Iron and glass lunette', note: 'A great half-round window of iron glazing bars fills the gable and lights the hall.', at: [0, 9.8, 10.4] },
     { label: 'Arcaded masonry base', note: 'Round arches outlined in grey pietra serena carry the iron hall above, a Renaissance dress for an industrial building.', at: [-7, 5.4, 10.4] },
     { label: 'Glazed roof lantern', note: 'A raised strip of glass along the ridge lets in light and lets out heat and smells.', at: [2.4, 12.6, -4.0] },
-    { label: 'New mezzanine', note: 'A steel deck with glass balustrades inserted under the old roof, full of tables: the restoration of 2014.', at: [3.0, 5.6, 2.8] },
+    { label: 'New mezzanine', note: 'A steel deck with glass balustrades inserted under the old roof, full of tables since the food hall opened in 2014.', at: [3.0, 5.6, 2.8] },
     { label: 'Clerestory', note: 'A continuous band of iron-framed glass between the masonry and the roof.', at: [-10.6, 7.2, -3.0] },
   ],
-  modelledOn: 'The Mercato Centrale, Florence (Giuseppe Mengoni, 1870 to 1874; first floor reopened as a food hall in 2014), reduced',
+  modelledOn: 'The Mercato Centrale, Florence (Giuseppe Mengoni, opened 1874; upper floor reopened as a food hall in 2014), reduced',
   influences: ['iron-and-glass', 'rossi-city'],
   build(b) {
     const stone = P.pietraSerena;

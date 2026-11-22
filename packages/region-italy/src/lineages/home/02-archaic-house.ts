@@ -22,7 +22,7 @@ export const archaicHouse: BuildingDef = {
     },
     {
       label: 'Antefixes',
-      note: 'A row of painted terracotta plaques closes the lower end of each cover tile along the eaves; on houses they were simple shells and palmettes.',
+      note: 'Terracotta plaques close the lower end of each cover tile along the eaves. Some houses at Acquarossa had them, mould-made and painted with simple patterns such as palmettes; many plainer roofs probably did without.',
       at: [1.9, 2.75, 5.6],
     },
     {

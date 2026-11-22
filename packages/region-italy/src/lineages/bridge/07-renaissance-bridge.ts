@@ -7,7 +7,7 @@ export const renaissanceBridge: BuildingDef = {
   style: 'Renaissance (Mannerist)',
   date: '1569, statues 1608',
   summary:
-    'When a flood wrecks one of the town’s bridges the duke has it rebuilt as a work of art. At Florence, after the flood of 1557, Cosimo I de’ Medici had Bartolomeo Ammannati build the Ponte Santa Trinita (1567 to 1569), and this bridge follows it. ' +
+    'When a flood wrecks one of the town’s bridges the duke has it rebuilt as a work of art. At Florence, after the flood of 1557, Cosimo I de’ Medici had Bartolomeo Ammannati build the Ponte Santa Trinita (1567 to 1569, with work going on until about 1571), and this bridge follows it. ' +
     'Its three arches are startlingly flat: each rises almost vertically from the pier, then sweeps out nearly level, and the two halves meet at a faint point hidden behind a carved cartouche. Nobody is sure how Ammannati drew the curve, and some have suggested advice from Michelangelo. ' +
     'Slim piers with long pointed cutwaters, a plain cornice and a level parapet make it look weightless. The statues of the Four Seasons on the corners were added in 1608 for a Medici wedding.',
   materials: ['pietra forte', 'marble statues'],

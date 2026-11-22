@@ -41,7 +41,7 @@ export const xenodochium: BuildingDef = {
     { label: 'Spolia', note: 'Two Roman columns and a marble lintel frame the gate, and the well-head is an old altar drum: reusing the ruins was cheaper than quarrying.', at: [-2.3, 2.4, ZW + 0.3] },
     { label: 'Well', note: 'Water for washing feet, a work of charity the guests could expect on arrival.', at: [-3.5, 1.0, 2.6] },
   ],
-  influences: ['christian-basilica'],
+  influences: [],
   build(b) {
     const stone = b.pick([P.tufa, tint(P.tufa, 0.04), tint(P.tufa, -0.03)]);
     const brick = b.pick([P.brickOrange, P.cotto, tint(P.brickOrange, -0.06)]);

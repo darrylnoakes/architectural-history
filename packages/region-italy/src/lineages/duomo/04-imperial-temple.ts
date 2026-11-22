@@ -25,7 +25,7 @@ export const imperialTemple: BuildingDef = {
     { label: 'Pseudo-peripteral cella', note: 'Half-columns run along the cella walls so the temple seems ringed with columns.', at: [W / 2 - 0.2, 7.5, TZ - 6] },
     { label: 'Colonnaded precinct', note: 'Porticoes on three sides frame the temple and give shade to the business of the forum.', at: [PX + 0.4, 3.5, 12] },
   ],
-  modelledOn: 'The Maison Carrée, Nîmes (late first century BC) and the Temple of Augustus, Pula',
+  modelledOn: 'The Maison Carrée, Nîmes (built under Augustus, about 20 BC to AD 5) and the Temple of Augustus, Pula (between 2 BC and AD 14)',
   influences: ['hellenistic-luxury', 'roman-empire-export'],
   build(b) {
     const front = TZ + D / 2;

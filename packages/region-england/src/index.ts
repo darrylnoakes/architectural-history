@@ -22,6 +22,12 @@ export const england: Region = {
   name: 'England',
   location: [52.2, -1.3],
   subtitle: 'A market town on a river',
+  intro: {
+    title: 'One town, twenty-five centuries',
+    text:
+      'This is an English market town on a river. Every plot keeps its purpose while its buildings are rebuilt in the manner of each age, ' +
+      'from Iron Age roundhouses to glass and timber.',
+  },
   start: -500,
   end: 2025,
   eras,

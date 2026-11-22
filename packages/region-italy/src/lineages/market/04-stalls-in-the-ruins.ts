@@ -46,7 +46,7 @@ export const stallsInTheRuins: BuildingDef = {
     { label: 'Lean-to booth', note: 'A shop of posts and wattle propped against the old wall, roofed with Roman tiles taken from the rubble.', at: [-9.6, 3.0, -2.0] },
     { label: 'Market awnings', note: 'Cloth stretched over poles shades the trestles on market day and comes down when the traders leave.', at: [3.6, 2.6, 5.2] },
   ],
-  influences: ['christian-basilica'],
+  influences: [],
   build(b) {
     // rough ground with patches of the old paving
     b.box(25.4, 0.04, 20.8, tint(P.earth, 0.06), { jitter: false });

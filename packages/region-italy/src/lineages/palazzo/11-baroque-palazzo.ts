@@ -40,7 +40,7 @@ export const baroquePalazzo: BuildingDef = {
     'Arrival is a ceremony: carriages pass through the portal into the court, where a broad open staircase climbs in two flights to the main floor. ' +
     'Where the Farnese front was a flat wall with framed windows, this one is modelled in depth.',
   materials: ['ochre or rose plaster', 'travertine pilasters and dressings', 'stucco', 'coppi roof tiles', 'wrought iron'],
-  modelledOn: 'Palazzo Chigi-Odescalchi, Rome (Gian Lorenzo Bernini, from 1664), with a curved centre in the manner of Guarino Guarini’s Palazzo Carignano, Turin (from 1679)',
+  modelledOn: 'Palazzo Chigi-Odescalchi, Rome (Gian Lorenzo Bernini, from 1664), with a centre bowed forward in the manner of Bernini’s Palazzo di Montecitorio, Rome (from 1653), and later of Guarino Guarini’s Palazzo Carignano, Turin (from 1679)',
   influences: ['baroque-export'],
   lookFor: [
     { label: 'Giant order', note: 'Pilasters rise through two storeys at once, from the top of the rusticated base to the main cornice: the "giant order" used by Michelangelo on the Capitol and by Bernini on palace fronts.', at: [-8.05, 11.0, 11.8] },

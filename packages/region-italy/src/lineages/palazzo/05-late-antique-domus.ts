@@ -9,10 +9,10 @@ export const lateAntiqueDomus: BuildingDef = {
   summary:
     'In the late empire the town has fewer rich families, but they live more grandly than ever. ' +
     'Their mansions are built of brick, often with bands of small tufa blocks, and reuse columns and marble taken from older buildings, so that no two columns match. ' +
-    'The house is arranged for receiving: a tall hall ending in an apse, where the master sat in state, and a fountain court where arches spring straight from the tops of the columns, a late Roman habit that the earlier domus never used.',
+    'The house is arranged for receiving: a tall hall ending in an apse, where the master sat in state, and a fountain court where arches spring straight from the tops of the columns, a late Roman habit that the earlier domus rarely used.',
   materials: ['brick with tufa bands', 'reused marble columns', 'marble floors and veneer', 'fired clay roof tiles'],
-  modelledOn: 'House of Cupid and Psyche, Ostia (early fourth century), enlarged',
-  influences: ['christian-basilica'],
+  modelledOn: 'House of Cupid and Psyche, Ostia (about AD 300, early fourth century), enlarged',
+  influences: [],
   lookFor: [
     { label: 'Apsed reception hall', note: 'A tall hall ending in a semicircular apse under a half-dome, where the owner received guests as an official would.', at: [0, 5.5, -12.0] },
     { label: 'Arches on columns', note: 'The arches of the fountain court rest directly on the columns, with no entablature between.', at: [-4.6, 3.6, 4.0] },

@@ -107,7 +107,7 @@ export const bastionGate: BuildingDef = {
     'and with angled bastions whose flanks let guns sweep the ditch and the face of the next bastion, so that no ground at the foot of the wall was hidden from fire. ' +
     'This bastioned system, the trace italienne, was taken up by every power in Europe. The gate itself is architecture: a rusticated Doric front, strong and severe, the order thought right for a fortress.',
   materials: ['brick facing on an earth core', 'travertine cordon', 'stone (tufa and marble) for the gate', 'oak gates', 'bronze cannon'],
-  modelledOn: 'Michele Sanmicheli’s Porta Nuova, Verona (1533 to 1540), with bastions like Antonio da Sangallo the Younger’s Bastione Ardeatino in Rome (1537 to 1542)',
+  modelledOn: 'Michele Sanmicheli’s Porta Nuova, Verona (1530s, finished 1540), with bastions like Antonio da Sangallo the Younger’s Bastione Ardeatino in Rome (1537 to 1542)',
   influences: ['bastion-export'],
   lookFor: [
     { label: 'Angled bastion', note: 'An arrowhead of rampart pushed out from the wall; its angled faces leave no blind spot and glance off shot.', at: [12.4, 8.4, 5.6] },

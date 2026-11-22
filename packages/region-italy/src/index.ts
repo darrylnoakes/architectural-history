@@ -24,6 +24,12 @@ export const italy: Region = {
   name: 'Italy',
   location: [42.7, 12.3],
   subtitle: 'A city on a river',
+  intro: {
+    title: 'One city, twenty-eight centuries',
+    text:
+      'This is a city on a river in central Italy, somewhere between Rome and Florence. It was never abandoned, and what it built in stone it mostly kept: ' +
+      'so the plots rebuild age by age from huts to the Renaissance, and then the old city stands while the new one grows up beyond the river.',
+  },
   start: -750,
   end: 2025,
   eras,

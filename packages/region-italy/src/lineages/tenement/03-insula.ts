@@ -24,9 +24,9 @@ export const insula: BuildingDef = {
   style: 'Roman Imperial',
   date: 'c. AD 60 to 150',
   summary:
-    'Under the empire most townspeople rented rooms in an insula, a block of flats of five storeys or so built in concrete faced with brick, which could be raised higher and burnt less than the timber-framed blocks before it. ' +
+    'Under the empire most people in Rome, Ostia and the larger towns rented rooms in an insula, a block of flats of five storeys or so built in concrete faced with brick, which could be raised higher and burnt less than the timber-framed blocks before it. ' +
     'Shops with mezzanines filled the street front; the best flats, on the first floor, had a balcony on stone brackets, and rents fell as you climbed, so the poorest lived under the roof in small rooms that were the last to escape a fire. ' +
-    'There was no running water above the ground floor, and tenants carried it upstairs from the street fountain. Augustus limited street fronts to 70 Roman feet, about 21 metres, and Trajan to 60.',
+    'There was no running water above the ground floor, and tenants carried it upstairs from the street fountain. Augustus limited the height of buildings on the street to 70 Roman feet, about 21 metres, and Trajan is said to have lowered it to 60.',
   materials: ['concrete faced with brick (opus testaceum)', 'travertine brackets and thresholds', 'timber floors and balconies', 'fired roof tiles'],
   modelledOn: 'The insulae of Ostia (House of Diana, 2nd century AD) and the Insula dell’Ara Coeli, Rome',
   lookFor: [

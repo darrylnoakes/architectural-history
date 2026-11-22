@@ -10,7 +10,7 @@ export const gothicPalazzo: BuildingDef = {
     'The great families of the commune have come down from their towers into a broad, compact town palace that is at once house, counting-house and warehouse. ' +
     'The ground floor opens to the street in wide arches for the family business, while the household lives on the floors above, lit by two-light windows with pointed heads. ' +
     'Battlements on corbels still give a fortified look, but they are now more a sign of rank than a defence. ' +
-    'Behind, a small courtyard holds the well and an open stone stair with timber galleries leading to the upper rooms, and an open loggia on the roof catches the evening air.',
+    'Behind, a small courtyard holds the well and an open stone stair with timber galleries leading to the upper rooms, and an open loggia on the roof of the back range catches the evening air; many palaces added such loggias later, in place of their battlements.',
   materials: ['pietraforte ashlar', 'brick', 'timber floors and galleries', 'coppi roof tiles', 'wrought iron'],
   modelledOn: 'Palazzo Davanzati, Florence (built for the Davizzi family in the mid-fourteenth century); the two-light windows follow Sienese palaces',
   influences: ['cistercian-gothic'],

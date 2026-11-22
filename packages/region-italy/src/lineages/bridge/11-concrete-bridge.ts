@@ -72,9 +72,9 @@ export const concreteBridge: BuildingDef = {
   summary:
     'Downstream, a new road bridge for the traffic of the boom years is carried not on arches or beams but on one continuous shell of reinforced concrete, about 30 cm thick, that rises from the ground in curved sheets and touches the underside of the road only at a few points. ' +
     'Its shape was not drawn but found: the engineer Sergio Musmeci worked it out with mathematics and with models of stretched rubber, looking for the form in which the concrete is everywhere in compression, as in an arch, so it can be as thin as possible. ' +
-    'Italian engineers such as Nervi, Morandi and Musmeci made reinforced concrete expressive in these years; Musmeci’s bridge over the Basento at Potenza, designed in 1967 and built from 1971 to 1976, is among the most daring of them.',
+    'Italian engineers such as Nervi, Morandi and Musmeci made reinforced concrete expressive in these years; Musmeci’s bridge over the Basento at Potenza, designed from 1967 and built in the first half of the 1970s, is among the most daring of them.',
   materials: ['reinforced concrete', 'prestressed concrete deck', 'asphalt', 'steel railings'],
-  modelledOn: 'Sergio Musmeci’s bridge over the Basento, Potenza (designed 1967, built 1971 to 1976)',
+  modelledOn: 'Sergio Musmeci’s bridge over the Basento, Potenza (designed from 1967, built about 1971 to 1976)',
   lookFor: [
     { label: 'Concrete membrane', note: 'A single thin curved sheet carries the whole road, shaped so it works in compression everywhere.', at: [2.6, 0.4, -1.8] },
     { label: 'Point supports', note: 'The shell rises to meet the deck at only a few crests, so the road seems to float on it.', at: [1.2, 1.45, 6.6] },

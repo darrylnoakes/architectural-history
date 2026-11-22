@@ -60,13 +60,13 @@ export const caseTerrinee: BuildingDef = {
   date: 'c. 850',
   summary:
     'By the ninth century the town was a scatter of houses, gardens and vineyards inside the old walls. Leases and sales in the church archives call the simplest of them domus terrineae: single-storey houses, as against the two-storey domus solaratae of the better off. ' +
-    'They were built of whatever came to hand: a footing of brick and stone pulled from the Roman ruins, walls of clay on a timber frame, a roof of thatch or wooden shingles where the Romans had used tiles. ' +
+    'They were built of whatever came to hand: a footing of brick and stone pulled from the Roman ruins, walls of clay on a timber frame, a roof of wooden shingles or thatch where the Romans had used tiles; some documents call such houses scandoliciae, shingled. ' +
     'Behind each one is the most valuable thing a poor family had, its vegetable garden (orto), with a shared well.',
   materials: ['reused Roman brick and stone', 'clay on a timber frame', 'straw thatch', 'oak or chestnut shingles'],
   lookFor: [
     { label: 'Footing of reused Roman brick', note: 'The base of the wall is a patchwork of brick, tufa and marble from the ruins.', at: [-9.0, 0.5, 4.2] },
     { label: 'Clay walls on a timber frame', note: 'Above the footing the walls are clay packed round posts, the posts left showing at corners and doors.', at: [0.5, 1.7, 3.8] },
-    { label: 'Thatch and shingle roofs', note: 'Steep roofs of straw or wooden shingles: fired tile had become too dear for the poor.', at: [8.5, 4.0, 1.2] },
+    { label: 'Thatch and shingle roofs', note: 'Steep roofs of wooden shingles or straw: fired tile was dear, though better houses of the same kind were still tiled.', at: [8.5, 4.0, 1.2] },
     { label: 'Vegetable gardens', note: 'Each house had its orto behind, fenced with wattle; these plots appear in almost every lease of the period.', at: [-1.5, 0.6, -4.6] },
     { label: 'Column drum doorstep', note: 'A slice of a Roman column serves as a step: the ruins were a quarry for everything.', at: [-10.3, 0.4, 4.6] },
   ],

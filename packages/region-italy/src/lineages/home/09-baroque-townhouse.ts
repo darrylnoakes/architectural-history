@@ -19,7 +19,6 @@ export const baroqueTownhouse: BuildingDef = {
     'big arched street door, with moulded window frames, pediments over the main floor and a balcony over the door. Low mezzanine windows ' +
     'light the service rooms tucked between the main storeys, and on the roof an altana, a terrace under a tiled canopy, catches the evening breeze.',
   materials: ['brick walls with lime plaster', 'stucco mouldings', 'travertine door frame and sills', 'wrought iron', 'clay pan-and-cover tiles'],
-  influences: ['baroque-export'],
   lookFor: [
     {
       label: 'Arched street door',

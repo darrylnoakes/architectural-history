@@ -18,7 +18,7 @@ export const communalGate: BuildingDef = {
   style: 'Medieval communal',
   date: '12th to 14th century',
   summary:
-    'The self-governing commune outgrew the old Roman circuit and built a longer wall round its new suburbs, with a tall gate-tower on every main road, each named after the place the road led to. ' +
+    'The self-governing commune outgrew the old Roman circuit and built a longer wall round its new suburbs, with a tall gate-tower on every main road, usually named after the place the road led to or the church nearby. ' +
     'The tower let the guard see far down the road and showed the commune’s pride to every arrival. Its back is left open to the town, so an enemy who took it would have no cover from the defenders inside. ' +
     'At the gate the commune’s officials collected the gabella, the toll on goods coming in to market, and over the arch a painting of the Virgin and saints put the gate under heaven’s protection.',
   materials: ['rubble and squared stone (pietraforte)', 'oak floors and gates', 'fresco on lime plaster', 'clay roof tiles on the customs post'],

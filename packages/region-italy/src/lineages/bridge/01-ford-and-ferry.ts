@@ -19,7 +19,6 @@ export const fordAndFerry: BuildingDef = {
     { label: 'Log raft', note: 'Logs lashed side by side under cross-pieces: no nails, just rope and pegs.', at: [3.4, -1.0, -2.6] },
     { label: 'Ferry post', note: 'A stout post driven into each bank anchors the rope and marks the landing.', at: [4.4, 2.0, 13.0] },
   ],
-  influences: ['etruscan-legacy'],
   build(b) {
     b.noCollide();
     const gravel = mix(P.gravel, P.sand, 0.25);

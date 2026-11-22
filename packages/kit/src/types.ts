@@ -241,6 +241,8 @@ export interface Region {
   location: [number, number];
   /** e.g. "A market town on a river". */
   subtitle: string;
+  /** The welcome shown when the region is first opened: a headline and two or three sentences. */
+  intro: { title: string; text: string };
   start: number;
   end: number;
   eras: Era[];

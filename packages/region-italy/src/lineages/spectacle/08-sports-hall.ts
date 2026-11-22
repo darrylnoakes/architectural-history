@@ -30,7 +30,7 @@ export const sportsHall: BuildingDef = {
   summary:
     'Rome was given the 1960 Olympic Games, and the city and the Olympic committee built new halls for them; towns across Italy followed with their own for basketball, boxing and volleyball. ' +
     'Here the whole building is its structure: a shallow concrete dome, its underside a web of interlacing ribs, rests on a ring of Y-shaped struts leaning outward along the line of the thrust. ' +
-    'The dome was assembled from hundreds of small prefabricated pieces of ferro-cement, thin concrete reinforced with fine steel mesh, cast on the ground and joined with poured concrete, which made it quick and cheap. ' +
+    'The dome was assembled from some 1,600 small prefabricated pieces of ferro-cement, thin concrete reinforced with fine steel mesh, cast on the ground and joined with poured concrete, which made it quick and cheap. ' +
     'A band of glass between the struts lets the dome seem to float.',
   materials: ['ferro-cement precast units', 'reinforced concrete', 'glass curtain wall'],
   modelledOn:

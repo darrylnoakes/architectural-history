@@ -14,7 +14,7 @@ export const boutiqueHotel: BuildingDef = {
   materials: ['restored lime plaster', 'travertine', 'terracotta', 'frameless glass', 'weathering steel'],
   lookFor: [
     { label: 'Glazed arches', note: 'The portico doors and the old stable openings are filled with frameless glass, so the historic arches still read clearly.', at: [5.4, 2.2, ZF - 2.6] },
-    { label: 'Glass lift', note: 'A lift in a glass shaft in a corner of the yard: plainly new and removable, as conservation practice since the Venice Charter of 1964 asks.', at: [SX - 1.0, 6.0, ZFI - 1.0] },
+    { label: 'Glass lift', note: 'A lift in a glass shaft in a corner of the yard: plainly new, as the Venice Charter of 1964 asks of additions, and removable, as later conservation practice prefers.', at: [SX - 1.0, 6.0, ZFI - 1.0] },
     { label: 'Roof terrace', note: 'The stable roof replaced by a terrace with a pergola, for breakfast and sundowners above the yard.', at: [-6.0, BTOP + 1.4, (ZB + BZI) / 2] },
     { label: 'Dehors', note: 'Tables under the portico and out on the street, for which the wine bar pays the commune a fee for the public space.', at: [3.2, 1.0, ZF + 1.0] },
     { label: 'Restored front', note: 'Plaster renewed in lime and tinted to match traces of the old colour; the travertine and terracotta cleaned, not replaced.', at: [-5.6, G + 2.5, ZF + 0.2] },

@@ -28,7 +28,7 @@ export const aurelianGate: BuildingDef = {
     'Speed mattered more than show: the wall is concrete faced in brick, often with old tombs and houses swallowed into it, and square towers project every thirty metres or so, each with a chamber whose arched windows took bolt-throwing ballistas. ' +
     'The gate is a single arch faced in stone between two towers with rounded fronts, and a chamber with a row of windows above the passage. Where the Augustan gate was a show front, this one is made to be fought from.',
   materials: ['concrete faced with brick', 'travertine blocks round the arch', 'clay roof tiles', 'oak doors'],
-  modelledOn: 'The Aurelian Walls of Rome (AD 271 to 275) and their gates, such as the Porta San Sebastiano and the Porta Latina',
+  modelledOn: 'The Aurelian Walls of Rome (AD 271 to 275) and their gates: the Porta Latina, and the Porta San Sebastiano (the old Porta Appia, built with two arches and given its single arch when Honorius rebuilt the gates about 401 to 403)',
   influences: ['roman-concrete'],
   lookFor: [
     { label: 'Brick-faced concrete', note: 'A core of concrete poured between two skins of brick: quick to build with gangs of unskilled labour.', at: [-10, 4, WF + 0.2] },

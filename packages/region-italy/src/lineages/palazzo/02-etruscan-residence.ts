@@ -16,7 +16,7 @@ export const etruscanResidence: BuildingDef = {
   style: 'Etruscan (Archaic)',
   date: 'c. 580 BC',
   summary:
-    'An Etruscan lord builds a grand house round a courtyard, part palace and part shrine, where the family received clients and held banquets. ' +
+    'An Etruscan lord builds a grand house round a courtyard, probably part palace and part shrine, where the family received clients and held banquets; what such buildings were for is still debated. ' +
     'The walls are of sun-dried brick on stone footings, but the roofs are of fired clay tiles, learned from the Greeks, and they carry the display: rows of painted terracotta plaques showing horse races, banquets and processions, and life-size seated figures of ancestors or gods along the ridge. ' +
     'A colonnade of timber posts on stone bases shades the sides of the court. Compared with the chief’s hut, everything is now rectilinear, tiled and decorated.',
   materials: ['stone footings', 'sun-dried brick with clay plaster', 'timber posts', 'fired clay roof tiles', 'painted terracotta'],
@@ -26,7 +26,7 @@ export const etruscanResidence: BuildingDef = {
     { label: 'Ridge statues (acroteria)', note: 'Seated terracotta figures, some in broad-brimmed hats, line the ridge of the main range: ancestors or gods watching over the house.', at: [-3.0, 7.2, 9.0] },
     { label: 'Frieze plaques', note: 'A band of painted terracotta plaques along the top of the walls showed horse races, banquets, processions and seated assemblies.', at: [6.0, 2.8, 11.7] },
     { label: 'Colonnaded courtyard', note: 'Timber columns on stone bases carry a lean-to roof round the sides of the court.', at: [-4.6, 2.0, 0] },
-    { label: 'Terracotta tiled roof', note: 'Flat pan tiles and rounded cover tiles, with moulded antefixes along the eaves, among the first fired roofs in Italy.', at: [8.5, 4.6, -6.0] },
+    { label: 'Terracotta tiled roof', note: 'Flat pan tiles and rounded cover tiles, with moulded antefixes along the eaves; tiled roofs had first appeared in Etruria only a few generations before.', at: [8.5, 4.6, -6.0] },
   ],
   build(b) {
     const plaster = b.pick([P.mudbrick, tint(P.mudbrick, 0.05), P.daub]);

@@ -29,20 +29,20 @@ function boarFountain(b: Builder, at: [number, number, number], rotY: number): v
 export const renaissanceLoggia: BuildingDef = {
   id: 'renaissance-loggia',
   name: 'Market loggia',
-  style: 'Florentine High Renaissance',
+  style: 'Florentine late Renaissance',
   date: 'c. 1550',
   summary:
     'The ducal government replaces the old trading stalls with a free-standing loggia for the dealers in silk, gold and other luxury goods, and for the bankers who changed money there. ' +
-    'It is open on all four sides: round arches on Corinthian columns with a cross-vaulted ceiling, a sober grey and white scheme of pietra serena against plaster that Florence had used since Brunelleschi. ' +
+    'It is open on all four sides: round arches on Composite columns carrying shallow domed vaults, a sober grey and white scheme of pietra serena against plaster that Florence had used since Brunelleschi. ' +
     'Where the Gothic grain loggia stacked a fortress-like granary on massive piers, this is a single, airy hall whose beauty lies in its proportions. ' +
-    'A bronze boar fountain, cast in the next century, became a good-luck charm whose snout visitors still rub.',
+    'A bronze boar fountain, added in the next century, became a good-luck charm whose snout visitors still rub.',
   materials: ['pietra serena', 'white lime plaster', 'marble', 'bronze', 'coppi tiles'],
   lookFor: [
-    { label: 'Arches on columns', note: 'Round arches springing straight from Corinthian columns, the Renaissance way of building an open arcade.', at: [-2.5, 7.4, 7.7] },
+    { label: 'Arches on columns', note: 'Round arches springing straight from Composite columns, the Renaissance way of building an open arcade.', at: [-2.5, 7.4, 7.7] },
     { label: 'Pietra serena against white', note: 'Grey sandstone for the structural lines, white plaster for the fields between: Brunelleschi’s Florentine colour scheme.', at: [7.6, 9.2, 7.7] },
-    { label: 'Corner piers', note: 'Solid square piers with pilasters stiffen the corners where the two arcades meet.', at: [-9.6, 4.0, 7.6] },
+    { label: 'Corner piers', note: 'Solid square piers with pilasters stiffen the corners where the two arcades meet; in Florence they replaced the original corner columns, a change credited to Buontalenti.', at: [-9.6, 4.0, 7.6] },
     { label: 'Marble wheel', note: 'A wheel inlaid in the floor; in Florence it is said to mark where the city’s war cart stood, and where bankrupts were publicly shamed.', at: [0, 0.6, 0] },
-    { label: 'Bronze boar fountain', note: 'Florence’s boar, the Porcellino, was cast by Pietro Tacca in the early seventeenth century after an ancient marble.', at: [5.8, 2.6, 9.8] },
+    { label: 'Bronze boar fountain', note: 'Florence’s boar, the Porcellino, was cast by Pietro Tacca in the seventeenth century (about 1633) after an ancient marble.', at: [5.8, 2.6, 9.8] },
   ],
   modelledOn: 'The Loggia del Mercato Nuovo, Florence (Giovanni Battista del Tasso, 1547 to 1551), simplified',
   influences: ['renaissance-birth'],

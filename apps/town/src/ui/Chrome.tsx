@@ -72,15 +72,12 @@ export function StreetBanner() {
 export function Intro() {
   const intro = useApp((s) => s.intro);
   const ready = useApp((s) => s.ready);
+  const { region } = useRegion();
   if (!intro || !ready) return null;
   return (
     <div className="intro panel">
-      <h1>One town, twenty-five centuries</h1>
-      <p>
-        This is an English market town on a river. Every plot keeps its purpose while its buildings are rebuilt in the
-        manner of each age, from Iron Age roundhouses to glass and timber. Press play and watch, or drag the timeline
-        and go exploring.
-      </p>
+      <h1>{region.intro.title}</h1>
+      <p>{region.intro.text} Press play and watch, or drag the timeline and go exploring.</p>
       <div className="intro-actions">
         <button className="btn primary" onClick={() => useApp.setState({ intro: false, playing: true })}>
           <IconPlay /> Play the story
@@ -89,7 +86,7 @@ export function Intro() {
           Explore on my own
         </button>
       </div>
-      <p className="fine">Click any building to learn what it is. Controls are under the ? button.</p>
+      <p className="fine">Click any building to learn what it is. Other regions are under the title, top left; controls are under the ? button.</p>
     </div>
   );
 }

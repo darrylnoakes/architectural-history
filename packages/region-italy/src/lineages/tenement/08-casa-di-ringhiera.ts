@@ -41,7 +41,7 @@ export const casaDiRinghiera: BuildingDef = {
   summary:
     'After unification the towns grew fast, and builders put up tenements for the incoming workers as cheaply as rent and land allowed. In the casa di ringhiera ("railing house") the flats, often of one or two rooms, open off long balconies (ballatoi) of stone slabs on iron brackets running round the courtyard on every floor. ' +
     'The galleries saved the cost of staircases, and they became the street of the building: a single tap and a single privy on each landing served everyone on that floor. ' +
-    'The type is best known from Milan and Turin, but similar courtyard tenements were built in the new working quarters of Rome, Florence and other central Italian cities; to the street they show a plain stuccoed front with shops below.',
+    'The type is best known from Milan and Turin, but courtyard tenements, some with galleries, were also built in the new working quarters of Rome, Florence and other central Italian cities; to the street they show a plain stuccoed front with shops below.',
   materials: ['brick, stuccoed', 'stone gallery slabs', 'wrought and cast iron', 'louvred wooden shutters (persiane)', 'coppi roof'],
   modelledOn: 'The case di ringhiera of Milan and Turin; working-class courtyard tenements of Rome and Florence',
   lookFor: [

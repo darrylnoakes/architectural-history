@@ -7,11 +7,11 @@ export const domusSolarata: BuildingDef = {
   style: 'Early medieval',
   date: 'c. AD 800',
   summary:
-    'By the ninth century the town had shrunk to clusters of houses among ruins, gardens and vineyards. The documents of the time call ' +
+    'By the ninth century the town had shrunk to clusters of houses among ruins, gardens and vineyards. Documents of the ninth and tenth centuries call ' +
     'a house like this a domus solarata, a house with an upper floor (the solarium), as against the single-storey houses most people ' +
     'lived in. The family lives upstairs, reached by an outside stair; below, behind an arcaded portico, are the stores, the animals and ' +
     'the work. It is built with care from blocks and bricks taken from the ruins, like the houses excavated in the Forum of Nerva in Rome, ' +
-    'which were built of the forum’s own stones in the 800s.',
+    'two-storey houses with a portico on the ground floor, built of the forum’s own stones in the 800s.',
   materials: ['reused peperino and tufa blocks', 'reused Roman brick', 'timber floor and roof', 'terracotta roof tiles'],
   modelledOn: 'The Carolingian houses in the Forum of Nerva, Rome (ninth century)',
   lookFor: [

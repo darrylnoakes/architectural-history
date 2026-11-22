@@ -21,7 +21,7 @@ export const etruscanTemple: BuildingDef = {
   id: 'etruscan-temple',
   name: 'Etruscan temple',
   style: 'Etruscan (Tuscan temple)',
-  date: 'c. 510 BC',
+  date: 'c. 500 BC',
   summary:
     'The first temple on the site, built when the town was Etruscan or under Etruscan influence. It stands on a high podium of tufa and can only be approached from the front, by a single flight of steps: unlike a Greek temple, it has a front and a back. ' +
     'The front half is a deep porch of widely spaced, unfluted columns; the back half holds three rooms (cellae) for three gods, behind three doors. ' +
@@ -29,12 +29,12 @@ export const etruscanTemple: BuildingDef = {
   materials: ['tufa podium', 'mud brick and plaster', 'timber', 'painted terracotta', 'clay roof tiles'],
   lookFor: [
     { label: 'Podium and front stair', note: 'A high platform you can climb only at the front, the Italian way; Greek temples have steps all round.', at: [0, 1.2, TZ + D / 2 + 2.6] },
-    { label: 'Deep porch', note: 'Two rows of four columns fill the whole front half of the temple, a space for rites and for watching the sky for omens.', at: [W / 2 - 1, 4.5, TZ + 5.5] },
+    { label: 'Deep porch', note: 'Two rows of four columns fill the whole front half of the temple, the setting for the rites at the altar in front.', at: [W / 2 - 1, 4.5, TZ + 5.5] },
     { label: 'Tuscan columns', note: 'Plain, unfluted columns with a simple round cap and base, set far apart because the beams they carry are timber.', at: [-3.2, 5.0, TZ + D / 2 - 0.8] },
     { label: 'Wide eaves', note: 'The roof overhangs by two metres all round to keep rain off the mud-brick walls.', at: [-W / 2 - OV + 0.3, ROOF_Y - 0.5, TZ - 4] },
     { label: 'Ridge statues', note: 'Painted clay gods striding along the ridge, as at Veii, where the famous Apollo stood on the roof.', at: [0, ROOF_Y + RISE + 2.3, TZ - 1] },
   ],
-  modelledOn: 'The Portonaccio temple at Veii (late sixth century BC); the porch follows the Tuscan plan described by Vitruvius',
+  modelledOn: 'The Portonaccio temple at Veii (late sixth century BC); the two rows of four porch columns and the three cellae follow the Tuscan plan described by Vitruvius, since how Veii’s own front and rooms were laid out is still debated',
   influences: ['greek-colonies', 'etruscan-legacy'],
   build(b) {
     const front = TZ + D / 2;

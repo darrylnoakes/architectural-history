@@ -28,7 +28,7 @@ export const tabernaeRow: BuildingDef = {
     { label: 'Ladder to the pergula', note: 'Inside, a ladder climbs to the loft over the front half of the shop.', at: [-1.1, 2.2, 3.8] },
     { label: 'Tile roof', note: 'Flat tiles with upturned edges (tegulae) laid side by side, the joints covered by half-round tiles (imbrices).', at: [0, 7.2, 2.2] },
   ],
-  influences: ['greek-colonies'],
+  influences: [],
   build(b) {
     const tufa = b.pick([P.tufa, tint(P.tufa, 0.03), tint(P.tufa, -0.03)]);
     const ashlar = tint(tufa, 0.05);

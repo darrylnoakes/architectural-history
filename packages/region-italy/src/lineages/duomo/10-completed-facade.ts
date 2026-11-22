@@ -99,9 +99,9 @@ export const completedFacade: BuildingDef = {
   id: 'completed-facade',
   name: 'The cathedral "completed"',
   style: 'Gothic Revival',
-  date: '1887',
+  date: 'c. 1887',
   summary:
-    'The nineteenth century saw the medieval cathedral as the pride of the nation and wanted it finished and pure. Restorers replaced the weathered and much-altered old front with a new one in revived Gothic, as Naples did from 1877 and Florence finished in 1887 to Emilio De Fabris’s design. ' +
+    'The nineteenth century saw the medieval cathedral as the pride of the nation and wanted it finished and pure. Often it gave a front to a church that had never had a finished one: at Florence the unfinished medieval front was pulled down in 1587 and the cathedral stood bare-fronted until Emilio De Fabris’s façade was finished in 1887. Here, as at Naples, where Enrico Alvino’s revived Gothic front (built 1877 to 1905) replaced an older, much-altered one but kept its fifteenth-century doorways, a front already stood. Cracked by earthquakes, worn and patched over nearly six centuries, it was judged past saving, and restorers replaced it with a new one in revived Gothic, a drastic choice that few towns made. ' +
     'It is a patterned front of white, green and pink marble: gabled doors with mosaic lunettes, a long row of saints in niches, a rose window, and a low gable with a tondo, more regular and more horizontal than the real Gothic front it replaced. ' +
     'The houses that had leaned against the flanks for seven centuries were pulled down to leave the cathedral standing free in a wider square. Behind the new front, the dome, the striped nave, the Romanesque apse, the Baroque chapel, the bell tower and the baptistery all stand as before.',
   materials: ['white Carrara marble', 'green marble of Prato', 'red and pink marble', 'mosaic', 'bronze doors'],

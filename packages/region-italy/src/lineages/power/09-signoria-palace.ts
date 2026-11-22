@@ -19,7 +19,7 @@ export const signoriaPalace: BuildingDef = {
   style: 'Early Renaissance',
   date: 'c. 1470 to 1490',
   summary:
-    'Faction fighting has worn out the commune, and a signore, a lord with a title from the pope or the emperor, now rules the town. ' +
+    'Faction fighting has worn out the commune, and a signore, a lord who in time gets a title from the pope or the emperor, now rules the town. ' +
     'He keeps the old Palazzo Pubblico and its tower (old) but turns them into his court: behind them he builds an arcaded courtyard on Corinthian columns, ' +
     'with a pilastered upper storey and an inscription praising himself, and a new wing whose front to the valley is a stack of open loggias between two slender round turrets (new). ' +
     'The commune still meets, but in a palace that now belongs to a prince; even the tower has been given a clock.',
@@ -29,7 +29,7 @@ export const signoriaPalace: BuildingDef = {
     { label: 'Twin turrets (torricini)', note: 'Two slender round towers with conical roofs flank the lord’s new front, more for show than for defence.', at: [WING.x0 - 1.8, WING.h + 3, TORRICINI_Z - 3.3] },
     { label: 'Stacked loggias', note: 'Three open arched balconies one above another, from which the lord looked out over his lands.', at: [WING.x0 - 0.8, 7.5, TORRICINI_Z] },
     { label: 'Inscription frieze', note: 'A band of white stone over the arcade, where the lord’s name and titles were carved in Roman capitals.', at: [COURT.x1 - 2.6, 7.4, (COURT.z0 + COURT.z1) / 2] },
-    { label: 'Tower clock', note: 'New in this age: a mechanical clock on the old civic tower, which now told the hours to the whole town.', at: [TWR.x, TWR.shaft - 4.5, TWR.z + TWR.w / 2 + 0.4] },
+    { label: 'Tower clock', note: 'A mechanical clock on the old civic tower tells the hours to the whole town; public clocks had spread through Italian towns since the fourteenth century.', at: [TWR.x, TWR.shaft - 4.5, TWR.z + TWR.w / 2 + 0.4] },
   ],
   modelledOn: 'The Ducal Palace of Urbino (courtyard by Luciano Laurana, c. 1468 to 1472; the Facciata dei Torricini), much reduced',
   influences: ['renaissance-birth'],

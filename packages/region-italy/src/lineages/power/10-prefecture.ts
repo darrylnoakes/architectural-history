@@ -119,10 +119,10 @@ export const prefectureDef: BuildingDef = {
   style: 'Neo-Renaissance',
   date: 'c. 1885',
   summary:
-    'In 1860 the town joins the new Kingdom of Italy and becomes the capital of a province, governed for the state by a prefect sent from the capital. ' +
+    'In 1860 the town votes to join the Kingdom of Sardinia, proclaimed the Kingdom of Italy in 1861, and becomes the capital of a province, governed for the state by a prefect sent from the capital. ' +
     'Beside the old Palazzo Pubblico, which stays the town hall of the elected council and its mayor (old), the state builds its prefecture in a Neo-Renaissance style that borrows from the Florentine palaces of the fifteenth century: ' +
     'a rusticated ground floor, windows in little temple frames with alternating pediments, a balcony over the portal and a deep cornice (new). ' +
-    'In the square a bronze Victor Emmanuel II, the first king of Italy, rides on a granite pedestal: one of hundreds of such monuments raised in the 1880s and 1890s to make Italians.',
+    'In the square a bronze Victor Emmanuel II, the first king of Italy, rides on a granite pedestal: one of the many monuments to the king, who died in 1878, raised in the 1880s and 1890s to make Italians.',
   materials: ['stucco', 'travertine', 'clay roof tiles', 'bronze', 'granite'],
   lookFor: [
     { label: 'Equestrian monument to the king', note: 'Victor Emmanuel II in bronze on a polished granite pedestal with reliefs, inside an iron railing.', at: [MON[0] + 1.4, MON_TOP - 1.2, MON[1] + 1.4] },

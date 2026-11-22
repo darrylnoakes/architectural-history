@@ -22,11 +22,11 @@ export const romanGate: BuildingDef = {
   style: 'Roman, Augustan',
   date: 'late 1st century BC',
   summary:
-    'Under Augustus, colonies of veteran soldiers were founded or refounded all over Italy, and each was given new walls and gates. With Italy at peace, the gate was as much a show front as a defence: a stately entrance in dressed white stone. ' +
+    'Under Augustus, colonies of veteran soldiers were founded or refounded all over Italy, and many were given new walls and gates. With Italy at peace, the gate was as much a show front as a defence: a stately entrance in dressed white stone. ' +
     'Two carriage arches let traffic in and out at once, with a narrower arch for people on foot either side. Above runs a gallery lit by a row of arched windows, and two many-sided towers stand forward of the wall to flank the approach. ' +
     'Where the Etruscan gate was a single opening in a mass of blocks, this is a designed façade with pilasters, a cornice and a regular rhythm of openings.',
-  materials: ['white limestone ashlar', 'concrete core faced with small stones (opus incertum)', 'clay roof tiles', 'oak gate leaves'],
-  modelledOn: 'The Porta Venere, Spello, and the Porta Palatina, Turin (both late 1st century BC)',
+  materials: ['white limestone ashlar', 'concrete core faced with small squared stones in regular courses', 'clay roof tiles', 'oak gate leaves'],
+  modelledOn: 'The Porta Palatina, Turin (two carriage and two foot arches under a gallery, between sixteen-sided towers) and the Porta Venere, Spello (three arches between twelve-sided towers), both Augustan; the Porta Praetoria, Aosta (25 BC), is of the same family',
   lookFor: [
     { label: 'Twin carriage arches', note: 'One arch for traffic coming in, one for traffic going out, divided by a central pier.', at: [-CARRIAGE.x, 6.3, FZ + FT / 2 + 0.3] },
     { label: 'Footway arch', note: 'A smaller arch either side kept people on foot out of the way of carts.', at: [FOOT.x, 3.5, FZ + FT / 2 + 0.3] },

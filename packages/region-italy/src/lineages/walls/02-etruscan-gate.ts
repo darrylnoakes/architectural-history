@@ -18,16 +18,16 @@ export const etruscanGate: BuildingDef = {
   date: '4th to 3rd century BC',
   summary:
     'As the towns of Etruria grew rich they ringed their hilltops with walls of huge squared blocks, cut from the local stone and laid in level courses without any mortar: their own weight holds them. ' +
-    'The gate is a deep passage through the wall, spanned by a true arch of wedge-shaped stones, a technique the Etruscans used in gates and drains before the Romans made it their own. ' +
-    'Three carved heads look out from the keystone and the springing of the arch, probably gods guarding the town, though they are too worn to name with certainty. ' +
+    'The gate is a deep passage through the wall, spanned by a true arch of wedge-shaped stones, a technique that spread through central Italy in the fourth and third centuries BC, in Etruscan and Roman gates and drains alike. ' +
+    'Three carved heads look out from the keystone and the springing of the arch, perhaps gods guarding the town, though they are too worn to name with certainty and some think they are trophy heads of enemies. ' +
     'Where the rampart was earth and timber, this is a permanent work of skilled masons.',
-  materials: ['panchino stone (a yellow calcareous sandstone) in squared blocks', 'dark volcanic stone for the heads', 'oak gate leaves'],
-  modelledOn: 'The Porta all’Arco, Volterra (arch probably 3rd century BC, in walls of the 4th century BC)',
+  materials: ['panchino stone (a yellow calcareous sandstone) in squared blocks', 'dark stone for the heads', 'oak gate leaves'],
+  modelledOn: 'The Porta all’Arco, Volterra (walls of the 4th century BC; the arch is later, probably 3rd or 2nd century BC)',
   influences: ['etruscan-legacy'],
   lookFor: [
     { label: 'Dry-laid ashlar', note: 'Big squared blocks in level courses with no mortar at all: their weight and close fit hold the wall together.', at: [-10, 4, 1.8] },
     { label: 'True arch', note: 'Wedge-shaped stones (voussoirs) lean on one another and turn the weight above sideways into the jambs.', at: [-1.6, 6.3, ZF + 0.4] },
-    { label: 'Keystone head', note: 'A carved head on the central stone of the arch; two more sit at its springing. Worn smooth, they are probably guardian gods.', at: [0, 7.3, ZF + 0.7] },
+    { label: 'Keystone head', note: 'A carved head on the central stone of the arch; two more sit at its springing. Worn smooth, they may be guardian gods.', at: [0, 7.3, ZF + 0.7] },
     { label: 'Deep gate passage', note: 'The gate is a tunnel through the thickened wall, with a second arch on the town side where the doors were hung.', at: [0, 2.2, -0.5] },
   ],
   build(b) {

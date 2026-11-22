@@ -71,7 +71,7 @@ export const inaCasa: BuildingDef = {
   style: 'Neorealism',
   date: 'c. 1954',
   summary:
-    'The INA-Casa plan (1949 to 1963), paid for by deductions from wages, built some 350,000 homes across Italy, partly to give work to the unemployed, so it chose simple methods that used a lot of labour: a concrete frame filled with brick, pitched tile roofs, wooden shutters. ' +
+    'The INA-Casa plan (1949 to 1963), paid for by contributions from workers’ wages, from employers and from the state, built some 350,000 homes across Italy, partly to give work to the unemployed, so it chose simple methods that used a lot of labour: a concrete frame filled with brick, pitched tile roofs, wooden shutters. ' +
     'Its architects, reacting against the monumental blocks of the Fascist years, wanted estates that felt like a village: blocks of three and four storeys set at angles to one another, with balconies, outside stairs and green space between. ' +
     'The Tiburtino quarter in Rome (1950 to 1954, by Ludovico Quaroni, Mario Ridolfi and their team) is the best-known example of this "neorealist" architecture.',
   materials: ['reinforced concrete frame', 'brick infill', 'coppi roofs', 'wooden persiane', 'iron railings'],

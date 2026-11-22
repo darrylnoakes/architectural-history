@@ -86,7 +86,7 @@ export const operaHouse: BuildingDef = {
     },
     {
       label: 'Horseshoe of boxes',
-      note: 'Four tiers of boxes and two galleries above, stacked round a horseshoe-shaped hall. Each box was owned by a family, who furnished it and received visitors in it.',
+      note: 'Tiers of boxes stacked round a horseshoe-shaped hall, with cheap seats in a gallery at the top; La Scala opened with five tiers of boxes and today has four and two galleries. Each box was owned by a family, who furnished it and received visitors in it.',
       at: [-6.6, 9.0, 1.0],
     },
     {

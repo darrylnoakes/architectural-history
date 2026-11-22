@@ -83,7 +83,7 @@ export const baroqueDuomo: BuildingDef = {
   style: 'Baroque',
   date: 'c. 1630 to 1670',
   summary:
-    'The Counter-Reformation church wanted drama and rich families wanted to be remembered, so the cathedral gained a domed chapel off the north aisle, lit from its own small dome, with paired pilasters, a curved pediment and scrolls bracing the drum, in the manner of Bernini’s Chapel of the Vow at Siena (1659 to 1662). ' +
+    'The Counter-Reformation church wanted drama and rich families wanted to be remembered, so the cathedral gained a domed chapel off the north aisle, lit from its own small dome as Bernini’s Chapel of the Vow at Siena (1659 to 1662) is, and dressed with paired pilasters, a curved pediment and scrolls bracing the drum. ' +
     'A curved flight of steps now spills down into the square, statues of saints stand along the front, and the Gothic spire of the bell tower was replaced by an open octagonal belfry under a lead cupola. ' +
     'As in most Italian cathedrals, the change is by addition: the Gothic front, the dome, the Romanesque flanks and the baptistery all remain, and much of the new work was inside, in marble altars and stucco.',
   materials: ['travertine', 'lead', 'marble statues', 'stucco'],

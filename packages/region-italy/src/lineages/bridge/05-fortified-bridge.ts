@@ -8,14 +8,14 @@ export const fortifiedBridge: BuildingDef = {
   date: 'c. 1100',
   summary:
     'With trade reviving, the broken arch is rebuilt in stone: in rubble and brick, rougher than the Roman work either side, but again a round arch. ' +
-    'Bridges were the gateways of a town and the places where tolls were taken, so a tower is raised over the roadway with a gate that can be shut and a fighting top of battlements and machicolations. ' +
+    'Bridges were the gateways of a town and the places where tolls were taken, so a tower is raised over the roadway with a gate that can be shut and a battlemented fighting top; the machicolations under it are the sort of improvement added over the next two or three centuries. ' +
     'At the bridgehead a small chapel lets travellers give thanks for a safe crossing and leave alms for the bridge’s upkeep. ' +
     'The Roman piers and arches are kept: medieval builders patched what they had rather than start again.',
   materials: ['Roman travertine and tufa', 'rubble and brick', 'clay roof tiles (coppi)'],
-  modelledOn: 'The Ponte Nomentano over the Aniene, Rome, a Roman bridge with a medieval fortified superstructure',
+  modelledOn: 'The Ponte Nomentano over the Aniene, Rome: a Roman bridge cut by Totila and rebuilt by Narses in the 550s, with towers and a fortified superstructure built up through the Middle Ages and largely remade under Pope Nicholas V (1447 to 1455)',
   lookFor: [
     { label: 'Gate tower', note: 'The road passes through an arch under the tower, which could be closed with a gate; tolls were collected here.', at: [3.7, 5.5, -7.65] },
-    { label: 'Machicolations', note: 'Openings in the floor of the projecting parapet, between stone brackets, so defenders could drop stones on attackers at the foot of the wall.', at: [1.2, 7.9, -5.5] },
+    { label: 'Machicolations', note: 'Openings in the floor of the projecting parapet, between stone brackets, so defenders could drop stones on attackers at the foot of the wall; in Italy these became common only from the 13th century.', at: [1.2, 7.9, -5.5] },
     { label: 'Rebuilt arch', note: 'The arch broken in the Gothic War, rebuilt in rubble with a ring of brick: a patch that still shows.', at: [3.3, 0.2, 5.15] },
     { label: 'Wayside chapel', note: 'A little chapel at the bridgehead where travellers prayed and gave money towards the bridge.', at: [5.0, 4.0, 14.4] },
   ],

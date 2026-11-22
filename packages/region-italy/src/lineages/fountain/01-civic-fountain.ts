@@ -39,11 +39,11 @@ export const civicFountain: BuildingDef = {
     'Two many-sided marble basins stand one above the other on a flight of steps, topped by a bronze bowl. The lower basin is carved with fifty relief panels, a stone encyclopaedia of the labours of the months, the liberal arts, scenes from the Bible, fables and the legends of the town’s founding; statuettes of saints and heroes stand round the upper basin. ' +
     'It was the work of the best sculptors of the day, and it said that this commune was rich, learned and well governed.',
   materials: ['white and pink marble', 'bronze', 'lead pipes'],
-  modelledOn: 'The Fontana Maggiore, Perugia (designed by Fra Bevignate, sculpture by Nicola and Giovanni Pisano, 1275 to 1278)',
+  modelledOn: 'The Fontana Maggiore, Perugia (designed by Fra Bevignate, sculpture by Nicola and Giovanni Pisano, the bronze bowl and nymphs cast by Rosso Padellaio, 1275 to 1278)',
   lookFor: [
     { label: 'Twenty-five-sided lower basin', note: 'Each of its sides carries two carved panels, divided by little twisted columns.', at: [0, B0 + HL + 0.5, RL + 0.3] },
     { label: 'Relief panels', note: 'Fifty carved scenes: the work of each month, the liberal arts, Adam and Eve, Romulus and Remus, Aesop’s fables.', at: [2.0, B0 + 0.8, RL * 0.95] },
-    { label: 'Upper basin with statuettes', note: 'A twelve-sided basin with a carved figure at every angle: saints, prophets and the patrons of the town.', at: [RU + 0.3, U0 + HU + 0.6, 0] },
+    { label: 'Upper basin with statuettes', note: 'A twelve-sided basin with carved figures round it (at Perugia twenty-four, at the angles and in the middle of each side): saints, prophets and the patrons of the town.', at: [RU + 0.3, U0 + HU + 0.6, 0] },
     { label: 'Bronze bowl and nymphs', note: 'At the top three bronze women stand back to back in a bronze basin, the water rising from the jar they hold up.', at: [0, U0 + HU + 3.2, 0.6] },
     { label: 'Steps', note: 'The fountain stands on a ring of steps, raising it above the slope of the square and inviting people to sit.', at: [0, STEP * 2, 5.4] },
   ],

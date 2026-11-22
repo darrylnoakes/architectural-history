@@ -10,7 +10,9 @@ import { P, car, lamp, smoothstep, tint, type Road, type Site, type SiteProp } f
  */
 
 export const RIVER_Z = 96;
-const RAIL_Z = 193;
+/** The two tracks run just behind the station building; these match the track the station plot lays. */
+const TRACKS = [192.5, 194.75];
+const RAIL_Z = 193.6;
 const CENTRE: [number, number] = [0, 20];
 /** A hill to the north-east with a keep on it. */
 const ROCCA = { x: 255, z: -235, r: 120, h: 30 };
@@ -53,6 +55,7 @@ const roads: Road[] = [
   { id: 'via-del-mercato', kind: 'lane', pts: [[-64, 0], [-64, 36]], since: -250 },
   // united Italy: a boulevard where the walls stood, a second bridge, an avenue to the station
   { id: 'viale', kind: 'main', pts: [[-150, 136], [128, 136]], since: 1864 },
+  { id: 'viale-west', kind: 'main', pts: [[-200, 136], [-150, 136]], since: 2002 },
   { id: 'new-south-road', kind: 'main', pts: [[128, 136], [131, 200], [112, 300], [84, 380], [70, 480]], since: 1864 },
   { id: 'boulevard-north', kind: 'main', pts: [[128, -92], [128, 79]], since: 1880 },
   { id: 'boulevard-south', kind: 'main', pts: [[128, 113], [128, 136]], since: 1880 },
@@ -192,12 +195,18 @@ const props: SiteProp[] = [
     id: 'railway',
     since: 1864,
     build(b) {
-      const len = 1500;
-      b.box(len, 0.5, 9, 0x8d8778, { at: [0, -0.1, RAIL_Z], jitter: false });
-      for (const dz of [-2.6, -1.15, 1.15, 2.6]) b.box(len, 0.14, 0.12, P.iron, { at: [0, 0.4, RAIL_Z + dz], jitter: false });
-      for (let x = -360; x <= 360; x += 3) {
-        b.box(0.26, 0.1, 2.4, P.oakDark, { at: [x, 0.38, RAIL_Z - 1.87], jitter: false });
-        b.box(0.26, 0.1, 2.4, P.oakDark, { at: [x, 0.38, RAIL_Z + 1.87], jitter: false });
+      // the station plot lays its own track: the line runs up to it from either side and matches it
+      for (const side of [-1, 1]) {
+        const x0 = side * 20;
+        const x1 = side * 760;
+        const mid = (x0 + x1) / 2;
+        const len = Math.abs(x1 - x0);
+        b.box(len, 0.12, 6.4, 0x8d8778, { at: [mid, -0.02, RAIL_Z], jitter: false });
+        for (const z of TRACKS) {
+          b.box(len, 0.18, 2.3, 0x8a8377, { at: [mid, 0, z], jitter: false });
+          for (const s of [-1, 1]) b.box(len, 0.15, 0.08, P.steel, { at: [mid, 0.28, z + s * 0.7175], jitter: false });
+          for (let x = 21.2; x <= 330; x += 2.4) b.box(0.24, 0.1, 2.2, 0x5a4c40, { at: [side * x, 0.18, z], jitter: false });
+        }
       }
     },
   },
@@ -208,10 +217,10 @@ const props: SiteProp[] = [
     build(b) {
       for (let x = -330; x <= 330; x += 44) {
         if (Math.abs(x) < 30) continue;
-        b.cyl(0.13, 7.2, P.steel, { at: [x, 0.3, RAIL_Z - 4.3], segs: 6 });
-        b.box(0.12, 0.12, 8.2, P.steel, { at: [x, 6.6, RAIL_Z - 0.4] });
+        b.cyl(0.13, 7.2, P.steel, { at: [x, 0, RAIL_Z - 3.6], segs: 6 });
+        b.box(0.12, 0.12, 6.4, P.steel, { at: [x, 6.6, RAIL_Z - 0.6] });
       }
-      for (const dz of [-1.87, 1.87]) b.box(700, 0.04, 0.04, P.iron, { at: [0, 6.1, RAIL_Z + dz], jitter: false });
+      for (const z of TRACKS) b.box(700, 0.04, 0.04, P.iron, { at: [0, 6.1, z], jitter: false });
     },
   },
   {

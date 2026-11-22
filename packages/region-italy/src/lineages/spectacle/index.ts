@@ -26,13 +26,13 @@ const lineage: Lineage = {
         year: 450,
         fate: 'ruin',
         note:
-          'Gladiator fights died out in the early fifth century and wild-beast hunts soon after, as Christian emperors frowned on them and towns ran out of money. ' +
+          'Gladiator fights died out in the early fifth century, as Christian emperors frowned on them and towns ran out of money; wild-beast hunts lingered in Rome into the sixth century, but in a provincial town the shows had stopped long before. ' +
           'The amphitheatre was shut, its seats and facing stripped for building stone and lime, and its vaults used as shelters, stores and stables.',
       },
       def: amphitheatre,
     },
     { from: 1000, def: arenaHouses },
-    // learned academy theatres (Vicenza 1585, Sabbioneta 1590, Parma 1618) gave way to public opera houses after 1637
+    // academy and court theatres (Vicenza 1585, Sabbioneta 1590, Parma 1618) gave way to public opera houses after 1637
     { from: 1585, builtUntil: 1640, def: academyTheatre },
     { from: 1778, def: operaHouse },
     // Stile Liberty was over by the early 1920s

@@ -29,10 +29,10 @@ export const earlyChristianBasilica: BuildingDef = {
     { label: 'Clerestory', note: 'The row of large windows high in the nave walls, above the aisle roofs, flooding the nave with light.', at: [NW + 0.2, 10.4, 2.3] },
     { label: 'Apse', note: 'The half-round end where the bishop sat among his clergy behind the altar.', at: [0, 6.0, Z1 - 5.3] },
     { label: 'Atrium', note: 'A forecourt ringed by colonnades, with a fountain (cantharus) in the middle for washing before entering.', at: [0, 1.2, 20.7] },
-    { label: 'Spolia', note: 'Columns taken from older buildings and reused; they do not match in colour or stone.', at: [-5.6, 3.0, 19.0] },
-    { label: 'Baptistery', note: 'An eight-sided building for baptism, apart from the church, entered only by the baptised once the rite was done.', at: [BAPT.x + 2.4, 5.0, BAPT.z + 2.4] },
+    { label: 'Spolia', note: 'Columns taken from older buildings and reused; here, as in many smaller churches, they do not match in colour or stone.', at: [-5.6, 3.0, 19.0] },
+    { label: 'Baptistery', note: 'An eight-sided building for baptism, apart from the church: converts were baptised here, usually at Easter, and then led into the church to take communion for the first time.', at: [BAPT.x + 2.4, 5.0, BAPT.z + 2.4] },
   ],
-  modelledOn: 'Santa Sabina, Rome (c. 422 to 432); the Lateran Baptistery, Rome, for the octagon',
+  modelledOn: 'Santa Sabina, Rome (c. 422 to 432), whose 24 reused columns are, unusually, a matching set; the Lateran Baptistery, Rome, for the octagon',
   influences: ['christian-basilica'],
   build(b) {
     // the body: nave and aisles as solid brick blocks on a low plinth

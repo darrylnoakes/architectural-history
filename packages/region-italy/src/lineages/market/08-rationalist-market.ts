@@ -65,9 +65,9 @@ export const rationalistMarket: BuildingDef = {
   date: 'c. 1936',
   summary:
     'In the 1930s the municipality moves the food trade off the street and into a hygienic covered market, part of a programme of public works the regime advertised as modern efficiency. ' +
-    'The hall is a single span of reinforced concrete: parabolic arches, the shape that carries its own weight most economically, with a thin shell between them. ' +
+    'The hall is a single span of reinforced concrete: parabolic arches, a shape that carries an evenly spread load in pure compression, with a thin shell between them. ' +
     'Light comes through walls of glass block and a strip of glazing along the crown, so the stalls inside need no windows. ' +
-    'Nothing is borrowed from history except the travertine on the clock tower, the material the state insisted on for its public face.',
+    'Nothing is borrowed from history except the travertine on the clock tower, the material the regime favoured for its public face.',
   materials: ['reinforced concrete', 'glass block', 'travertine cladding', 'steel'],
   lookFor: [
     { label: 'Parabolic arches', note: 'Concrete ribs shaped as parabolas carry the roof in one span, with no columns inside.', at: [6.4, 7.6, 7.6] },

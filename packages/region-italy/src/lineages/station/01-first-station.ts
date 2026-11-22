@@ -52,7 +52,7 @@ export const firstStation: BuildingDef = {
     'Its front is a sober neoclassical palace in stucco, with a central block, low wings and end pavilions, so that the newest of building types looks as dignified as any public building. ' +
     'Behind it the true novelty is out of sight from the street: a train shed of cast and wrought iron and glass, a technique learned from England and France, spanning the platform and tracks.',
   materials: ['brick walls finished in stucco', 'stone dressings', 'cast-iron columns', 'wrought-iron trusses', 'zinc and glass roof'],
-  modelledOn: 'Italian stations of the 1860s, such as the first stations of Pistoia and Arezzo; the iron shed after English and French models',
+  modelledOn: 'Provincial stations of the 1860s on the new lines through Tuscany, Umbria and Lazio; the iron shed after English and French models',
   influences: ['iron-and-glass'],
   lookFor: [
     { label: 'Neoclassical front', note: 'A central block, wings and end pavilions in stucco, with arched windows and a cornice: the station dressed as a palace.', at: [-10, 4.2, ZF + 0.3] },

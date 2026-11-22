@@ -60,12 +60,12 @@ export const silkMill: BuildingDef = {
   style: 'Renaissance',
   date: 'c. 1550',
   summary:
-    'In the sixteenth century silk overtook wool as the luxury trade, and the most advanced machine in Europe was the Bolognese silk-throwing mill. ' +
+    'In the sixteenth century silk was overtaking wool as the luxury trade, and the most advanced machine in Europe was the Bolognese silk-throwing mill. ' +
     'A waterwheel in the basement turned a great round wooden machine, several storeys high, whose turning inner cage drove hundreds of spindles at once, twisting raw silk filaments into strong thread and winding it onto reels. ' +
-    'One mill did the work of hundreds of hand spinners, and Bologna guarded the design as a state secret; when Thomas Lombe built England’s first silk mill at Derby in 1721 it was copied from machines his half-brother John had studied in Piedmont. ' +
+    'One mill did the work of hundreds of hand spinners, and Bologna guarded the design as a state secret; when Thomas Lombe built England’s first successful silk-throwing mill at Derby, finished about 1721, it was copied from machines his half-brother John had studied in Piedmont. ' +
     'The building itself is a plain, tall, plastered block with rows of windows, a portico on the street and a big coppi roof, here shown with one corner cut away to reveal the machine.',
   materials: ['brick', 'lime plaster', 'pietra serena', 'coppi roof tiles', 'oak and elm machinery'],
-  modelledOn: 'The Bolognese silk-throwing mill (filatoio alla bolognese), as shown in Vittorio Zonca’s book of machines (1607), simplified',
+  modelledOn: 'The water-powered circular silk-throwing mill (filatoio) perfected at Bologna; the best-known early picture of such a machine is in Vittorio Zonca’s Novo teatro di machine et edificii (Padua, 1607). Simplified',
   lookFor: [
     { label: 'Circular throwing machine', note: 'A turning wooden cage inside a fixed frame drives tier upon tier of spindles; seen here through the cut-away corner of the building.', at: [11.5, 7.6, -3.8] },
     { label: 'Spindles and reels', note: 'Each spindle twisted a thread of silk, which was drawn up and wound onto the reels (aspi) on the tier above.', at: [12.5, 3.6, -1.6] },
@@ -73,7 +73,7 @@ export const silkMill: BuildingDef = {
     { label: 'Street portico', note: 'An arcade along the front, as on the streets of Bologna, gave shelter to the door and the carts unloading raw silk.', at: [-4, 3.6, 3.6] },
     { label: 'Rows of windows', note: 'Many windows on every floor gave light for the workers mending broken threads, most of them women and children.', at: [-6, 9.4, 0.1] },
   ],
-  influences: ['renaissance-birth'],
+  influences: [],
   build(b) {
     const plaster = b.pick([P.intonacoCream, P.intonacoRose, tint(P.intonacoOchre, 0.08)]);
     const stone = P.pietraSerena;

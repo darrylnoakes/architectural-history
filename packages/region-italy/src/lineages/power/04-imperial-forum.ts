@@ -32,7 +32,7 @@ export const imperialForum: BuildingDef = {
     'A triumphal arch at the entrance and a gilded bronze horseman in the square honour the emperor. The town still elects its own magistrates, but the decisions that matter are made in Rome, and loyalty is shown in stone.',
   materials: ['marble', 'brick-faced concrete', 'travertine', 'gilded bronze', 'fired clay tiles'],
   lookFor: [
-    { label: 'Triumphal arch', note: 'A single archway framed by Corinthian half-columns, with relief panels and a tall attic carrying the dedication to the emperor.', at: [ARCH.x + 3.2, ARCH.h + 3.6, ARCH.z + ARCH.d / 2 + 0.3] },
+    { label: 'Triumphal arch', note: 'A single archway framed by half-columns with leafy capitals (Composite ones at Benevento), with relief panels and a tall attic carrying the dedication to the emperor.', at: [ARCH.x + 3.2, ARCH.h + 3.6, ARCH.z + ARCH.d / 2 + 0.3] },
     { label: 'Tribunal apse', note: 'The half-round end of the basilica, where the magistrates sat raised above the parties to a case.', at: [BAS.x0 - BAS.apseR - 0.4, 6, BAS_ZC] },
     { label: 'Equestrian statue', note: 'A gilded bronze rider on a marble pedestal, the emperor shown as the town’s protector.', at: [1.2, 6.2, 3] },
     { label: 'Corinthian colonnade', note: 'Marble columns with leafy capitals carry the porticoes round the square, a Greek order the Romans made their own.', at: [-12.6, 4.6, 8] },

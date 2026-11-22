@@ -9,15 +9,15 @@ export const renaissancePalazzo: BuildingDef = {
   summary:
     'A banking family rebuilds its house as a single cube of stone round a square courtyard, with a symmetrical front of evenly spaced windows. ' +
     'The wall is graded storey by storey, from rough boulder-like blocks at street level to flat, drafted blocks on the main floor and smooth ashlar at the top, and the whole is crowned by a great cornice in the manner of an ancient entablature. ' +
-    'The pointed Gothic windows and battlements have gone: round arches, two-light windows and a courtyard arcaded on slender Corinthian columns, as in Brunelleschi’s Foundling Hospital, follow the buildings of ancient Rome as Florentines understood them.',
+    'The pointed Gothic windows and battlements have gone: round arches, two-light windows and a courtyard arcaded on slender classical columns, as in Brunelleschi’s Foundling Hospital, follow the buildings of ancient Rome as Florentines understood them.',
   materials: ['pietraforte (rusticated and ashlar)', 'pietra serena columns', 'plastered courtyard walls', 'coppi roof tiles', 'wrought iron'],
-  modelledOn: 'Palazzo Medici, Florence (Michelozzo, from 1444) and Palazzo Strozzi, Florence (from 1489)',
+  modelledOn: 'Palazzo Medici, Florence (Michelozzo, from 1444) and Palazzo Strozzi, Florence (Benedetto da Maiano and Il Cronaca, from 1489)',
   influences: ['renaissance-birth'],
   lookFor: [
     { label: 'Graded rustication', note: 'Rough, bulging blocks (bugnato rustico) on the ground floor, flat drafted blocks on the main floor, smooth ashlar on the top floor: the wall grows lighter as it rises.', at: [-8.5, 3.0, 12.5] },
-    { label: 'Round-arched two-light windows', note: 'Each window is a round arch of long radiating stones, divided by a colonnette into two round-headed lights with a roundel above.', at: [3, 8.4, 12.4] },
+    { label: 'Round-arched two-light windows', note: 'Each window is a round arch of long radiating stones, divided by a colonnette into two round-headed lights, often with a roundel above.', at: [3, 8.4, 12.4] },
     { label: 'Crowning cornice (cornicione)', note: 'A huge cornice on brackets, sized to the whole height of the building as if the palace were one classical column.', at: [-6, 17.2, 13.6] },
-    { label: 'Arcaded courtyard (cortile)', note: 'Round arches springing straight from the capitals of Corinthian columns, with the upper floors resting on them.', at: [-5.0, 3.5, 0] },
+    { label: 'Arcaded courtyard (cortile)', note: 'Round arches springing straight from the capitals of classical columns, with the upper floors resting on them.', at: [-5.0, 3.5, 0] },
     { label: 'Street bench (panca di via)', note: 'A stone bench along the foot of the wall where clients and dependants waited to be received.', at: [6.5, 0.6, 12.5] },
   ],
   build(b) {

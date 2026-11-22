@@ -8,10 +8,10 @@ export const baileyBridge: BuildingDef = {
   date: '1944',
   summary:
     'In the summer of 1944 the retreating German army blew up the town’s bridges to slow the Allied advance; in Florence, on the night of 3 to 4 August, every bridge over the Arno was destroyed except the Ponte Vecchio. ' +
-    'Allied engineers put the road back across within days using a Bailey bridge, a British invention of 1940 to 1941 by Donald Bailey: a kit of steel panels, each light enough for six soldiers to carry, pinned together into trusses with no welding or special tools. ' +
+    'Allied engineers soon put the road back across using a Bailey bridge, a British invention of 1940 to 1941 by Donald Bailey: a kit of steel panels, each light enough for six soldiers to carry, pinned together into trusses with no welding or special tools. ' +
     'It rests on timber cribs built up on the broken stumps of the Renaissance piers, while the rest of the old bridge lies in the river. It carries one lane of traffic over a deck of timber planks.',
   materials: ['steel panels', 'steel pins', 'timber decking', 'timber cribs', 'stones of the old bridge'],
-  modelledOn: 'The Bailey bridges built across the Arno at Florence in 1944',
+  modelledOn: 'The Bailey bridges built across the Arno at Florence in 1944, one of them carried on the surviving piers of the Ponte Santa Trinita',
   lookFor: [
     { label: 'Bailey panel', note: 'Standard welded steel panels about 3 m long and 1.5 m high, pinned end to end to make the side trusses.', at: [2.3, 0.5, -6.0] },
     { label: 'Panel pins', note: 'Each panel is joined to the next by steel pins driven through lugs at the corners: no rivets, no welding.', at: [2.1, -0.25, 0] },

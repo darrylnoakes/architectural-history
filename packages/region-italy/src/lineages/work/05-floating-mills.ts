@@ -78,7 +78,7 @@ export const floatingMills: BuildingDef = {
   date: 'c. 540',
   summary:
     'In 537 the Goths besieging Rome cut the aqueducts that drove the city’s watermills, and the Byzantine general Belisarius, Procopius tells us, moored pairs of boats in the Tiber, hung waterwheels between them and set millstones on board, so the current ground the corn. ' +
-    'Mills like these, which rose and fell with the river and could be moved out of danger, became a common sight on Italian rivers: they worked on the Tiber in Rome until the 1870s, and on the Po into the twentieth century. ' +
+    'Mills like these, which rose and fell with the river and could be moved out of danger, became a common sight on Italian rivers: they worked on the Tiber in Rome until about the 1870s, and on the Po into the twentieth century. ' +
     'On the bank the great warehouse is roofless and half fallen: the grain trade it served has collapsed with the western empire, and its walls are a quarry. ' +
     'A few rooms have been patched up with salvaged tiles as the millers’ store.',
   materials: ['oak hulls', 'timber', 'salvaged Roman brick and tile', 'millstones'],

@@ -7,18 +7,18 @@ export const forumShops: BuildingDef = {
   style: 'Roman Republican',
   date: 'c. 200 to 50 BC',
   summary:
-    'As a self-governing Roman town the place gets a forum, and along it the council builds rows of one-room shops, tabernae, let to traders. ' +
+    'Drawn into Rome’s orbit, the town lays out a forum, and along it the council builds rows of one-room shops, tabernae, let to traders. ' +
     'Each shop opens its whole front by day and is shut at night with boards slid into a grooved threshold; a small window above lights a timber loft where the shopkeeper slept or stored stock. ' +
     'A portico of stuccoed tufa columns keeps sun and rain off the buyers, and in front stands the mensa ponderaria, a stone table with cavities of official size against which any trader’s measures could be checked.',
   materials: ['tufa blocks', 'white stucco', 'timber lintels and shutters', 'clay tegulae and imbrices', 'travertine'],
   lookFor: [
     { label: 'Mensa ponderaria', note: 'The table of standard measures: each hollow held an official quantity of grain, oil or wine, with a hole beneath to let it out.', at: [0, 1.4, 9.0] },
     { label: 'Taberna', note: 'A one-room shop with a wide opening, a timber lintel and a stone threshold grooved for the shutter boards.', at: [-2.0, 2.2, 4.4] },
-    { label: 'Loft window', note: 'The small window over each shop lit the pergula, a timber mezzanine where the family often lived.', at: [6.0, 3.6, 4.4] },
+    { label: 'Loft window', note: 'The small window over each shop lit a timber mezzanine (usually called the pergula) where the family often lived.', at: [6.0, 3.6, 4.4] },
     { label: 'Tuscan portico', note: 'Plain columns of local tufa coated in white stucco, with a timber beam over them: the Italian order the Romans had from the Etruscans.', at: [-8.6, 3.6, 7.4] },
     { label: 'Painted notices', note: 'Whitewashed panels on the end walls carried painted election slogans and announcements of games, as survive at Pompeii.', at: [-10.3, 2.4, 0] },
   ],
-  influences: ['etruscan-legacy', 'hellenistic-luxury'],
+  influences: ['etruscan-legacy'],
   build(b) {
     const BW = 20.4; // shop block
     const BD = 8.4;

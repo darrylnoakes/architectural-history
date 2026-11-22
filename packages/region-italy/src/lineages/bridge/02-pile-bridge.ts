@@ -8,7 +8,7 @@ export const pileBridge: BuildingDef = {
   date: 'c. 520 BC',
   summary:
     'The first bridge stands on rows of oak piles driven into the river bed, each row capped by a beam and braced against the current, with heavy timbers and a plank road laid across them. ' +
-    'Rome’s first bridge, the Pons Sublicius (from sublicae, piles), was of this kind and by sacred law was built and repaired without any iron, held together only by joints and wooden pegs, so that it could be taken apart quickly if an enemy came. ' +
+    'Rome’s first bridge, the Pons Sublicius (from sublicae, piles), was of this kind and by sacred law was built and repaired without any iron, held together only by joints and wooden pegs; one ancient explanation was that it could then be taken apart quickly if an enemy came. ' +
     'Its upkeep was a religious duty, and the priests who kept it, the pontifices, may take their name from the bridge (pons). ' +
     'Timber in water rots and floods tear it away, so the bridge is renewed again and again.',
   materials: ['oak piles', 'oak beams', 'oak planks', 'wooden pegs'],
@@ -20,7 +20,6 @@ export const pileBridge: BuildingDef = {
     { label: 'Plank road', note: 'Planks laid across the stringers make a level road wide enough for a cart.', at: [0, 1.0, 4.0] },
     { label: 'Shrine at the bridgehead', note: 'A small altar for the gods of the river: crossing water was a sacred matter, and the bridge was in the keeping of priests.', at: [5.0, 1.3, 15.2] },
   ],
-  influences: ['etruscan-legacy'],
   build(b) {
     b.noCollide();
     const crown = 0.95;

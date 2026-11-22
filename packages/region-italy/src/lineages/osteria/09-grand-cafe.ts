@@ -43,7 +43,7 @@ export const grandCafe: BuildingDef = {
   lookFor: [
     { label: 'Doric porch', note: 'Greek Doric columns without bases carry a frieze of triglyphs, the order neoclassical architects copied from temples such as those at Paestum.', at: [PCX, 3.8, PZ + 0.4] },
     { label: 'Stone lions', note: 'Couchant lions in the Egyptian manner guard the porch steps. Those at the Pedrocchi copy the ancient Egyptian lions at the foot of the Capitol steps in Rome.', at: [-PCX - PW / 2 - 0.1, 2.2, PZ + 1.0] },
-    { label: 'No doors', note: 'The porches open straight into the café rooms, which at the Pedrocchi never closed: day and night, there was no need of a door.', at: [-PCX, 1.8, ZF + 0.2] },
+    { label: 'No doors', note: 'The porches open straight into the café rooms, which at the Pedrocchi stayed open day and night until 1916, so there was no need of a door.', at: [-PCX, 1.8, ZF + 0.2] },
     { label: 'Corinthian loggia', note: 'The upper floor of reception and ballrooms sits behind a loggia of Corinthian columns: the richer order for the grander rooms.', at: [0, G + 2.8, ZF + 0.4] },
     { label: 'Rusticated base', note: 'The ground floor stucco is cut into broad smooth bands, making the base look heavier and stronger than the floor above.', at: [-8.5, 2.0, ZF + 0.2] },
   ],

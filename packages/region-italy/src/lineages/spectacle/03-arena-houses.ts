@@ -63,7 +63,7 @@ export const arenaHouses: BuildingDef = {
     },
     {
       label: 'Garden in the arena',
-      note: 'The arena is a shared yard of vegetable plots, fruit trees and a well. In Lucca it was cleared as a public piazza only in 1830.',
+      note: 'The arena is a shared yard of vegetable plots, fruit trees and a well. In Lucca it filled up with small buildings and was cleared as a public piazza only in 1830.',
       at: [-3.5, 1.2, 0.5],
     },
     {

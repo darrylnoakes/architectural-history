@@ -23,7 +23,7 @@ export const casaDelFascio: BuildingDef = {
   summary:
     'Under Fascism elected councils are abolished: from 1926 the old palace (old) is run by a podestà appointed from Rome, and real power in the town lies with the party. ' +
     'Its local headquarters goes up on the main square beside the town hall (new): a box of white marble, its front a deep grid of frame and void on one side and a blank wall on the other, built of reinforced concrete and plate glass. ' +
-    'Rationalist architects argued that this was a modern classicism, as ordered as a Roman building; the party wanted a “house of glass” where the people could see in. The row of glass doors at the bottom was meant to open together so the crowd in the square could pour into the hall.',
+    'Rationalist architects argued that this was a modern classicism, as ordered as a Roman building; Mussolini is said to have called Fascism “a house of glass” that anyone could look into, and Terragni took the phrase as his brief. The row of glass doors at the bottom was meant to open together so the crowd in the square could pour into the hall.',
   materials: ['reinforced concrete', 'white marble cladding', 'plate glass', 'glass blocks'],
   lookFor: [
     { label: 'Grid of frame and void', note: 'Deep marble-faced beams and columns stand out in front of the glazing, a grid you can read as structure and as shadow.', at: [CF.x0 + 3.2, 10, CF.z1 + 0.4] },

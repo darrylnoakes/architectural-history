@@ -9,7 +9,7 @@ export const shopBridge: BuildingDef = {
   summary:
     'After a great flood carries away the old bridge (in Florence the flood of November 1333 destroyed the Ponte Vecchio), the commune rebuilds it on three wide, low segmental arches: each is only a slice of a circle, so it spans far more than a Roman half-circle of the same height and leaves fewer, thinner piers to block the river. ' +
     'To pay for it the commune builds rows of shops along both sides of the roadway and lets them out, leaving an open gap in the middle where people can look at the river. ' +
-    'The design of the Ponte Vecchio is usually credited to Neri di Fioravanti, though Vasari named the painter Taddeo Gaddi. Over the centuries the shopkeepers hung back rooms out over the water on timber brackets.',
+    'The design of the Ponte Vecchio is usually credited to Neri di Fioravante, though Vasari named the painter Taddeo Gaddi. From the 16th and 17th centuries the shopkeepers hung back rooms out over the water on timber brackets.',
   materials: ['pietra forte', 'rubble and brick', 'plaster', 'clay roof tiles (coppi)', 'chestnut timber'],
   modelledOn: 'The Ponte Vecchio, Florence (1345)',
   lookFor: [

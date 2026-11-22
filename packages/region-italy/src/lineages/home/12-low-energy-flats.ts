@@ -14,9 +14,9 @@ export const lowEnergyFlats: BuildingDef = {
   style: 'Contemporary',
   date: 'c. 2016',
   summary:
-    'A small block of flats built to the energy rules of the 2010s, which require new buildings to use almost no energy for heating ' +
-    'and cooling. The structure is of cross-laminated timber panels, light, quick to put up, good in earthquakes and storing carbon instead ' +
-    'of emitting it, as Italy has built since the Via Cenni flats in Milan. A thick coat of insulation under the render wraps the walls; deep ' +
+    'A small block of flats built to the near-zero-energy standard that European rules were making compulsory for all new buildings by 2021: ' +
+    'it uses almost no energy for heating and cooling. The structure is of cross-laminated timber panels, light, quick to put up, good in earthquakes and storing carbon instead ' +
+    'of emitting it, as in the nine-storey social housing in Via Cenni, Milan (2013), the tallest timber housing in Italy when it was built. A thick coat of insulation under the render wraps the walls; deep ' +
     'loggias with sliding timber screens shade the glass in summer while letting the low winter sun in; and the roof is covered with ' +
     'photovoltaic panels that run the heat pumps.',
   materials: ['cross-laminated timber', 'external insulation and render', 'larch boarding', 'triple glazing', 'photovoltaic panels'],

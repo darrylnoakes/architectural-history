@@ -46,10 +46,13 @@ export const plots: Plot[] = [
   { id: 'new-bridge', lineage: 'bridge', x: 128, z: 96, rotY: S, seed: 21, since: 1880, skip: ['bailey-bridge', 'rebuilt-bridge'], keep: 'concrete-bridge' },
   { id: 'footbridge', lineage: 'bridge', x: -36, z: 96, rotY: S, seed: 22, since: 2008 },
 
-  // --- spectacle: the amphitheatre that becomes houses, the theatre, and the sports ground
+  // --- spectacle: the amphitheatre that becomes houses, the theatre, and the halls of the twentieth century
   { id: 'arena', lineage: 'spectacle', x: -112, z: 24, rotY: N, seed: 23, hero: true, keep: 'arena-houses' },
   { id: 'theatre', lineage: 'spectacle', x: 101, z: -23.5, rotY: S, seed: 24, since: 1585, keep: 'opera-house' },
-  { id: 'stadium', lineage: 'spectacle', x: -128, z: 159.5, rotY: N, seed: 25, since: 1911 },
+  { id: 'cinema', lineage: 'spectacle', x: 151.5, z: -50, rotY: W, seed: 25, since: 1911, keep: 'liberty-cinema' },
+  { id: 'stadium', lineage: 'spectacle', x: -128, z: 159.5, rotY: N, seed: 37, since: 1932, keep: 'stadium' },
+  { id: 'sports-hall', lineage: 'spectacle', x: 152, z: 36, rotY: W, seed: 38, since: 1957, keep: 'sports-hall' },
+  { id: 'auditorium', lineage: 'spectacle', x: -172, z: 159.5, rotY: N, seed: 39, since: 2002 },
 
   // --- food, drink and a bed
   { id: 'osteria', lineage: 'osteria', x: 16.5, z: 37, rotY: W, seed: 26, hero: true, skip: ['posting-inn', 'grand-cafe', 'grand-hotel', 'bar-and-pensione'] },
@@ -71,7 +74,8 @@ export const plots: Plot[] = [
   { id: 'palazzo-3', lineage: 'palazzo', x: 66, z: 18.5, rotY: N, seed: 43, since: 1320, lag: 0.45, keep: 'renaissance-palazzo' },
   { id: 'villa', lineage: 'palazzo', x: -18.5, z: -160, rotY: E, seed: 44, since: 1790, keep: 'neoclassical-villa' },
   { id: 'villino', lineage: 'palazzo', x: -40, z: 154.5, rotY: N, seed: 45, since: 1905, keep: 'liberty-villa' },
-  { id: 'villa-moderna', lineage: 'palazzo', x: 18.5, z: -160, rotY: W, seed: 46, since: 1936 },
+  { id: 'villa-moderna', lineage: 'palazzo', x: 18.5, z: -160, rotY: W, seed: 46, since: 1936, keep: 'rationalist-villa' },
+  { id: 'villa-oggi', lineage: 'palazzo', x: 18.5, z: -196, rotY: W, seed: 47, since: 2008 },
 
   // --- the family home: rows along the cardo and the decumanus, each stopping where its luck ran out
   { id: 'home-1', lineage: 'home', x: -14.5, z: 27, rotY: E, seed: 51, hero: true, keep: 'renaissance-house' },
@@ -105,6 +109,6 @@ export const plots: Plot[] = [
   { id: 'ringhiera', lineage: 'tenement', x: 40, z: 122.5, rotY: S, seed: 83, since: 1880, keep: 'casa-di-ringhiera' },
   { id: 'case-popolari', lineage: 'tenement', x: 70, z: 122.5, rotY: S, seed: 84, since: 1926, keep: 'case-popolari' },
   { id: 'ina-casa', lineage: 'tenement', x: 100, z: 122.5, rotY: S, seed: 85, since: 1954, keep: 'ina-casa' },
-  { id: 'megastructure', lineage: 'tenement', x: 176, z: -13.5, rotY: S, seed: 86, since: 1978, keep: 'megastructure' },
-  { id: 'social-housing', lineage: 'tenement', x: 176, z: 13.5, rotY: N, seed: 87, since: 2018 },
+  { id: 'megastructure', lineage: 'tenement', x: 190, z: -13.5, rotY: S, seed: 86, since: 1978, keep: 'megastructure' },
+  { id: 'social-housing', lineage: 'tenement', x: 190, z: 13.5, rotY: N, seed: 87, since: 2018 },
 ];

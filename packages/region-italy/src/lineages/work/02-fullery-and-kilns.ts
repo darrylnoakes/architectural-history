@@ -40,11 +40,11 @@ export const fulleryAndKilns: BuildingDef = {
   lookFor: [
     { label: 'Treading stalls (saltus fullonici)', note: 'Low walled tubs where workers stood and trampled the cloth in water, urine and fuller’s earth.', at: [-11.5, 1.0, -3.6] },
     { label: 'Black-gloss pottery kiln', note: 'A round firing chamber over a furnace, fed through a stoke tunnel (praefurnium) at ground level.', at: [5.0, 2.4, -6.0] },
-    { label: 'Lever press (torcular)', note: 'A long beam held at its heel between two uprights and drawn down at its tip by a rope and capstan squeezes baskets of olive pulp.', at: [12.5, 2.4, 0.2] },
+    { label: 'Lever press (torcular)', note: 'A long beam held at its heel between two uprights and drawn down at its tip by a rope and windlass (sucula) squeezes baskets of olive pulp.', at: [12.5, 2.4, 0.2] },
     { label: 'Olive crusher (trapetum)', note: 'Two half-round millstones turned in a stone basin crush the olives without breaking the bitter stones.', at: [8.0, 1.6, -0.8] },
     { label: 'Squared tufa walls (opus quadratum)', note: 'Soft volcanic tufa cut into blocks and laid without mortar, the building stone of Republican Latium and Etruria.', at: [-8, 3.0, 10.0] },
   ],
-  influences: ['etruscan-legacy'],
+  influences: [],
   build(b) {
     const tufa = b.pick([P.tufa, tint(P.tufa, 0.04), P.pietraForte]);
     const plaster = b.pick([P.plaster, P.intonacoCream, P.daub]);

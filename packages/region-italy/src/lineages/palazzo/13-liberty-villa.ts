@@ -23,7 +23,7 @@ export const libertyVilla: BuildingDef = {
   style: 'Stile Liberty (Italian Art Nouveau)',
   date: 'c. 1905',
   summary:
-    'In the new suburbs of the united kingdom of Italy, a prosperous family builds a villino in the Stile Liberty, Italy’s version of Art Nouveau. ' +
+    'In the new suburbs of a town in the Kingdom of Italy, a prosperous family builds a villino in the Stile Liberty, Italy’s version of Art Nouveau. ' +
     'Symmetry is abandoned: the house is a picturesque cluster of volumes with a corner turret, deep eaves on carved brackets and windows of different shapes. ' +
     'Ornament is taken from nature, not from the classical orders: a frieze of glazed tiles painted with flowers runs under the eaves, and wrought iron, freed from straight lines, curls into whiplash curves on balconies, railings and a glass canopy over the door.',
   materials: ['stuccoed brick', 'glazed ceramic tiles', 'wrought iron', 'glass', 'clay tiles'],

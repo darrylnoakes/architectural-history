@@ -17,7 +17,7 @@ export const bishopsPalace: BuildingDef = {
   style: 'Romanesque',
   date: 'c. 1000',
   summary:
-    'Charlemagne ended the Lombard kingdom in 774, and in the tenth century the emperors, short of loyal men, granted the powers of a count over many Italian towns to their bishops. ' +
+    'Charlemagne ended the Lombard kingdom in 774, and in the tenth century the emperors, short of loyal men, granted the powers of a count over many Italian towns to their bishops, above all in the north, though in Tuscany too bishops such as those of Volterra and Arezzo held wide lordly rights. ' +
     'The bishop-count governs from a fortified palace: a hall on the upper floor over a vaulted undercroft for stores, reached by an outside stair, a tall square tower, and a battlemented wall round the whole. ' +
     'It is built of rough-coursed stone, with big squared blocks robbed from Roman ruins at the corners and base, small round-arched windows, and a low roof of coppi. Church and government are now in the same hands.',
   materials: ['rubble stone', 'reused Roman blocks', 'clay roof tiles (coppi)', 'timber'],

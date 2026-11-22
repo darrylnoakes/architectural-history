@@ -7,13 +7,13 @@ export const gardenApartment: BuildingDef = {
   style: 'Roman Imperial',
   date: 'early second century AD',
   summary:
-    'By the second century a comfortable family in a busy town rented a flat rather than owning a house. Investors replaced the old ' +
+    'By the second century many comfortable families in Rome, Ostia and other busy towns rented a flat rather than owning a house. Investors replaced old ' +
     'atrium houses with blocks of brick-faced concrete three or four storeys high, which would not burn like timber and could rise as ' +
     'high as the law allowed. The best flats, like those of the Garden Houses at Ostia, have a long living room lit by a row of large ' +
     'windows, with the other rooms opening off it, and look over a shared garden behind; shops line the street, and a balcony on stone ' +
     'brackets runs along the first floor.',
   materials: ['concrete faced with brick', 'travertine brackets and sills', 'terracotta roof tiles', 'timber shutters and glazed windows'],
-  modelledOn: 'The Garden Houses (Case a Giardino) and the House of Diana, Ostia',
+  modelledOn: 'The Garden Houses (Case a Giardino, c. AD 125 to 130) and the House of Diana (mid second century), Ostia',
   influences: ['roman-concrete'],
   lookFor: [
     {

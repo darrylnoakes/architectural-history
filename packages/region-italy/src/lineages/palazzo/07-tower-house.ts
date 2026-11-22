@@ -8,12 +8,12 @@ export const towerHouse: BuildingDef = {
   date: 'c. 1150',
   summary:
     'In the age of the communes the great families compete by building upward. ' +
-    'Beside its house each clan raises a tall square tower of stone, with walls metres thick at the base, few and small openings, and a door well above the street reached by a ladder or timber stair: a refuge in the feuds between families and a sign of rank on the skyline. ' +
+    'Beside its house each clan raises a tall square tower of stone, with walls well over a metre thick at the base, few and small openings, and a door well above the street reached by a ladder or timber stair: a refuge in the feuds between families and a sign of rank on the skyline. ' +
     'Rows of holes left by the builders’ scaffolding (putlog holes) also take the beams of timber balconies and walkways that could link one tower to the next. ' +
     'The house at its foot has a shop arch on the street and upper floors jettied out on timber brackets.',
   materials: ['squared stone (pietraforte or travertine)', 'rubble core', 'timber balconies and jetties', 'coppi roof tiles'],
   modelledOn: 'The towers of San Gimignano and Bologna',
-  influences: ['islamic-mediterranean'],
+  influences: [],
   lookFor: [
     { label: 'Family tower', note: 'A tall square tower with very thick walls and tiny openings, more refuge and status symbol than home.', at: [-6.5, 22.0, 6.4] },
     { label: 'Putlog holes', note: 'Rows of square holes left by the scaffolding; beams slotted into them carried balconies and walkways.', at: [-6.5, 12.2, 6.3] },
