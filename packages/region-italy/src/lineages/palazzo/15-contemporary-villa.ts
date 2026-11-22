@@ -46,7 +46,8 @@ export const contemporaryVilla: BuildingDef = {
       b.box(10, 0.4, 0.6, corten, { at: [0, 6.35, 0.3] });
     });
     onFace(b, '+x', [8.0, 0, -2.6], () => b.box(4.0, 1.6, 0.08, P.glassDark, { at: [0, 4.5, 0.04], mat: 'glass' }));
-    b.box(10.2, 0.2, 7.7, P.concreteDark, { at: [3.0, 6.75, -2.6] });
+    b.box(10.2, 0.12, 7.7, corten, { at: [3.0, 6.75, -2.6] });
+    b.box(9.6, 0.15, 7.1, P.grass, { at: [3.0, 6.8, -2.6] });
     // a slim steel column under the cantilever tip
     b.box(0.15, 3.75, 0.15, frame, { at: [7.6, 0, 0.8] });
     // ---- terrace and pool
@@ -57,7 +58,6 @@ export const contemporaryVilla: BuildingDef = {
     // dry-stone terrace walls retaining the slope at the sides
     b.sym((s) => b.box(1.8, 2.6, 0.5, stone, { at: [s * 10.6, 0, 1.8] }));
     b.box(0.5, 2.2, 6, stone, { at: [-10.6, 0, -1.2] });
-    for (let i = 0; i < 6; i++) b.box(2.6, 0.06, 0.06, frame, { at: [7.5 + (i % 2) * 0.1, 0.45 + i * 0.16, 8.05] });
     // olives on the slope, a cypress by the drive
     for (const [x, z] of [[-8.0, -9.0], [-3.0, -10.5], [2.5, -10.0], [8.5, -9.5]]) {
       b.tree(4.5, { kind: 'olive', at: [x, Math.max(0, Math.min(4.4, (4.4 * (-z - 0.8)) / 12)), z] });

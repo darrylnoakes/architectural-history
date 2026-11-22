@@ -47,10 +47,10 @@ export const imperialDomus: BuildingDef = {
       pediment(b, 0, 3.7, 3.4, 0.8, 'tri', brick, 0.3);
       win(b, 0, 4.7, 1.1, 1.6, trav, { border: 0.12 });
       // the balcony on travertine corbels
-      for (let i = 0; i < 12; i++) b.box(0.3, 0.35, 1.0, trav, { at: [-10.5 + i * 1.9, 3.9, 0.5] });
-      b.box(21.6, 0.15, 1.1, P.oak, { at: [0, 4.25, 0.55] });
-      b.box(21.6, 0.1, 0.1, P.oak, { at: [0, 5.25, 1.05] });
-      for (let i = 0; i < 23; i++) b.box(0.07, 1.0, 0.07, P.oak, { at: [-10.8 + i * 0.98, 4.3, 1.05] });
+      for (let i = 0; i < 12; i++) b.box(0.3, 0.35, 0.9, trav, { at: [-10.5 + i * 1.9, 3.9, 0.45] });
+      b.box(21.6, 0.15, 0.95, P.oak, { at: [0, 4.25, 0.48] });
+      b.box(21.6, 0.1, 0.1, P.oak, { at: [0, 5.25, 0.9] });
+      for (let i = 0; i < 23; i++) b.box(0.07, 1.0, 0.07, P.oak, { at: [-10.8 + i * 0.98, 4.3, 0.9] });
       b.box(22, 0.25, 0.25, trav, { at: [0, 3.6, 0.12] });
     });
 

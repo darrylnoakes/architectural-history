@@ -95,7 +95,7 @@ export const baroquePalazzo: BuildingDef = {
     });
 
     // ---- the curved centre: three bays swelling forward on an arc
-    const sag = 1.2;
+    const sag = 0.8;
     const chord = 6.9;
     const Rb = (chord * chord) / 4 / (2 * sag) + sag / 2;
     const zc = zf + sag - Rb;

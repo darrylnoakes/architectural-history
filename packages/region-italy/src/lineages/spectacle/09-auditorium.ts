@@ -15,8 +15,8 @@ interface Hall {
 }
 
 const HALLS: Hall[] = [
-  { dir: Math.PI, dist: 16.9, L: 16, W: 12.5, H: 8.5 },
-  { dir: Math.PI * 1.37, dist: 15.0, L: 13.5, W: 10, H: 7.0 },
+  { dir: Math.PI, dist: 16.3, L: 16, W: 12.5, H: 8.5 },
+  { dir: Math.PI * 1.37, dist: 13.8, L: 13.5, W: 10, H: 7.0 },
   { dir: Math.PI * 0.63, dist: 14.0, L: 11.5, W: 8.5, H: 6.0 },
 ];
 
@@ -178,7 +178,7 @@ export const auditorium: BuildingDef = {
     for (const h of HALLS) hall(b, h, lead, brick);
 
     // umbrella pines of the park
-    for (const [x, z, s] of [[-15.5, 14.5, 8], [15.5, 14.0, 7.5], [-17, -14.5, 7], [16.2, -14.0, 8]]) b.tree(s, { at: [x, 0, z], kind: 'pine' });
+    for (const [x, z, s] of [[-15.5, 14.5, 8], [15.5, 14.0, 7.5], [-15.8, -14.6, 7], [16.2, -14.0, 8]]) b.tree(s, { at: [x, 0, z], kind: 'pine' });
 
     // ------------------------------------------------ walk collisions: the halls and the foyer ring
     for (const h of HALLS) {

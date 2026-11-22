@@ -97,11 +97,11 @@ export const neoclassicalVilla: BuildingDef = {
     b.dome(1.8, P.lead, { at: [7.5, 3.5, -9.3], segs: 10, squash: 0.55 });
     b.collider(3.8, 3.8, { at: [7.5, 0, -9.3] });
     // clumps of trees
-    b.tree(10, { kind: 'pine', at: [-8.5, 0, -10.5] });
-    b.tree(9, { kind: 'pine', at: [-9.6, 0, 3.5] });
+    b.tree(7.5, { kind: 'pine', at: [-7.5, 0, -8.8] });
+    b.tree(7.5, { kind: 'pine', at: [-8.4, 0, 3.5] });
     for (const [x, z] of [[10.5, -5.5], [10.5, -3.5], [-10.8, 10.5], [10.6, 10.6]]) b.tree(7, { kind: 'cypress', at: [x, 0, z] });
     b.tree(6, { kind: 'round', at: [-1.0, 0, -10.8], color: P.leafDark });
-    b.tree(5, { kind: 'olive', at: [4.5, 0, -11.2] });
+    b.tree(5, { kind: 'olive', at: [4.0, 0, -10.0] });
     for (const [x, z] of [[-6.5, 9.5], [6.6, 9.6], [-0.5, -5.6]]) b.blob(0.8, P.hedge, { at: [x, 0.5, z], stretch: [1.2, 0.8, 1] });
     // gate piers on the road
     b.sym((s) => {

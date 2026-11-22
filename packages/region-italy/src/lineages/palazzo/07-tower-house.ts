@@ -67,8 +67,8 @@ export const towerHouse: BuildingDef = {
     const hx = 3.6;
     const hw = 14.6;
     const G = 3.6;
-    block(b, hw, G, 8, stone, hx, 8);
-    onFace(b, '+z', [hx, 0, 12], () => {
+    block(b, hw, G, 7.6, stone, hx, 7.8);
+    onFace(b, '+z', [hx, 0, 11.6], () => {
       b.archWall(4.0, G, 0.3, stone, { at: [-3.0, 0, 0.15], openings: 1, openW: 3.2, openH: 3.2, shape: 'round' });
       b.panel(3.2, 3.2, 0x2a2420, { at: [-3.0, 0, 0], shape: 'round', depth: 0.03 });
       b.box(3.2, 0.9, 0.5, wood, { at: [-3.0, 0, 0.25] });
@@ -78,19 +78,19 @@ export const towerHouse: BuildingDef = {
     // brackets and the jettied upper floors
     for (let i = 0; i < 8; i++) {
       const x = hx - hw / 2 + 0.6 + i * ((hw - 1.2) / 7);
-      b.beam([x, G - 0.8, 12.0], [x, G, 12.9], 0.18, 0.18, wood);
-      b.box(0.2, 0.2, 1.2, wood, { at: [x, G - 0.05, 12.45] });
+      b.beam([x, G - 0.8, 11.6], [x, G, 12.5], 0.18, 0.18, wood);
+      b.box(0.2, 0.2, 1.2, wood, { at: [x, G - 0.05, 12.05] });
     }
-    b.box(hw, 5.2, 9, render, { at: [hx, G, 8.4] });
-    b.frame(hw, 5.2, wood, { at: [hx, G, 12.9], facing: '+z', studs: 7, rails: 1 });
-    onFace(b, '+z', [hx, 0, 12.9], () => {
+    b.box(hw, 5.2, 8.6, render, { at: [hx, G, 8.2] });
+    b.frame(hw, 5.2, wood, { at: [hx, G, 12.5], facing: '+z', studs: 7, rails: 1 });
+    onFace(b, '+z', [hx, 0, 12.5], () => {
       for (const x of [-5, -1.7, 1.7, 5]) {
         win(b, x, G + 0.9, 0.9, 1.4, wood, { border: 0.1 });
         win(b, x, G + 3.4, 0.9, 1.2, wood, { border: 0.1 });
       }
     });
-    b.gable(hw, 9, 2.0, roof, { at: [hx, G + 5.2, 8.4], overhang: 0.35, wall: render });
-    coppiRibs(b, hx - hw / 2 - 0.2, hx + hw / 2 + 0.2, 8.4, 9, G + 5.2, 2.0, 0.35, tint(roof, -0.06), 0.9, [1]);
+    b.gable(hw, 8.6, 2.0, roof, { at: [hx, G + 5.2, 8.2], overhang: 0.35, wall: render });
+    coppiRibs(b, hx - hw / 2 - 0.2, hx + hw / 2 + 0.2, 8.2, 8.6, G + 5.2, 2.0, 0.35, tint(roof, -0.06), 0.9, [1]);
     onFace(b, '+x', [hx + hw / 2, 0, 8], () => {
       win(b, 0, 1.6, 0.8, 1.0, tint(stone, 0.05), { shape: 'round', border: 0.12 });
       win(b, 0, G + 1.6, 0.9, 1.4, wood, { border: 0.1 });
