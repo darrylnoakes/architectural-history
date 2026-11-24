@@ -70,11 +70,11 @@ export const grandMagasin: BuildingDef = {
   id: 'grand-magasin',
   name: 'Department store (grand magasin)',
   style: 'Belle Époque, iron frame behind a stone front',
-  date: 'c. 1895',
+  date: 'c. 1887',
   summary:
     'The department store is a Paris invention, and the town gets its own. Shopping is turned into a show: anyone may walk in without being expected to buy, prices are fixed and marked, and goods can be returned. ' +
     'To sell everything under one roof the store needs huge, light floors, so it is built on an iron frame with walls of plate glass between stone piers, round a central light well with galleries on every floor and a grand staircase rising through it. ' +
-    'A dome on the corner advertises it down two streets. The model is Aristide Boucicaut’s Au Bon Marché in Paris, rebuilt from 1869 and finished in 1887, its iron extension of the 1870s by Louis-Auguste Boileau with Gustave Eiffel’s firm; from the 1890s chains such as the Nouvelles Galeries brought the type to provincial towns.',
+    'A dome on the corner advertises it down two streets. The model is Aristide Boucicaut’s Au Bon Marché in Paris, rebuilt from 1869 and finished in 1887, its iron extension of the 1870s by Louis-Auguste Boileau with Gustave Eiffel’s firm.',
   materials: ['cut stone fronts', 'iron and steel frame', 'plate glass', 'zinc and slate', 'oak and marble inside'],
   lookFor: [
     { label: 'Corner dome', note: 'The store’s landmark, set on the corner so it can be seen down both streets.', at: [8.4, 24.0, 6.4] },
