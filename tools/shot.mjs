@@ -2,7 +2,8 @@
 /**
  * Screenshot buildings from the gallery page.
  *
- *   node tools/shot.mjs <lineage> [buildingId|all|row] [views] [--seed=N] [--variant=N] [--closed]
+ *   node tools/shot.mjs <lineage> [buildingId|all|row] [views] [--seed=N] [--variant=N] [--closed] [--year=N]
+ *   (--year shows a building with the revisions it had by that year)
  *   node tools/shot.mjs extra <buildingId> [views]
  *
  *   node tools/shot.mjs home roundhouse            -> shots/home/roundhouse-iso.png, -front.png
@@ -111,7 +112,7 @@ async function shootOnce(params, file, size) {
 try {
   const seed = flags.seed ?? '1';
   // --variant=1 builds as on a plot other than the main one; --closed shows the form a building has in the townscape
-  const more = { ...(flags.variant ? { variant: flags.variant } : {}), ...(flags.closed ? { cutaway: '0' } : {}) };
+  const more = { ...(flags.variant ? { variant: flags.variant } : {}), ...(flags.closed ? { cutaway: '0' } : {}), ...(flags.year ? { year: flags.year } : {}) };
   if (lineage === 'extra') {
     const views = (viewArg ?? 'iso,front').split(',');
     for (const view of views) {
@@ -138,7 +139,7 @@ try {
     const views = (viewArg ?? 'iso,front').split(',');
     for (const id of ids) {
       for (const view of views) {
-        const r = await shoot({ lineage, id, view, seed, ...more }, `${id}-${view}${flags.variant ? '-v' + flags.variant : ''}${flags.closed ? '-closed' : ''}.png`, { width: 1000, height: 750 });
+        const r = await shoot({ lineage, id, view, seed, ...more }, `${id}-${view}${flags.variant ? '-v' + flags.variant : ''}${flags.closed ? '-closed' : ''}${flags.year ? '-y' + flags.year : ''}.png`, { width: 1000, height: 750 });
         console.log(r.path);
         if (view === views[0] && r.info) console.log('  ' + r.info.join('\n  '));
       }

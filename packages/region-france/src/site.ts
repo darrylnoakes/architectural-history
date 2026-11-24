@@ -50,11 +50,18 @@ function relief(x: number, z: number): number {
 
 const roads: Road[] = [
   // the road from Paris to Flanders: in over the bridge, through the town, out by the north gate
-  { id: 'grande-rue', kind: 'main', pts: [[-50, -480], [-30, -340], [-8, -240], [0, -150], [0, 79]] },
+  { id: 'route-de-flandre', kind: 'main', pts: [[-50, -480], [-30, -340], [-8, -240], [0, -150]] },
+  // (through the north gate, kept as a monument after 1885, it is a narrow street)
+  { id: 'grande-rue-porte', kind: 'main', pts: [[0, -150], [0, -108]], until: 1885 },
+  { id: 'rue-de-la-porte-nord', kind: 'lane', pts: [[0, -150], [0, -108]], since: 1885 },
+  { id: 'grande-rue', kind: 'main', pts: [[0, -108], [0, 79]] },
   { id: 'rue-de-paris', kind: 'main', pts: [[0, 113], [0, 156]] },
   { id: 'old-paris-road', kind: 'main', pts: [[0, 156], [0, 190], [14, 260], [50, 360], [90, 480]], until: 1849 },
   // the road from the west, bending round the foot of the castle hill, and on to Reims
-  { id: 'route-ouest', kind: 'main', pts: [[0, 0], [-170, 0], [-250, 40], [-350, 30], [-480, -10]] },
+  { id: 'rue-de-l-ouest', kind: 'main', pts: [[0, 0], [-128, 0]] },
+  { id: 'route-ouest-porte', kind: 'main', pts: [[-128, 0], [-172, 0]], until: 1885 },
+  { id: 'rue-de-la-porte-ouest', kind: 'lane', pts: [[-128, 0], [-172, 0]], since: 1885 },
+  { id: 'route-ouest', kind: 'main', pts: [[-172, 0], [-250, 40], [-350, 30], [-480, -10]] },
   { id: 'route-de-reims', kind: 'main', pts: [[0, 0], [124, 0]] },
   // (through the kept east gate and over its bridges it is a narrow street in the motor age)
   { id: 'route-de-reims-porte', kind: 'main', pts: [[124, 0], [184, 0]], until: 1885 },
@@ -71,10 +78,11 @@ const roads: Road[] = [
   { id: 'new-paris-road', kind: 'main', pts: [[-150, 136], [-153, 200], [-130, 300], [-96, 380], [-90, 480]], since: 1849 },
   { id: 'rue-du-pont-neuf', kind: 'main', pts: [[128, 55], [128, 79]], since: 1830 },
   { id: 'rue-du-pont-neuf-sud', kind: 'main', pts: [[128, 113], [128, 136]], since: 1830 },
-  // after 1885: boulevards on the line of the western and north-western ramparts, meeting the old
-  // roads at the roundabouts where the kept gates stand on their islands
-  { id: 'boulevard-ouest', kind: 'main', pts: [[-150, 55], [-150, -128]], since: 1890 },
-  { id: 'boulevard-nord', kind: 'main', pts: [[-150, -128], [0, -128]], since: 1890 },
+  // after 1885: boulevards on the line of the western and north-western ramparts. At each kept
+  // gate the boulevard passes in front of the arch (7 m outside the old wall line, over the filled
+  // ditch), and the old road runs through the arch to cross it
+  { id: 'boulevard-ouest', kind: 'main', pts: [[-150, 55], [-150, 30], [-157, 20], [-157, -20], [-150, -30], [-150, -128]], since: 1890 },
+  { id: 'boulevard-nord', kind: 'main', pts: [[-150, -128], [-30, -128], [-20, -135], [0, -135]], since: 1890 },
   { id: 'rue-neuve', kind: 'lane', pts: [[-150, 55], [-66, 55]], since: 1890 },
   { id: 'footbridge-path-north', kind: 'lane', pts: [[-62, 74], [-62, 79]], since: 2006 },
   { id: 'footbridge-path-south', kind: 'lane', pts: [[-62, 113], [-62, 136]], since: 2006 },

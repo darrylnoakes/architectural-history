@@ -41,6 +41,8 @@ async function main() {
   const variant = Number(q.get('variant') ?? 0);
   // &cutaway=0 shows the closed form of a building that can open itself up
   const cutaway = q.get('cutaway') !== '0';
+  // &year=1950 shows a building with the revisions it had by then
+  const year = q.get('year') ? Number(q.get('year')) : -Infinity;
 
   let defs: { def: BuildingDef; from?: number }[] = [];
   let plot: [number, number] | null = null;
@@ -74,7 +76,7 @@ async function main() {
   const cuts: Cut[] = [];
 
   defs.forEach((entry, i) => {
-    const built = construct(entry.def, seed, variant, cutaway);
+    const built = construct(entry.def, seed, variant, cutaway, year);
     const x = (i - (defs.length - 1) / 2) * spacing;
     built.object.position.x = x;
     scene.add(built.object);

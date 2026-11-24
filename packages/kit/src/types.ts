@@ -28,6 +28,14 @@ export interface BuildingDef {
   modelledOn?: string;
   /** Ids from the region's `influences` list that shaped this building. */
   influences?: string[];
+  /**
+   * Small later alterations to the same building, oldest first: it keeps its name, its text and its
+   * place in the lineage, and `build` asks `b.since(year)` to draw the altered pieces. In the town
+   * only those pieces change. Use it for the kind of change that does not make a new building: a
+   * drawbridge replaced by a fixed bridge, shutters added, a road surfaced. `note` is shown on the
+   * card from that year on.
+   */
+  revisions?: { year: number; note: string }[];
   build(b: Builder): void;
 }
 

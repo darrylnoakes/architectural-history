@@ -46,7 +46,7 @@ export class Street implements Walkable {
         b = construct(st.def, seed, variant);
       } catch (err) {
         console.error(`Failed to build ${st.def.id}`, err);
-        b = { object: new THREE.Group(), bounds: new THREE.Box3(), colliders: [], decks: [], cuts: [], triangles: 0, hasCutaway: false };
+        b = { object: new THREE.Group(), parts: [], bounds: new THREE.Box3(), colliders: [], decks: [], cuts: [], triangles: 0, hasCutaway: false };
       }
       builts.push(b);
       const s = b.bounds.isEmpty() ? pw * 0.6 : b.bounds.max.x - b.bounds.min.x;

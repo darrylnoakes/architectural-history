@@ -153,7 +153,7 @@ export class Town {
         b = construct(def, p.plot.seed, p.variant, open);
       } catch (err) {
         console.error(`Failed to build ${def.id}`, err);
-        b = { object: new THREE.Group(), bounds: new THREE.Box3(), colliders: [], decks: [], cuts: [], triangles: 0, hasCutaway: false };
+        b = { object: new THREE.Group(), parts: [], bounds: new THREE.Box3(), colliders: [], decks: [], cuts: [], triangles: 0, hasCutaway: false };
       }
       const ruin = p.schedule[i].state === 'ruin' ? getRuinMaterials() : null;
       b.object.traverse((o) => {

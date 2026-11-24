@@ -42,8 +42,29 @@ export interface Deck {
   yEnds?: number;
 }
 
+/**
+ * One piece of a model (a box, a roof, a run of railings): where its vertices lie in the merged mesh
+ * of its material, and a fingerprint of its shape and position. Two versions of a building are
+ * compared piece by piece, so that only what differs has to change when one replaces the other.
+ */
+export interface Part {
+  kind: MatKind;
+  /** Fingerprint of the vertices' positions: equal for a piece that has not moved or changed. */
+  key: string;
+  /** First vertex and number of vertices in the merged mesh of this material. */
+  start: number;
+  count: number;
+  /** The middle of its footprint and its bottom and top, for growing and shrinking it in place. */
+  cx: number;
+  cz: number;
+  y0: number;
+  y1: number;
+}
+
 export interface Built {
   object: THREE.Group;
+  /** Every piece of the model, in the order built (see `Part`). */
+  parts: Part[];
   bounds: THREE.Box3;
   colliders: Collider[];
   decks: Deck[];
@@ -52,6 +73,40 @@ export interface Built {
   triangles: number;
   /** True if the building asked whether to cut itself open (see `Builder.cutaway`): it has two forms. */
   hasCutaway: boolean;
+}
+
+/** The fingerprint and extent of one piece, from its finished (placed) geometry. */
+function fingerprint(g: THREE.BufferGeometry, kind: MatKind): Part {
+  const a = g.attributes.position.array as ArrayLike<number>;
+  const n = a.length / 3;
+  let h1 = 0;
+  let h2 = 0;
+  let x0 = Infinity;
+  let x1 = -Infinity;
+  let z0 = Infinity;
+  let z1 = -Infinity;
+  let y0 = Infinity;
+  let y1 = -Infinity;
+  for (let i = 0; i < a.length; i += 3) {
+    const x = a[i];
+    const y = a[i + 1];
+    const z = a[i + 2];
+    if (x < x0) x0 = x;
+    if (x > x1) x1 = x;
+    if (y < y0) y0 = y;
+    if (y > y1) y1 = y;
+    if (z < z0) z0 = z;
+    if (z > z1) z1 = z;
+    // to the nearest half centimetre, and summed so the order of the vertices does not matter
+    const qx = Math.round(x * 200) | 0;
+    const qy = Math.round(y * 200) | 0;
+    const qz = Math.round(z * 200) | 0;
+    let v = Math.imul(qx, 73856093) ^ Math.imul(qy, 19349663) ^ Math.imul(qz, 83492791);
+    v = Math.imul(v ^ (v >>> 15), 2246822519);
+    h1 = (h1 + v) | 0;
+    h2 = (h2 + Math.imul(v ^ (v >>> 13), 3266489917)) | 0;
+  }
+  return { kind, key: `${kind[0]}${n}:${h1}:${h2}`, start: 0, count: n, cx: (x0 + x1) / 2, cz: (z0 + z1) / 2, y0, y1 };
 }
 
 const FACING: Record<string, number> = {
@@ -220,6 +275,7 @@ export class Builder {
   private _colliders: Collider[] = [];
   private _decks: Deck[] = [];
   private _cuts: Cut[] = [];
+  private _parts: Record<MatKind, Part[]> = { matte: [], glass: [] };
   private _noCollide = false;
 
   constructor(
@@ -227,8 +283,20 @@ export class Builder {
     /** 0 for the hero plot; other plots get 1, 2, 3… Use it (or rand()) to vary repeated buildings. */
     public readonly variant = 0,
     private readonly _cutaway = true,
+    /** The year of the latest revision of the building in force (see `since`), -Infinity as built. */
+    private readonly _revision = -Infinity,
   ) {
     this.rng = mulberry32(seed * 7919 + 13);
+  }
+
+  /**
+   * True if the building is being built as altered in `year` or later. `year` must be one of the
+   * years in the definition's `revisions`: the same model, title and text, with a small change (a
+   * drawbridge replaced by a fixed bridge, a road surfaced with asphalt). Build everything else
+   * exactly the same either way, so that only the altered pieces change in the town.
+   */
+  since(year: number): boolean {
+    return this._revision >= year;
   }
 
   private _askedCutaway = false;
@@ -328,7 +396,9 @@ export class Builder {
     for (const name of Object.keys(g.attributes)) {
       if (name !== 'position' && name !== 'normal' && name !== 'color') g.deleteAttribute(name);
     }
-    this.buckets[o?.mat ?? 'matte'].push(g);
+    const kind = o?.mat ?? 'matte';
+    this._parts[kind].push(fingerprint(g, kind));
+    this.buckets[kind].push(g);
     if (g !== geom) geom.dispose();
     return this;
   }
@@ -998,6 +1068,7 @@ export class Builder {
       bounds.union(merged.boundingBox!);
       triangles += merged.attributes.position.count / 3;
       const mesh = new THREE.Mesh(merged, mats[kind]);
+      mesh.userData.kind = kind;
       mesh.castShadow = true;
       mesh.receiveShadow = true;
       object.add(mesh);
@@ -1009,6 +1080,16 @@ export class Builder {
       const s = bounds.getSize(new THREE.Vector3());
       colliders = [{ x: c.x, z: c.z, w: s.x, d: s.z, rotY: 0 }];
     }
-    return { object, bounds, colliders, decks: this._decks, cuts: this._cuts, triangles, hasCutaway: this._askedCutaway };
+    // where each piece lies in the merged mesh of its material
+    const parts: Part[] = [];
+    for (const kind of ['matte', 'glass'] as MatKind[]) {
+      let start = 0;
+      for (const p of this._parts[kind]) {
+        p.start = start;
+        start += p.count;
+        parts.push(p);
+      }
+    }
+    return { object, parts, bounds, colliders, decks: this._decks, cuts: this._cuts, triangles, hasCutaway: this._askedCutaway };
   }
 }
