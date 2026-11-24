@@ -328,6 +328,60 @@ export function segBox(b: Builder, p: XY, q: XY, w: number, h: number, color: nu
   b.box(L, h, w, color, { at: [(p[0] + q[0]) / 2, y, (p[1] + q[1]) / 2], rotY: Math.atan2(-dz, dx), jitter: false });
 }
 
+/**
+ * The outline of a ditch turning a corner: a quarter ring between radii r0 and r1 in the corner's
+ * outer quadrant (+X, +Z). Its two straight ends join the stretches either side, so dig it with
+ * `open: ringEnds(n)`.
+ */
+export function quarterRing(r0: number, r1: number, n = 6): XY[] {
+  const pts: XY[] = [];
+  for (let i = 0; i <= n; i++) pts.push([Math.sin((Math.PI / 2) * (i / n)) * r0, Math.cos((Math.PI / 2) * (i / n)) * r0]);
+  for (let i = n; i >= 0; i--) pts.push([Math.sin((Math.PI / 2) * (i / n)) * r1, Math.cos((Math.PI / 2) * (i / n)) * r1]);
+  return pts;
+}
+
+/** The two open ends of a `quarterRing(r0, r1, n)` outline, as edge indices for `b.dig`. */
+export const ringEnds = (n = 6): number[] => [n, 2 * n + 1];
+
+/**
+ * A polyline moved `d` to its right-hand side (looking along it from point to point, in plan with +x
+ * east and +z south: for a line running +x that is -z), with mitred corners. Good for short offsets
+ * of a fortification trace, where no segment is shorter than the offset.
+ */
+export function offsetMiter(pts: XY[], d: number): XY[] {
+  const nrm = (p: XY, q: XY): XY => {
+    const L = Math.hypot(q[0] - p[0], q[1] - p[1]) || 1;
+    return [(q[1] - p[1]) / L, -(q[0] - p[0]) / L];
+  };
+  return pts.map((p, i) => {
+    const a = i > 0 ? nrm(pts[i - 1], p) : null;
+    const c = i < pts.length - 1 ? nrm(p, pts[i + 1]) : null;
+    if (!a || !c) {
+      const n = (a ?? c)!;
+      return [p[0] + n[0] * d, p[1] + n[1] * d];
+    }
+    const k = d / (1 + a[0] * c[0] + a[1] * c[1]);
+    return [p[0] + (a[0] + c[0]) * k, p[1] + (a[1] + c[1]) * k];
+  });
+}
+
+/**
+ * Bands of ground cover between plan polylines that all have the same number of points: `lines[i]`
+ * is drawn at height `ys[i]`, and each pair of neighbouring lines is joined by a strip of quads.
+ * For a covered way, a glacis, a towpath.
+ */
+export function bands(b: Builder, lines: XY[][], ys: number[], colors: number[]): void {
+  for (let k = 0; k < lines.length - 1; k++) {
+    const out: number[] = [];
+    const A = lines[k];
+    const B = lines[k + 1];
+    for (let i = 0; i < A.length - 1; i++) {
+      quad(out, [A[i][0], ys[k], A[i][1]], [A[i + 1][0], ys[k], A[i + 1][1]], [B[i + 1][0], ys[k + 1], B[i + 1][1]], [B[i][0], ys[k + 1], B[i][1]]);
+    }
+    soup(b, out, colors[k]);
+  }
+}
+
 /** Clip an x-monotonic polyline of [x, z] points to x0 <= x <= x1. */
 export function clipX(pts: XY[], x0: number, x1: number): XY[] {
   const out: XY[] = [];

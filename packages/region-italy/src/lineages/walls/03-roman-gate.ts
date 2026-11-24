@@ -79,7 +79,14 @@ export const romanGate: BuildingDef = {
     }
     // cornice and plinth all round the front block
     b.box(FW + 0.6, 0.35, FT + 0.6, tint(stone, 0.04), { at: [0, H1 - 0.35, FZ] });
-    b.box(FW + 0.3, 0.4, FT + 0.3, shade, { at: [0, 0, FZ] });
+    // the plinth runs between the openings and stops at the jambs, so the passages are level with the road
+    {
+      const edges = [-FW / 2 - 0.15, ...[-FOOT.x, -CARRIAGE.x, CARRIAGE.x, FOOT.x].flatMap((x) => {
+        const w = Math.abs(x) === FOOT.x ? FOOT.w : CARRIAGE.w;
+        return [x - w / 2, x + w / 2];
+      }), FW / 2 + 0.15];
+      for (let i = 0; i < edges.length; i += 2) b.box(edges[i + 1] - edges[i], 0.4, FT + 0.3, shade, { at: [(edges[i] + edges[i + 1]) / 2, 0, FZ] });
+    }
     // the passages: soffits, and the doors folded back
     for (const o of [CARRIAGE, FOOT]) b.sym((s) => b.vault(o.w, FT - 0.05, tint(stone, -0.22), { at: [s * o.x, o.h - o.w / 2, FZ], segs: 8 }));
     b.sym((s) => {

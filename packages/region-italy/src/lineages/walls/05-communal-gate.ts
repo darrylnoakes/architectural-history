@@ -43,7 +43,8 @@ export const communalGate: BuildingDef = {
 
     // ---------------------------------------------------------------- the tower: front wall
     gateMass(b, TW, TH, FT, stone, { at: [0, 0, TF - FT / 2], xs: [0], openW: OW, openH: OH });
-    b.box(TW + 0.5, 1.4, FT + 0.5, shade, { at: [0, 0, TF - FT / 2] });
+    // the battered base stops at the jambs: carts roll through on the level
+    b.sym((s) => b.box(TW / 2 + 0.25 - OW / 2, 1.4, FT + 0.5, shade, { at: [(s * (TW / 2 + 0.25 + OW / 2)) / 2, 0, TF - FT / 2] }));
     // the side walls, running back past the curtain and stopping, open, on the town side
     b.sym((s) => {
       const d = TF - FT - TB;
@@ -133,7 +134,8 @@ export const communalGate: BuildingDef = {
     });
     // the gate leaves, folded back inside the passage
     b.sym((s) => b.box(0.18, OH - 0.8, OW / 2, oak, { at: [s * (OW / 2 - 0.15), 0, TF - FT - OW / 4 - 0.1] }));
-    b.box(OW, 0.12, FT + 0.6, tint(P.cobble, -0.06), { at: [0, 0, TF - FT / 2], jitter: false });
+    // the floor of the passage, paved flush with the road
+    b.box(OW, 0.05, FT + 0.6, tint(P.cobble, -0.06), { at: [0, 0, TF - FT / 2], jitter: false });
 
     // ---------------------------------------------------------------- the customs post (casotto della gabella)
     b.group({ at: [6.9, 0, -5.6] }, () => {

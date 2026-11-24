@@ -1,8 +1,9 @@
 import { P, mix, tint, type BuildingDef } from '@ah/kit';
 import { HALF, road, ruts, stakes } from './shared';
-import { WALL_COLOURS, curtain, rampartEnd } from './curtain';
+import { RAMPART, WALL_COLOURS, curtain, rampartEnd } from './curtain';
 
 const GAP = 2.7; // half-width of the gate passage
+const CAUSEWAY = 4.0; // the ditch stops this far either side of the road
 
 export const rampart: BuildingDef = {
   id: 'rampart',
@@ -12,12 +13,12 @@ export const rampart: BuildingDef = {
   summary:
     'The first villages stood on plateaus of tufa with cliffs on most sides, so only the easy approach needed closing. ' +
     'Across it the villagers dug a ditch and heaped the spoil behind it into a bank of earth, probably crowned by a fence of stakes. ' +
-    'The road passed through a gap in the bank faced with timber, closed at night by a gate of oak planks under a walkway for the lookouts. ' +
+    'The road crossed the ditch on a causeway of undug earth and passed through a gap in the bank faced with timber, closed at night by a gate of oak planks under a walkway for the lookouts. ' +
     'It is a work of many hands and no specialists: earth, timber and labour were all it needed.',
   materials: ['rammed earth and rubble', 'oak posts and planks', 'split stakes', 'turf'],
   lookFor: [
     { label: 'Earth bank', note: 'Heaped from the spoil of the ditch, it gives defenders the height and makes attackers climb.', at: [-9, 3.4, -2.5] },
-    { label: 'Ditch', note: 'Dug outside the bank so that an attacker has to go down before he can climb up; the spoil made the bank.', at: [-9, 0.5, 3.2] },
+    { label: 'Ditch', note: 'Dug outside the bank so that an attacker has to go down before he can climb up; the spoil made the bank. It stops either side of the road, which crosses on a causeway of undug earth.', at: [-9, -1.2, (RAMPART.ditch.z0 + RAMPART.ditch.z1) / 2] },
     { label: 'Palisade', note: 'A fence of pointed stakes along the crest of the bank, a screen for the defenders.', at: [8.5, 5, -1.5] },
     { label: 'Timber gate', note: 'Two leaves of oak planks between heavy posts, with a fighting platform across the top of the passage.', at: [0, 4.2, -1.2] },
     { label: 'Timber revetment', note: 'Planks held back by posts keep the cut ends of the bank from slumping into the gateway.', at: [GAP + 0.1, 1.8, -3] },
@@ -31,8 +32,11 @@ export const rampart: BuildingDef = {
 
     // ---------------------------------------------------------------- bank, ditch and counterscarp
     b.sym((s) => {
-      curtain(b, 'rampart', s > 0 ? GAP : -HALF, s > 0 ? HALF : -GAP);
+      curtain(b, 'rampart', s > 0 ? GAP : -HALF, s > 0 ? HALF : -GAP, { ditch: false });
       rampartEnd(b, s * GAP, s);
+      // the ditch, open at the plot edge to run on into the town's, sloping up to the causeway
+      const d = RAMPART.ditch;
+      b.dig([[s * HALF, d.z0], [s * CAUSEWAY, d.z0], [s * CAUSEWAY, d.z1], [s * HALF, d.z1]], d.depth, { slope: d.slope, color: WALL_COLOURS.rampart.ditch, open: [3] });
     });
 
     // ---------------------------------------------------------------- the gate
@@ -62,13 +66,14 @@ export const rampart: BuildingDef = {
         b.beam([-s * 0.1, 0.45, -0.1], [-s * 2.0, 3.0, -0.1], 0.1, 0.06, tint(timber, -0.1));
       });
     });
-    // the sill beam across the road
-    b.box(GAP * 2, 0.12, 0.3, timber, { at: [0, 0, gz] });
+    // the sill beam across the road, bedded flush with it
+    b.box(GAP * 2, 0.05, 0.3, timber, { at: [0, 0, gz] });
 
     // ---------------------------------------------------------------- around it
-    b.tree(4.4, { kind: 'olive', at: [-12.8, 0, 5.8] });
-    b.tree(1.4, { kind: 'bush', at: [10.8, 0, 7.3] });
-    b.tree(1.1, { kind: 'bush', at: [12.4, 0, 7.1] });
+    // on the spoil bank beyond the ditch, clear of it
+    b.tree(4.4, { kind: 'olive', at: [-12.8, 0.55, 6.9] });
+    b.tree(1.4, { kind: 'bush', at: [10.8, 0.3, 7.35] });
+    b.tree(1.1, { kind: 'bush', at: [12.4, 0.4, 7.2] });
 
     // ---------------------------------------------------------------- walking
     b.sym((s) => b.collider(HALF - GAP, 9.4, { at: [s * (HALF + GAP) / 2, 0, -2.9] }));

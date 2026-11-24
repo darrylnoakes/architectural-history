@@ -87,8 +87,8 @@ export const etruscanGate: BuildingDef = {
         for (const y of [0.5, 2.4, 4.3]) b.box(OW / 2 - 0.2, 0.14, 0.04, P.iron, { at: [-s * (OW / 4 - 0.05), y, 0.1], jitter: false });
       });
     });
-    // a step at the threshold and a worn sill
-    b.box(OW, 0.12, depth, tint(P.gravel, -0.08), { at: [0, 0, zc], jitter: false });
+    // the floor of the passage, worn flush with the road
+    b.box(OW, 0.05, depth, tint(P.gravel, -0.08), { at: [0, 0, zc], jitter: false });
 
     // a stair of blocks up to the wall-walk on the town side
     b.stairs(1.3, WALL_H, 8.4, 14, tint(stone, -0.04), { at: [-10.3, 0, -WALL_T / 2 - 0.65], rotY: -Math.PI / 2 });

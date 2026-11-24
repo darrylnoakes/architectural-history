@@ -2,12 +2,16 @@ import { P, mix, mulberry32, tint, type Builder } from '@ah/kit';
 import {
   HALF,
   archPanel,
+  bands,
   blockWall,
   clipPolyX,
   clipX,
   merlonsX,
+  offsetMiter,
   prismX,
   quad,
+  quarterRing,
+  ringEnds,
   run,
   segBox,
   slab,
@@ -42,12 +46,12 @@ export const CURTAIN: Record<WallStage, { z: number; thick: number; height: numb
 
 /** Fixed colours per stage, shared with the gate plots. */
 export const WALL_COLOURS = {
-  rampart: { earth: mix(P.earth, P.turf, 0.35), grass: mix(P.turf, P.grassDry, 0.4), timber: mix(P.oak, P.oakSilver, 0.2), stake: mix(P.oak, P.oakSilver, 0.35) },
+  rampart: { earth: mix(P.earth, P.turf, 0.35), grass: mix(P.turf, P.grassDry, 0.4), timber: mix(P.oak, P.oakSilver, 0.2), stake: mix(P.oak, P.oakSilver, 0.35), ditch: mix(P.mud, P.turf, 0.4) },
   etruscan: { stone: mix(P.tufa, P.pietraForte, 0.47) },
   roman: { stone: mix(P.travertine, P.limestone, 0.5), face: mix(P.rubble, P.tufa, 0.35) },
   aurelian: { brick: mix(mix(P.brickRed, P.brickDark, 0.3), P.brickBuff, 0.28) },
   communal: { stone: mix(P.pietraForte, P.rubble, 0.4), dress: tint(P.pietraForte, 0.04) },
-  bastion: { brick: mix(P.brickRed, P.brickBuff, 0.25), grass: mix(P.turf, P.grassDry, 0.45), ditch: mix(P.turf, P.hedge, 0.5) },
+  bastion: { brick: mix(P.brickRed, P.brickBuff, 0.25), grass: mix(P.turf, P.grassDry, 0.45), ditch: mix(P.turf, P.hedge, 0.5), way: mix(P.gravel, P.earth, 0.3) },
 };
 
 const NJ = { jitter: false } as const;
@@ -79,20 +83,24 @@ function gaps(x0: number, x1: number, xs: number[], hw: number): [number, number
 // ================================================================== rampart (c. 750 BC)
 
 export const RAMPART = {
-  bank: [[-7.6, 0], [-4.4, 2.6], [-2.2, 3.2], [-0.9, 3.0], [1.2, 0]] as XY[],
+  // the bank's outer face runs on down into the ditch, so its foot is never left above the dug ground
+  bank: [[-7.6, 0], [-4.4, 2.6], [-2.2, 3.2], [-0.9, 3.0], [1.55, -0.5], [-7.6, -0.5]] as XY[],
   turf: [[-7.65, 0.02], [-4.45, 2.63], [-2.2, 3.23], [-1.2, 3.12]] as XY[],
-  ditch: [[1.2, 0.02], [5.2, 0.02]] as XY[],
-  counter: [[5.0, 0], [6.0, 0.75], [6.8, 0.7], [7.8, 0]] as XY[],
+  /** The ditch, dug from z0 to z1: a V with a narrow flat bottom. */
+  ditch: { z0: 1.2, z1: 5.2, depth: 1.8, slope: 1.5 },
+  /** The spoil left over, in a low bank along the far lip (its inner foot on the ditch side, below ground). */
+  counter: [[4.6, -0.72], [6.0, 0.75], [6.8, 0.7], [7.8, 0], [7.8, -0.72]] as XY[],
   palisade: { z: -1.2, y: 3.0, h: 1.7 },
 };
 
-function rampartStretch(b: Builder, x0: number, x1: number): void {
+function rampartStretch(b: Builder, x0: number, x1: number, ditch: boolean): void {
   const c = WALL_COLOURS.rampart;
+  const d = RAMPART.ditch;
   prismX(b, x0, x1, RAMPART.bank, c.earth);
   prismX(b, x0, x1, RAMPART.turf, c.grass);
-  prismX(b, x0, x1, RAMPART.ditch, tint(P.mud, 0.04));
+  // the ditch is dug out of the ground, its ends open to run on into the next piece
+  if (ditch) b.trench(x0, x1, d.z0, d.z1, d.depth, { slope: d.slope, color: c.ditch });
   prismX(b, x0, x1, RAMPART.counter, c.grass);
-  if (x1 - x0 > 0.5) b.box(x1 - x0 - 0.4, 0.04, 1.4, tint(P.soil, -0.06), { at: [(x0 + x1) / 2, 0, 3.2], ...NJ });
   stakes(b, x0, x1, RAMPART.palisade.z, RAMPART.palisade.y, RAMPART.palisade.h, c.stake);
   b.box(x1 - x0, 0.14, 0.12, tint(c.stake, -0.08), { at: [(x0 + x1) / 2, 3.9, -1.42], ...NJ });
 }
@@ -109,11 +117,12 @@ export function rampartEnd(b: Builder, x: number, s: 1 | -1): void {
 
 function rampartCorner(b: Builder): void {
   const c = WALL_COLOURS.rampart;
+  const d = RAMPART.ditch;
   // the parts of the section outside the reference line, swept round the outer quadrant
   const sweep = (prof: XY[], color: number) => b.lathe(prof, color, { segs: 6, start: 0, sweep: Math.PI / 2, ...NJ });
-  sweep([[0.001, 1.71], [1.2, 0]], c.earth);
-  sweep([[1.2, 0.02], [5.2, 0.02]], tint(P.mud, 0.04));
-  sweep([[5.0, 0], [6.0, 0.75], [6.8, 0.7], [7.8, 0]], c.grass);
+  sweep([[0.001, 1.71], [1.55, -0.5]], c.earth);
+  b.dig(quarterRing(d.z0, d.z1), d.depth, { slope: d.slope, color: c.ditch, open: ringEnds() });
+  sweep(RAMPART.counter.slice(0, 4), c.grass);
   // a timber lookout platform where the two palisades cross
   const t = c.timber;
   const z = RAMPART.palisade.z;
@@ -124,8 +133,16 @@ function rampartCorner(b: Builder): void {
   b.pyramid(3.6, 3.6, 1.2, P.thatch, { at: [z, 6.2, z], ...NJ });
 }
 
+/** The end of the ditch, sloping up to the ground at x = +x1 (the edge toward x = 0 is open). */
+export function rampartDitchEnd(b: Builder, x0: number, x1: number): void {
+  const d = RAMPART.ditch;
+  b.dig([[x0, d.z0], [x1, d.z0], [x1, d.z1], [x0, d.z1]], d.depth, { slope: d.slope, color: WALL_COLOURS.rampart.ditch, open: [3] });
+}
+
 function rampartTerminal(b: Builder): void {
   rampartEnd(b, 0, -1);
+  // the ditch stops short of the river bank
+  rampartDitchEnd(b, 0, 2.4);
 }
 
 // ================================================================== Etruscan (4th to 3rd century BC)
@@ -353,6 +370,13 @@ export function communalTower(b: Builder, x: number, o: { open: boolean; w?: num
  * foot at z = CF to the shoulders at z = SH) and faces meeting at the salient (c, SH + K·G). The gate
  * plot's two bastions sit at x = ±PLOT_C, so their inner flanks are at ±8.6 and the faces leave the plot
  * at (±15, 7.2).
+ *
+ * In front runs a dry ditch D deep, dug out of the ground. Its outer side, the counterscarp, runs W out
+ * from the scarp foot, square to it: parallel to the curtain, and to each face of a bastion, the lines
+ * of the faces carried on until they meet the curtain's (and rounded off in front of the salient). Both
+ * sides are walled, so the dig reaches 2 m in behind each wall face; the scarp and the counterscarp
+ * revetment are drawn down to the ditch bottom, the rampart covers the strip behind the scarp, and a
+ * covered way (a path behind a low bank of earth, the glacis) covers the strip behind the counterscarp.
  */
 export const BASTION = {
   CF: -0.6,
@@ -362,25 +386,35 @@ export const BASTION = {
   PLOT_C: 8.6 + 13,
   spacing: 105,
   top: 6.2, // the terreplein behind the parapet
-  cs: 7.6, // the counterscarp wall
-  section: [[0, 0], [1.0, 6.0], [1.05, 7.3], [1.9, 7.9], [3.9, 7.55], [4.5, 6.3], [4.5, 0]] as XY[],
+  D: 3.2, // depth of the ditch
+  W: 7, // width of the ditch, square to the scarp foot
+  END: 32, // a corner or a river end draws the counterscarp for this far back along each stretch
+  // the scarp keeps its batter down to the ditch bottom
+  section: [[-3.2 / 6, -3.2], [1.0, 6.0], [1.05, 7.3], [1.9, 7.9], [3.9, 7.55], [4.5, 6.3], [4.5, -3.2]] as XY[],
 };
 
-/** Centres of the bastions that touch the stretch x0..x1. */
+const COS = 1 / Math.hypot(1, BASTION.K);
+const SIN = BASTION.K * COS;
+const SAL = BASTION.SH + BASTION.K * BASTION.G; // z of a salient
+/** Distances out from the scarp foot: the counterscarp revetment's centre, the covered way, the edge of the dig, the glacis. */
+const CW = { rev: BASTION.W + 0.3, way: BASTION.W + 0.55, dig: BASTION.W + 2, crest0: BASTION.W + 2.2, crest: BASTION.W + 2.8, foot: BASTION.W + 6.5 };
+
+/** Centres of the bastions whose works reach the stretch x0..x1. */
 function bastionCentres(x0: number, x1: number): number[] {
-  const { G, PLOT_C, spacing } = BASTION;
+  const { G, PLOT_C, spacing, END } = BASTION;
   const eps = 0.01;
   // inside the gate plot, and the stretches that continue it from its two edges
-  if (x0 >= -HALF - eps && x1 <= HALF + eps) return [-PLOT_C, PLOT_C].filter((c) => c + G > x0 && c - G < x1);
-  // continuing the plot: the next bastions follow the plot's own at the proper spacing
+  if (x0 >= -HALF - eps && x1 <= HALF + eps) return [-PLOT_C, PLOT_C];
+  // continuing the plot: the next bastions follow the plot's own at the proper spacing, keeping clear of
+  // the bastion of the corner or the half-bastion at the river that ends the stretch
   if (Math.abs(x0 - HALF) < eps) {
     const res = [PLOT_C];
-    while (res[res.length - 1] + spacing + G <= x1 - 2) res.push(res[res.length - 1] + spacing);
+    while (res[res.length - 1] + spacing + G <= x1 - END - G) res.push(res[res.length - 1] + spacing);
     return res;
   }
   if (Math.abs(x1 + HALF) < eps) {
     const res = [-PLOT_C];
-    while (res[0] - spacing - G >= x0 + 2) res.unshift(res[0] - spacing);
+    while (res[0] - spacing - G >= x0 + END + G) res.unshift(res[0] - spacing);
     return res;
   }
   return spread(x0, x1);
@@ -398,6 +432,122 @@ function bastionTrace(cs: number[], x0: number, x1: number): XY[] {
   for (const c of [...cs].sort((a, d) => a - d)) pts.push([c - G, CF], [c - G, SH], [c, SH + K * G], [c + G, SH], [c + G, CF]);
   pts.push([Math.max(x1, ...cs.map((c) => c + G)) + 1, CF]);
   return pts;
+}
+
+/** z of the line w out from the scarp foot of the bastions cs and the curtain between them, at plan x. */
+function outerZ(cs: number[], x: number, w: number): number {
+  let z = BASTION.CF + w;
+  for (const c of cs) {
+    const dx = Math.abs(x - c);
+    z = Math.max(z, dx <= w * SIN ? SAL + Math.sqrt(w * w - dx * dx) : SAL + w / COS - BASTION.K * dx);
+  }
+  return z;
+}
+
+/** The x positions where any of the lines w (for w in ws) bend, between x0 and x1. */
+function outerXs(cs: number[], x0: number, x1: number, ws: number[]): number[] {
+  const { CF, K } = BASTION;
+  const xs: number[] = [];
+  const sorted = [...cs].sort((a, c) => a - c);
+  for (const w of ws) {
+    for (const c of sorted) {
+      const reach = (SAL + w / COS - (CF + w)) / K;
+      xs.push(c - reach, c + reach);
+      for (let i = -4; i <= 4; i++) xs.push(c + (i / 4) * w * SIN);
+    }
+  }
+  for (let i = 0; i < sorted.length - 1; i++) xs.push((sorted[i] + sorted[i + 1]) / 2);
+  const res = [x0];
+  for (const x of xs.filter((v) => v > x0 + 0.05 && v < x1 - 0.05).sort((a, c) => a - c)) if (x - res[res.length - 1] > 0.05) res.push(x);
+  res.push(x1);
+  return res;
+}
+
+/** The line w out from the scarp, from x0 to x1, with a point wherever any of the lines in ws bends. */
+function outerLines(cs: number[], x0: number, x1: number, ws: number[]): (w: number) => XY[] {
+  const xs = outerXs(cs, x0, x1, ws);
+  return (w) => xs.map((x) => [x, outerZ(cs, x, w)] as XY);
+}
+
+function dedupe(pts: XY[]): XY[] {
+  return pts.filter((p, i) => i === 0 || Math.hypot(p[0] - pts[i - 1][0], p[1] - pts[i - 1][1]) > 1e-4);
+}
+
+/** The inner edge of the dig: 2 m in behind the scarp, under the rampart. */
+function innerLine(cs: number[], x0: number, x1: number, d = 2): XY[] {
+  const { CF, SH, G } = BASTION;
+  const sorted = [...cs].sort((a, c) => a - c);
+  const sh = SH - (d * COS) / (1 + SIN);
+  const pts: XY[] = [[Math.min(x0, ...sorted.map((c) => c - G)) - 1, CF - d]];
+  for (const c of sorted) pts.push([c - G + d, CF - d], [c - G + d, sh], [c, SAL - d / COS], [c + G - d, sh], [c + G - d, CF - d]);
+  pts.push([Math.max(x1, ...sorted.map((c) => c + G)) + 1, CF - d]);
+  return dedupe(clipX(pts, x0, x1));
+}
+
+/** Dig the ditch of the stretch x0..x1. Its ends are open to run on into the next piece, unless closed with `close`. */
+function bastionDitch(b: Builder, cs: number[], x0: number, x1: number, close?: 'x0' | 'x1'): void {
+  const inner = innerLine(cs, x0, x1);
+  const outer = outerLines(cs, x0, x1, [CW.dig])(CW.dig).reverse();
+  const pts = [...inner, ...outer];
+  const open: number[] = [];
+  if (close !== 'x1') open.push(inner.length - 1);
+  if (close !== 'x0') open.push(pts.length - 1);
+  b.dig(pts, BASTION.D, { slope: 1.5, color: WALL_COLOURS.bastion.ditch, open });
+}
+
+/**
+ * The counterscarp along a line given at any distance w out from the scarp: a brick revetment from the
+ * ditch bottom up to the level of the ground, with a stone coping; behind it the covered way, and a low
+ * bank of earth (the crest of the glacis) that slopes away gently to the field.
+ */
+function counterscarpWorks(b: Builder, lineAt: (w: number) => XY[], o?: { glacis?: boolean }): void {
+  const { brick, grass, way } = WALL_COLOURS.bastion;
+  const { D } = BASTION;
+  const rev = lineAt(CW.rev);
+  for (let i = 0; i < rev.length - 1; i++) {
+    const [p, q] = [rev[i], rev[i + 1]];
+    const L = Math.hypot(q[0] - p[0], q[1] - p[1]);
+    if (L < 1e-3) continue;
+    // carried a little past each end so the joints close where the line bends
+    const e: XY = [((q[0] - p[0]) / L) * 0.12, ((q[1] - p[1]) / L) * 0.12];
+    const p2: XY = [p[0] - e[0], p[1] - e[1]];
+    const q2: XY = [q[0] + e[0], q[1] + e[1]];
+    segBox(b, p2, q2, 0.62, D + 0.03, brick, -D);
+    segBox(b, p2, q2, 0.74, 0.1, P.travertine, 0.03);
+  }
+  bands(b, [lineAt(CW.way), lineAt(CW.crest0)], [0.05, 0.05], [way]);
+  if (o?.glacis !== false) bands(b, [lineAt(CW.crest0), lineAt(CW.crest), lineAt(CW.foot)], [0.05, 0.55, -0.06], [tint(grass, 0.02), grass]);
+}
+
+/** The bastions of the gate plot. */
+const PLOT_CS = [-BASTION.PLOT_C, BASTION.PLOT_C];
+
+/** z of the counterscarp (or the line w out from the scarp) in the gate plot, at plan x. */
+export function counterscarpZ(x: number, w: number = BASTION.W): number {
+  return outerZ(PLOT_CS, x, w);
+}
+
+/** For the gate plot: dig the ditch from x0 to x1 (both ends open). */
+export function gateDitch(b: Builder, x0: number, x1: number): void {
+  bastionDitch(b, PLOT_CS, x0, x1);
+}
+
+/** For the gate plot: the counterscarp and covered way from x0 to x1, without the bank of the glacis. */
+export function gateCounterscarp(b: Builder, x0: number, x1: number): void {
+  const ws = Object.values(CW);
+  counterscarpWorks(b, outerLines(PLOT_CS, x0, x1, ws), { glacis: false });
+}
+
+/**
+ * The ditch of a kept gate plot where the wall beyond its edge at x = s·HALF has been pulled down and
+ * the ditch filled in: it slopes up to the ground just past the plot's edge.
+ */
+export function bastionDitchEnd(b: Builder, s: 1 | -1): void {
+  const x = s * HALF;
+  const z0 = outerZ(PLOT_CS, x, 0) - 0.2; // the scarp foot, where the face of the bastion is cut off
+  const z1 = outerZ(PLOT_CS, x, CW.dig);
+  const x2 = x + s * 3;
+  b.dig([[x, z0], [x, z1], [x2, z1 - 1.2], [x2, z0 + 0.8]], BASTION.D, { slope: 1.5, color: WALL_COLOURS.bastion.ditch, open: [0] });
 }
 
 /** Draw the scarped runs of a trace (with cordon and turf parapet top), clipped to x0..x1. */
@@ -477,28 +627,9 @@ export function sentryBox(b: Builder, x: number, y: number, z: number, look: 1 |
   });
 }
 
-/** The counterscarp line, bulging round each bastion so the ditch follows its faces. */
-function counterscarpLine(cs: number[], x0: number, x1: number): XY[] {
-  const { G, cs: z } = BASTION;
-  const pts: XY[] = [[Math.min(x0, ...cs.map((c) => c - G)) - 1, z]];
-  for (const c of [...cs].sort((a, d) => a - d)) pts.push([c - G + 6.4, z], [c, z + 0.8 * (G - 6.4)], [c + G - 6.4, z]);
-  pts.push([Math.max(x1, ...cs.map((c) => c + G)) + 1, z]);
-  return clipX(pts, x0, x1);
-}
-
-function counterscarp(b: Builder, line: XY[]): void {
-  const { brick, ditch } = WALL_COLOURS.bastion;
-  for (let i = 0; i < line.length - 1; i++) {
-    segBox(b, line[i], line[i + 1], 0.6, 0.9, brick);
-    segBox(b, line[i], line[i + 1], 0.7, 0.15, P.travertine, 0.9);
-  }
-  // the ditch floor between the scarp foot and the counterscarp
-  if (line.length > 1) slab(b, [[line[0][0], BASTION.CF + 0.2], [line[line.length - 1][0], BASTION.CF + 0.2], ...[...line].reverse().map(([x, z]) => [x, z + 0.3] as XY)], 0, 0.03, ditch);
-}
-
-function bastionStretch(b: Builder, x0: number, x1: number): void {
+function bastionStretch(b: Builder, x0: number, x1: number, close?: 'x0' | 'x1'): void {
   const { grass } = WALL_COLOURS.bastion;
-  const { G, SH, K, top } = BASTION;
+  const { G, SH, K, top, END } = BASTION;
   const cs = bastionCentres(x0, x1);
   scarpRuns(b, bastionTrace(cs, x0, x1), x0, x1);
   // the terreplein: one fill behind the curtain, and one inside each bastion
@@ -517,7 +648,13 @@ function bastionStretch(b: Builder, x0: number, x1: number): void {
   }
   // the inner slope down to the town
   prismX(b, x0, x1, [[-6.0, top], [-8, 0], [-6.0, 0]], tint(grass, -0.04));
-  counterscarp(b, counterscarpLine(cs, x0, x1));
+  // the ditch, and the counterscarp beyond it; where the stretch ends at a corner or at the river (the
+  // end away from the gate plot) that piece draws the last stretch of counterscarp round its own bastion
+  bastionDitch(b, cs, x0, x1, close);
+  const far = Math.abs(x0 - HALF) < 0.01 ? 'x1' : Math.abs(x1 + HALF) < 0.01 ? 'x0' : null;
+  const xa = far === 'x0' ? x0 + END : x0;
+  const xb = far === 'x1' ? x1 - END : x1;
+  if (xb - xa > 0.1) counterscarpWorks(b, outerLines(cs, xa, xb, Object.values(CW)));
 }
 
 /** A raised gun platform (cavalier) of earth faced in brick over the gorge of a bastion. */
@@ -527,11 +664,36 @@ function cavalier(b: Builder, poly: XY[], h: number): void {
   slab(b, poly, h, h + 0.08, grass);
 }
 
+const CORNER = { G: 13, S: 9 }; // flanks 13 from the corner, the salient on the diagonal at (9, 9)
+
+/**
+ * The line w out from the scarp round the corner bastion: from the stretch arriving along -X (at x =
+ * -END), parallel to the first face, round the salient, and back along the second face to the stretch
+ * arriving along -Z. Every w gives the same number of points.
+ */
+function cornerLine(w: number): XY[] {
+  const { CF, SH, END } = BASTION;
+  const { G, S } = CORNER;
+  const L = Math.hypot(S + G, S - SH);
+  const u: XY = [(S + G) / L, (S - SH) / L];
+  const n: XY = [-u[1], u[0]];
+  const k = u[1] / u[0];
+  const tx = S + w * n[0];
+  const tz = S + w * n[1];
+  const f = (x: number) => tz + (x - tx) * k;
+  const half: XY[] = [[-END, Math.max(CF + w, f(-END))], [tx + (CF + w - tz) / k, CF + w]];
+  const a0 = Math.atan2(n[1], n[0]);
+  for (let i = 0; i <= 4; i++) {
+    const a = a0 + ((Math.PI / 4 - a0) * i) / 4;
+    half.push([S + w * Math.cos(a), S + w * Math.sin(a)]);
+  }
+  return [...half, ...half.slice(0, -1).reverse().map(([x, z]) => [z, x] as XY)];
+}
+
 function bastionCorner(b: Builder): void {
-  const { CF, SH, top } = BASTION;
-  const { grass, ditch } = WALL_COLOURS.bastion;
-  const G = 13;
-  const S = 9; // the salient lies on the diagonal
+  const { CF, SH, top, END } = BASTION;
+  const { grass } = WALL_COLOURS.bastion;
+  const { G, S } = CORNER;
   const trace: XY[] = [[-G, CF], [-G, SH], [S, S], [SH, -G], [CF, -G]];
   scarpRuns(b, trace, -1e9, 1e9);
   // terreplein inside the bastion, and a cavalier over the gorge where the two curtains run in
@@ -546,25 +708,46 @@ function bastionCorner(b: Builder): void {
     });
   }
   sentryBox(b, S - 1.6, 7.0, S - 1.6, 1);
-  // ditch and counterscarp round the salient
-  const line: XY[] = [[0, BASTION.cs], [12.5, 12.5], [BASTION.cs, 0]];
-  for (let i = 0; i < 2; i++) {
-    segBox(b, line[i], line[i + 1], 0.6, 0.9, WALL_COLOURS.bastion.brick);
-    segBox(b, line[i], line[i + 1], 0.7, 0.15, P.travertine, 0.9);
-  }
-  slab(b, [[0, 0], [0, BASTION.cs + 0.3], [12.8, 12.8], [BASTION.cs + 0.3, 0]], 0, 0.03, ditch);
+  // the ditch round the bastion, running on into the ditches of the two stretches, and its counterscarp
+  const inner = offsetMiter([[-END, CF], ...trace, [CF, -END]], 2);
+  const outer = cornerLine(CW.dig).reverse();
+  b.dig([...inner, ...outer], BASTION.D, { slope: 1.5, color: WALL_COLOURS.bastion.ditch, open: [inner.length - 1, inner.length + outer.length - 1] });
+  counterscarpWorks(b, cornerLine);
+}
+
+const TERMINAL = { G: 13, ZS: 6.6, XE: 2.4 }; // a half-bastion whose face ends at (0, ZS); the ditch ends at x = XE
+
+/** The line w out from the face of the half-bastion at the river, from x = -END to the ditch's end. */
+function terminalLine(w: number): XY[] {
+  const { CF, SH, END } = BASTION;
+  const { G, ZS, XE } = TERMINAL;
+  const L = Math.hypot(G, ZS - SH);
+  const n: XY = [-(ZS - SH) / L, G / L];
+  const k = (ZS - SH) / G;
+  const tx = w * n[0];
+  const tz = ZS + w * n[1];
+  const f = (x: number) => tz + (x - tx) * k;
+  return [[-END, Math.max(CF + w, f(-END))], [tx + (CF + w - tz) / k, CF + w], [XE, f(XE)]];
 }
 
 function bastionTerminal(b: Builder): void {
-  const { CF, SH, top } = BASTION;
+  const { CF, SH, top, END } = BASTION;
   const { grass } = WALL_COLOURS.bastion;
-  const G = 13;
-  const ZS = 6.6; // a half-bastion whose face stops short of the counterscarp
+  const { G, ZS, XE } = TERMINAL;
   scarpRuns(b, [[-G, CF], [-G, SH], [0, ZS], [0, CF - 0.01]], -1e9, 1e9);
   slab(b, [[-G + 1, -1.5], [-G + 1, SH - 0.4], [-1.0, ZS - 1.6], [-1.0, -1.5]], 0, top, grass);
   cavalier(b, [[-8.4, -5.4], [-8.4, 0.4], [-4.6, 1.6], [-4.6, -5.4]], 8.6);
   gunports(b, -G, 1);
   sentryBox(b, -G + 1.0, 7.0, SH + 0.4, 1);
+  // the ditch runs on past the point of the half-bastion and stops short of the river bank
+  const inner = offsetMiter([[-END, CF], [-G, CF], [-G, SH], [0, ZS]], 2);
+  const k = (ZS - SH) / G;
+  const last = inner[inner.length - 1];
+  inner[inner.length - 1] = [-0.3, last[1] + (-0.3 - last[0]) * k];
+  const outer = terminalLine(CW.dig).reverse();
+  const pts: XY[] = [...inner, [0, ZS + 0.1], [XE, ZS + 0.1 + XE * k + 0.4], ...outer];
+  b.dig(pts, BASTION.D, { slope: 1.5, color: WALL_COLOURS.bastion.ditch, open: [pts.length - 1] });
+  counterscarpWorks(b, terminalLine);
 }
 
 // ================================================================== the public functions
@@ -572,15 +755,23 @@ function bastionTerminal(b: Builder): void {
 /**
  * A straight stretch of the town wall of the given stage along X from x0 to x1 (x0 < x1), matching the
  * wall stubs on that stage's gate plot. `o.towers: false` and `o.detail: true` are for the plot stubs
- * themselves (which place their own towers and use more detailed masonry).
+ * themselves (which place their own towers and use more detailed masonry). Stretches that have a ditch
+ * dig it with both ends open, to run on into the next piece: `o.ditch: false` leaves it out (for a plot
+ * that digs its own), and `o.close` closes it at that end instead (where the next piece has no ditch).
  */
-export function curtain(b: Builder, stage: WallStage, x0: number, x1: number, o?: { towers?: boolean; detail?: boolean }): void {
+export function curtain(
+  b: Builder,
+  stage: WallStage,
+  x0: number,
+  x1: number,
+  o?: { towers?: boolean; detail?: boolean; ditch?: boolean; close?: 'x0' | 'x1' },
+): void {
   if (x1 - x0 < 1e-3) return;
   const towers = o?.towers ?? true;
   const detail = o?.detail ?? false;
   switch (stage) {
     case 'rampart':
-      return rampartStretch(b, x0, x1);
+      return rampartStretch(b, x0, x1, o?.ditch ?? true);
     case 'etruscan':
       return etruscanStretch(b, x0, x1, detail);
     case 'roman':
@@ -590,7 +781,7 @@ export function curtain(b: Builder, stage: WallStage, x0: number, x1: number, o?
     case 'communal':
       return communalStretch(b, x0, x1, towers);
     case 'bastion':
-      return bastionStretch(b, x0, x1);
+      return bastionStretch(b, x0, x1, o?.close);
   }
 }
 
