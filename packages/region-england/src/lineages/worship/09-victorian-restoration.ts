@@ -1,5 +1,5 @@
 import { P, tint, type BuildingDef, type Builder } from '@ah/kit';
-import { church, tower, porch, win, churchyardCross, archPts, DOOR_Z } from './shared';
+import { church, tower, porch, win, churchyardCross, archPts, DOOR_Z, CROSS } from './shared';
 import { PERP_ASHLAR, PERP_DRESS, perpChurchSpec, perpTower } from './08-perpendicular-church';
 
 const NEW_STONE = tint(P.limestone, 0.05);
@@ -68,7 +68,7 @@ export const victorianRestoration: BuildingDef = {
     // churchyard: path, lychgate, yews, headstones, the medieval cross now a broken stump
     b.box(1.6, 0.03, 11.0, P.gravel, { at: [9.2, 0, 15.0], jitter: false });
     lychgate(b, 9.2, 20.7);
-    churchyardCross(b, [8.0, 0, -12.0], P.limestone, true);
+    churchyardCross(b, CROSS, P.limestone, true);
     for (const [x, z, h] of [[-9.5, 17, 6.0], [10.2, -17.5, 6.0], [-10.0, -19, 5.5], [5.6, 19.8, 4.5]] as [number, number, number][]) {
       b.cyl(0.35, h * 0.3, P.bark, { at: [x, 0, z], segs: 6 });
       b.blob(h * 0.33, tint(P.leafDark, -0.03), { at: [x, h * 0.45, z], stretch: [1.15, 1.0, 1.15] });

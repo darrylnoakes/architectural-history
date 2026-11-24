@@ -1,5 +1,5 @@
 import { P, tint, type BuildingDef } from '@ah/kit';
-import { church, tower, porch, churchyardCross, graveMounds, BAYS, DOOR_Z, type WinSpec, type TowerSpec, type ChurchSpec } from './shared';
+import { church, tower, porch, churchyardCross, graveMounds, BAYS, DOOR_Z, CROSS, GRAVES, type WinSpec, type TowerSpec, type ChurchSpec } from './shared';
 import { NORMAN_WALL } from './05-norman-church';
 import { eeChancel } from './06-early-english-church';
 import { DEC_AISLE_WALL, DEC_DRESS, decEast } from './07-decorated-church';
@@ -45,7 +45,7 @@ export function perpChurchSpec(over: { naveRoof?: ChurchSpec['nave']['roof']; ch
     chancel: eeChancel({ east: decEast, ...(over.chancelRoof ? { roof: over.chancelRoof } : {}) }),
     aisles: {
       w: 5,
-      h: 4.75,
+      h: 4.6,
       roof: { rise: 1.35, color: P.lead, parapet: 'battle' },
       spec: perpAisleWin,
       buttress: 'stepped',
@@ -64,7 +64,7 @@ export const perpendicularChurch: BuildingDef = {
   summary:
     'Rich from the wool and cloth trade, the town\'s merchants rebuilt their church to show it off, in the uniquely English Perpendicular style. ' +
     'The nave walls were raised to take a clerestory, a row of windows above the aisle roofs, and the nave and aisle roofs were lowered to a shallow pitch of lead hidden behind battlements. ' +
-    'Windows grew huge, divided into upright panels by straight mullions, so the church became a lantern of glass. ' +
+    'The Decorated aisle walls were kept, but their windows grew huge, divided into upright panels by straight mullions, so the church became a lantern of glass. ' +
     'The old spire was taken down and replaced by a tall new west tower with pinnacles, built in fine ashlar. The steep Early English chancel roof and the Decorated east window were left alone.',
   materials: ['limestone ashlar', 'ragstone', 'rubble stone', 'lead', 'clay tile'],
   lookFor: [
@@ -79,7 +79,7 @@ export const perpendicularChurch: BuildingDef = {
     church(b, perpChurchSpec());
     tower(b, perpTower);
     porch(b, { wall: PERP_ASHLAR, dress: PERP_DRESS, x: 9, z: DOOR_Z, d: 3.4, w: 3.6, h: 6.0, roof: { rise: 0, color: P.lead, parapet: 'battle' }, arch: 'tudor', upper: true });
-    churchyardCross(b, [8.0, 0, -12.0], P.limestone);
-    graveMounds(b, [[11.5, -6], [11.2, -14], [-11.5, -12], [-11.4, -5.5], [6.8, -20.5], [-7, -20]], tint(P.grass, -0.06));
+    churchyardCross(b, CROSS, P.limestone);
+    graveMounds(b, [...GRAVES, [-7, -20]], tint(P.grass, -0.06));
   },
 };

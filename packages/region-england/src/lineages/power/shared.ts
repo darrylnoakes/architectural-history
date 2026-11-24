@@ -258,6 +258,64 @@ export const BAILEY_LEFT: XZ[] = [
 /** Centre of the gateway on the front line. */
 export const GATE: XZ = [1.5, 19];
 
+/** Extend a bailey line from where it meets the motte slope up to the summit. */
+export function toSummit(p: XZ, r = MOTTE.rTop - 0.4): XZ {
+  const a = Math.atan2(p[1] - MOTTE.z, p[0] - MOTTE.x);
+  return [MOTTE.x + r * Math.cos(a), MOTTE.z + r * Math.sin(a)];
+}
+
+/** Offset a bailey line outwards (scaled about a point near the bailey centre) for the outer ditch. */
+export function ditchLine(pts: XZ[], k = 1.06): XZ[] {
+  return pts.map(([x, z]) => [x * k, 2 + (z - 2) * k]);
+}
+
+/**
+ * The earthworks of the bailey, thrown up in 1068 and kept by the stone castle: the bank the
+ * palisade (later the curtain wall) stands on, and the dry ditch outside it, broken at the gate.
+ */
+export function baileyEarthworks(b: Builder, o?: { bank?: boolean; ditch?: boolean }): void {
+  if (o?.bank !== false) {
+    bank(b, BAILEY_RIGHT.slice(1), 3.2, BAILEY_BANK_H, tint(P.turf, 0.03));
+    bank(b, BAILEY_LEFT.slice(0, -1), 3.2, BAILEY_BANK_H, tint(P.turf, 0.03));
+  }
+  if (o?.ditch !== false) {
+    const ditch = mix(P.soil, P.earth, 0.4);
+    strip(b, ditchLine(BAILEY_RIGHT.slice(1)), 1.5, 0.03, ditch);
+    strip(b, ditchLine(BAILEY_LEFT.slice(0, -1)), 1.5, 0.03, ditch);
+    strip(b, [[-12.6, 20.6], [-0.8, 20.6]], 1.7, 0.03, ditch);
+    strip(b, [[3.8, 20.6], [14, 20.6]], 1.7, 0.03, ditch);
+  }
+}
+
+/** Height of the bailey bank. */
+export const BAILEY_BANK_H = 1.0;
+
+/** The timber bridge over the ditch in front of the gate (1068, kept in front of the stone gate tower). */
+export function gateBridge(b: Builder): void {
+  b.group({ at: [GATE[0], 0, GATE[1]] }, () => {
+    b.box(3.2, 0.25, 2.6, P.oak, { at: [0, 0.35, 1.7] });
+    b.sym((s) => {
+      b.box(0.12, 1.0, 2.6, P.oakDark, { at: [s * 1.5, 0.6, 1.7] });
+      b.box(0.24, 0.6, 0.24, P.oakDark, { at: [s * 1.4, 0, 1.0] });
+      b.box(0.24, 0.6, 0.24, P.oakDark, { at: [s * 1.4, 0, 2.6] });
+    });
+  });
+}
+
+/** The timber stables along the right side of the bailey, thatched (1068, kept in 1130). */
+export function baileyStables(b: Builder): void {
+  b.group({ at: [15.3, 0, 4.5] }, () => {
+    b.box(4.2, 2.6, 12, mix(P.oak, P.oakSilver, 0.3));
+    b.shed(5, 12.6, 1.3, P.thatchOld, { at: [0, 2.6, 0], high: '+x' });
+    for (const z of [-4, 0, 4]) b.panel(1.6, 2.0, P.oakDark, { at: [-2.1, 0, z], facing: '-x' });
+  });
+}
+
+/** The well in the bailey, from 1068 to the end of the castle. */
+export function baileyWell(b: Builder): void {
+  b.cyl(0.8, 0.8, P.rubble, { at: [5, 0, 6], segs: 8 });
+}
+
 /** Points along a polyline, `step` apart, with the direction of travel at each. */
 export function along(pts: XZ[], step: number): { x: number; z: number; ang: number }[] {
   const res: { x: number; z: number; ang: number }[] = [];
@@ -376,31 +434,48 @@ export function columns(
   }
 }
 
+/** One straight length of a curtain wall, as `curtainPieces` cuts a polyline into them. */
+export interface WallPiece {
+  /** Index of the polyline segment and of the piece within it. */
+  seg: number;
+  k: number;
+  /** Ends and middle of the piece in plan, its turn, length (with overlap), foot and wall-walk height. */
+  ax: number;
+  az: number;
+  bx: number;
+  bz: number;
+  mx: number;
+  mz: number;
+  ang: number;
+  len: number;
+  lo: number;
+  top: number;
+  /** Plan length of the piece and the right-hand normal of the segment. */
+  run: number;
+  nx: number;
+  nz: number;
+}
+
 /**
- * A battlemented stone curtain wall along a polyline, stepping up where it climbs the motte.
- * `h` is the height of the wall-walk above the ground under it; merlons stand on the outer edge.
- * `outer` is +1 if the outside is to the right of the direction of travel, -1 if to the left.
+ * The straight pieces a curtain wall along `pts` is built in (see `curtain`). Each segment is cut
+ * into equal pieces no longer than `piece`; a piece depends only on its own segment, so a later
+ * stage that keeps a stretch of wall gets exactly the same pieces for it.
  */
-export function curtain(
-  b: Builder,
+export function curtainPieces(
   pts: XZ[],
   h: number,
   t: number,
-  color: number,
-  o?: { base?: (x: number, z: number) => number; outer?: 1 | -1; merlon?: number; piece?: number; walk?: number },
-): void {
+  o?: { base?: (x: number, z: number) => number; piece?: number },
+): WallPiece[] {
   const base = o?.base ?? (() => 0);
-  const outer = o?.outer ?? 1;
-  const mw = o?.merlon ?? 0.8;
   const piece = o?.piece ?? 4;
-  const walk = o?.walk ?? tint(color, -0.08);
+  const out: WallPiece[] = [];
   for (let i = 0; i < pts.length - 1; i++) {
     const [x0, z0] = pts[i];
     const [x1, z1] = pts[i + 1];
     const L = Math.hypot(x1 - x0, z1 - z0);
     const n = Math.max(1, Math.ceil(L / piece));
     const ang = Math.atan2(-(z1 - z0), x1 - x0);
-    // right-hand normal of the direction of travel (in plan)
     const nx = -(z1 - z0) / L;
     const nz = (x1 - x0) / L;
     for (let k = 0; k < n; k++) {
@@ -412,26 +487,72 @@ export function curtain(
       const bz = z0 + (z1 - z0) * u1;
       const mx = (ax + bx) / 2;
       const mz = (az + bz) / 2;
-      const lo = Math.min(base(ax, az), base(bx, bz)) - 0.6;
-      const top = base(mx, mz) + h;
-      const len = (L / n) + t * 0.6;
-      b.box(len, top - lo, t, color, { at: [mx, lo, mz], rotY: ang });
-      b.box(len, 0.06, t - 0.2, walk, { at: [mx, top, mz], rotY: ang, jitter: false });
-      // merlons along the outer edge
-      const m = Math.max(1, Math.round(L / n / (mw * 2)));
-      for (let j = 0; j < m; j++) {
-        const u = (j + 0.5) / m;
-        const px = ax + (bx - ax) * u - nx * outer * -1 * (t / 2 - 0.2);
-        const pz = az + (bz - az) * u - nz * outer * -1 * (t / 2 - 0.2);
-        b.box(mw, 0.9, 0.4, color, { at: [px, top, pz], rotY: ang, jitter: false });
-      }
-      // a low parapet on the inner edge
-      b.box(len, 0.5, 0.3, color, {
-        at: [mx - nx * outer * (t / 2 - 0.15), top, mz - nz * outer * (t / 2 - 0.15)],
-        rotY: ang,
-        jitter: false,
+      out.push({
+        seg: i,
+        k,
+        ax,
+        az,
+        bx,
+        bz,
+        mx,
+        mz,
+        ang,
+        len: L / n + t * 0.6,
+        lo: Math.min(base(ax, az), base(bx, bz)) - 0.6,
+        top: base(mx, mz) + h,
+        run: L / n,
+        nx,
+        nz,
       });
     }
+  }
+  return out;
+}
+
+/** The body of one curtain piece, from below the ground up to its wall-walk. */
+export function wallBody(b: Builder, p: WallPiece, t: number, color: number): void {
+  b.box(p.len, p.top - p.lo, t, color, { at: [p.mx, p.lo, p.mz], rotY: p.ang });
+}
+
+/**
+ * A battlemented stone curtain wall along a polyline, stepping up where it climbs the motte.
+ * `h` is the height of the wall-walk above the ground under it; merlons stand on the outer edge.
+ * `outer` is +1 if the outside is to the right of the direction of travel, -1 if to the left.
+ * `raise` builds the wall to `h` as before and then heightens it by that much: the old wall body
+ * stays the same piece, and the battlements are rebuilt on top of the new course.
+ */
+export function curtain(
+  b: Builder,
+  pts: XZ[],
+  h: number,
+  t: number,
+  color: number,
+  o?: { base?: (x: number, z: number) => number; outer?: 1 | -1; merlon?: number; piece?: number; walk?: number; raise?: number },
+): void {
+  const outer = o?.outer ?? 1;
+  const mw = o?.merlon ?? 0.8;
+  const walk = o?.walk ?? tint(color, -0.08);
+  const raise = o?.raise ?? 0;
+  for (const p of curtainPieces(pts, h, t, o)) {
+    wallBody(b, p, t, color);
+    if (raise > 0) b.box(p.len, raise, t, color, { at: [p.mx, p.top, p.mz], rotY: p.ang });
+    const top = p.top + raise;
+    const { ax, az, bx, bz, mx, mz, ang, len, nx, nz } = p;
+    if (!raise) b.box(len, 0.06, t - 0.2, walk, { at: [mx, top, mz], rotY: ang, jitter: false });
+    // merlons along the outer edge
+    const m = Math.max(1, Math.round(p.run / (mw * 2)));
+    for (let j = 0; j < m; j++) {
+      const u = (j + 0.5) / m;
+      const px = ax + (bx - ax) * u - nx * outer * -1 * (t / 2 - 0.2);
+      const pz = az + (bz - az) * u - nz * outer * -1 * (t / 2 - 0.2);
+      b.box(mw, 0.9, 0.4, color, { at: [px, top, pz], rotY: ang, jitter: false });
+    }
+    // a low parapet on the inner edge
+    b.box(len, 0.5, 0.3, color, {
+      at: [mx - nx * outer * (t / 2 - 0.15), top, mz - nz * outer * (t / 2 - 0.15)],
+      rotY: ang,
+      jitter: false,
+    });
   }
 }
 

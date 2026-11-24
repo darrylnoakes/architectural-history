@@ -35,6 +35,88 @@ function gallery(b: Builder, len: number, y: number, h: number, timber: number) 
   }
 }
 
+/**
+ * The 15th-century yard: the cobbles, the two galleried side ranges of chambers and the stable range
+ * across the back. The Georgian inn kept all of it behind its new brick street range, so both stages
+ * build it here with the same numbers.
+ */
+export function yardRanges(b: Builder, oak: number, fill: number, tile: number): void {
+  const yardX = XI - GAL;
+  // the street range's roof, which the side-range roofs run into
+  const z2 = ZF + 0.45 + 0.4;
+  const zf0 = ZFI - GAL;
+  const fspan = z2 - zf0;
+  const fRise = (fspan / 2) * PITCH;
+  ground(b, 2 * XI, ZFI - ZBI, P.cobble, [0, (ZFI + ZBI) / 2]);
+
+  // ---------------- side ranges: chambers on two galleried floors over parlours and kitchen
+  const sLen = ZFI - ZBI;
+  const sZ = (ZFI + ZBI) / 2;
+  b.sym((s) => {
+    const xc = s * (XI + XO) / 2;
+    const out = s > 0 ? '+x' : '-x';
+    const inn = s > 0 ? '-x' : '+x';
+    b.box(XO - XI, TOP, sLen, fill, { at: [xc, 0, sZ] });
+    b.box(XO - XI + 0.06, 0.3, sLen + 0.06, P.rubble, { at: [xc, 0, sZ] });
+    // outer wall: square panels with corner braces, storey by storey
+    b.frame(sLen, TOP - 0.3, oak, { at: [s * XO, 0.3, sZ], facing: out, studs: 7, rails: 2, brace: 'corner', beam: 0.17 });
+    b.frame(sLen, TOP - 0.3, oak, { at: [s * XI, 0.3, sZ], facing: inn, studs: 5, rails: 2, beam: 0.15 });
+    for (const z of [-3, 0.4, 3]) {
+      b.window(1.4, 1.0, { at: [s * XO, G + 0.9, z], facing: out, frame: oak, bars: [3, 2] });
+      b.window(1.2, 0.9, { at: [s * XO, G + F1 + 0.85, z], facing: out, frame: oak, bars: [3, 2] });
+    }
+    // galleries on the yard face
+    b.group({ at: [s * XI, 0, sZ], rotY: s > 0 ? -Math.PI / 2 : Math.PI / 2 }, () => {
+      gallery(b, sLen, G, F1, oak);
+      gallery(b, sLen, G + F1, F2, oak);
+    });
+    for (const z of spread(4, ZBI + 1.2, ZFI - 1.2)) {
+      b.panel(0.9, 2.0, P.oakDark, { at: [s * XI, G, z], facing: inn });
+      b.panel(0.9, 1.95, P.oakDark, { at: [s * XI, G + F1, z], facing: inn });
+      b.panel(1.0, 2.1, P.oakDark, { at: [s * XI, 0.3, z + 0.9], facing: inn });
+      b.window(1.2, 1.0, { at: [s * XI, 1.2, z - 0.7], facing: inn, frame: oak, bars: [3, 1] });
+    }
+    // roof over range and gallery, running into the street-range roof
+    const span = XO - yardX;
+    const rise = (span / 2) * PITCH;
+    // ridge level is met by the street roof at this z, so the end is buried in it
+    const zEnd = zf0 + (rise / fRise) * (fspan / 2) + 0.15;
+    const len = zEnd - ZBI;
+    b.gable(span, len, rise, tile, { at: [s * (XO + yardX) / 2, TOP, ZBI + len / 2], ridge: 'z', overhang: 0.3, wall: fill });
+    // the gable end that shows above the stable roof
+    b.frame(span - 0.4, TOP - BH, oak, { at: [s * (XO + yardX) / 2, BH, ZBI - 0.02], facing: '-z', studs: 6, rails: 2, brace: 'corner' });
+    for (const x of [-1.5, 1.5]) b.window(1.1, 0.9, { at: [s * (XO + yardX) / 2 + x, G + F1 + 0.8, ZBI - 0.02], facing: '-z', frame: oak, bars: [3, 2] });
+    b.chimney(0.9, 2.6, 1.0, P.rubble, { at: [s * (XO - 1.4), TOP + rise * 0.4, -1.0] });
+  });
+
+  // ---------------- back range: stables with a hayloft over
+  const bz = (ZB + ZBI) / 2;
+  b.box(2 * XO, BH, ZBI - ZB, fill, { at: [0, 0, bz] });
+  b.box(2 * XO + 0.06, 0.3, ZBI - ZB + 0.06, P.rubble, { at: [0, 0, bz] });
+  b.frame(2 * XO, BH - 0.3, oak, { at: [0, 0.3, ZB], facing: '-z', studs: 11, rails: 1, brace: 'corner', beam: 0.17 });
+  b.frame(2 * XI, BH - 0.3, oak, { at: [0, 0.3, ZBI], facing: '+z', studs: 8, rails: 1, beam: 0.17 });
+  b.sym((s) => b.frame(ZBI - ZB, BH - 0.3, oak, { at: [s * XO, 0.3, bz], facing: s > 0 ? '+x' : '-x', studs: 3, rails: 1, brace: 'corner' }));
+  for (const x of spread(4, -3.6, 3.6)) {
+    b.panel(1.5, 2.4, tint(oak, 0.04), { at: [x, 0.3, ZBI + 0.06], facing: '+z' });
+  }
+  b.box(1.6, 1.0, 1.0, fill, { at: [0, BH, ZBI - 0.5] });
+  b.panel(1.1, 0.85, tint(oak, 0.04), { at: [0, BH + 0.05, ZBI], facing: '+z' });
+  b.gable(1.6, 1.0, 0.9, tile, { at: [0, BH + 1.0, ZBI - 0.5], ridge: 'z', overhang: 0.15, wall: fill });
+  for (const x of [-6, -2, 2, 6]) b.panel(1.2, 0.6, P.windowDark, { at: [x, 1.6, ZB - 0.06], facing: '-z' });
+  const bRise = ((ZBI - ZB) / 2) * PITCH * 0.95;
+  b.gable(2 * XO, ZBI - ZB, bRise, tile, { at: [0, BH, bz], overhang: 0.3, wall: fill });
+
+  // ---------------- yard: a stair up to the first gallery, a mounting block, barrels, a trough
+  b.stairs(1.1, G, 3.6, 12, oak, { at: [-yardX + 0.65, 0, -2.6] });
+  b.sym((s) => b.box(0.08, 1.0, 3.8, oak, { at: [-yardX + 0.65 + s * 0.55, 1.6, -2.6], rot: [-Math.atan2(G, 3.6), 0, 0] }));
+  barrel(b, [3.6, 0, -4.6]);
+  barrel(b, [3.0, 0, -4.8], tint(P.oak, 0.05));
+  b.box(2.2, 0.55, 0.6, P.oak, { at: [-1.0, 0, ZBI + 0.6] });
+
+  b.sym((s) => b.collider(XO - XI, sLen, { at: [s * (XI + XO) / 2, 0, sZ] }));
+  b.collider(2 * XO, ZBI - ZB, { at: [0, 0, bz] });
+}
+
 export const galleriedInn: BuildingDef = {
   id: 'galleried-inn',
   name: 'Galleried inn',
@@ -57,10 +139,9 @@ export const galleriedInn: BuildingDef = {
     const oak = b.pick([P.oak, tint(P.oak, -0.04), tint(P.oak, 0.04)]);
     const fill = b.pick([P.limewash, P.plaster, tint(P.ochreWash, 0.1)]);
     const tile = b.pick([P.tileRed, tint(P.tileRed, -0.05), P.tileBrown]);
-    const yardX = XI - GAL;
 
-    // cobbled yard and street pavement
-    ground(b, 2 * XI, ZFI - ZBI, P.cobble, [0, (ZFI + ZBI) / 2]);
+    // the yard and the ranges round it (kept by the Georgian inn), then the cobbled passage
+    yardRanges(b, oak, fill, tile);
     ground(b, AW, ZF - ZFI, P.cobble, [0, (ZF + ZFI) / 2]);
 
     // ---------------- front (street) range: three storeys, jettied twice
@@ -138,74 +219,10 @@ export const galleriedInn: BuildingDef = {
       b.panel(0.9, 1.95, P.oakDark, { at: [x, G + F1, ZFI], facing: '-z' });
     }
 
-    // ---------------- side ranges: chambers on two galleried floors over parlours and kitchen
-    const sLen = ZFI - ZBI;
-    const sZ = (ZFI + ZBI) / 2;
-    b.sym((s) => {
-      const xc = s * (XI + XO) / 2;
-      const out = s > 0 ? '+x' : '-x';
-      const inn = s > 0 ? '-x' : '+x';
-      b.box(XO - XI, TOP, sLen, fill, { at: [xc, 0, sZ] });
-      b.box(XO - XI + 0.06, 0.3, sLen + 0.06, P.rubble, { at: [xc, 0, sZ] });
-      // outer wall: square panels with corner braces, storey by storey
-      b.frame(sLen, TOP - 0.3, oak, { at: [s * XO, 0.3, sZ], facing: out, studs: 7, rails: 2, brace: 'corner', beam: 0.17 });
-      b.frame(sLen, TOP - 0.3, oak, { at: [s * XI, 0.3, sZ], facing: inn, studs: 5, rails: 2, beam: 0.15 });
-      for (const z of [-3, 0.4, 3]) {
-        b.window(1.4, 1.0, { at: [s * XO, G + 0.9, z], facing: out, frame: oak, bars: [3, 2] });
-        b.window(1.2, 0.9, { at: [s * XO, G + F1 + 0.85, z], facing: out, frame: oak, bars: [3, 2] });
-      }
-      // galleries on the yard face
-      b.group({ at: [s * XI, 0, sZ], rotY: s > 0 ? -Math.PI / 2 : Math.PI / 2 }, () => {
-        gallery(b, sLen, G, F1, oak);
-        gallery(b, sLen, G + F1, F2, oak);
-      });
-      for (const z of spread(4, ZBI + 1.2, ZFI - 1.2)) {
-        b.panel(0.9, 2.0, P.oakDark, { at: [s * XI, G, z], facing: inn });
-        b.panel(0.9, 1.95, P.oakDark, { at: [s * XI, G + F1, z], facing: inn });
-        b.panel(1.0, 2.1, P.oakDark, { at: [s * XI, 0.3, z + 0.9], facing: inn });
-        b.window(1.2, 1.0, { at: [s * XI, 1.2, z - 0.7], facing: inn, frame: oak, bars: [3, 1] });
-      }
-      // roof over range and gallery, running into the street-range roof
-      const span = XO - yardX;
-      const rise = (span / 2) * PITCH;
-      // ridge level is met by the street roof at this z, so the end is buried in it
-      const zEnd = zf0 + (rise / fRise) * (fspan / 2) + 0.15;
-      const len = zEnd - ZBI;
-      b.gable(span, len, rise, tile, { at: [s * (XO + yardX) / 2, TOP, ZBI + len / 2], ridge: 'z', overhang: 0.3, wall: fill });
-      // the gable end that shows above the stable roof
-      b.frame(span - 0.4, TOP - BH, oak, { at: [s * (XO + yardX) / 2, BH, ZBI - 0.02], facing: '-z', studs: 6, rails: 2, brace: 'corner' });
-      for (const x of [-1.5, 1.5]) b.window(1.1, 0.9, { at: [s * (XO + yardX) / 2 + x, G + F1 + 0.8, ZBI - 0.02], facing: '-z', frame: oak, bars: [3, 2] });
-      b.chimney(0.9, 2.6, 1.0, P.rubble, { at: [s * (XO - 1.4), TOP + rise * 0.4, -1.0] });
-    });
-
-    // ---------------- back range: stables with a hayloft over
-    const bz = (ZB + ZBI) / 2;
-    b.box(2 * XO, BH, ZBI - ZB, fill, { at: [0, 0, bz] });
-    b.box(2 * XO + 0.06, 0.3, ZBI - ZB + 0.06, P.rubble, { at: [0, 0, bz] });
-    b.frame(2 * XO, BH - 0.3, oak, { at: [0, 0.3, ZB], facing: '-z', studs: 11, rails: 1, brace: 'corner', beam: 0.17 });
-    b.frame(2 * XI, BH - 0.3, oak, { at: [0, 0.3, ZBI], facing: '+z', studs: 8, rails: 1, beam: 0.17 });
-    b.sym((s) => b.frame(ZBI - ZB, BH - 0.3, oak, { at: [s * XO, 0.3, bz], facing: s > 0 ? '+x' : '-x', studs: 3, rails: 1, brace: 'corner' }));
-    for (const x of spread(4, -3.6, 3.6)) {
-      b.panel(1.5, 2.4, tint(oak, 0.04), { at: [x, 0.3, ZBI + 0.06], facing: '+z' });
-    }
-    b.box(1.6, 1.0, 1.0, fill, { at: [0, BH, ZBI - 0.5] });
-    b.panel(1.1, 0.85, tint(oak, 0.04), { at: [0, BH + 0.05, ZBI], facing: '+z' });
-    b.gable(1.6, 1.0, 0.9, tile, { at: [0, BH + 1.0, ZBI - 0.5], ridge: 'z', overhang: 0.15, wall: fill });
-    for (const x of [-6, -2, 2, 6]) b.panel(1.2, 0.6, P.windowDark, { at: [x, 1.6, ZB - 0.06], facing: '-z' });
-    const bRise = ((ZBI - ZB) / 2) * PITCH * 0.95;
-    b.gable(2 * XO, ZBI - ZB, bRise, tile, { at: [0, BH, bz], overhang: 0.3, wall: fill });
-
-    // ---------------- yard: a stair up to the first gallery, a mounting block, barrels, a trough
-    b.stairs(1.1, G, 3.6, 12, oak, { at: [-yardX + 0.65, 0, -2.6] });
-    b.sym((s) => b.box(0.08, 1.0, 3.8, oak, { at: [-yardX + 0.65 + s * 0.55, 1.6, -2.6], rot: [-Math.atan2(G, 3.6), 0, 0] }));
+    // a mounting block by the gate
     b.stairs(1.4, 0.75, 1.2, 3, P.rubble, { at: [3.0, 0, 2.6], rotY: Math.PI / 2 });
-    barrel(b, [3.6, 0, -4.6]);
-    barrel(b, [3.0, 0, -4.8], tint(P.oak, 0.05));
-    b.box(2.2, 0.55, 0.6, P.oak, { at: [-1.0, 0, ZBI + 0.6] });
 
     // ---------------- colliders: the four ranges; the arch and yard stay open
     b.sym((s) => b.collider(fw, ZF - ZFI, { at: [s * (AW / 2 + fw / 2), 0, (ZF + ZFI) / 2] }));
-    b.sym((s) => b.collider(XO - XI, sLen, { at: [s * (XI + XO) / 2, 0, sZ] }));
-    b.collider(2 * XO, ZBI - ZB, { at: [0, 0, bz] });
   },
 };

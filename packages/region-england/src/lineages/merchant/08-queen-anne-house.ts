@@ -1,5 +1,5 @@
 import { P, linspace, tint, type BuildingDef } from '@ah/kit';
-import { sash } from './shared';
+import { sash, gardenWalls } from './shared';
 
 export const queenAnneHouse: BuildingDef = {
   id: 'queen-anne-house',
@@ -148,7 +148,6 @@ export const queenAnneHouse: BuildingDef = {
         b.cone(0.55, 2.2, P.leafDark, { at: [x, 0.1, z], segs: 8 });
       }
     }
-    b.sym((s) => b.box(0.35, 2.2, 12.6, brick, { at: [s * 9.7, 0, -5.3] }));
-    b.box(19.7, 2.2, 0.35, brick, { at: [0, 0, -11.6] });
+    gardenWalls(b); // the old stone garden walls, kept
   },
 };

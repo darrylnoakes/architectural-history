@@ -1,5 +1,7 @@
 import { P, mix, spread, tint, type BuildingDef, type Builder } from '@ah/kit';
-import { MOTTE, arch, motte, motteY, quad, soup } from './shared';
+import { BAILEY_RIGHT, MOTTE, arch, curtainPieces, lineColliders, motte, motteY, quad, soup, wallBody } from './shared';
+import { CURTAIN_1130 } from './05-stone-keep';
+import { FLANK, RUIN_CORNER, TOWER_STUMP, flankAt, roundTowerStump } from './06-edwardian-castle';
 
 /** Clustered brick chimney shafts on a shared base, as Elizabethan builders loved to show off. */
 function stack(b: Builder, x: number, y: number, z: number, n: number, brick: number, stone: number, rotY = 0) {
@@ -26,31 +28,44 @@ function frontGable(b: Builder, w: number, h: number, depth: number, brick: numb
   b.sphere(0.28, stone, { at: [0, h + 0.3, depth / 2 - 0.1], segs: 6 });
 }
 
-/** A ruined length of curtain wall with the stump of a round tower: the castle kept as a garden ornament. */
+/** The angle of the bailey whose tower and walls survive as the garden ruin, and the wall running from it. */
+const RUIN_RUN: [number, number][] = [BAILEY_RIGHT[2], BAILEY_RIGHT[3]];
+
+/**
+ * What is left of the castle, kept as a garden ornament: the lower stage of one round tower of
+ * c. 1290, broken off unevenly, and the Norman curtain wall running from it, its first stretch still
+ * at the height of the 1290 heightening and the rest robbed down to ragged stumps.
+ */
 export function castleFragment(b: Builder, stone: number) {
   const ruin = mix(stone, P.rubble, 0.35);
-  // stump of a round corner tower, broken off unevenly
-  b.group({ at: [15.2, 0, -17.8] }, () => {
-    b.cyl(3.2, 1.4, tint(ruin, -0.04), { segs: 12, rTop: 2.7 });
-    b.cyl(2.7, 6.5, ruin, { segs: 12 });
-    b.cyl(2.7, 2.2, ruin, { at: [0, 6.5, 0], segs: 12, rTop: 2.2 });
-    b.box(1.6, 2.6, 1.4, ruin, { at: [1.6, 8.0, 1.2], rotY: 0.6 });
-    b.box(1.3, 1.6, 1.2, ruin, { at: [-1.4, 8.0, 1.6], rotY: -0.4 });
-    b.cyl(1.8, 0.3, tint(P.turf, 0.04), { at: [0, 8.7, 0], segs: 8 });
-    b.panel(0.18, 1.5, P.black, { at: [0, 3, 2.7], facing: '+z' });
-    b.panel(0.55, 0.16, P.black, { at: [0, 3.9, 2.7], facing: '+z' });
-    arch(b, 1.4, 2.4, P.black, { at: [-2.5, 0, 0.6], facing: -1.2 });
+  const [tx, tz] = flankAt(RUIN_CORNER);
+  roundTowerStump(b, tx, tz, FLANK.r, ruin);
+  b.group({ at: [tx, TOWER_STUMP, tz] }, () => {
+    b.cyl(FLANK.r, 1.4, ruin, { segs: 10, rTop: FLANK.r - 0.45 });
+    b.box(1.6, 1.8, 1.4, ruin, { at: [1.1, 1.2, 1.0], rotY: 0.6 });
+    b.box(1.3, 1.0, 1.2, ruin, { at: [-1.2, 1.2, 1.2], rotY: -0.4 });
+    b.cyl(1.7, 0.3, tint(P.turf, 0.04), { at: [0, 1.25, 0], segs: 8 });
   });
-  // a run of curtain wall, its top ragged where stone has been robbed
-  const heights = [6.8, 6.2, 7.2, 5.1, 4.2, 3.4, 2.3, 1.2];
-  heights.forEach((h, i) => {
-    const z = -17.8 + 0.965 * (2.8 + i * 1.5);
-    const x = 15.2 + 0.261 * (2.8 + i * 1.5);
-    b.box(2, h, 1.65, ruin, { at: [x, 0, z], rotY: -(Math.PI / 2 - 0.26) });
-    if (i % 2 === 0 && h > 5) b.box(0.8, 0.8, 0.4, ruin, { at: [x + 0.7, h, z - 0.2], rotY: -(Math.PI / 2 - 0.26) });
+  arch(b, 1.4, 2.4, P.black, { at: [tx - 2.4, 0, tz + 0.6], facing: -1.2 });
+  // the curtain wall: the same pieces as the castle's, the later ones robbed down to stumps
+  const C = CURTAIN_1130;
+  const pieces = curtainPieces(RUIN_RUN, C.h, C.t, { base: C.base, piece: C.piece });
+  pieces.forEach((p, i) => {
+    if (i === 0) {
+      wallBody(b, p, C.t, ruin);
+      b.box(p.len, 1.6, C.t, ruin, { at: [p.mx, p.top, p.mz], rotY: p.ang }); // the 1290 heightening
+    } else if (i === 1) wallBody(b, p, C.t, ruin);
+    else {
+      // ragged stumps, lower the further they run from the tower
+      for (const [u, h] of (i === 2 ? [[0.25, 4.6], [0.75, 3.3]] : [[0.25, 2.0], [0.75, 0.9]]) as [number, number][]) {
+        const x = p.ax + (p.bx - p.ax) * u;
+        const z = p.az + (p.bz - p.az) * u;
+        b.box(p.run / 2 + 0.1, h, C.t - 0.1, ruin, { at: [x, 0, z], rotY: p.ang });
+      }
+    }
   });
   // ivy
-  b.blob(1.3, P.leafDark, { at: [16.9, 4.2, -13.6], stretch: [0.5, 1.6, 1] });
+  b.blob(1.3, P.leafDark, { at: [17.0, 4.2, -13.6], stretch: [0.5, 1.6, 1] });
   b.blob(1.0, P.leafDark, { at: [13.4, 3, -16.4], stretch: [1, 1.8, 0.6] });
 }
 
@@ -62,14 +77,14 @@ export const elizabethanManor: BuildingDef = {
   summary:
     'Under strong Tudor government, and with cannon able to batter walls down, castles lost much of their point; this one was left to decay and quarried for its stone. The new lord builds a house to be seen rather than to hold: an E-shaped plan of fashionable brick, two wings and a central porch, ' +
     'with walls of glass in huge mullioned and transomed windows and tall clustered chimneys announcing many warm rooms. ' +
-    'The old motte survives as a garden mount, a spiral walk to its top for a view over the knot garden, and a broken stretch of the castle wall is kept, perhaps as a reminder of the family\'s ancient lineage.',
+    'The old motte survives as a garden mount, a spiral walk to its top for a view over the knot garden, and the stump of one corner tower of the castle, with a broken stretch of its wall, is kept, perhaps as a reminder of the family\'s ancient lineage.',
   materials: ['red brick with blue diaper', 'limestone dressings', 'clay plain tiles', 'leaded glass'],
   lookFor: [
     { label: 'E-plan', note: 'Two wings project forward at the ends and a porch in the middle, so the plan reads as a letter E; it is often said, probably wrongly, to honour the Queen.', at: [0, 11.6, 17.8] },
     { label: 'Mullioned and transomed windows', note: 'Great windows divided by upright stone mullions and horizontal transoms, filled with small leaded panes; glass itself was a display of wealth.', at: [-6.5, 6.5, 12.3] },
     { label: 'Clustered chimneys', note: 'Several tall brick shafts grouped on one base, each serving a fireplace in a different room.', at: [9, 18.2, 6.8] },
     { label: 'Porch of the orders', note: 'The central porch carries classical columns stacked in their proper order, Doric, Ionic, then Corinthian, a Renaissance motif learned from books and applied to a still-medieval house.', at: [0, 4.4, 16.6] },
-    { label: 'Castle ruin and garden mount', note: 'A ruined fragment of the medieval curtain wall kept in the garden, and the old motte reused as a mount with a spiral path.', at: [15.6, 9.4, -16] },
+    { label: 'Castle ruin and garden mount', note: 'A ruined fragment of the medieval curtain wall kept in the garden, and the old motte reused as a mount with a spiral path.', at: [15.2, 8.4, -17.8] },
   ],
   influences: ['flemish-brick', 'italian-renaissance'],
   build(b) {
@@ -245,8 +260,9 @@ export const elizabethanManor: BuildingDef = {
     b.collider(LM + 2.6, DM + 1.2, { at: [XC, 0, ZM - 0.2] });
     b.sym((s) => b.collider(WW + 1.2, DM + WD + 1.4, { at: [XC + s * (half - WW / 2), 0, ZM + WD / 2 + 0.6] }));
     b.collider(3.8, 4.2, { at: [XC, 0, FRONT + 1.8] });
-    b.collider(5.6, 5.6, { at: [15.2, 0, -17.8] });
-    b.collider(12.4, 2, { at: [17.1, 0, -10.6], rotY: -(Math.PI / 2 - 0.26) });
+    const [tx, tz] = flankAt(RUIN_CORNER);
+    b.collider(6, 6, { at: [tx, 0, tz] });
+    lineColliders(b, RUIN_RUN, 1.6);
     b.collider(4, 4, { at: [MOTTE.x, 0, MOTTE.z] });
   },
 };

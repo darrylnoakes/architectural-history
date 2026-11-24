@@ -1,6 +1,6 @@
 import { P, tint, type BuildingDef, type Builder, type Vec3 } from '@ah/kit';
-import { church, tower, win, churchyardCross, graveMounds, BAY_EDGES, type WinSpec, type ChurchSpec, type TowerSpec } from './shared';
-import { NORMAN_DRESS, NORMAN_WALL, normanBelfry } from './05-norman-church';
+import { church, tower, win, churchyardCross, graveMounds, BAY_EDGES, CROSS, GRAVES, type WinSpec, type ChurchSpec, type TowerSpec } from './shared';
+import { NORMAN_DRESS, NORMAN_WALL, normanTower } from './05-norman-church';
 
 export const EE_AISLE_WALL = tint(P.rubble, 0.04);
 export const EE_CHANCEL_WALL = tint(P.rubble, 0.03);
@@ -36,15 +36,7 @@ export function eeChancel(over: Partial<ChurchSpec['chancel']> = {}): ChurchSpec
 
 /** The Norman tower, kept, with a stone broach spire on top. */
 export const eeTower: TowerSpec = {
-  size: 6,
-  z: 17,
-  h: 13,
-  wall: NORMAN_WALL,
-  dress: NORMAN_DRESS,
-  corners: 'clasping',
-  courses: [4.6, 9.4],
-  belfry: { spec: normanBelfry, n: 1 },
-  lower: [{ kind: 'round', w: 0.5, h: 1.2, sill: 6.2, splay: 0.18 }],
+  ...normanTower,
   westWin: { kind: 'lancet', w: 0.7, h: 2.6, sill: 2.0, hood: 'arch' },
   top: 'broach',
   topColor: tint(P.limestone, -0.04),
@@ -88,7 +80,7 @@ export const earlyEnglishChurch: BuildingDef = {
       southDoor: 'norman',
     });
     tower(b, eeTower);
-    churchyardCross(b, [8.0, 0, -10.5], P.limestone);
-    graveMounds(b, [[10.5, -6], [10.8, -13], [-9.5, -12], [-9.8, -6.5], [6.8, -19.5]], tint(P.grass, -0.06));
+    churchyardCross(b, CROSS, P.limestone);
+    graveMounds(b, GRAVES, tint(P.grass, -0.06));
   },
 };

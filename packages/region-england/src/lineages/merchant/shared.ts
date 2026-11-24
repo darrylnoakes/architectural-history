@@ -1,4 +1,4 @@
-import { P, type Builder, type Facing, type Vec3 } from '@ah/kit';
+import { P, tint, type Builder, type Facing, type Vec3 } from '@ah/kit';
 
 /** A square-section timber or bar running straight from p0 to p1. */
 export function beam(b: Builder, p0: Vec3, p1: Vec3, t: number, color: number, tz = t): void {
@@ -195,4 +195,25 @@ export function cantedBay(
     { at: [x, zWall + proj], facing: 0, w: wFront },
     { at: [x + (wBack + wFront) / 4, zWall + proj / 2], facing: ang, w: sw },
   ];
+}
+
+/**
+ * The walls round the back garden of the big-house plot: the two side walls and the back wall, of
+ * rubble stone. Built by the Norman stone house and kept, piece for piece, by every house down to the
+ * Queen Anne one, because a town plot kept its boundaries long after the house on it was rebuilt.
+ * `toStreet` carries the side walls on to the street front, as the medieval and Tudor houses have them.
+ */
+export function gardenWalls(b: Builder, o: { toStreet?: boolean } = {}): void {
+  const c = tint(P.ragstone, -0.05);
+  b.sym((s) => b.box(0.4, 2.0, 11.0, c, { at: [s * 9.7, 0, -5.9] }));
+  b.box(19.8, 2.0, 0.4, c, { at: [0, 0, -11.4] });
+  if (o.toStreet) b.sym((s) => b.box(0.4, 2.0, 11.4, c, { at: [s * 9.7, 0, 5.3] }));
+}
+
+/** A stone-lined well with a timber frame for the bucket. */
+export function well(b: Builder, x: number, z: number, stone: number, oak: number): void {
+  b.cyl(0.65, 0.8, stone, { at: [x, 0, z], segs: 10 });
+  b.cyl(0.5, 0.82, 0x2a2a2a, { at: [x, 0, z], segs: 10 });
+  b.sym((s) => b.box(0.12, 1.5, 0.12, oak, { at: [x + s * 0.6, 0.8, z] }));
+  b.box(1.4, 0.12, 0.12, oak, { at: [x, 2.3, z] });
 }

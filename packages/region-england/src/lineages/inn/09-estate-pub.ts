@@ -5,14 +5,29 @@ import { bayLines, car, ground } from './shared';
 export const BAR = { x0: -10, x1: 5.6, z0: -9.2, z1: -1.2, h: 3.6 };
 export const FLAT = { x0: 5.6, x1: 10.4, z0: -10.4, z1: -2.4, h: 6.4 };
 
-/** The brick volumes of the estate pub: a single-storey bar block and a two-storey manager's flat. */
-export function estateShell(b: Builder, brick: number, roofFelt: number): void {
+/**
+ * The brick volumes of the estate pub, a single-storey bar block and a two-storey manager's flat, with
+ * the openings the 2012 refit kept: high back windows, the side picture window, the back and cellar
+ * doors and the ground floor of the flat.
+ */
+export function estateShell(b: Builder, brick: number, roofFelt: number, frame: number): void {
   const { x0, x1, z0, z1, h } = BAR;
   b.box(x1 - x0, h, z1 - z0, brick, { at: [(x0 + x1) / 2, 0, (z0 + z1) / 2] });
   b.box(x1 - x0, 0.06, z1 - z0, roofFelt, { at: [(x0 + x1) / 2, h, (z0 + z1) / 2] });
   const f = FLAT;
   b.box(f.x1 - f.x0, f.h, f.z1 - f.z0, brick, { at: [(f.x0 + f.x1) / 2, 0, (f.z0 + f.z1) / 2] });
   b.box(f.x1 - f.x0, 0.06, f.z1 - f.z0, roofFelt, { at: [(f.x0 + f.x1) / 2, f.h, (f.z0 + f.z1) / 2] });
+  // back and side of the bar: high windows to the toilets, a door, a cellar flap, one picture window
+  for (const x of [-8, -5, -2, 1]) b.window(1.8, 0.6, { at: [x, 2.2, z0], facing: '-z', frame, border: 0.05 });
+  b.panel(1.0, 2.1, P.doorBlue, { at: [3.6, 0, z0], facing: '-z' });
+  b.box(1.6, 0.12, 1.0, P.steel, { at: [-3, 0, z0 - 0.5] });
+  b.window(2.6, 1.9, { at: [x0, 0.9, -5.2], facing: '-x', frame, border: 0.06, bars: [2, 1] });
+  // the flat's ground floor: a window to the front, one to the side, its own door
+  const fx = (f.x0 + f.x1) / 2;
+  b.window(3.2, 1.3, { at: [fx, 1.0, f.z1], facing: '+z', frame, border: 0.05, bars: [3, 1] });
+  b.window(2.4, 1.2, { at: [f.x1, 1.0, -6.4], facing: '+x', frame, border: 0.05, bars: [2, 1] });
+  b.panel(0.95, 2.1, P.doorYellow, { at: [f.x1, 0, -9.0], facing: '+x' });
+  b.chimney(0.6, 1.2, 0.6, brick, { at: [f.x0 + 0.8, f.h, f.z0 + 1.0] });
 }
 
 /** A flat-roof edge band of depth `h` round a rectangle, standing `out` proud of the walls. */
@@ -61,7 +76,7 @@ export const estatePub: BuildingDef = {
     ground(b, 20.6, 1.4, P.concrete, [-0.4, z1 + 0.7], 0.08);
     bayLines(b, -9.6, 9.6, 7, 6.3, 4.4);
 
-    estateShell(b, brick, P.asphalt);
+    estateShell(b, brick, P.asphalt, alu);
 
     // ---------------- fascias
     fasciaBand(b, BAR, h, 0.8, 0.35, fascia);
@@ -76,29 +91,20 @@ export const estatePub: BuildingDef = {
       b.window(3.0, 1.9, { at: [x, 0.9, z1], facing: '+z', frame: alu, border: 0.06, bars: [2, 1] });
       b.box(3.2, 0.06, 0.25, P.concrete, { at: [x, 0.84, z1 + 0.1] });
     }
-    b.window(2.6, 1.9, { at: [x0, 0.9, -5.2], facing: '-x', frame: alu, border: 0.06, bars: [2, 1] });
     // recessed entrance with a flat concrete canopy on thin steel posts
     b.panel(2.4, 2.4, P.glassDark, { at: [-1.2, 0, z1], facing: '+z', depth: 0.06 });
     b.sym((s) => b.panel(0.06, 2.4, alu, { at: [-1.2 + s * 0.6, 0, z1], facing: '+z', depth: 0.09 }));
     b.panel(2.4, 0.06, alu, { at: [-1.2, 2.1, z1], facing: '+z', depth: 0.09 });
     b.box(3.6, 0.18, 1.8, P.concreteWhite, { at: [-1.2, 2.6, z1 + 0.9] });
     b.sym((s) => b.box(0.08, 2.6, 0.08, P.castIron, { at: [-1.2 + s * 1.6, 0, z1 + 1.65] }));
-    // back and side: high windows to toilets and a cellar flap
-    for (const x of [-8, -5, -2, 1]) b.window(1.8, 0.6, { at: [x, 2.2, z0], facing: '-z', frame: alu, border: 0.05 });
-    b.panel(1.0, 2.1, P.doorBlue, { at: [3.6, 0, z0], facing: '-z' });
-    b.box(1.6, 0.12, 1.0, P.steel, { at: [-3, 0, z0 - 0.5] });
 
     // ---------------- the flat: horizontal windows, a tile-hung panel, its own door
     const f = FLAT;
     const fx = (f.x0 + f.x1) / 2;
     b.panel(f.x1 - f.x0, 1.2, P.tileBrown, { at: [fx, 4.0, f.z1], facing: '+z', depth: 0.04 });
     b.window(3.2, 1.0, { at: [fx, 4.1, f.z1], facing: '+z', frame: alu, border: 0.05, bars: [3, 1] });
-    b.window(3.2, 1.3, { at: [fx, 1.0, f.z1], facing: '+z', frame: alu, border: 0.05, bars: [3, 1] });
     b.window(2.4, 1.0, { at: [f.x1, 4.1, -6.4], facing: '+x', frame: alu, border: 0.05, bars: [2, 1] });
-    b.window(2.4, 1.2, { at: [f.x1, 1.0, -6.4], facing: '+x', frame: alu, border: 0.05, bars: [2, 1] });
     b.window(2.4, 1.0, { at: [fx, 4.1, f.z0], facing: '-z', frame: alu, border: 0.05, bars: [2, 1] });
-    b.panel(0.95, 2.1, P.doorYellow, { at: [f.x1, 0, -9.0], facing: '+x' });
-    b.chimney(0.6, 1.2, 0.6, brick, { at: [f.x0 + 0.8, f.h, f.z0 + 1.0] });
 
     // ---------------- pole sign, bins, cars, a scrap of planting
     b.group({ at: [8.8, 0, 9.4] }, () => {

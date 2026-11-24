@@ -1,5 +1,5 @@
 import { P, tint, type Builder, type BuildingDef } from '@ah/kit';
-import { dutchGable } from './shared';
+import { dutchGable, gardenWalls } from './shared';
 
 /** A shaped gable wall facing +Z (or -Z with flip) with a stone coping rim and a ball finial. */
 function shapedGable(b: Builder, w: number, h: number, x: number, y: number, z: number, brick: number, stone: number, flip = false) {
@@ -155,7 +155,6 @@ export const jacobeanBrickHouse: BuildingDef = {
     b.box(14, 0.05, 9, P.gravel, { at: [0, 0, -6.2] });
     for (const x of [-4.5, 0, 4.5]) for (const z of [-4, -8.4]) b.box(3.6, 0.3, 3.2, P.grass, { at: [x, 0, z] });
     for (const x of [-4.5, 0, 4.5]) for (const z of [-4, -8.4]) b.blob(0.45, P.hedge, { at: [x, 0.5, z], stretch: [1, 1.4, 1] });
-    b.sym((s) => b.box(0.35, 2.0, 11.4, brick, { at: [s * 9.7, 0, -6] }));
-    b.box(19.7, 2.0, 0.35, brick, { at: [0, 0, -11.6] });
+    gardenWalls(b); // the old stone garden walls, kept
   },
 };

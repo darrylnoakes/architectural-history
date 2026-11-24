@@ -1,7 +1,7 @@
 import { P, tint, type BuildingDef, type Builder, type Vec3 } from '@ah/kit';
-import { church, tower, porch, win, churchyardCross, graveMounds, DOOR_Z, type WinSpec, type TowerSpec } from './shared';
-import { NORMAN_DRESS, NORMAN_WALL, normanBelfry } from './05-norman-church';
-import { EE_ROOF, eeChancel } from './06-early-english-church';
+import { church, tower, porch, win, churchyardCross, graveMounds, DOOR_Z, CROSS, GRAVES, type WinSpec, type TowerSpec } from './shared';
+import { NORMAN_WALL, normanBelfry, normanTowerSlit } from './05-norman-church';
+import { EE_ROOF, eeChancel, eeTower } from './06-early-english-church';
 
 export const DEC_AISLE_WALL = P.ragstone;
 export const DEC_DRESS = tint(P.limestone, 0.03);
@@ -17,18 +17,13 @@ export function decEast(b: Builder, at: Vec3) {
 
 /** The Norman tower heightened with a new belfry stage, and a tall spire behind a pinnacled parapet. */
 export const decTower: TowerSpec = {
-  size: 6,
-  z: 17,
+  ...eeTower,
   h: 16.6,
-  wall: NORMAN_WALL,
-  dress: NORMAN_DRESS,
-  corners: 'clasping',
-  courses: [4.6, 9.4, 13.2],
+  raisedFrom: eeTower.h,
+  courses: [...eeTower.courses, 13.2],
   belfry: { spec: { kind: 'pointed', w: 1.5, h: 2.5, sill: 13.6, tracery: 'geometric', lights: 2, hood: 'arch' }, n: 1 },
-  lower: [{ ...normanBelfry, sill: 10.2 }],
-  westWin: { kind: 'lancet', w: 0.7, h: 2.6, sill: 2.0, hood: 'arch' },
+  lower: [normanTowerSlit, normanBelfry],
   top: 'spire',
-  topColor: tint(P.limestone, -0.04),
   spireH: 19,
 };
 
@@ -69,7 +64,7 @@ export const decoratedChurch: BuildingDef = {
     });
     tower(b, decTower);
     porch(b, { wall: DEC_AISLE_WALL, dress: DEC_DRESS, x: 9, z: DOOR_Z, d: 3.4, w: 3.6, h: 3.0, roof: { rise: 1.6, color: EE_ROOF }, arch: 'pointed' });
-    churchyardCross(b, [8.0, 0, -12.0], P.limestone);
-    graveMounds(b, [[11.5, -6], [11.2, -14], [-11.5, -12], [-11.4, -5.5], [6.8, -20.5]], tint(P.grass, -0.06));
+    churchyardCross(b, CROSS, P.limestone);
+    graveMounds(b, GRAVES, tint(P.grass, -0.06));
   },
 };

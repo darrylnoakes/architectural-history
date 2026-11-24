@@ -1,5 +1,5 @@
-import { P, tint, type BuildingDef } from '@ah/kit';
-import { beam } from './shared';
+import { P, tint, type Builder, type BuildingDef } from '@ah/kit';
+import { beam, gardenWalls, well } from './shared';
 
 export const merchantsHall: BuildingDef = {
   id: 'merchants-hall',
@@ -78,48 +78,54 @@ export const merchantsHall: BuildingDef = {
     for (const x of [-5.2, -1.9, 5.4]) b.panel(0.7, 0.45, P.windowDark, { at: [x, 0.15, zf], facing: '+z' });
 
     // ---------------- the open hall behind: timber frame on a stone sill wall, ridge front to back
-    const hx = -2.2;
-    const hw = 7.4;
-    const hz0 = -7.2;
-    const hd = zb - hz0;
-    const hzc = (zb + hz0) / 2;
-    const hH = 4.4;
-    b.box(hw, 0.6, hd, stone, { at: [hx, 0, hzc] });
-    b.box(hw - 0.1, hH - 0.6, hd - 0.1, infill, { at: [hx, 0.6, hzc] });
-    b.sym((s) =>
-      b.frame(hd, hH - 0.6, oak, { at: [hx + s * hw / 2, 0.6, hzc], facing: s > 0 ? '+x' : '-x', studs: 3, rails: 1, brace: 'corner', beam: 0.22 }),
-    );
-    b.frame(hw, hH - 0.6, oak, { at: [hx, 0.6, hz0], facing: '-z', studs: 2, rails: 1, brace: 'corner', beam: 0.22 });
-    const hrh = 3.9;
-    b.gable(hw, hd, hrh, tile, { at: [hx, hH, hzc], ridge: 'z', overhang: 0.35, wall: infill });
-    b.box(0.24, 0.14, hd + 0.4, tint(tile, -0.08), { at: [hx, hH + hrh + 0.08, hzc] });
-    beam(b, [hx, hH, hz0 - 0.04], [hx, hH + hrh - 0.1, hz0 - 0.04], 0.2, oak);
+    openHall(b, stone, dressed, infill, oak, tile);
+    const { hx, hw, hH, hrh } = HALL;
     // louvre on the ridge over the central hearth
     const lz = -1.5;
     b.box(1.0, 0.8, 1.0, oak, { at: [hx, hH + hrh - 0.35, lz] });
     for (const s of [-1, 1]) b.panel(0.8, 0.5, 0x2b2420, { at: [hx + s * 0.5, hH + hrh - 0.2, lz], facing: s > 0 ? '+x' : '-x' });
     b.pyramid(1.3, 1.3, 0.7, tile, { at: [hx, hH + hrh + 0.45, lz] });
-    // tall hall windows on the yard side, a smaller one opposite, a gable window at the back
+    // tall hall windows on the yard side, a smaller one opposite
     for (const z of [-0.5, -4.0]) {
       b.window(1.3, 2.4, { at: [hx + hw / 2, 1.5, z], facing: '+x', frame: oak, bars: [2, 2], shape: 'pointed' });
     }
     b.window(1.1, 1.9, { at: [hx - hw / 2, 1.7, -2.2], facing: '-x', frame: oak, bars: [2, 2], shape: 'pointed' });
-    b.window(1.0, 1.4, { at: [hx, hH + 0.4, hz0], facing: '-z', frame: oak, bars: [2, 1] });
-    // cross-passage door into the hall from the yard, with a little pentice over it
-    b.panel(1.2, 2.2, P.oakDark, { at: [hx + hw / 2, 0.6, 3.2], facing: '+x', shape: 'pointed' });
-    b.stairs(1.4, 0.6, 0.7, 2, dressed, { at: [hx + hw / 2 + 0.35, 0, 3.2], rotY: Math.PI / 2 });
-    b.shed(1.0, 2.0, 0.5, tile, { at: [hx + hw / 2 + 0.5, 3.1, 3.2], high: '-x' });
 
     // ---------------- yard: gateway from the street, boundary walls, a well
     b.box(0.45, 2.6, 0.5, stone, { at: [9.6, 0, zf] });
     b.archWall(3.6, 3.2, 0.5, stone, { at: [7.8, 0, zf], facing: '+z', openings: 1, openW: 2.6, openH: 2.9, shape: 'pointed' });
     b.box(4.0, 0.2, 0.62, dressed, { at: [7.8, 3.2, zf] });
-    b.sym((s) => b.box(0.4, 2.2, zf + 11, tint(stone, -0.05), { at: [s * 9.7, 0, (zf - 11) / 2] }));
-    b.box(19.8, 2.2, 0.4, tint(stone, -0.05), { at: [0, 0, -11.4] });
+    gardenWalls(b, { toStreet: true });
     b.box(3.2, 0.06, 14, P.cobble, { at: [6.6, 0, 3.6] });
-    b.cyl(0.65, 0.8, stone, { at: [5.8, 0, -6], segs: 10 });
-    b.cyl(0.5, 0.82, 0x2a2a2a, { at: [5.8, 0, -6], segs: 10 });
-    b.sym((s) => b.box(0.12, 1.5, 0.12, oak, { at: [5.8 + s * 0.6, 0.8, -6] }));
-    b.box(1.4, 0.12, 0.12, oak, { at: [5.8, 2.3, -6] });
+    well(b, 5.8, -6, stone, oak);
   },
 };
+
+/** Where the open hall stands: kept by the Tudor house, which floors it over. */
+export const HALL = { hx: -2.2, hw: 7.4, hz0: -7.2, hz1: 5, hH: 4.4, hrh: 3.9 };
+
+/**
+ * The open hall behind the street range: timber frame on a stone sill wall, ridge front to back, with
+ * its gable window and the cross-passage door from the yard. Shared with the Tudor merchant's house,
+ * which kept the hall and floored it over.
+ */
+export function openHall(b: Builder, stone: number, dressed: number, infill: number, oak: number, tile: number): void {
+  const { hx, hw, hz0, hz1, hH, hrh } = HALL;
+  const hd = hz1 - hz0;
+  const hzc = (hz1 + hz0) / 2;
+  b.box(hw, 0.6, hd, stone, { at: [hx, 0, hzc] });
+  b.box(hw - 0.1, hH - 0.6, hd - 0.1, infill, { at: [hx, 0.6, hzc] });
+  b.sym((s) =>
+    b.frame(hd, hH - 0.6, oak, { at: [hx + s * hw / 2, 0.6, hzc], facing: s > 0 ? '+x' : '-x', studs: 3, rails: 1, brace: 'corner', beam: 0.22 }),
+  );
+  b.frame(hw, hH - 0.6, oak, { at: [hx, 0.6, hz0], facing: '-z', studs: 2, rails: 1, brace: 'corner', beam: 0.22 });
+  b.gable(hw, hd, hrh, tile, { at: [hx, hH, hzc], ridge: 'z', overhang: 0.35, wall: infill });
+  b.box(0.24, 0.14, hd + 0.4, tint(tile, -0.08), { at: [hx, hH + hrh + 0.08, hzc] });
+  beam(b, [hx, hH, hz0 - 0.04], [hx, hH + hrh - 0.1, hz0 - 0.04], 0.2, oak);
+  // a window in the back gable
+  b.window(1.0, 1.4, { at: [hx, hH + 0.4, hz0], facing: '-z', frame: oak, bars: [2, 1] });
+  // cross-passage door into the hall from the yard, with a little pentice over it
+  b.panel(1.2, 2.2, P.oakDark, { at: [hx + hw / 2, 0.6, 3.2], facing: '+x', shape: 'pointed' });
+  b.stairs(1.4, 0.6, 0.7, 2, dressed, { at: [hx + hw / 2 + 0.35, 0, 3.2], rotY: Math.PI / 2 });
+  b.shed(1.0, 2.0, 0.5, tile, { at: [hx + hw / 2 + 0.5, 3.1, 3.2], high: '-x' });
+}

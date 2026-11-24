@@ -168,3 +168,25 @@ export function waterSteps(b: Builder, x: number, w: number, run: number, color:
 export function water(b: Builder, w: number, d: number, at: Vec3): void {
   b.box(w, 0.05, d, P.water, { at, mat: 'glass', jitter: false });
 }
+
+/** The millpond dug for the Saxon mill and kept by the Norman one: centre, size and bank height. */
+export const POND = { x: 10.3, z: -3, w: 10, d: 12, h: 1.3 };
+
+/** The earth-banked, timber-lined millpond and the leat that fills it from upstream. */
+export function millPond(b: Builder): void {
+  const { x: px, z: pz, w: pw, d: pd, h: ph } = POND;
+  b.box(pw, ph - 0.25, pd, P.earth, { at: [px, 0, pz] });
+  water(b, pw - 1.4, pd - 1.4, [px, ph - 0.25, pz]);
+  // turf banks all round
+  b.sym((s) => {
+    b.extrude([[-0.9, 0], [0.9, 0], [0.35, ph], [-0.35, ph]], pd, P.turf, { at: [px + s * (pw / 2 - 0.35), 0, pz] });
+    b.extrude([[-0.9, 0], [0.9, 0], [0.35, ph], [-0.35, ph]], pw, P.turf, { at: [px, 0, pz + s * (pd / 2 - 0.35)], rotY: Math.PI / 2 });
+  });
+  // timber lining on the inside of the banks
+  b.box(pw - 1.3, 0.35, 0.1, P.oakDark, { at: [px, ph - 0.4, pz + pd / 2 - 0.7] });
+  b.box(pw - 1.3, 0.35, 0.1, P.oakDark, { at: [px, ph - 0.4, pz - pd / 2 + 0.7] });
+  // the leat bringing water in from upstream (off the plot to the right)
+  b.box(2.4, ph - 0.25, 2.4, P.earth, { at: [px + pw / 2 + 1.1, 0, pz + 2] });
+  water(b, 2.4, 1.2, [px + pw / 2 + 1.1, ph - 0.25, pz + 2]);
+  b.sym((s) => b.box(2.4, ph, 0.6, P.turf, { at: [px + pw / 2 + 1.1, 0, pz + 2 + s * 0.9] }));
+}

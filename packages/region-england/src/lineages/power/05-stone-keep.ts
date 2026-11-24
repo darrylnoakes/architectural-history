@@ -1,6 +1,22 @@
 import { P, mix, tint, type BuildingDef, type Builder } from '@ah/kit';
-import { BAILEY_LEFT, BAILEY_RIGHT, GATE, MOTTE, arcade, arch, archWindow, curtain, lineColliders, motte, motteY, strip } from './shared';
-import { ditchLine, toSummit } from './04-motte-and-bailey';
+import {
+  BAILEY_LEFT,
+  BAILEY_RIGHT,
+  GATE,
+  MOTTE,
+  arcade,
+  arch,
+  archWindow,
+  baileyEarthworks,
+  baileyStables,
+  baileyWell,
+  curtain,
+  gateBridge,
+  lineColliders,
+  motte,
+  motteY,
+  toSummit,
+} from './shared';
 
 export const KEEP = { w: 9.6, h: 19, plinth: 1.4 };
 
@@ -72,13 +88,41 @@ export function stoneKeep(b: Builder, stone: number, o?: { ruin?: boolean }) {
   }
 }
 
+/** The Norman curtain wall of c. 1130 on the line of the palisade: plan lines, height and thickness. */
+export const CURTAIN_1130 = {
+  right: [toSummit(BAILEY_RIGHT[0], MOTTE.rTop - 0.8), ...BAILEY_RIGHT] as [number, number][],
+  left: [...BAILEY_LEFT, toSummit(BAILEY_LEFT[BAILEY_LEFT.length - 1], MOTTE.rTop - 0.8)] as [number, number][],
+  h: 6,
+  t: 1.6,
+  piece: 6,
+  base: (x: number, z: number) => motteY(x, z),
+};
+
+/**
+ * The stone chapel of c. 1130 in the bailey: a small nave with a round-headed west door and window
+ * and a lower square chancel. In 1290 it is kept and given a new pointed east window.
+ */
+export function normanChapel(b: Builder, stone: number, o?: { eastWindow?: boolean }) {
+  b.group({ at: [-11, 0, 11.5] }, () => {
+    b.box(5, 4.6, 8, stone);
+    b.gable(5, 8, 3, P.stoneSlate, { at: [0, 4.6, 0], ridge: 'z', overhang: 0.2, wall: stone });
+    arch(b, 1.4, 2.6, P.oakDark, { at: [0, 0, 4], facing: '+z', shape: 'round' });
+    archWindow(b, 0.8, 1.8, { at: [0, 4.9, 4], facing: '+z', shape: 'round', frame: tint(stone, -0.05) });
+    for (const z of [-2, 1]) b.sym((s) => archWindow(b, 0.6, 1.6, { at: [s * 2.5, 2.2, z], facing: s > 0 ? '+x' : '-x', shape: 'round', frame: tint(stone, -0.05) }));
+    b.box(3, 3, 2.2, stone, { at: [0, 0, -5] }); // small square chancel
+    b.gable(3, 2.2, 1.6, P.stoneSlate, { at: [0, 3, -5], ridge: 'z', wall: stone });
+    // the Gothic east window put into the chancel later
+    if (o?.eastWindow) archWindow(b, 1.2, 2.4, { at: [0, 0.5, -6.1], facing: '-z', frame: tint(stone, -0.05), mullion: true });
+  });
+}
+
 export const stoneKeepDef: BuildingDef = {
   id: 'stone-keep',
   name: 'Stone keep castle',
   style: 'Norman Romanesque',
   date: 'c. 1130',
   summary:
-    'Once the conquest was secure, many lords rebuilt their timber castles in stone. A square great tower, the keep, now crowns the old motte, as at Norwich and Guildford, and a stone curtain wall replaces the palisade around the bailey. ' +
+    'Once the conquest was secure, many lords rebuilt their timber castles in stone. A square great tower, the keep, now crowns the old motte, as at Norwich and Guildford, and a stone curtain wall replaces the palisade on the bailey bank. The earthworks of the first castle are kept, and so for now are the timber bridge at the gate and the stables. ' +
     'Its walls are three or four metres thick, with flat buttresses and turrets at the corners. The door is on the first floor, reached by a stair through a forebuilding, and the windows grow larger as they rise, up to the great hall in the upper storeys.',
   materials: ['limestone ashlar', 'flint and rubble core', 'lead roof', 'oak floors'],
   lookFor: [
@@ -95,30 +139,22 @@ export const stoneKeepDef: BuildingDef = {
     motte(b, { color: mix(P.turf, P.grassDry, 0.3), ditch: 'dry' });
     stoneKeep(b, stone);
 
-    // stone curtain wall on the line of the old palisade, stepping up the motte
-    const base = (x: number, z: number) => motteY(x, z);
-    const right: [number, number][] = [toSummit(BAILEY_RIGHT[0], MOTTE.rTop - 0.8), ...BAILEY_RIGHT];
-    const left: [number, number][] = [...BAILEY_LEFT, toSummit(BAILEY_LEFT[BAILEY_LEFT.length - 1], MOTTE.rTop - 0.8)];
+    // the bank and ditch of 1068 are kept; a stone curtain wall replaces the palisade on the bank
+    baileyEarthworks(b);
     const wall = tint(stone, -0.05);
-    curtain(b, right, 6, 1.6, wall, { base, outer: -1 });
-    curtain(b, left, 6, 1.6, wall, { base, outer: -1 });
-    const ditch = mix(P.soil, P.earth, 0.4);
-    strip(b, ditchLine(BAILEY_RIGHT.slice(1)), 1.5, 0.03, ditch);
-    strip(b, ditchLine(BAILEY_LEFT.slice(0, -1)), 1.5, 0.03, ditch);
-    strip(b, [[-12.6, 20.6], [-1, 20.6]], 1.7, 0.03, ditch);
-    strip(b, [[4, 20.6], [14, 20.6]], 1.7, 0.03, ditch);
+    const C = CURTAIN_1130;
+    curtain(b, C.right, C.h, C.t, wall, { base: C.base, piece: C.piece, outer: -1 });
+    curtain(b, C.left, C.h, C.t, wall, { base: C.base, piece: C.piece, outer: -1 });
 
-    // square gate tower
+    // square gate tower, behind the old timber bridge over the ditch
     b.group({ at: [GATE[0], 0, GATE[1] - 1.8] }, () => {
       arcade(b, 6.2, 9, 5, wall, { openings: 1, openW: 3, openH: 4.2, shape: 'round' });
       b.crenel(6.2, 5, wall, { at: [0, 9, 0], merlonW: 0.6, merlonH: 0.9, t: 0.4 });
       b.box(5.4, 0.1, 4.2, P.lead, { at: [0, 8.8, 0] });
       archWindow(b, 0.7, 1.5, { at: [0, 5.8, 2.5], facing: '+z', shape: 'round', frame: tint(wall, -0.05) });
       b.box(3.0, 0.2, 0.2, P.oakDark, { at: [0, 4.2, 2.5] });
-      // timber bridge over the ditch
-      b.box(3.2, 0.25, 2.4, P.oak, { at: [0, 0.35, 3.6] });
-      b.sym((s) => b.box(0.12, 1.0, 2.4, P.oakDark, { at: [s * 1.5, 0.6, 3.6] }));
     });
+    gateBridge(b);
 
     // stone hall in the bailey: a first-floor hall over a storage undercroft
     b.group({ at: [9.5, 0, -11.5] }, () => {
@@ -133,22 +169,10 @@ export const stoneKeepDef: BuildingDef = {
       arch(b, 1.3, 2.4, P.oakDark, { at: [-6.4, 3.2, 3.8], facing: '+z', shape: 'round' });
       b.chimney(0.9, 2.4, 0.9, stone, { at: [3, 9.4, 0] });
     });
-    // stables (still timber) and a stone chapel
-    b.group({ at: [15.3, 0, 4.5] }, () => {
-      b.box(4.2, 2.8, 12, mix(P.oak, P.oakSilver, 0.3));
-      b.shed(5, 12.6, 1.3, P.thatchOld, { at: [0, 2.8, 0], high: '+x' });
-      for (const z of [-4, 0, 4]) b.panel(1.6, 2.0, P.oakDark, { at: [-2.1, 0, z], facing: '-x' });
-    });
-    b.group({ at: [-11, 0, 11.5] }, () => {
-      b.box(5, 4.6, 8, stone);
-      b.gable(5, 8, 3, P.stoneSlate, { at: [0, 4.6, 0], ridge: 'z', overhang: 0.2, wall: stone });
-      arch(b, 1.4, 2.6, P.oakDark, { at: [0, 0, 4], facing: '+z', shape: 'round' });
-      archWindow(b, 0.8, 1.8, { at: [0, 4.9, 4], facing: '+z', shape: 'round', frame: tint(stone, -0.05) });
-      for (const z of [-2, 1]) b.sym((s) => archWindow(b, 0.6, 1.6, { at: [s * 2.5, 2.2, z], facing: s > 0 ? '+x' : '-x', shape: 'round', frame: tint(stone, -0.05) }));
-      b.box(3, 3, 2.2, stone, { at: [0, 0, -5] }); // small apse-like chancel
-      b.gable(3, 2.2, 1.6, P.stoneSlate, { at: [0, 3, -5], ridge: 'z', wall: stone });
-    });
-    b.cyl(0.8, 0.8, P.rubble, { at: [5, 0, 6], segs: 8 });
+    // the timber stables of 1068, still standing, and a new stone chapel
+    baileyStables(b);
+    normanChapel(b, stone);
+    baileyWell(b);
 
     // colliders
     lineColliders(b, BAILEY_RIGHT.slice(1), 1.8);

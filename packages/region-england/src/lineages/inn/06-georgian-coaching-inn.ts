@@ -1,4 +1,5 @@
 import { P, spread, tint, type Builder, type BuildingDef } from '@ah/kit';
+import { yardRanges } from './05-galleried-inn';
 import { ground, hangingSign } from './shared';
 
 const XO = 10.5;
@@ -37,14 +38,16 @@ export const georgianCoachingInn: BuildingDef = {
   date: 'c. 1750',
   summary:
     'Turnpike roads and scheduled stagecoaches made the market-town inn a busy staging post, where coaches changed horses and passengers dined while they waited. ' +
-    'Prosperous innkeepers rebuilt or refronted the old timber ranges in fashionable brick with tall sash windows, a parapet and a classical cornice, keeping the medieval plan of a yard behind. ' +
-    'The carriage arch grew tall enough for a coach with luggage and passengers on the roof, and stables for dozens of horses lined the yard.',
-  materials: ['red brick', 'stone dressings', 'clay roof tiles', 'painted timber sashes'],
+    'Prosperous innkeepers rebuilt or refronted the old timber ranges in fashionable brick. Here the street range is new, with tall sash windows, a parapet and a classical cornice, ' +
+    'but behind it the medieval inn survives: the galleried timber ranges of chambers round the yard and the stables across the back are kept, as they were at many coaching inns. ' +
+    'The carriage arch grew tall enough for a coach with luggage and passengers on the roof.',
+  materials: ['red brick', 'stone dressings', 'clay roof tiles', 'painted timber sashes', 'the old oak-framed yard ranges'],
   lookFor: [
     { label: 'Carriage arch', note: 'Tall and wide enough for a loaded stagecoach with passengers riding on the roof.', at: [0, 4.7, ZF + 0.3] },
     { label: 'Sash windows', note: 'Two sliding frames, six panes each, set in a regular grid. Tallest on the first floor, where the best rooms were.', at: [-6, 5.8, ZF + 0.3] },
     { label: 'Venetian window', note: 'An arched light between two square-headed ones, a Palladian motif marking the centre of the front.', at: [0, 6.4, ZF + 0.4] },
     { label: 'Swinging sign', note: 'A painted board on a wrought-iron bracket, readable by coachmen from far down the street.', at: [4.95, 2.8, ZF + 1.0] },
+    { label: 'Old galleries', note: 'The 15th-century galleried ranges still line the yard behind the new front: brick for the street, timber where only guests and ostlers saw it.', at: [-4.0, 6.4, -1] },
     { label: 'Parapet', note: 'A low wall above the cornice that hides the roof, so the front reads as a neat brick box.', at: [-8, TOP + 0.9, ZF + 0.2] },
   ],
   influences: ['palladianism', 'dutch-classicism'],
@@ -57,7 +60,8 @@ export const georgianCoachingInn: BuildingDef = {
     const zm = (ZF + ZFB) / 2;
     const dep = ZF - ZFB;
 
-    ground(b, 2 * XO, 13.4, P.cobble, [0, -3.7]);
+    // the medieval yard behind: its galleried side ranges and back stables are kept, timber and all
+    yardRanges(b, P.oak, P.limewash, roof);
     ground(b, 2 * PW, dep, P.cobble, [0, zm]);
     ground(b, 21.4, 1.3, P.paving, [0, ZF + 0.65], 0.08);
 
@@ -136,11 +140,8 @@ export const georgianCoachingInn: BuildingDef = {
     hangingSign(b, [4.65, 4.3, ZF], '+z', P.doorBlue, { out: 0.95, w: 0.85, h: 1.3, picture: P.gold, frame: P.black });
 
     // back of the street range: plainer sashes and a stair window
-    for (const x of [-8.7, -6, 6, 8.7]) {
-      b.window(1.2, 2.0, { at: [x, 1.0, ZFB], facing: '-z', frame: sash, bars: [3, 4] });
-      b.window(1.2, 2.2, { at: [x, G + 0.7, ZFB], facing: '-z', frame: sash, bars: [3, 4] });
-      b.window(1.2, 1.5, { at: [x, G + F1 + 0.6, ZFB], facing: '-z', frame: sash, bars: [3, 3] });
-    }
+    // (the old side ranges butt against it beyond x = ±5.5, so only the middle shows to the yard)
+    b.window(1.2, 1.5, { at: [0, G + F1 + 0.6, ZFB], facing: '-z', frame: sash, bars: [3, 3] });
     b.window(1.3, 2.8, { at: [-3.3, 4.6, ZFB], facing: '-z', frame: sash, shape: 'round', bars: [3, 5] });
     b.panel(1.1, 2.3, door, { at: [3.3, 0.5, ZFB], facing: '-z' });
     // ends of the street range
@@ -150,50 +151,10 @@ export const georgianCoachingInn: BuildingDef = {
       }
     });
 
-    // ---------------- yard ranges
-    const WZ0 = -6.6; // back of the wings
-    const wd = ZFB - WZ0;
-    const wz = (ZFB + WZ0) / 2;
-    // west wing: kitchen and chambers, two storeys
-    const wH = 6.2;
-    b.box(5.4, wH, wd, brick, { at: [-XO + 2.7, 0, wz] });
-    b.box(5.5, 0.4, wd + 0.06, stone, { at: [-XO + 2.7, 0, wz] });
-    b.gable(5.4, wd, 2.0, roof, { at: [-XO + 2.7, wH, wz], ridge: 'z', overhang: 0.25, wall: brick });
-    for (const z of spread(3, WZ0 + 1.6, ZFB - 1.6)) {
-      b.window(1.1, 1.9, { at: [-XO + 5.4, 0.9, z], facing: '+x', frame: sash, bars: [3, 4] });
-      b.window(1.1, 1.7, { at: [-XO + 5.4, 3.8, z], facing: '+x', frame: sash, bars: [3, 3] });
-      b.window(1.1, 1.7, { at: [-XO, 3.8, z], facing: '-x', frame: sash, bars: [3, 3] });
-    }
-    b.panel(1.0, 2.1, door, { at: [-XO + 5.4, 0.4, ZFB - 0.8], facing: '+x' });
-    b.chimney(1.0, 2.0, 0.8, brick, { at: [-XO + 1.2, wH + 1.0, wz], pots: 2 });
-    // east wing: stables below, hayloft above with a hoist door
-    const sH = 5.2;
-    b.box(5.4, sH, wd, tint(brick, -0.04), { at: [XO - 2.7, 0, wz] });
-    b.gable(5.4, wd, 2.2, roof, { at: [XO - 2.7, sH, wz], ridge: 'z', overhang: 0.25, wall: tint(brick, -0.04) });
-    for (const z of spread(4, WZ0 + 1.2, ZFB - 1.2)) {
-      b.panel(1.2, 2.3, P.doorGreen, { at: [XO - 5.4, 0, z], facing: '-x' });
-      b.panel(1.2, 0.08, P.white, { at: [XO - 5.4, 1.2, z], facing: '-x', depth: 0.08 });
-      b.panel(0.9, 0.5, P.windowDark, { at: [XO, 1.8, z], facing: '+x', shape: 'segmental' });
-    }
-    b.panel(1.4, 1.6, P.doorGreen, { at: [XO - 5.4, 3.1, wz], facing: '-x' });
-    b.box(0.1, 0.1, 1.2, P.oakDark, { at: [XO - 5.9, 4.9, wz], rot: [0, Math.PI / 2, 0] });
-    // coach house across the back: three open arches
-    const cz = (WZ0 + -10.5) / 2;
-    b.box(2 * XO, 4.6, 0.4, brick, { at: [0, 0, -10.3] });
-    b.sym((s) => b.box(0.4, 4.6, 3.9, brick, { at: [s * (XO - 0.2), 0, cz] }));
-    b.archWall(10.2, 4.6, 0.4, brick, { at: [0, 0, WZ0], facing: '+z', openings: 3, openW: 2.8, openH: 3.6, shape: 'segmental' });
-    b.box(10.2, 0.3, 3.9, tint(P.plaster, -0.15), { at: [0, 4.3, cz] });
-    b.box(10, 0.05, 3.6, P.soil, { at: [0, 0.01, cz] });
-    b.hip(2 * XO, 4.1, 1.9, roof, { at: [0, 4.6, cz], overhang: 0.25 });
-    for (const x of [-3.4, 0, 3.4]) b.panel(2.6, 3.2, P.windowDark, { at: [x, 0, -10.1], facing: '+z', shape: 'segmental' });
-    b.box(0.5, 3.4, 0.5, brick, { at: [-1.7, 0, -7.3] });
-    b.box(0.5, 3.4, 0.5, brick, { at: [1.7, 0, -7.3] });
-    for (const x of [-10.5 + 1.8, 10.5 - 1.8]) b.panel(1.0, 0.6, P.windowDark, { at: [x, 2.0, -10.5], facing: '-z', shape: 'segmental' });
-
     // a stagecoach waiting in the yard, a mounting block and a pump
     b.group({ at: [-0.6, 0, -2.6], rotY: -Math.PI / 2 + 0.25 }, () => coach(b, b.pick([P.doorRed, P.doorGreen, tint(P.doorRed, -0.1)])));
-    b.stairs(1.0, 0.8, 1.2, 3, stone, { at: [-4.4, 0, 1.6], rotY: -Math.PI / 2 });
-    b.group({ at: [3.5, 0, 1.8] }, () => {
+    b.stairs(1.0, 0.8, 1.2, 3, stone, { at: [-2.6, 0, 1.2], rotY: -Math.PI / 2 });
+    b.group({ at: [2.4, 0, 0.2] }, () => {
       b.box(0.4, 1.4, 0.4, P.castIron);
       b.box(0.08, 0.08, 0.6, P.castIron, { at: [0, 1.2, 0.4] });
       b.box(1.2, 0.4, 0.6, P.rubble, { at: [0, 0, 0.8] });
@@ -201,8 +162,5 @@ export const georgianCoachingInn: BuildingDef = {
 
     // ---------------- colliders: the ranges, leaving the arch and yard open
     b.sym((s) => b.collider(sw, dep, { at: [s * (PW + sw / 2), 0, zm] }));
-    b.collider(5.4, wd, { at: [-XO + 2.7, 0, wz] });
-    b.collider(5.4, wd, { at: [XO - 2.7, 0, wz] });
-    b.collider(2 * XO, 3.9, { at: [0, 0, cz] });
   },
 };

@@ -1,13 +1,47 @@
 import { P, mix, tint, type BuildingDef, type Builder } from '@ah/kit';
-import { BAILEY_LEFT, BAILEY_RIGHT, GATE, MOTTE, arcade, arch, archWindow, curtain, lineColliders, motte, motteY, strip } from './shared';
-import { ditchLine, toSummit } from './04-motte-and-bailey';
-import { KEEP, stoneKeep } from './05-stone-keep';
+import { BAILEY_LEFT, BAILEY_RIGHT, GATE, MOTTE, arcade, arch, archWindow, baileyEarthworks, baileyWell, curtain, ditchLine, lineColliders, motte, strip } from './shared';
+import { CURTAIN_1130, KEEP, normanChapel, stoneKeep } from './05-stone-keep';
 
-/** A round flanking tower with a battlemented top and arrow loops. */
-export function roundTower(b: Builder, x: number, z: number, r: number, h: number, stone: number, o?: { loops?: boolean }) {
+/** Height to which the round towers' lower stage rises; the Elizabethan ruin keeps this much of one. */
+export const TOWER_STUMP = 6.5;
+
+/** The angle of the bailey whose tower outlives the castle as a garden ruin (see the Elizabethan manor). */
+export const RUIN_CORNER = BAILEY_RIGHT[2];
+
+/** Radius and height of the round flanking towers, and where they stand: just inside each angle of the bailey. */
+export const FLANK = { r: 2.5, h: 10.6 };
+export const flankAt = (p: [number, number]): [number, number] => [3 + (p[0] - 3) * 0.94, 1 + (p[1] - 1) * 0.94];
+
+/** Arrow loops in the lower stage of a round tower. */
+function towerLoops(b: Builder, r: number) {
+  for (const a of [0.5, 2.6, 4.7]) {
+    b.panel(0.18, 1.5, P.black, { at: [Math.sin(a) * r, 4.5, Math.cos(a) * r], facing: a });
+    b.panel(0.55, 0.16, P.black, { at: [Math.sin(a) * r, 5.4, Math.cos(a) * r], facing: a });
+  }
+}
+
+/** The lower stage of a round tower: spurred base, the shaft up to TOWER_STUMP, arrow loops. */
+export function roundTowerStump(b: Builder, x: number, z: number, r: number, stone: number) {
   b.group({ at: [x, 0, z] }, () => {
     b.cyl(r + 0.5, 1.4, tint(stone, -0.04), { segs: 10, rTop: r }); // spurred base
-    b.cyl(r, h, stone, { segs: 10 });
+    b.cyl(r, TOWER_STUMP, stone, { segs: 10 });
+    towerLoops(b, r);
+  });
+}
+
+/**
+ * A round flanking tower with a battlemented top and arrow loops. `stump` builds the shaft in two
+ * stages, so that a later ruin can keep the lower one (see `roundTowerStump`).
+ */
+export function roundTower(b: Builder, x: number, z: number, r: number, h: number, stone: number, o?: { loops?: boolean; stump?: boolean }) {
+  if (o?.stump) roundTowerStump(b, x, z, r, stone);
+  b.group({ at: [x, 0, z] }, () => {
+    if (o?.stump) b.cyl(r, h - TOWER_STUMP, stone, { at: [0, TOWER_STUMP, 0], segs: 10 });
+    else {
+      b.cyl(r + 0.5, 1.4, tint(stone, -0.04), { segs: 10, rTop: r }); // spurred base
+      b.cyl(r, h, stone, { segs: 10 });
+      if (o?.loops !== false) towerLoops(b, r);
+    }
     b.cyl(r + 0.25, 0.35, tint(stone, -0.05), { at: [0, h - 0.35, 0], segs: 10 });
     const n = 6;
     for (let i = 0; i < n; i++) {
@@ -15,14 +49,6 @@ export function roundTower(b: Builder, x: number, z: number, r: number, h: numbe
       b.box(0.85, 0.95, 0.45, stone, { at: [Math.sin(a) * (r - 0.05), h, Math.cos(a) * (r - 0.05)], rotY: a, jitter: false });
     }
     b.cyl(r - 0.4, 0.1, P.lead, { at: [0, h - 0.25, 0], segs: 6 });
-    if (o?.loops !== false) {
-      for (const a of [0.5, 2.6, 4.7]) {
-        for (const y of [4.5]) {
-          b.panel(0.18, 1.5, P.black, { at: [Math.sin(a) * r, y, Math.cos(a) * r], facing: a });
-          b.panel(0.55, 0.16, P.black, { at: [Math.sin(a) * r, y + 0.9, Math.cos(a) * r], facing: a });
-        }
-      }
-    }
   });
 }
 
@@ -83,9 +109,9 @@ export const edwardianCastle: BuildingDef = {
   style: 'Gothic (Edwardian)',
   date: 'c. 1290',
   summary:
-    'By the reign of Edward I castle design had changed a great deal, drawing on ideas often said to come from the Crusades and tested in the king\'s Welsh wars. The old keep is kept, but the curtain wall is rebuilt higher with round towers that let archers shoot along the wall face, and with no square corners to undermine. ' +
+    'By the reign of Edward I castle design had changed a great deal, drawing on ideas often said to come from the Crusades and tested in the king\'s Welsh wars. The Norman keep, chapel and curtain wall are kept, but the wall is raised higher and given round towers that let archers shoot along the wall face, and that have no square corners to undermine. ' +
     'The weak point, the gate, becomes a fortress of its own: two great towers either side of a passage closed by a portcullis and a drawbridge over a water-filled moat. ' +
-    'Inside, comfort grows too: a large hall with tall pointed windows for feasting and courts.',
+    'Inside, comfort grows too: a large new hall with tall pointed windows for feasting and courts, and a pointed east window in the old chapel.',
   materials: ['limestone ashlar and rubble', 'lead and stone slate roofs', 'oak', 'iron portcullis'],
   lookFor: [
     { label: 'Twin-towered gatehouse', note: 'Two round-fronted towers flank the entrance passage, so attackers at the gate are shot at from both sides.', at: [GATE[0] - 3.6, 13.6, GATE[1] + 2.8] },
@@ -102,20 +128,22 @@ export const edwardianCastle: BuildingDef = {
     motte(b, { color: mix(P.turf, P.grassDry, 0.3), ditch: 'water' });
     stoneKeep(b, tint(stone, -0.05));
 
-    // curtain rebuilt higher on the same line, with round towers at the angles
-    const base = (x: number, z: number) => motteY(x, z);
-    const right: [number, number][] = [toSummit(BAILEY_RIGHT[0], MOTTE.rTop - 0.8), ...BAILEY_RIGHT.slice(0, -1), [GATE[0] + 5, 19]];
-    const left: [number, number][] = [[GATE[0] - 5, 19], ...BAILEY_LEFT.slice(1), toSummit(BAILEY_LEFT[BAILEY_LEFT.length - 1], MOTTE.rTop - 0.8)];
-    curtain(b, right, 7.6, 2, wall, { base, outer: -1, piece: 7, merlon: 1 });
-    curtain(b, left, 7.6, 2, wall, { base, outer: -1, piece: 7, merlon: 1 });
+    // the Norman curtain is kept on its bank and raised higher, with round towers at the angles;
+    // only the stretches either side of the new gatehouse are rebuilt
+    baileyEarthworks(b, { ditch: false });
+    const C = CURTAIN_1130;
+    const right: [number, number][] = [...C.right.slice(0, -1), [GATE[0] + 5, 19]];
+    const left: [number, number][] = [[GATE[0] - 5, 19], ...C.left.slice(1)];
+    curtain(b, right, C.h, C.t, wall, { base: C.base, piece: C.piece, outer: -1, merlon: 1, raise: 1.6 });
+    curtain(b, left, C.h, C.t, wall, { base: C.base, piece: C.piece, outer: -1, merlon: 1, raise: 1.6 });
     for (const p of [...BAILEY_RIGHT.slice(1, -1), ...BAILEY_LEFT.slice(1, -1)]) {
       // pulled a little inwards so the towers stay on the plot
-      const k = 0.94;
-      roundTower(b, 3 + (p[0] - 3) * k, 1 + (p[1] - 1) * k, 2.5, 10.6, stone);
+      const [tx, tz] = flankAt(p);
+      roundTower(b, tx, tz, FLANK.r, FLANK.h, stone, { stump: p === RUIN_CORNER });
     }
     gatehouse(b, stone);
 
-    // wet moat
+    // the ditch is flooded as a wet moat
     const moatPts = (pts: [number, number][]) => ditchLine(pts, 1.06);
     strip(b, moatPts(BAILEY_RIGHT.slice(1, -1)), 1.6, 0.04, P.water, { mat: 'glass' });
     strip(b, moatPts(BAILEY_LEFT.slice(1, -1)), 1.6, 0.04, P.water, { mat: 'glass' });
@@ -133,24 +161,18 @@ export const edwardianCastle: BuildingDef = {
       b.shed(5.2, 12.6, 1.5, P.tileRed, { at: [0, 3.2, 0], high: '+x' });
     });
     // chapel (the Norman one, with a new pointed east window)
-    b.group({ at: [-11, 0, 11.5] }, () => {
-      b.box(5, 4.6, 8, stone);
-      b.gable(5, 8, 3, P.stoneSlate, { at: [0, 4.6, 0], ridge: 'z', overhang: 0.2, wall: stone });
-      arch(b, 1.4, 2.6, P.oakDark, { at: [0, 0, 4], facing: '+z', shape: 'round' });
-      archWindow(b, 1.4, 3, { at: [0, 1.6, -4], facing: '-z', frame: tint(stone, -0.05), mullion: true });
-      for (const z of [-2, 1]) b.sym((s) => archWindow(b, 0.6, 1.6, { at: [s * 2.5, 2.2, z], facing: s > 0 ? '+x' : '-x', shape: 'round', frame: tint(stone, -0.05) }));
-    });
-    b.cyl(0.8, 0.8, P.rubble, { at: [5, 0, 6], segs: 8 });
+    normanChapel(b, stone, { eastWindow: true });
+    baileyWell(b);
 
     // colliders
-    lineColliders(b, right.slice(1), 2.2);
-    lineColliders(b, left.slice(0, -1), 2.2);
+    lineColliders(b, right.slice(1), 1.8);
+    lineColliders(b, left.slice(0, -1), 1.8);
     b.sym((s) => b.collider(3.4, 6.5, { at: [GATE[0] + s * 3.8, 0, GATE[1] - 2.2] }));
     b.collider(KEEP.w + 1.6, KEEP.w + 1.6, { at: [MOTTE.x, 0, MOTTE.z] });
     b.collider(3.4, 6.4, { at: [MOTTE.x + KEEP.w / 2 + 1.7, 0, MOTTE.z - 0.8] });
     b.collider(25, 10, { at: [10.7, 0, -12] });
     b.collider(5, 5, { at: [-3, 0, -15.4] });
     b.collider(4.4, 12, { at: [15, 0, 4] });
-    b.collider(5, 8, { at: [-11, 0, 11.5] });
+    b.collider(5, 10.2, { at: [-11, 0, 10.4] });
   },
 };

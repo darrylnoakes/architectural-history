@@ -1,4 +1,5 @@
 import { P, spread, tint, type Builder, type BuildingDef, type Facing } from '@ah/kit';
+import { gardenWalls } from './shared';
 
 /** A Romanesque two-light window: two round-headed lights under one enclosing arch, divided by a shaft. */
 function twoLight(b: Builder, x: number, y: number, z: number, facing: Facing, stone: number) {
@@ -109,8 +110,7 @@ export const normanStoneHouse: BuildingDef = {
       b.gable(5, 4, 2.6, P.thatch, { at: [0, 2.4, 0], overhang: 0.35, wall: P.daub, thick: 0.35 });
       b.panel(1.0, 1.9, P.oakDark, { at: [0, 0, 2], facing: '+z' });
     });
-    b.sym((s) => b.box(0.45, 1.8, 13, tint(stone, -0.05), { at: [s * 9.6, 0, -4.5] }));
-    b.box(19.6, 1.8, 0.45, tint(stone, -0.05), { at: [0, 0, -11.2] });
+    gardenWalls(b);
     b.box(3.0, 0.08, 6, P.gravel, { at: [ks * 4.2, 0, -1.3] });
   },
 };

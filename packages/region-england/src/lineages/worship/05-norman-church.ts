@@ -1,5 +1,5 @@
 import { P, tint, type BuildingDef } from '@ah/kit';
-import { church, tower, graveMounds, saxonCross, type WinSpec } from './shared';
+import { church, tower, graveMounds, saxonCross, SAXON_CROSS, SAXON_GRAVES, type WinSpec, type TowerSpec } from './shared';
 
 export const NORMAN_WALL = P.rubble;
 export const NORMAN_DRESS = P.limestone;
@@ -8,6 +8,24 @@ export const NORMAN_DRESS = P.limestone;
 export const normanWin: WinSpec = { kind: 'round', w: 0.62, h: 1.5, sill: 3.4, splay: 0.22 };
 /** Paired belfry openings divided by a shaft, under one round arch. */
 export const normanBelfry: WinSpec = { kind: 'round', w: 1.7, h: 2.0, sill: 10.2, tracery: 'twin', border: undefined } as WinSpec;
+/** The little slit lighting the ringing chamber below the belfry. */
+export const normanTowerSlit: WinSpec = { kind: 'round', w: 0.5, h: 1.2, sill: 6.2, splay: 0.18 };
+
+/** The squat west tower. Later stages keep it: the Early English adds a spire, the Decorated a stage. */
+export const normanTower: TowerSpec = {
+  size: 6,
+  z: 17,
+  h: 13,
+  wall: NORMAN_WALL,
+  dress: NORMAN_DRESS,
+  corners: 'clasping',
+  courses: [4.6, 9.4],
+  belfry: { spec: normanBelfry, n: 1 },
+  lower: [normanTowerSlit],
+  westWin: { kind: 'round', w: 0.7, h: 1.7, sill: 2.4, splay: 0.24 },
+  top: 'pyramid',
+  topColor: P.stoneSlate,
+};
 
 export const normanChurch: BuildingDef = {
   id: 'norman-church',
@@ -58,22 +76,9 @@ export const normanChurch: BuildingDef = {
       },
       southDoor: 'norman',
     });
-    tower(b, {
-      size: 6,
-      z: 17,
-      h: 13,
-      wall,
-      dress,
-      corners: 'clasping',
-      courses: [4.6, 9.4],
-      belfry: { spec: normanBelfry, n: 1 },
-      lower: [{ kind: 'round', w: 0.5, h: 1.2, sill: 6.2, splay: 0.18 }],
-      westWin: { kind: 'round', w: 0.7, h: 1.7, sill: 2.4, splay: 0.24 },
-      top: 'pyramid',
-      topColor: P.stoneSlate,
-    });
-    // the old Saxon cross still stands in the churchyard
-    saxonCross(b, [8.5, 0, 1.5], tint(P.sandstone, 0.02));
-    graveMounds(b, [[8.5, -6], [10.5, -4.5], [9.8, -9], [-8, -3], [-9.5, -7]], tint(P.grass, -0.06));
+    tower(b, normanTower);
+    // the old Saxon cross still stands in the churchyard, among the Saxon graves
+    saxonCross(b, SAXON_CROSS, tint(P.sandstone, 0.02));
+    graveMounds(b, SAXON_GRAVES, tint(P.grass, -0.06));
   },
 };

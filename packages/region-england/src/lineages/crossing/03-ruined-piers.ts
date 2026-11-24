@@ -1,6 +1,6 @@
 import { P, tint, mix, type BuildingDef } from '@ah/kit';
-import { BANK, BED, WATER, side, bar, cutwaterPier, type ZY } from './shared';
-import { ROMAN_PIERS, ROMAN_PIER } from './02-roman-timber-bridge';
+import { BANK, BED, WATER, side, bar, type ZY } from './shared';
+import { ROMAN_PIERS, ROMAN_PIER, ROMAN_STUMP, romanAbutmentFoot, romanPierStump } from './02-roman-timber-bridge';
 
 export const ruinedPiers: BuildingDef = {
   id: 'ruined-piers',
@@ -23,28 +23,29 @@ export const ruinedPiers: BuildingDef = {
     const stone = tint(b.pick([P.sandstone, P.limestoneWarm]), -0.04);
     const moss = mix(stone, P.turf, 0.35);
 
-    // ruined abutments: lower courses only, grassed over on top, with a bush growing out
+    // ruined abutments: the lower courses of the Roman masonry stand, robbed and broken above,
+    // grassed over on top, with a bush growing out
     b.sym((s) => {
+      romanAbutmentFoot(b, s, stone);
       const pts: ZY[] = [
-        [s * (BANK - 0.6), BED - 0.1],
-        [s * (BANK - 0.6), -0.9 + b.range(-0.2, 0.1)],
+        [s * (BANK - 0.6), ROMAN_STUMP],
+        [s * (BANK - 0.6), -0.8 + b.range(-0.1, 0.1)],
         [s * (BANK - 0.2), -0.5],
         [s * BANK, -0.1],
         [s * (BANK + 1.5), -0.1],
-        [s * (BANK + 1.5), BED - 0.1],
+        [s * (BANK + 1.5), ROMAN_STUMP],
       ];
       side(b, pts, 5.0, stone);
       b.box(4.4, 0.18, 2.0, P.turf, { at: [b.range(-0.3, 0.3), -0.1, s * (BANK + 0.8)] });
       b.tree(1.4, { kind: 'bush', at: [s * 1.6, 0, s * (BANK + 0.9)] });
     });
 
-    // the pier stumps: the cutwater footings survive just above the water, with a few ragged
-    // courses of ashlar still standing on them
+    // the pier stumps: the lower lift of each Roman pier survives just above the water, with a few
+    // ragged courses of ashlar still standing on it
     ROMAN_PIERS.forEach((z, i) => {
-      const { len, thick, nose } = ROMAN_PIER;
-      cutwaterPier(b, { z, len: len + 0.3, thick: thick + 0.3, nose: nose + 0.15, y0: BED - 0.1, h: 0.5, color: tint(stone, -0.05) });
-      const top = WATER + 0.3 + i * 0.15;
-      cutwaterPier(b, { z, len, thick, nose, y0: BED + 0.4, h: top - BED - 0.4, color: tint(stone, -0.02) });
+      const { len, thick } = ROMAN_PIER;
+      romanPierStump(b, z, stone);
+      const top = ROMAN_STUMP;
       const courses = i === 0 ? [7, 4, 2] : [8, 6, 3, 1];
       const bw = len / 6;
       courses.forEach((n, k) => {

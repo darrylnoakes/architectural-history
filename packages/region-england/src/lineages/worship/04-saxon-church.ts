@@ -1,5 +1,5 @@
 import { P, mix, tint, type BuildingDef } from '@ah/kit';
-import { church, win, saxonCross, graveMounds, DOOR_Z, type WinSpec } from './shared';
+import { church, win, saxonCross, graveMounds, DOOR_Z, SAXON_CROSS, SAXON_GRAVES, type WinSpec } from './shared';
 
 const WALL = mix(P.sandstone, P.rubble, 0.55);
 const DRESS = tint(P.limestoneWarm, -0.02);
@@ -59,7 +59,7 @@ export const saxonChurch: BuildingDef = {
       b.extrude([[-0.45, 0.5], [0.45, 0.5], [0.4, 0.25], [0.25, 0.08], [0, 0], [-0.25, 0.08], [-0.4, 0.25]], 0.08, DRESS, { at: [0, -0.5, 0.06] });
       for (const a of [-0.9, -0.45, 0, 0.45, 0.9]) b.box(0.03, 0.42, 0.04, P.oakDark, { at: [0, -0.02, 0.11], rot: [0, 0, Math.PI + a] });
     });
-    saxonCross(b, [7.5, 0, 2.5], tint(P.sandstone, 0.02));
-    graveMounds(b, [[7.5, -3], [9.5, -1.5], [9.0, -6], [-7, -1], [-8.5, -5], [6.5, -8.5]], tint(P.grass, -0.06));
+    saxonCross(b, SAXON_CROSS, tint(P.sandstone, 0.02));
+    graveMounds(b, SAXON_GRAVES, tint(P.grass, -0.06));
   },
 };

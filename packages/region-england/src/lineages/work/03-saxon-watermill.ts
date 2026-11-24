@@ -1,5 +1,5 @@
 import { P, tint, type BuildingDef } from '@ah/kit';
-import { BANK, WATER, waterwheel, water } from './shared';
+import { POND, WATER, millPond, waterwheel, water } from './shared';
 
 export const saxonWatermill: BuildingDef = {
   id: 'saxon-watermill',
@@ -59,26 +59,9 @@ export const saxonWatermill: BuildingDef = {
     // a splash of white water under the wheel
     b.blob(0.6, tint(P.water, 0.2), { at: [mx, WATER + 0.02, wz], stretch: [1.6, 0.15, 1.2], mat: 'glass' });
 
-    // ---- millpond: an earth-banked pond lined with timber, raised above the plot
-    const px = 10.3;
-    const pz = -3;
-    const pw = 10;
-    const pd = 12;
-    const ph = 1.3;
-    b.box(pw, ph - 0.25, pd, P.earth, { at: [px, 0, pz] });
-    water(b, pw - 1.4, pd - 1.4, [px, ph - 0.25, pz]);
-    // turf banks all round
-    b.sym((s) => {
-      b.extrude([[-0.9, 0], [0.9, 0], [0.35, ph], [-0.35, ph]], pd, P.turf, { at: [px + s * (pw / 2 - 0.35), 0, pz] });
-      b.extrude([[-0.9, 0], [0.9, 0], [0.35, ph], [-0.35, ph]], pw, P.turf, { at: [px, 0, pz + s * (pd / 2 - 0.35)], rotY: Math.PI / 2 });
-    });
-    // timber lining on the inside of the banks
-    b.box(pw - 1.3, 0.35, 0.1, P.oakDark, { at: [px, ph - 0.4, pz + pd / 2 - 0.7] });
-    b.box(pw - 1.3, 0.35, 0.1, P.oakDark, { at: [px, ph - 0.4, pz - pd / 2 + 0.7] });
-    // the leat bringing water in from upstream (off the plot to the right)
-    b.box(2.4, ph - 0.25, 2.4, P.earth, { at: [px + pw / 2 + 1.1, 0, pz + 2] });
-    water(b, 2.4, 1.2, [px + pw / 2 + 1.1, ph - 0.25, pz + 2]);
-    b.sym((s) => b.box(2.4, ph, 0.6, P.turf, { at: [px + pw / 2 + 1.1, 0, pz + 2 + s * 0.9] }));
+    // ---- millpond: an earth-banked pond lined with timber, raised above the plot (kept by the Norman mill)
+    millPond(b);
+    const { x: px, z: pz, w: pw, d: pd, h: ph } = POND;
 
     // ---- sluice and chute: out of the back of the pond, then steeply down to the wheel
     const sx = 9;

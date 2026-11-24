@@ -526,6 +526,15 @@ export function saxonCross(b: Builder, at: Vec3, stone: number) {
   });
 }
 
+/** Where the Saxon cross stands; the Norman churchyard keeps it. */
+export const SAXON_CROSS: Vec3 = [7.5, 0, 2.5];
+/** Graves of the Saxon churchyard, still there round the Norman church. */
+export const SAXON_GRAVES: [number, number][] = [[7.5, -3], [9.5, -1.5], [9.0, -6], [-7, -1], [-8.5, -5], [6.5, -8.5]];
+/** Graves of the churchyard round the aisled church, from the Early English enlargement on. */
+export const GRAVES: [number, number][] = [[11.5, -6], [11.2, -14], [-11.5, -12], [-11.4, -5.5], [6.8, -20.5]];
+/** Where the medieval churchyard cross stands, from the Early English church on. */
+export const CROSS: Vec3 = [8.0, 0, -12.0];
+
 /** Unmarked grave mounds, aligned east-west. */
 export function graveMounds(b: Builder, spots: [number, number][], color: number) {
   for (const [x, z] of spots) b.blob(0.5, color, { at: [x, 0, z], stretch: [0.75, 0.35, 2.0], detail: 0 });
@@ -810,6 +819,8 @@ export interface TowerSpec {
   topColor?: number;
   spireH?: number;
   clock?: number;
+  /** Height of an older tower that this one raises by a stage: the old walls stay as they were. */
+  raisedFrom?: number;
 }
 
 export function tower(b: Builder, t: TowerSpec) {
@@ -817,7 +828,9 @@ export function tower(b: Builder, t: TowerSpec) {
   const hs = s / 2;
   const { wall, dress } = t;
   b.box(s + 0.3, 0.5, s + 0.3, tint(wall, -0.05), { at: [0, 0, t.z] });
-  b.box(s, t.h, s, wall, { at: [0, 0, t.z] });
+  const old = t.raisedFrom ?? t.h;
+  b.box(s, old, s, wall, { at: [0, 0, t.z] });
+  if (old < t.h) b.box(s, t.h - old, s, wall, { at: [0, old, t.z] });
   for (const y of t.courses) b.box(s + 0.14, 0.16, s + 0.14, dress, { at: [0, y, t.z] });
 
   // corner buttresses
@@ -826,7 +839,8 @@ export function tower(b: Builder, t: TowerSpec) {
       const cx = sx * hs;
       const cz = t.z + sz * hs;
       if (t.corners === 'clasping') {
-        b.box(1.2, t.h - 0.6, 1.2, wall, { at: [cx - sx * 0.48, 0, cz - sz * 0.48] });
+        b.box(1.2, old - 0.6, 1.2, wall, { at: [cx - sx * 0.48, 0, cz - sz * 0.48] });
+        if (old < t.h) b.box(1.2, t.h - old, 1.2, wall, { at: [cx - sx * 0.48, old - 0.6, cz - sz * 0.48] });
       } else if (t.corners === 'diagonal' && sz > 0) {
         const a = Math.atan2(sx, sz);
         buttress(b, { at: [cx - sx * 0.25, 0, cz - sz * 0.25], facing: a, h: t.h * 0.78, proj: 1.7, w: 0.85, color: wall, steps: 4 });

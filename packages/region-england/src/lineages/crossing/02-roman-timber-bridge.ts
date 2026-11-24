@@ -1,9 +1,34 @@
-import { P, tint, type BuildingDef } from '@ah/kit';
+import { P, tint, type BuildingDef, type Builder } from '@ah/kit';
 import { BANK, BED, END, hump, side, steps, bar, cutwaterPier, plankDeck, handrail, type ZY } from './shared';
 
 /** Shared with the ruin stage, which shows the same piers broken. */
 export const ROMAN_PIERS = [-2.9, 2.9];
 export const ROMAN_PIER = { len: 4.4, thick: 1.7, nose: 1.1, top: -0.25 };
+/** Height to which the masonry survives after the bridge falls: the piers and abutments are built in two lifts split here. */
+export const ROMAN_STUMP = -0.9;
+/** Width of the deck, and of the abutments (W + 0.8). */
+const W = 4.6;
+
+/**
+ * The lower part of one Roman pier, from the riverbed to ROMAN_STUMP: the offset footing course, the
+ * cutwater pier and its lowest course line. It is the same in the ruin that follows.
+ */
+export function romanPierStump(b: Builder, z: number, stone: number): void {
+  const { len, thick, nose } = ROMAN_PIER;
+  cutwaterPier(b, { z, len: len + 0.3, thick: thick + 0.3, nose: nose + 0.15, y0: BED - 0.1, h: 0.5, color: tint(stone, -0.05) });
+  cutwaterPier(b, { z, len, thick, nose, y0: BED + 0.4, h: ROMAN_STUMP - BED - 0.4, color: stone });
+  b.box(len + 0.02, 0.04, thick + 0.02, tint(stone, -0.1), { at: [0, -1.0, z], jitter: false });
+}
+
+/**
+ * The foot of the Roman abutment on bank `s` (+1 or -1): its river face from the bed up to
+ * ROMAN_STUMP, the low wing walls returning along the bank, and the lowest course line. Kept in the ruin.
+ */
+export function romanAbutmentFoot(b: Builder, s: number, stone: number): void {
+  side(b, [[s * (BANK + 0.01), ROMAN_STUMP], [s * (BANK + 0.01), BED - 0.1], [s * (BANK - 0.6), BED - 0.1], [s * (BANK - 0.6), ROMAN_STUMP]], W + 0.8, stone);
+  b.box(W + 3.2, -0.05 - BED, 0.5, tint(stone, -0.03), { at: [0, BED - 0.1, s * (BANK - 0.2)] });
+  b.box(W + 0.84, 0.05, 0.05, tint(stone, -0.1), { at: [0, -1.5, s * (BANK - 0.62)], jitter: false });
+}
 
 export const romanTimberBridge: BuildingDef = {
   id: 'roman-timber-bridge',
@@ -25,7 +50,6 @@ export const romanTimberBridge: BuildingDef = {
   influences: ['roman-conquest'],
   build(b) {
     b.noCollide();
-    const W = 4.6; // deck width
     const crown = 0.9; // Roman decks ran nearly level
     const f = hump(crown);
     b.deck(W, 26, crown, { yEnds: 0 });
@@ -36,23 +60,23 @@ export const romanTimberBridge: BuildingDef = {
 
     // abutments: masonry from the bed up to the stringers, buried into each bank
     b.sym((s) => {
+      romanAbutmentFoot(b, s, stone);
       const pts: ZY[] = [];
       for (const z of steps(6, BANK, END)) pts.push([s * z, under(z)]);
-      pts.push([s * END, -0.4], [s * (BANK + 0.01), -0.4], [s * (BANK + 0.01), BED - 0.1], [s * (BANK - 0.6), BED - 0.1], [s * (BANK - 0.6), under(BANK)]);
+      pts.push([s * END, -0.4], [s * (BANK + 0.01), -0.4], [s * (BANK + 0.01), ROMAN_STUMP], [s * (BANK - 0.6), ROMAN_STUMP], [s * (BANK - 0.6), under(BANK)]);
       side(b, pts, W + 0.8, stone);
-      // wing walls returning along the bank
-      b.box(W + 3.2, -0.05 - BED, 0.5, tint(stone, -0.03), { at: [0, BED - 0.1, s * (BANK - 0.2)] });
       // course lines on the river face
-      for (const y of [-1.5, -0.8, -0.1]) b.box(W + 0.84, 0.05, 0.05, tint(stone, -0.1), { at: [0, y, s * (BANK - 0.62)], jitter: false });
+      for (const y of [-0.8, -0.1]) b.box(W + 0.84, 0.05, 0.05, tint(stone, -0.1), { at: [0, y, s * (BANK - 0.62)], jitter: false });
     });
 
-    // piers with cutwaters both ends, an offset footing course and a projecting cap course
+    // piers with cutwaters both ends, an offset footing course and a projecting cap course,
+    // built in two lifts
     for (const z of ROMAN_PIERS) {
       const { len, thick, nose, top } = ROMAN_PIER;
-      cutwaterPier(b, { z, len: len + 0.3, thick: thick + 0.3, nose: nose + 0.15, y0: BED - 0.1, h: 0.5, color: tint(stone, -0.05) });
-      cutwaterPier(b, { z, len, thick, nose, y0: BED + 0.4, h: top - BED - 0.4, color: stone, cap: 0.08, capColor: tint(stone, 0.04) });
+      romanPierStump(b, z, stone);
+      cutwaterPier(b, { z, len, thick, nose, y0: ROMAN_STUMP, h: top - ROMAN_STUMP, color: stone, cap: 0.08, capColor: tint(stone, 0.04) });
       // ashlar course lines
-      for (const y of [-1.0, -0.5, 0.0 - 0.35]) b.box(len + 0.02, 0.04, thick + 0.02, tint(stone, -0.1), { at: [0, y, z], jitter: false });
+      for (const y of [-0.5, -0.35]) b.box(len + 0.02, 0.04, thick + 0.02, tint(stone, -0.1), { at: [0, y, z], jitter: false });
     }
 
     // timber trestle on each pier: four posts, a cap beam (corbel) and raking struts

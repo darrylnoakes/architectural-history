@@ -1,18 +1,24 @@
 import { P, mix, tint, type BuildingDef, type Builder } from '@ah/kit';
-import { BAILEY_LEFT, BAILEY_RIGHT, GATE, MOTTE, arcPts, arch, bank, lineColliders, motte, motteY, palisade, strip } from './shared';
+import {
+  BAILEY_BANK_H,
+  BAILEY_LEFT,
+  BAILEY_RIGHT,
+  GATE,
+  MOTTE,
+  arcPts,
+  arch,
+  baileyEarthworks,
+  baileyStables,
+  baileyWell,
+  gateBridge,
+  lineColliders,
+  motte,
+  motteY,
+  palisade,
+  toSummit,
+} from './shared';
 
 type XZ = [number, number];
-
-/** Extend a bailey line from where it meets the motte slope up to the summit palisade. */
-export function toSummit(p: XZ, r = MOTTE.rTop - 0.4): XZ {
-  const a = Math.atan2(p[1] - MOTTE.z, p[0] - MOTTE.x);
-  return [MOTTE.x + r * Math.cos(a), MOTTE.z + r * Math.sin(a)];
-}
-
-/** Offset a bailey line outwards (scaled about a point near the bailey centre) for the outer ditch. */
-export function ditchLine(pts: XZ[], k = 1.06): XZ[] {
-  return pts.map(([x, z]) => [x * k, 2 + (z - 2) * k]);
-}
 
 /** The direction the flying bridge climbs the motte: from the bailey towards the summit. */
 export const BRIDGE_ANG = Math.PI / 4;
@@ -92,19 +98,14 @@ export const motteAndBailey: BuildingDef = {
   influences: ['norman-romanesque'],
   build(b) {
     motte(b, { color: tint(P.turf, -0.02), ditch: 'dry' });
-    const ditch = mix(P.soil, P.earth, 0.4);
 
     // ----------------------------------------------------------- the bailey: bank, palisade, ditch
     const rightLine: XZ[] = [toSummit(BAILEY_RIGHT[0]), ...BAILEY_RIGHT];
     const leftLine: XZ[] = [...BAILEY_LEFT, toSummit(BAILEY_LEFT[BAILEY_LEFT.length - 1])];
-    const bankH = 1.0;
-    bank(b, BAILEY_RIGHT.slice(1), 3.2, bankH, tint(P.turf, 0.03));
-    bank(b, BAILEY_LEFT.slice(0, -1), 3.2, bankH, tint(P.turf, 0.03));
-    const base = (x: number, z: number) => Math.max(motteY(x, z), bankH - 0.1);
+    baileyEarthworks(b);
+    const base = (x: number, z: number) => Math.max(motteY(x, z), BAILEY_BANK_H - 0.1);
     palisade(b, rightLine, 3, tint(P.oak, 0.05), { base, rail: 2 });
     palisade(b, leftLine, 3, tint(P.oak, 0.05), { base, rail: 2 });
-    strip(b, ditchLine(BAILEY_RIGHT.slice(1)), 1.5, 0.03, ditch);
-    strip(b, ditchLine(BAILEY_LEFT.slice(0, -1)), 1.5, 0.03, ditch);
 
     // ----------------------------------------------------------- the motte top
     const ringR = MOTTE.rTop - 0.4;
@@ -130,17 +131,9 @@ export const motteAndBailey: BuildingDef = {
       b.box(W, 0.3, 4.2, P.oakDark, { at: [0, 3.4, -0.6] });
       // gates folded back inside
       b.sym((s) => b.box(0.15, 3.2, 1.6, P.oakDark, { at: [s * 1.5, 0, -2.6], rotY: s * 0.2 }));
-      // bridge across the ditch
-      b.box(3.2, 0.25, 2.6, P.oak, { at: [0, 0.35, 1.7] });
-      b.sym((s) => {
-        b.box(0.12, 1.0, 2.6, P.oakDark, { at: [s * 1.5, 0.6, 1.7] });
-        b.box(0.24, 0.6, 0.24, P.oakDark, { at: [s * 1.4, 0, 1.0] });
-        b.box(0.24, 0.6, 0.24, P.oakDark, { at: [s * 1.4, 0, 2.6] });
-      });
     });
-    // the front ditch, with the bridge over it
-    strip(b, [[-12.6, 20.6], [-0.8, 20.6]], 1.7, 0.03, ditch);
-    strip(b, [[3.8, 20.6], [14, 20.6]], 1.7, 0.03, ditch);
+    // bridge across the front ditch
+    gateBridge(b);
 
     // ----------------------------------------------------------- buildings in the bailey
     const plank = mix(P.oak, P.oakSilver, 0.3);
@@ -154,11 +147,7 @@ export const motteAndBailey: BuildingDef = {
       b.cone(0.5, 0.9, P.thatchOld, { at: [1.5, 7.6, 0], segs: 4 }); // smoke louvre
     });
     // stables along the right palisade
-    b.group({ at: [15.3, 0, 4.5] }, () => {
-      b.box(4.2, 2.6, 12, plank);
-      b.shed(5, 12.6, 1.3, P.thatchOld, { at: [0, 2.6, 0], high: '+x' });
-      for (const z of [-4, 0, 4]) b.panel(1.6, 2.0, P.oakDark, { at: [-2.1, 0, z], facing: '-x' });
-    });
+    baileyStables(b);
     // timber chapel with a bellcote
     b.group({ at: [-11, 0, 12] }, () => {
       b.box(4.4, 3.2, 7, plank, { rotY: 0 });
@@ -168,7 +157,7 @@ export const motteAndBailey: BuildingDef = {
       arch(b, 1.1, 2.1, P.oakDark, { at: [0, 0, 3.5], facing: '+z', shape: 'round' });
     });
     // well, cart, woodpile
-    b.cyl(0.8, 0.8, P.rubble, { at: [5, 0, 6], segs: 8 });
+    baileyWell(b);
     b.box(1.9, 0.12, 0.12, P.oakDark, { at: [5, 1.7, 6] });
     b.sym((s) => b.box(0.12, 1.8, 0.12, P.oakDark, { at: [5 + s * 0.9, 0, 6] }));
     for (let i = 0; i < 3; i++) b.log(0.16, 2.4, P.bark, { at: [12, i * 0.28, 12 + i * 0.1], axis: 'z', segs: 6 });

@@ -62,7 +62,7 @@ export const gastropub: BuildingDef = {
     ground(b, 22, 2.8, P.tarmac, [0, 9.6], 0.05);
 
     // ---------------- the retained 1968 shell, painted, with a slim zinc coping
-    estateShell(b, paint, P.asphalt);
+    estateShell(b, paint, P.asphalt, frame);
     fasciaBand(b, BAR, BAR.h, 0.35, 0.08, zinc);
     // the flat is wrapped in vertical larch boards
     const f = FLAT;
@@ -81,11 +81,10 @@ export const gastropub: BuildingDef = {
       b.box(0.08, 0.5, 0.08, P.steel, { at: [x, BAR.h, -5.6] });
     }
     // back of the shell: kitchen door, extract duct, bins
-    b.panel(1.0, 2.1, frame, { at: [-3, 0, BAR.z0], facing: '-z' });
+    b.panel(1.0, 2.1, frame, { at: [-0.6, 0, BAR.z0], facing: '-z' });
     b.box(0.5, 0.5, 2.2, P.steel, { at: [-6, BAR.h - 0.6, BAR.z0 - 0.3] });
     b.box(0.5, 1.6, 0.5, P.steel, { at: [-6, BAR.h - 0.6, BAR.z0 - 1.2] });
     for (const x of [-9, -8.1]) b.box(0.7, 1.2, 0.8, P.cladGreen, { at: [x, 0, BAR.z0 - 0.7] });
-    for (const x of [-8, -5, -2, 1]) b.window(1.8, 0.6, { at: [x, 2.2, BAR.z0], facing: '-z', frame, border: 0.05 });
 
     // ---------------- glazed dining room in front of the bar
     const dz0 = BAR.z1;
