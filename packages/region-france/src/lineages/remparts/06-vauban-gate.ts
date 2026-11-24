@@ -122,7 +122,7 @@ export const vaubanGateStage: BuildingDef = {
   style: 'Classical military (Vauban)',
   date: 'c. 1670 to 1700',
   summary:
-    'After Louis XIV’s conquests in Flanders (1667 to 1678) the northern frontier was refortified by his engineer Sébastien Le Prestre de Vauban (1633 to 1707), who rebuilt or improved some 150 fortified places. ' +
+    'After Louis XIV’s conquests in Flanders (1667 to 1678) the northern frontier was refortified by his engineer Sébastien Le Prestre de Vauban (1633 to 1707), who worked on some three hundred fortified places and built more than thirty new ones. ' +
     'Against cannon the wall sinks into a deep dry ditch: low ramparts of earth, faced in the north with brick and capped by a stone cordon and a thick parapet of turf; angled bastions whose flanks sweep the ditch; and in the ditch, in front of the curtain, a triangular outwork, the demi-lune (ravelin), that the enemy must take before he can even fire at the gate. The far side of the ditch, the counterscarp, is walled too, and along its top runs the covered way behind the low bank of the glacis. ' +
     'The road crosses the ditch by a drawbridge to the demi-lune and leaves it by a second bridge to the covered way. Here it runs straight through; in most real fortresses it turned inside the demi-lune and left by a bridge from one side, at an angle. ' +
     'Vauban did not invent the bastion, which came from Italy, but he made its geometry and the art of siege a system that all Europe studied. The gate is the one place where the fortress speaks: it is dressed as a triumphal arch to the king’s glory.',
