@@ -1,6 +1,6 @@
 import { P, mix, spread, tint, type BuildingDef } from '@ah/kit';
-import { BATHS } from './02-roman-baths';
-import { facet, roundArch, ruinWall, type Pt } from './shared';
+import { BATHS, BATH_RUIN, WALL_T, bathFabric } from './02-roman-baths';
+import { facet, ruinWall, type Pt } from './shared';
 
 export const ruinedBaths: BuildingDef = {
   id: 'ruined-baths',
@@ -25,39 +25,49 @@ export const ruinedBaths: BuildingDef = {
     const stone = tint(P.limestone, b.range(-0.05, -0.02));
     const core = mix(stone, P.rubble, 0.5);
     const tile = P.romanTile;
+    const R = BATH_RUIN;
     const { back, front } = BATHS;
     const D = front - back;
     const zc = (front + back) / 2;
-    const t = 0.8;
-    const rubble = (x: number, z: number, r: number) =>
-      b.blob(r, b.chance(0.5) ? core : tint(stone, -0.08), { at: [x, 0, z], stretch: [1.4, 0.5, 1.1], detail: 0 });
+    const t = WALL_T;
+    const B = 0.4;
+    const rubble = (x: number, z: number, r: number, y = 0) =>
+      b.blob(r, b.chance(0.5) ? core : tint(stone, -0.08), { at: [x, y, z], stretch: [1.4, 0.5, 1.1], detail: 0 });
 
-    // weedy ground over the old floors
-    b.box(BATHS.C[1] - BATHS.F[0] + 1, 0.3, D + 1, tint(P.grassDry, -0.03), { at: [(BATHS.C[1] + BATHS.F[0]) / 2, 0, zc] });
+    // the baths' own walls, robbed down to the lifts that still stand, and the half vault
+    bathFabric(b, stone, true);
+    // weeds over the old floors
+    b.box(BATHS.C[1] - BATHS.F[0] + 0.4, 0.04, D + 0.4, tint(P.grassDry, -0.03), { at: [(BATHS.C[1] + BATHS.F[0]) / 2, B, zc], jitter: false });
 
-    // ---------------------------------------------------------------- frigidarium: knee-high walls
+    // ragged tops where the robbers stopped: the rubble core above the last good course
     const [f0, f1] = BATHS.F;
-    ruinWall(b, f1 - f0, 0.6, 2.6, t, stone, { at: [(f0 + f1) / 2, 0, front - t / 2] });
-    ruinWall(b, f1 - f0, 1.2, 3.4, t, stone, { at: [(f0 + f1) / 2, 0, back + t / 2] });
-    ruinWall(b, D, 1.0, 3.6, t, core, { at: [f0 + t / 2, 0, zc], rotY: Math.PI / 2 });
-    b.tree(7.5, { at: [-10.5, 0.3, -7.6] });
-    b.tree(2.2, { at: [-13, 0.3, -5], kind: 'bush', color: P.hedge });
+    const [t0, t1] = BATHS.T;
+    const [c0, c1] = BATHS.C;
+    const ragX = (x0: number, x1: number, z: number, cut: number, lo: number, hi: number, col = core) =>
+      ruinWall(b, x1 - x0, lo, hi, t, col, { at: [(x0 + x1) / 2, B + cut, z] });
+    const ragZ = (x: number, z0: number, z1: number, cut: number, lo: number, hi: number, col = core) =>
+      ruinWall(b, z1 - z0, lo, hi, t, col, { at: [x, B + cut, (z0 + z1) / 2], rotY: Math.PI / 2 });
+    ragX(f0, f1, front - t / 2, R.fFront, 0.1, 1.3);
+    ragX(f0, f1, back + t / 2, R.fBack, 0.1, 1.0);
+    ragZ(f0 + t / 2, back, front, R.fEnd, 0.2, 1.2);
+    ragZ(t0, zc, front, R.ftFront, 0.3, 2.6);
+    ragX(t0, t1, front - t / 2, R.tFront, 0.1, 0.9);
+    ragZ(t1, zc, front, R.tcFront, 0.4, 2.4);
+    ragX(c0, c1, front - t / 2, R.cFront, 0.2, 1.6);
+    ragX(c0, c1, back + t / 2, R.cBack, 0.3, 1.8);
+    R.apse.forEach((cut, i) => {
+      const [fx, fz, fa] = facet(i, 14, BATHS.apseR);
+      if (cut < 4) ruinWall(b, 1.45, 0.1, 0.7, 0.7, core, { at: [c1 + fx, cut, zc + fz], rotY: fa });
+    });
 
-    // ---------------------------------------------------------------- tepidarium: the half vault
-    const [t0, t1, th] = BATHS.T;
+    // frigidarium: a tree through the floor
+    b.tree(7.5, { at: [-10.5, B, -7.6] });
+    b.tree(2.2, { at: [-13, B, -5], kind: 'bush', color: P.hedge });
+
+    // tepidarium: broken stubs of the fallen front half of the vault, still clinging to the walls
     const tx = (t0 + t1) / 2;
     const tw = t1 - t0;
-    const top = th + 0.4;
-    // back half survives to the springing: back wall and the two cross walls
-    b.box(tw + t, top, t, stone, { at: [tx, 0, back + t / 2] });
-    for (const x of [t0, t1]) {
-      b.box(t, top, D / 2, stone, { at: [x, 0, back + D / 4] });
-      ruinWall(b, D / 2, 1.5, top - 0.6, t, core, { at: [x, 0, back + (D * 3) / 4], rotY: Math.PI / 2, endHigh: top - 0.4 });
-    }
-    for (let y = 1.1; y < top - 0.4; y += 1.25) {
-      b.box(tw + t + 0.06, 0.22, t + 0.06, tile, { at: [tx, y, back + t / 2], jitter: false });
-    }
-    // the surviving half of the vault, its broken end showing the thickness of the shell
+    const top = BATHS.T[2] + B;
     const band = (ro: number, ri: number, a0: number, a1: number, len: number, z: number, color: number) => {
       const pts: Pt[] = [];
       const n = Math.max(3, Math.round((a1 - a0) * 3));
@@ -71,44 +81,28 @@ export const ruinedBaths: BuildingDef = {
       }
       b.extrude(pts, len, color, { at: [tx, top, z] });
     };
-    const vo = (tw + t) / 2;
-    const vi = (tw - t) / 2;
-    const vlen = D / 2 - 0.4;
-    const vz = back + D / 4 - 0.2;
-    band(vo, vi, 0, Math.PI, vlen, vz, core);
-    band(vo + 0.12, vo, 0, Math.PI, vlen - 0.3, vz - 0.15, tile);
-    band(vo, vi, 0, 1.1, 1.4, back + D / 2 + 0.3, core);
-    band(vo, vi, Math.PI - 0.7, Math.PI, 0.9, back + D / 2 + 0.2, core);
-    ruinWall(b, tw - 0.6, 0.4, 1.4, t, stone, { at: [tx, 0, front - t / 2] });
-    for (let i = 0; i < 5; i++) rubble(tx + b.range(-2.5, 2.5), front - b.range(1, 3.5), b.range(0.6, 1.1));
-    b.box(1.6, 0.25, 0.9, tile, { at: [tx - 1, 0.4, front - 2.5], rotY: 0.4, rot: [0.2, 0, 0] });
+    const vo = (tw + 0.3) / 2;
+    const vi = vo - t;
+    band(vo, vi, 0, 1.1, 1.4, zc + 0.7, core);
+    band(vo, vi, Math.PI - 0.7, Math.PI, 0.9, zc + 0.45, core);
+    for (let i = 0; i < 5; i++) rubble(tx + b.range(-2.5, 2.5), front - b.range(1, 3.5), b.range(0.6, 1.1), B);
+    b.box(1.6, 0.25, 0.9, tile, { at: [tx - 1, B, front - 2.5], rotY: 0.4, rot: [0.2, 0, 0] });
 
-    // ---------------------------------------------------------------- caldarium: tall walls, no roof, pilae exposed
-    const [c0, c1, chH] = BATHS.C;
+    // caldarium: no roof, the hypocaust pilae exposed where the floor has fallen in
     const cx = (c0 + c1) / 2;
     const cw = c1 - c0;
-    const win = (xc: number) => roundArch(xc, 3.0, 0.9, 1.6, 6);
-    ruinWall(b, cw + t, 4.5, chH + 0.2, t, stone, { at: [cx, 0, back + t / 2], holes: spread(2, -cw / 2, cw / 2).map(win) });
-    ruinWall(b, cw + t, 2.0, chH - 1.6, t, stone, { at: [cx, 0, front - t / 2] });
     for (let i = 0; i < 6; i++) {
       for (let j = 0; j < 4; j++) {
         if (b.chance(0.15)) continue;
-        b.box(0.45, b.range(0.6, 0.95), 0.45, tint(tile, -0.05), { at: [c0 + 1.3 + i * 1.4, 0.3, back + 1.6 + j * 1.6] });
+        b.box(0.45, b.range(0.6, 0.95), 0.45, tint(tile, -0.05), { at: [c0 + 1.3 + i * 1.4, B, back + 1.6 + j * 1.6] });
       }
     }
-    b.box(cw - 1.4, 0.12, 1.8, tint(stone, 0.04), { at: [cx + 1.5, 1.2, back + 2.4] }); // a surviving patch of floor
-    rubble(cx - 2, front - 1.5, 1.1);
-    b.tree(3.2, { at: [c1 - 0.6, chH - 1.2, back + 0.4], kind: 'bush', color: P.leaf });
+    b.box(cw - 1.4, 0.12, 1.8, tint(stone, 0.04), { at: [cx + 1.5, 1.3, back + 2.4] }); // a surviving patch of floor
+    rubble(cx - 2, front - 1.5, 1.1, B);
+    b.tree(3.2, { at: [c1 - 0.6, BATHS.C[2] - 1.2, back + 0.4], kind: 'bush', color: P.leaf });
 
-    // apse: a ragged half ring of wall
-    for (let i = 0; i < 7; i++) {
-      const [fx, fz, fa] = facet(i, 14, BATHS.apseR);
-      const h = i === 3 ? 4.8 : b.range(0.8, 4.2);
-      b.box(1.45, h, 0.7, stone, { at: [c1 + fx, 0, zc + fz], rotY: fa });
-    }
-    // furnace house: stumps and the blackened stoke-hole
+    // furnace house: the blackened stoke-hole in its stump
     const pz = back - 1.1;
-    ruinWall(b, 6, 0.5, 1.8, 0.6, stone, { at: [cx, 0, pz - 0.8] });
     b.box(1.3, 0.9, 0.62, P.black, { at: [cx, 0, pz - 0.8] });
     rubble(cx + 2, pz, 0.8);
 
@@ -116,12 +110,11 @@ export const ruinedBaths: BuildingDef = {
     const Y = BATHS.yard;
     const yz = (Y.front + front) / 2;
     const yardD = Y.front - front;
-    b.box(Y.x * 2 - 1.2, 0.06, yardD - 0.6, tint(P.grass, 0.03), { at: [0, 0, yz - 0.3] });
     b.sym((s) => {
-      ruinWall(b, yardD, 0.4, s > 0 ? 3.6 : 2.4, 0.6, stone, { at: [s * (Y.x - 0.3), 0, yz], rotY: Math.PI / 2 });
-      ruinWall(b, Y.x - 2.2, 0.3, 2.2, 0.6, stone, { at: [(s * (Y.x + 2.2)) / 2, 0, Y.front - 0.3] });
+      const k = s > 0 ? 0 : 1;
+      ruinWall(b, yardD, 0.1, s > 0 ? 1.0 : 0.6, 0.6, core, { at: [s * (Y.x - 0.3), R.yardSide[k], yz], rotY: Math.PI / 2 });
+      ruinWall(b, Y.x - 2.2, 0.1, 0.9, 0.6, core, { at: [(s * (Y.x + 2.2)) / 2, R.yardFront[k], Y.front - 0.3] });
     });
-    b.box(1.0, 5.2, 0.9, tint(stone, 0.05), { at: [-2.4, 0, Y.front - 0.3] });
     b.box(1.0, 1.4, 0.9, tint(stone, 0.05), { at: [2.4, 0, Y.front - 0.3] });
 
     // the colonnade: a few still standing, some broken, some fallen
@@ -147,9 +140,8 @@ export const ruinedBaths: BuildingDef = {
     b.log(0.24, 1.6, col, { at: [-8, 0, 9], rotY: 1.2, segs: 7 });
 
     // the plunge pool, silted and reedy
-    b.box(6.4, 0.45, 3.4, tint(stone, 0.02), { at: [-5, 0, 3.8] });
-    b.box(5.8, 0.06, 2.8, mix(P.water, P.leafDark, 0.5), { at: [-5, 0.4, 3.8] });
-    for (const x of spread(5, -7.5, -2.5)) b.cone(0.25, b.range(0.8, 1.3), P.reed, { at: [x, 0.4, 3.8 + b.range(-1, 1)], segs: 4 });
+    b.box(5.8, 0.06, 2.8, mix(P.water, P.leafDark, 0.5), { at: [-5, 0.46, 3.8] });
+    for (const x of spread(5, -7.5, -2.5)) b.cone(0.25, b.range(0.8, 1.3), P.reed, { at: [x, 0.45, 3.8 + b.range(-1, 1)], segs: 4 });
 
     b.tree(8, { at: [6, 0, 9.5] });
     b.tree(5, { at: [-12, 0, 11.5], color: P.leafDark });

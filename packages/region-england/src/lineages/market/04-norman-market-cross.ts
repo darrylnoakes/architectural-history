@@ -1,5 +1,5 @@
 import { P, mix, tint, type BuildingDef, type Builder } from '@ah/kit';
-import { barrel, beam, goods, trestle } from './shared';
+import { barrel, beam, goods, marketPlace, stocks, trestle } from './shared';
 
 /** A permanent market booth: a small timber-framed stall under a steep thatch, open at the front. */
 function booth(b: Builder, x: number, z: number, rotY: number, kinds: ('basket' | 'sack' | 'pot' | 'cloth' | 'fruit')[]): void {
@@ -37,13 +37,13 @@ export const normanMarketCross: BuildingDef = {
     { label: 'Market cross', note: 'A tall tapering shaft on a socket stone, set on steps. It marked the market place and reminded traders to deal honestly.', at: [0, 7.6, 0.4] },
     { label: 'Calvary steps', note: 'The square stepped base. Traders sat on it, and proclamations were read from it.', at: [1.8, 0.6, 1.9] },
     { label: 'Socket stone', note: 'The heavy block the shaft is mortised into, often the only part of a medieval cross to survive today.', at: [0, 1.7, 0.55] },
-    { label: 'Stocks', note: 'Wooden boards that locked an offender’s ankles in public view.', at: [5.4, 0.9, 2.4] },
+    { label: 'Stocks', note: 'Wooden boards that locked an offender’s ankles in public view.', at: [7.6, 0.9, 5.8] },
     { label: 'Thatched booths', note: 'Small permanent stalls, the first step from a trestle on market day toward a real shop.', at: [-6.1, 3.2, -4.6] },
   ],
   build(b) {
     const stone = b.pick([P.limestone, P.limestoneWarm, P.ragstone]);
     // cobbled square around the cross
-    b.group({ scale: [1.1, 1, 0.88] }, () => b.cyl(9.4, 0.04, mix(P.cobble, P.earth, 0.5), { segs: 18 }));
+    marketPlace(b, mix(P.cobble, P.earth, 0.5));
 
     // three square steps
     for (let i = 0; i < 3; i++) {
@@ -83,19 +83,7 @@ export const normanMarketCross: BuildingDef = {
     goods(b, 2, [-4.6, 0.88, 4.6], 0.2, ['fruit', 'basket', 'fruit']);
     barrel(b, [-2.6, 0, 5.4]);
 
-    // the stocks: two posts, a sill and a pair of hinged boards with leg holes, and a bench
-    b.group({ at: [5.4, 0, 3.6], rotY: -0.25 }, () => {
-      const oak = P.oakDark;
-      for (const s of [-1, 1]) b.box(0.2, 1.1, 0.2, oak, { at: [s * 1.0, 0, 0] });
-      b.box(2.3, 0.14, 0.24, oak, { at: [0, 0.02, 0] });
-      b.box(2.2, 0.28, 0.14, P.oak, { at: [0, 0.36, 0] });
-      b.box(2.2, 0.28, 0.14, P.oak, { at: [0, 0.64, 0] });
-      for (const x of [-0.6, -0.25, 0.25, 0.6]) b.panel(0.14, 0.14, P.timberBlack, { at: [x, 0.57, 0.07], facing: '+z', shape: 'circle', depth: 0.02 });
-      b.box(2.3, 0.08, 0.36, P.oak, { at: [0, 0.4, -0.75] });
-      for (const s of [-1, 1]) b.box(0.1, 0.4, 0.3, P.oak, { at: [s * 0.95, 0, -0.75] });
-      // whipping post beside it
-      b.box(0.22, 2.4, 0.22, oak, { at: [1.6, 0, -0.3] });
-      b.box(0.4, 0.1, 0.12, P.iron, { at: [1.6, 1.7, -0.15] });
-    });
+    // the stocks and whipping post
+    stocks(b);
   },
 };

@@ -1,5 +1,5 @@
 import { P, tint, spread, type BuildingDef } from '@ah/kit';
-import { paling, sash } from './shared';
+import { paling, sash, gardenWalls } from './shared';
 
 export const georgianTownhouse: BuildingDef = {
   id: 'georgian-townhouse',
@@ -138,8 +138,7 @@ export const georgianTownhouse: BuildingDef = {
     b.panel(1.0, 2.1, P.doorBlack, { at: [-1.2, 0.15, zc - D / 2 - 0.04], facing: '-z' });
     // walled garden behind
     const zg = zc - D / 2;
-    b.sym((s) => b.box(0.24, 1.8, -8.9 - zg, brick, { at: [s * 6.8, 0, (zg - 8.9) / 2] }));
-    b.box(13.84, 1.8, 0.24, brick, { at: [0, 0, -8.9] });
+    gardenWalls(b);
     b.box(1.2, 0.03, -8.9 - zg, P.gravel, { at: [-1.2, 0, (zg - 8.9) / 2], jitter: false });
     for (const x of spread(3, 2.0, 5.6)) b.tree(b.range(1.6, 2.4), { at: [x, 0, -6.8], kind: 'bush' });
     b.tree(b.range(3.5, 4.5), { at: [-4.6, 0, -6.6] });

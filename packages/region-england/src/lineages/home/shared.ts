@@ -1,4 +1,4 @@
-import { P, type Builder, type Facing, type Vec3 } from '@ah/kit';
+import { P, tint, type Builder, type Facing, type Vec3 } from '@ah/kit';
 
 /** A squared timber (or any bar) running from p0 to p1 in 3D, w wide and h deep. */
 export function beam(b: Builder, p0: Vec3, p1: Vec3, w: number, h: number, color: number): void {
@@ -135,4 +135,37 @@ export function hipGablet(
       wall: o.hole ?? P.timberBlack,
     });
   }
+}
+
+/*
+ * The plot's boundaries, laid out with the late Saxon town and kept for centuries after the houses on
+ * them were rebuilt. Each is built by the same call in every stage that keeps it, so it stands still
+ * while the house changes.
+ */
+
+/** Wattle fences down both sides of the tenement, from near the street to the back. */
+export function tenementSides(b: Builder): void {
+  hurdle(b, -6.6, 6.1, -6.6, -8.6, 1.2);
+  hurdle(b, 6.6, 6.1, 6.6, -8.6, 1.2);
+}
+
+/** The wattle fence across the back of the tenement. */
+export function tenementBack(b: Builder): void {
+  hurdle(b, -6.6, -8.6, 6.6, -8.6, 1.2);
+}
+
+/** A paling along the street front, with a gap for the path a little right of centre. */
+export function streetPaling(b: Builder): void {
+  paling(b, -6.6, 7.6, 1.2, 7.6, 1.0, P.oakSilver, 0.22);
+  paling(b, 3.0, 7.6, 6.6, 7.6, 1.0, P.oakSilver, 0.22);
+}
+
+/**
+ * The brick walls round the back garden, first built for the Georgian house (its back wall stands at
+ * z -4) and kept by the terrace and the semi that followed, so they stay in the old red brick.
+ */
+export function gardenWalls(b: Builder): void {
+  const brick = tint(P.brickRed, -0.04);
+  b.sym((s) => b.box(0.24, 1.8, 4.9, brick, { at: [s * 6.8, 0, -6.45] }));
+  b.box(13.84, 1.8, 0.24, brick, { at: [0, 0, -8.9] });
 }

@@ -1,5 +1,5 @@
 import { P, tint, spread, type BuildingDef } from '@ah/kit';
-import { curvedTimber, hurdle, paling } from './shared';
+import { curvedTimber, hurdle, tenementSides, tenementBack, streetPaling } from './shared';
 
 export const cruckHouse: BuildingDef = {
   id: 'cruck-house',
@@ -92,11 +92,11 @@ export const cruckHouse: BuildingDef = {
     b.sym((s) => b.panel(0.6, 0.35, P.timberBlack, { at: [s * 0.36, wallH + rise, lz], facing: s > 0 ? '+x' : '-x', rotY: 0 }));
     b.gable(0.9, 1.1, 0.4, tint(thatch, -0.1), { at: [0, wallH + rise + 0.45, lz], ridge: 'z', overhang: 0.08, thick: 0.1 });
 
-    // garden behind: wattle fence, beehive skeps, a pig sty
+    // the old tenement fences, still on the lines laid out with the late Saxon town
+    tenementSides(b);
+    tenementBack(b);
+    // garden behind: beehive skeps, a pig sty
     const zg = zf - L - 0.4;
-    hurdle(b, -6.6, zg, -6.6, -8.8, 1.1);
-    hurdle(b, -6.6, -8.8, 6.6, -8.8, 1.1);
-    hurdle(b, 6.6, -8.8, 6.6, zg, 1.1);
     for (const x of [-5.4, -4.7]) {
       b.box(0.6, 0.5, 0.5, P.oak, { at: [x, 0, -8.2] });
       b.lathe([[0.3, 0], [0.3, 0.25], [0.2, 0.5], [0.01, 0.6]], P.thatch, { at: [x, 0.5, -8.2], segs: 8 });
@@ -108,8 +108,8 @@ export const cruckHouse: BuildingDef = {
       b.box(2.0, 0.9, 1.6, P.rubble);
       b.shed(2.2, 1.8, 0.4, P.thatchOld, { at: [0, 0.9, 0], high: '-z' });
     });
-    // a paling along the street front
-    paling(b, -6.6, 7.6, -1.0, 7.6, 1.0, P.oakSilver, 0.22);
-    paling(b, 1.0, 7.6, 6.6, 7.6, 1.0, P.oakSilver, 0.22);
+    // a paling along the street front, joined to the tenement fences
+    streetPaling(b);
+    b.sym((s) => hurdle(b, s * 6.6, 7.6, s * 6.6, 6.1, 1.1));
   },
 };

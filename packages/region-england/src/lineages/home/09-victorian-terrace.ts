@@ -1,5 +1,5 @@
 import { P, tint, type BuildingDef } from '@ah/kit';
-import { paling, sash } from './shared';
+import { paling, sash, gardenWalls } from './shared';
 import { cantedPlan, prism } from './shared-prism';
 
 export const victorianTerrace: BuildingDef = {
@@ -152,12 +152,12 @@ export const victorianTerrace: BuildingDef = {
       sash(b, 0.95, 1.6, [cx - mirror * 1.2, g1 + 0.6, zb], '-z', [2, 2]);
       sash(b, 0.8, 1.3, [ox, g1 + 0.7, zb - od], '-z', [2, 2]);
       // yard: dividing walls, privy at the end
-      b.box(0.2, 1.8, 8.9 + zb - od, brick, { at: [cx - hw / 2 + 0.1, 0, (zb - od - 8.9) / 2] });
+      if (i > 0) b.box(0.2, 1.8, 8.78 + zb - od, brick, { at: [cx - hw / 2 + 0.1, 0, (zb - od - 8.78) / 2] });
       b.box(1.2, 2.1, 1.1, brick, { at: [ox, 0, -8.3] });
       b.shed(1.3, 1.2, 0.3, slate, { at: [ox, 2.1, -8.3], high: '-z' });
       b.panel(0.7, 1.8, tint(P.doorGreen, 0.05), { at: [ox, 0, -7.75], facing: '+z' });
     }
-    b.box(0.2, 1.8, 8.9 + zb - 4.4, brick, { at: [W / 2 - 0.1, 0, (zb - 4.4 - 8.9) / 2] });
-    b.box(W, 1.8, 0.2, brick, { at: [0, 0, -8.9] });
+    // the walls of the old house's garden, kept round the yards
+    gardenWalls(b);
   },
 };

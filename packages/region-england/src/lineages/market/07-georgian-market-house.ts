@@ -1,5 +1,5 @@
-import { P, spread, tint, type BuildingDef, type Builder } from '@ah/kit';
-import { goods, oct, trestle } from './shared';
+import { P, mix, spread, tint, type BuildingDef, type Builder } from '@ah/kit';
+import { goods, marketPlace, oct, trestle } from './shared';
 
 /** Collider blocks for the piers of a walk-through arcade face. */
 function pierColliders(b: Builder, len: number, n: number, openW: number, fixed: number, alongX: boolean, t: number): void {
@@ -44,6 +44,7 @@ export const georgianMarketHouse: BuildingDef = {
     const upper = b.variant % 2 === 0 ? stone : b.pick([P.brickRed, P.brickOrange]);
 
     // paved platform with a step all round
+    marketPlace(b, mix(P.cobble, P.earth, 0.5)); // the old cobbled square round the new market house
     b.box(W + 1.4, 0.15, D + 1.4, P.paving);
     b.box(W + 0.4, 0.15, D + 0.4, stone, { at: [0, 0.15, 0] });
     const F = 0.3;

@@ -1,5 +1,5 @@
-import { P, tint, type BuildingDef, type Builder } from '@ah/kit';
-import { goods, oct, trestle } from './shared';
+import { P, mix, tint, type BuildingDef, type Builder } from '@ah/kit';
+import { goods, marketPlace, oct, stocks, trestle } from './shared';
 
 const K = Math.PI / 4;
 
@@ -18,7 +18,8 @@ export const gothicButtercross: BuildingDef = {
   summary:
     'The plain cross has grown into a shelter. Eight pointed arches on buttressed piers enclose a vaulted space round a central pillar, where country women sold butter, eggs and cheese out of the rain and sun. ' +
     'It was paid for by a guild, a churchman or a pious merchant, and it is dressed like a small church: pinnacles, panelled parapet, and flying buttresses leaping up to a lantern with a cross on top. ' +
-    'Masons trained on the great Perpendicular churches brought their whole vocabulary to the market place.',
+    'Masons trained on the great Perpendicular churches brought their whole vocabulary to the market place. ' +
+    'Round it the cobbled square and the town stocks are unchanged.',
   materials: ['ashlar limestone', 'stone slates'],
   lookFor: [
     { label: 'Pointed arches', note: 'Each of the eight sides opens in a two-centred Gothic arch, so buyers can walk in from any direction.', at: [0, 3.0, 4.25] },
@@ -38,6 +39,10 @@ export const gothicButtercross: BuildingDef = {
     const F = 0.5; // floor level on top of the steps
     const WH = 4.0; // arcade height
     const T = 0.5;
+
+    // the cobbled market place and the stocks, kept from the days of the old cross
+    marketPlace(b, mix(P.cobble, P.earth, 0.5));
+    stocks(b);
 
     // two octagonal steps
     oct(b, R + 1.2, 0.25, tint(stone, -0.05));

@@ -1,5 +1,5 @@
 import { P, tint, type BuildingDef } from '@ah/kit';
-import { curvedTimber, hipGablet, paling } from './shared';
+import { curvedTimber, hipGablet, streetPaling, tenementBack } from './shared';
 
 export const wealdenHallHouse: BuildingDef = {
   id: 'wealden-hall-house',
@@ -109,10 +109,11 @@ export const wealdenHallHouse: BuildingDef = {
     // one hipped roof over everything, with smoke gablets
     hipGablet(b, L, D + jet, 4.1, tile, { at: [0, H, jet / 2], overhang: 0.4, g: 0.7 });
 
-    // garden: a paling to the street, a path, a kitchen garden behind
-    b.box(1.2, 0.03, 4.2, P.gravel, { at: [hw / 2 - 0.9, 0, zf + 2.4], jitter: false });
-    paling(b, -6.8, 8.4, hw / 2 - 1.6, 8.4, 1.1, P.oakSilver, 0.2);
-    paling(b, hw / 2 - 0.2, 8.4, 6.8, 8.4, 1.1, P.oakSilver, 0.2);
+    // garden: the old paling to the street and the wattle fence across the back, a path, a kitchen garden
+    const zp = zf + jet;
+    b.box(1.2, 0.03, 7.6 - zp, P.gravel, { at: [hw / 2 - 0.9, 0, (7.6 + zp) / 2], jitter: false });
+    streetPaling(b);
+    tenementBack(b);
     for (let i = 0; i < 6; i++) b.box(0.5, 0.12, 3.0, P.soil, { at: [-5 + i * 1.0, 0, -6.6] });
     b.tree(b.range(4.5, 5.5), { at: [4.8, 0, -7.0] });
   },

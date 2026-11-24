@@ -1,5 +1,5 @@
 import { P, tint, type BuildingDef } from '@ah/kit';
-import { bar, hurdles } from './shared';
+import { bar, croftFence, hurdles } from './shared';
 
 const UW = 4.5; // one dwelling per bay
 const GF = 2.45; // ground storey
@@ -87,7 +87,7 @@ export const medievalCottageRow: BuildingDef = {
       b.box(0.9, 0.04, zb + 6.8 - 0.1, P.gravel, { at: [x + (doorLeft ? 1 : -1) * 1.0, 0, (zb - 0.1 - 6.8) / 2] });
       for (let k = 0; k < 3; k++) b.box(1.8, 0.2, 0.45, b.pick([P.leaf, P.leafDark, P.soil]), { at: [x + (doorLeft ? 0.8 : -0.8), 0, zb - 1.4 - k * 1.1] });
     }
-    hurdles(b, [-L / 2, -6.8], [L / 2, -6.8], { h: 1.1 });
+    croftFence(b); // the crofts behind keep the fences of the cottages before
 
     // end walls (gables): frame on both storeys
     b.sym((s) => {

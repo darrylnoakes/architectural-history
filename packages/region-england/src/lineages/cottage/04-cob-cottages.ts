@@ -1,5 +1,5 @@
 import { P, tint, type Builder, type BuildingDef } from '@ah/kit';
-import { hurdles, patch, thickHip } from './shared';
+import { croftFence, hurdles, patch, thickHip } from './shared';
 
 /** A one-room cob cottage: rounded corners, rubble plinth, half-hipped thatch with smoke holes. */
 function cobCottage(b: Builder, x: number, z: number, flip: 1 | -1, cob: number, thatch: number): void {
@@ -60,12 +60,8 @@ export const cobCottages: BuildingDef = {
 
     // trodden earth in front, crofts (garden strips) behind divided by wattle
     patch(b, 25, 3.2, tint(P.earth, 0.05), [0, 5.4]);
-    const z0 = -6.5;
-    const z1 = -1.2;
-    hurdles(b, [-12.5, z0], [12.5, z0]);
-    hurdles(b, [-12.5, z0], [-12.5, z1]);
-    hurdles(b, [12.5, z0], [12.5, z1]);
-    hurdles(b, [0, z0], [0, z1 + 1.0]);
+    croftFence(b);
+    hurdles(b, [0, -6.8], [0, -0.2]);
     for (const s of [-1, 1]) {
       for (let i = 0; i < 5; i++) {
         const zz = -5.8 + i * 0.9;

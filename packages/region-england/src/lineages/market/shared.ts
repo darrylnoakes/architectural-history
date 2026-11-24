@@ -153,3 +153,31 @@ export function beast(b: Builder, at: Vec3, rotY: number, kind: 'sheep' | 'pig' 
     b.blob(0.13 * s, kind === 'sheep' ? P.timberBlack : body, { at: [0.42 * s, 0.6 * s, 0], detail: 0 });
   });
 }
+
+/**
+ * The market place itself: the oval of trodden earth, later cobbles, round the cross. Built the same
+ * way by every stage that trades in the open, so the ground stays put while the cross changes.
+ */
+export function marketPlace(b: Builder, color: number): void {
+  b.group({ scale: [1.1, 1, 0.85] }, () => b.cyl(9.4, 0.04, color, { segs: 18 }));
+}
+
+/**
+ * The town stocks and whipping post, in the front corner of the square. Set up in the 13th century and
+ * kept beside the buttercross and the Tudor market hall, as stocks were kept in most towns into the 1800s.
+ */
+export function stocks(b: Builder): void {
+  b.group({ at: [7.6, 0, 5.6], rotY: -0.25 }, () => {
+    const oak = P.oakDark;
+    for (const s of [-1, 1]) b.box(0.2, 1.1, 0.2, oak, { at: [s * 1.0, 0, 0] });
+    b.box(2.3, 0.14, 0.24, oak, { at: [0, 0.02, 0] });
+    b.box(2.2, 0.28, 0.14, P.oak, { at: [0, 0.36, 0] });
+    b.box(2.2, 0.28, 0.14, P.oak, { at: [0, 0.64, 0] });
+    for (const x of [-0.6, -0.25, 0.25, 0.6]) b.panel(0.14, 0.14, P.timberBlack, { at: [x, 0.57, 0.07], facing: '+z', shape: 'circle', depth: 0.02 });
+    b.box(2.3, 0.08, 0.36, P.oak, { at: [0, 0.4, -0.75] });
+    for (const s of [-1, 1]) b.box(0.1, 0.4, 0.3, P.oak, { at: [s * 0.95, 0, -0.75] });
+    // whipping post beside it
+    b.box(0.22, 2.4, 0.22, oak, { at: [1.6, 0, -0.3] });
+    b.box(0.4, 0.1, 0.12, P.iron, { at: [1.6, 1.7, -0.15] });
+  });
+}

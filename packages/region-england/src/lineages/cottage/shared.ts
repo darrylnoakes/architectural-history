@@ -162,3 +162,13 @@ export function sheep(b: Builder, x: number, z: number, rotY: number): void {
     b.box(0.17, 0.2, 0.15, P.timberBlack, { at: [0.5, 0.5, 0] });
   });
 }
+
+/**
+ * The wattle fence round the crofts behind the row: across the back of the plot and down both ends.
+ * Put up for the cob cottages and kept on the same lines when the landlord's row replaced them.
+ */
+export function croftFence(b: Builder): void {
+  hurdles(b, [-12.5, -6.8], [12.5, -6.8]);
+  hurdles(b, [-12.5, -6.8], [-12.5, -1.2]);
+  hurdles(b, [12.5, -6.8], [12.5, -1.2]);
+}

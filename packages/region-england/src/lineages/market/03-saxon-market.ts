@@ -1,5 +1,5 @@
 import { P, tint, type BuildingDef, type Builder } from '@ah/kit';
-import { barrel, beam, beast, goods, hurdle, trestle } from './shared';
+import { barrel, beam, beast, goods, hurdle, marketPlace, trestle } from './shared';
 
 /** A trestle stall under a lean-to awning of hides on two forked poles. */
 function awningStall(b: Builder, x: number, z: number, rotY: number, cover: number, kinds: ('basket' | 'sack' | 'pot' | 'cloth' | 'fruit')[]): void {
@@ -36,7 +36,7 @@ export const saxonMarket: BuildingDef = {
   build(b) {
     b.noCollide();
     // trodden ground
-    b.group({ scale: [1.1, 1, 0.85] }, () => b.cyl(9.5, 0.04, tint(P.earth, 0.06), { segs: 18 }));
+    marketPlace(b, tint(P.earth, 0.06));
 
     // stepped base of rough stone, three steps
     const stone = P.rubble;

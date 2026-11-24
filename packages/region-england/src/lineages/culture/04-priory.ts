@@ -6,8 +6,8 @@ export const PRIORY = {
   nave: { x0: -16, x1: 1, z0: 8, z1: 14, h: 7.5 },
 };
 
-/** A Norman doorway of three recessed orders (concentric round arches), facing +Z at `at`. */
-export function normanDoor(b: Builder, stone: number, at: [number, number, number], rotY = 0, door = P.oakDark): void {
+/** A Norman doorway of three recessed orders (concentric round arches), facing +Z at `at`. `door` null leaves it open. */
+export function normanDoor(b: Builder, stone: number, at: [number, number, number], rotY = 0, door: number | null = P.oakDark): void {
   b.group({ at, rotY }, () => {
     const orders = [
       [3.4, 4.4, tint(stone, 0.06)],
@@ -15,9 +15,22 @@ export function normanDoor(b: Builder, stone: number, at: [number, number, numbe
       [2.2, 3.5, tint(stone, 0.06)],
     ] as const;
     orders.forEach(([w, h, c], i) => b.panel(w, h, c, { shape: 'round', depth: 0.32 - i * 0.08 }));
-    b.panel(1.6, 3.0, door, { shape: 'round', depth: 0.1 });
+    if (door !== null) b.panel(1.6, 3.0, door, { shape: 'round', depth: 0.1 });
     b.sym((s) => b.cyl(0.12, 2.5, tint(stone, 0.08), { at: [s * 1.25, 0, 0.3], segs: 6 }));
   });
+}
+
+/**
+ * The middle of the west front: the doorway, the blind arcading over it and the two windows above.
+ * The playhouse keeps them standing in a broken stretch of wall, without the door (`ruined`).
+ */
+export function westDoorway(b: Builder, stone: number, ruined: boolean): void {
+  const N = PRIORY.nave;
+  const nz = (N.z0 + N.z1) / 2;
+  const nw = N.z1 - N.z0;
+  normanDoor(b, stone, [N.x0, 0, nz], -Math.PI / 2, ruined ? null : P.oakDark);
+  b.archWall(nw - 0.6, 1.8, 0.12, tint(stone, 0.05), { at: [N.x0 - 0.06, 4.7, nz], facing: '-x', openings: 5, openW: 0.75, openH: 1.4, sill: 0.15 });
+  b.sym((s) => b.panel(0.8, 1.9, P.windowDark, { at: [N.x0, 6.7, nz + s * 1.2], facing: '-x', shape: 'round', depth: 0.05 }));
 }
 
 export const priory: BuildingDef = {
@@ -66,9 +79,7 @@ export const priory: BuildingDef = {
       slit(0.8, 1.7, [x, 5.0, N.z0], '-z');
     }
     // west front: recessed doorway, blind arcading, windows, corner turrets
-    normanDoor(b, stone, [N.x0, 0, nz], -Math.PI / 2);
-    b.archWall(nw - 0.6, 1.8, 0.12, tint(stone, 0.05), { at: [N.x0 - 0.06, 4.7, nz], facing: '-x', openings: 5, openW: 0.75, openH: 1.4, sill: 0.15 });
-    b.sym((s) => slit(0.8, 1.9, [N.x0, 6.9 - 0.2, nz + s * 1.2], '-x'));
+    westDoorway(b, stone, false);
     b.window(0.9, 0.9, { at: [N.x0, 8.9, nz], facing: '-x', shape: 'circle', frame: dark });
     b.sym((s) => {
       b.box(1.1, N.h + 1.6, 1.1, stone, { at: [N.x0 + 0.3, 0, nz + s * (nw / 2 - 0.1)] });

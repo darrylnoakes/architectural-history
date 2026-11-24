@@ -1,4 +1,5 @@
 import { P, tint, spread, type BuildingDef } from '@ah/kit';
+import { gardenWalls } from './shared';
 
 export const ecoHouse: BuildingDef = {
   id: 'eco-house',
@@ -151,6 +152,6 @@ export const ecoHouse: BuildingDef = {
       b.box(1.5, 0.05, 2.9, P.soil, { at: [x, 0.38, -7.0] });
     }
     b.tree(b.range(4, 5.5), { at: [4.6, 0, -7.4] });
-    b.box(13.6, 1.6, 0.08, P.larch, { at: [0, 0, -8.9] });
+    gardenWalls(b); // the old brick walls of the back garden, kept
   },
 };

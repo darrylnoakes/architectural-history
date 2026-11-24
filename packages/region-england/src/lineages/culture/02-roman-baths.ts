@@ -1,4 +1,4 @@
-import { P, mix, spread, tint, type Builder, type BuildingDef, type Vec3 } from '@ah/kit';
+import { P, spread, tint, type Builder, type BuildingDef, type Vec3 } from '@ah/kit';
 import { facet, thermalWindow, type Pt } from './shared';
 
 /** Plan of the bath house, shared with the ruin that follows it. */
@@ -20,9 +20,10 @@ export const WALL_T = 0.8;
  * Stone with red tile bonding courses, as a solid box (a wall, or a whole small block). Given a
  * `cut`, the box is built in two lifts split at that height, one block to the eye; `ruined` leaves
  * only the lower lift and the tile courses in it. This is how the baths share their walls with the
- * ruin that follows: the lower lifts are the same pieces in both. Returns the height left standing.
+ * ruin that follows: the lower lifts are the same pieces in both. `laced` false leaves out the tile
+ * courses (inner walls, plastered). Returns the height left standing.
  */
-export function lacedBox(b: Builder, w: number, h: number, d: number, stone: number, at: Vec3, cut?: number, ruined = false): number {
+export function lacedBox(b: Builder, w: number, h: number, d: number, stone: number, at: Vec3, cut?: number, ruined = false, laced = true): number {
   const split = cut !== undefined && cut > 0.05 && cut < h - 0.05;
   const gone = cut !== undefined && cut <= 0.05;
   const standing = !ruined || cut === undefined || cut >= h - 0.05 ? h : gone ? 0 : cut;
@@ -30,7 +31,7 @@ export function lacedBox(b: Builder, w: number, h: number, d: number, stone: num
     b.box(w, cut, d, stone, { at, jitter: false });
     if (!ruined) b.box(w, h - cut, d, stone, { at: [at[0], at[1] + cut, at[2]], jitter: false });
   } else if (standing > 0) b.box(w, h, d, stone, { at });
-  for (let y = 1.1; y < h - 0.4; y += 1.25) {
+  for (let y = 1.1; laced && y < h - 0.4; y += 1.25) {
     if (y + 0.22 > standing + 1e-6) break;
     b.box(w + 0.06, 0.22, d + 0.06, P.romanTile, { at: [at[0], at[1] + y, at[2]], jitter: false });
   }
@@ -70,7 +71,7 @@ export function vaultHalf(b: Builder, x: number, w: number, top: number, half: '
   const ro = (w + 0.3) / 2;
   const ri = ro - WALL_T;
   const pts: Pt[] = [];
-  const n = 10;
+  const n = 8;
   for (let i = 0; i <= n; i++) pts.push([ro * Math.cos((Math.PI * i) / n), ro * Math.sin((Math.PI * i) / n) * 0.75]);
   for (let i = n; i >= 0; i--) pts.push([ri * Math.cos((Math.PI * i) / n), ri * Math.sin((Math.PI * i) / n) * 0.75]);
   const len = (front - back) / 2 + 0.15;
@@ -99,7 +100,9 @@ export function bathFabric(b: Builder, stone: number, ruined: boolean) {
 
   b.box(c1 - f0 + 0.6, B, D + 0.6, tint(stone, -0.05), { at: [(c1 + f0) / 2, 0, zc] });
   const alongX = (x0: number, x1: number, z: number, h: number, cut: number) => lacedBox(b, x1 - x0, h, t, stone, [(x0 + x1) / 2, B, z], cut, ruined);
-  const alongZ = (x: number, z0: number, z1: number, h: number, cut: number) => lacedBox(b, t, h, z1 - z0, stone, [x, B, (z0 + z1) / 2], cut, ruined);
+  // the cross walls inside are plastered, without tile courses on show
+  const alongZ = (x: number, z0: number, z1: number, h: number, cut: number, laced = false) =>
+    lacedBox(b, t, h, z1 - z0, stone, [x, B, (z0 + z1) / 2], cut, ruined, laced);
   const zf = front - t / 2;
   const zb = back + t / 2;
   const mid = zc;
@@ -107,7 +110,7 @@ export function bathFabric(b: Builder, stone: number, ruined: boolean) {
   // frigidarium
   const fFront = alongX(f0, f1, zf, fh, R.fFront);
   const fBack = alongX(f0, f1, zb, fh, R.fBack);
-  alongZ(f0 + t / 2, back, front, fh, R.fEnd);
+  alongZ(f0 + t / 2, back, front, fh, R.fEnd, true);
   alongZ(t0, back, mid, fh, R.ftBack);
   alongZ(t0, mid, front, fh, R.ftFront);
   // tepidarium
@@ -139,7 +142,7 @@ export function bathFabric(b: Builder, stone: number, ruined: boolean) {
   const top = th + B;
   if (!ruined || tBack >= th) {
     b.box(t1 - t0 + 0.3, 0.3, D / 2 + 0.15, tint(stone, 0.04), { at: [tx, top - 0.3, zc - D / 4 - 0.075] });
-    vaultHalf(b, tx, t1 - t0, top, 'back', ruined ? mix(stone, P.rubble, 0.5) : tile);
+    vaultHalf(b, tx, t1 - t0, top, 'back', tile);
     b.vault(t1 - t0 - 0.2, 0.16, P.plaster, { at: [tx, top, back - 0.08], squash: 0.73, segs: 10 });
     thermalWindow(b, (t1 - t0) * 0.27, stone, { at: [tx, top + 0.1, back - 0.16], facing: '-z' });
   }
@@ -149,7 +152,7 @@ export function bathFabric(b: Builder, stone: number, ruined: boolean) {
     const [ax, az, aa] = facet(i, 14, BATHS.apseR);
     b.group({ at: [c1 + ax, 0, zc + az], rotY: aa }, () => lacedBox(b, 1.45, 5.4, 0.7, stone, [0, 0, 0], cut, ruined));
     if (i >= 2 && i <= 4 && (!ruined || cut >= 4.2)) {
-      const [wx, wz, wa] = facet(i, 14, BATHS.apseR);
+      const [wx, wz, wa] = facet(i, 14, BATHS.apseR + 0.36);
       b.window(0.8, 1.6, { at: [c1 + wx, 2.6, zc + wz], facing: wa, shape: 'round', frame: stone });
     }
   });
@@ -232,9 +235,8 @@ export const romanBaths: BuildingDef = {
         thermalWindow(b, r.w * 0.27, stone, { at: [r.x, top + 0.1, zc + s * (D / 2 + 0.16)], facing: s > 0 ? '+z' : '-z' });
       }
     }
-    // the apse's tile courses and half dome
+    // the apse's half dome
     const ax = BATHS.C[1];
-    for (const y of [1.5, 2.75, 4.0]) b.cyl(BATHS.apseR + 0.04, 0.22, tile, { at: [ax, 0.4 + y, zc], segs: 14, jitter: false });
     b.dome(BATHS.apseR + 0.15, tile, { at: [ax, 5.4, zc], squash: 0.75, segs: 14 });
 
     // arched entrance to the frigidarium from the yard
@@ -276,7 +278,7 @@ export const romanBaths: BuildingDef = {
     b.shed(cx * 2 + Y.depth * 2, Y.depth + 0.6, 0.9, tile, { at: [0, colH + 0.4, cz + Y.depth / 2 - 0.3], high: '+z' });
 
     // water in the plunge pool
-    b.box(5.8, 0.05, 2.8, P.water, { at: [-5, 0.42, 3.8], mat: 'glass' });
+    b.box(5.8, 0.05, 2.8, P.water, { at: [-5, 0.46, 3.8], mat: 'glass' });
 
     // ---------------------------------------------------------------- walk collisions
     b.collider(BATHS.C[1] - BATHS.F[0] + 1.8 + BATHS.apseR, D + 0.6, { at: [(BATHS.C[1] + BATHS.apseR + BATHS.F[0] - 1.8) / 2, 0, zc] });

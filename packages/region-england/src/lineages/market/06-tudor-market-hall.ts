@@ -1,5 +1,5 @@
-import { P, linspace, tint, type BuildingDef } from '@ah/kit';
-import { barrel, beam, goods, trestle } from './shared';
+import { P, mix, linspace, tint, type BuildingDef } from '@ah/kit';
+import { barrel, beam, goods, marketPlace, stocks, trestle } from './shared';
 
 export const tudorMarketHall: BuildingDef = {
   id: 'tudor-market-hall',
@@ -9,7 +9,7 @@ export const tudorMarketHall: BuildingDef = {
   summary:
     'The town’s leading men now run more of its affairs, and they put a room for them on stilts over the market. Sixteen timber posts carry a framed upper chamber for meetings, the market court and storage, while traders keep the dry, open floor below. ' +
     'Oak was still plentiful in the west Midlands, and the frame is a show of it: close-set studs and zigzag herringbone braces that a plainer building would not need. ' +
-    'Unlike the stone cross before it, this is a working building with a room for the people who run the town.',
+    'Unlike the stone cross before it, this is a working building with a room for the people who run the town. The cobbled square and the stocks in its corner carry on round it.',
   materials: ['oak frame', 'lime plaster infill', 'clay tiles', 'sandstone post pads'],
   lookFor: [
     { label: 'Open ground floor', note: 'The ground floor is left open between the posts so that traders can set out stalls under cover.', at: [0, 1.6, 3.9] },
@@ -30,6 +30,9 @@ export const tudorMarketHall: BuildingDef = {
     const stone = P.sandstone;
     const xs = linspace(8, -L / 2, L / 2);
 
+    // the cobbled market place, still there round the hall, and the stocks in its corner
+    marketPlace(b, mix(P.cobble, P.earth, 0.5));
+    stocks(b);
     // stone paving under the hall
     b.box(L + 1.6, 0.08, W + 1.6, P.paving);
 

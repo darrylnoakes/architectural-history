@@ -1,5 +1,5 @@
 import { P, spread, tint, type BuildingDef } from '@ah/kit';
-import { hurdle } from './shared';
+import { tenementSides, tenementBack } from './shared';
 
 export const lateSaxonHouse: BuildingDef = {
   id: 'late-saxon-house',
@@ -100,9 +100,8 @@ export const lateSaxonHouse: BuildingDef = {
     for (let i = 0; i < 3; i++) b.log(0.11, 1.7, tint(P.bark, 0.04 * i), { at: [cx + W / 2 + 0.5, i * 0.19, 3.4 + (i % 2) * 0.1], axis: 'z', segs: 6 });
 
     // tenement boundaries: wattle fences down both sides and across the back
-    hurdle(b, -6.6, zf - 0.4, -6.6, -8.6, 1.2);
-    hurdle(b, 6.6, zf - 0.4, 6.6, -8.6, 1.2);
-    hurdle(b, -6.6, -8.6, 6.6, -8.6, 1.2);
+    tenementSides(b);
+    tenementBack(b);
     // a strip of garden behind the house
     for (const x of spread(4, -5.9, -2.6)) b.box(0.5, 0.12, 4.2, P.soil, { at: [x, 0, -5.9] });
     for (const x of spread(4, -5.9, -2.6)) for (const z of spread(5, -7.8, -4.0)) b.blob(0.16, P.leaf, { at: [x, 0.22, z], detail: 0 });

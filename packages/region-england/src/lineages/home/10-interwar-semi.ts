@@ -1,5 +1,5 @@
 import { P, tint, spread, type BuildingDef } from '@ah/kit';
-import { beam, paling } from './shared';
+import { beam, paling, gardenWalls } from './shared';
 import { prism } from './shared-prism';
 
 /** Plan of a shallow bow: an arc of radius r over +-half degrees, back edge at z 0. */
@@ -145,8 +145,7 @@ export const interwarSemi: BuildingDef = {
       // garden fence between the two halves
     }
     paling(b, px, zb, px, -8.8, 1.4, P.cedar, 0.13);
-    paling(b, -6.8, -8.8, 6.8, -8.8, 1.4, P.cedar, 0.13);
-    paling(b, -6.8, -8.8, -6.8, zb, 1.4, P.cedar, 0.13);
+    gardenWalls(b); // the old garden walls of the plot, kept
     b.box(1.8, 2.0, 1.4, P.cedar, { at: [-5.4, 0, -7.6] }); // shed
     b.gable(1.9, 1.5, 0.5, P.asphalt, { at: [-5.4, 2.0, -7.6], ridge: 'z' });
     b.tree(b.range(4.5, 5.5), { at: [3.2, 0, -7.0] });
