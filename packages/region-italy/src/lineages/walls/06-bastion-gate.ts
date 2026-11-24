@@ -93,6 +93,9 @@ const BR = 2.6;
 const PIER = [2.8, 3.8];
 const ZE = counterscarpZ(BR, BASTION.W + 2) + 0.25;
 const DECK = 0.06; // top of the bridge deck, level with the road
+// the revisions (see `revisions` below)
+const FIXED = 1875;
+const ASPHALT = 1950;
 
 export const bastionGate: BuildingDef = {
   id: 'bastion-gate',
@@ -107,6 +110,10 @@ export const bastionGate: BuildingDef = {
   materials: ['brick facing on an earth core', 'travertine cordon', 'stone (tufa and marble) for the gate', 'oak gates and drawbridge', 'bronze cannon'],
   modelledOn: 'Michele Sanmicheli’s Porta Nuova, Verona (1530s, finished 1540), with bastions like Antonio da Sangallo the Younger’s Bastione Ardeatino in Rome (1537 to 1542)',
   influences: ['bastion-export'],
+  revisions: [
+    { year: FIXED, note: 'With the walls out of military use after unification, the guns were taken off and the drawbridge was replaced by a fixed brick arch.' },
+    { year: ASPHALT, note: 'For motor traffic the roadway over the bridge and through the gate was surfaced with asphalt, like the street.' },
+  ],
   lookFor: [
     { label: 'Angled bastion', note: 'An arrowhead of rampart pushed out from the wall; its angled faces leave no blind spot and glance off shot.', at: [12.4, 8.4, 5.6] },
     { label: 'Flank with gunports', note: 'The short side of the bastion, set at right angles to the wall, where hidden guns swept the ditch in front of the gate.', at: [FX - 0.4, 3.0, 1.6] },
@@ -120,7 +127,8 @@ export const bastionGate: BuildingDef = {
     const gateStone = mix(P.travertine, P.tufa, 0.35);
 
     // ---------------------------------------------------------------- the ditch and the bridge over it
-    const roadStone = mix(P.gravel, P.cobble, 0.4);
+    // from the 1950s the roadway over the bridge and through the gate is asphalt, like the street
+    const roadStone = b.since(ASPHALT) ? P.tarmac : mix(P.gravel, P.cobble, 0.4);
     // the road, from the town through the gate passage
     road(b, 5.4, roadStone, { z0: -8, z1: GATE.front });
     // the ditch in front of the gate (either side it comes with the ramparts), its counterscarp walled
@@ -137,18 +145,14 @@ export const bastionGate: BuildingDef = {
     b.group({ at: [0, -D, zc], rotY: Math.PI / 2 }, () => {
       gateMass(b, ZE - PIER[0], D + DECK - 0.03, BR * 2, brick, { xs: [zc - (span[0] + span[1]) / 2], openW: span[1] - span[0], openH: 2.6 });
     });
-    b.box(BR * 2, 0.03, ZE - PIER[0], roadStone, { at: [0, DECK - 0.03, zc] });
+    b.box(BR * 2, 0.03, ZE - PIER[0], roadStone, { at: [0, DECK - 0.03, zc], jitter: false });
     // a stone cap on the pier, and low parapets along the sides of the fixed bridge
     b.box(BR * 2 + 0.1, 0.25, PIER[1] - PIER[0] + 0.1, trav, { at: [0, DECK - 0.55, (PIER[0] + PIER[1]) / 2] });
     b.sym((s) => {
       b.box(0.45, 0.85, ZE - PIER[0] - 1.2, brick, { at: [s * (BR - 0.22), DECK, zc - 0.6] });
       b.box(0.55, 0.12, ZE - PIER[0] - 1.2, trav, { at: [s * (BR - 0.22), DECK + 0.85, zc - 0.6] });
     });
-    // the drawbridge: a timber deck from the gate to the pier, with the lifting beams above
-    const dz = (GATE.front + PIER[0] + 0.3) / 2;
-    b.box(4.0, 0.28, PIER[0] + 0.3 - GATE.front, P.oak, { at: [0, DECK - 0.28, dz] });
-    for (let z = GATE.front + 0.3; z < PIER[0] + 0.2; z += 0.5) b.box(4.0, 0.02, 0.05, P.oakDark, { at: [0, DECK, z], jitter: false });
-    b.sym((s) => b.beam([s * 1.9, DECK + 0.4, PIER[0]], [s * 1.9, 5.4, GATE.front + 0.25], 0.07, 0.07, P.iron));
+    // (the span next to the gate, a drawbridge and later a fixed arch, is built last: see below)
     // the road runs on over the abutment and out to the field
     road(b, 5.4, roadStone, { z0: ZE, z1: ZE + 1.6 });
     b.deck(4.2, ZE - GATE.front + 3.4, DECK, { at: [0, 0, (ZE + GATE.front - 3.4) / 2] });
@@ -156,18 +160,42 @@ export const bastionGate: BuildingDef = {
     // ---------------------------------------------------------------- the ramparts either side
     b.sym((s) => {
       curtain(b, 'bastion', s > 0 ? SX : -HALF, s > 0 ? HALF : -SX);
-      // a bronze cannon on its carriage, run up to the parapet of the face
-      b.group({ at: [s * 12.2, TOP, 2.6], rotY: s * -0.5 }, () => {
-        b.box(0.9, 0.55, 1.8, P.oak, { at: [0, 0.35, 0] });
-        b.sym((t) => b.log(0.42, 0.14, P.oakDark, { at: [t * 0.55, 0, 0.3], segs: 10 }));
-        b.group({ at: [0, 1.05, 0.2], rot: [-0.08, 0, 0] }, () => {
-          b.log(0.22, 2.6, P.bronze, { at: [0, -0.2, 0.6], axis: 'z', segs: 8 });
-        });
-      });
     });
 
     // ---------------------------------------------------------------- the gate
     gateBlock(b, gateStone);
+
+    // ---------------------------------------------------------------- what changed once the walls lost their use
+    // (built last, so that the alterations do not disturb the colours drawn for anything else)
+    if (!b.since(FIXED)) {
+      // a cannon on each bastion face, run up to the parapet
+      b.sym((s) => {
+        b.group({ at: [s * 12.2, TOP, 2.6], rotY: s * -0.5 }, () => {
+          b.box(0.9, 0.55, 1.8, P.oak, { at: [0, 0.35, 0] });
+          b.sym((t) => b.log(0.42, 0.14, P.oakDark, { at: [t * 0.55, 0, 0.3], segs: 10 }));
+          b.group({ at: [0, 1.05, 0.2], rot: [-0.08, 0, 0] }, () => {
+            b.log(0.22, 2.6, P.bronze, { at: [0, -0.2, 0.6], axis: 'z', segs: 8 });
+          });
+        });
+      });
+      // the drawbridge: a timber deck from the gate to the pier, with the lifting beams above
+      const dz = (GATE.front + PIER[0] + 0.3) / 2;
+      b.box(4.0, 0.28, PIER[0] + 0.3 - GATE.front, P.oak, { at: [0, DECK - 0.28, dz] });
+      for (let z = GATE.front + 0.3; z < PIER[0] + 0.2; z += 0.5) b.box(4.0, 0.02, 0.05, P.oakDark, { at: [0, DECK, z], jitter: false });
+      b.sym((s) => b.beam([s * 1.9, DECK + 0.4, PIER[0]], [s * 1.9, 5.4, GATE.front + 0.25], 0.07, 0.07, P.iron));
+    } else {
+      // a fixed brick arch from the gate to the pier, its parapets carried on to the gate
+      const L = PIER[0] + 0.05 - GATE.front;
+      const zm = GATE.front + L / 2;
+      b.group({ at: [0, -D, zm], rotY: Math.PI / 2 }, () => {
+        gateMass(b, L, D + DECK - 0.03, BR * 2, brick, { xs: [0], openW: L - 0.5, openH: 2.6 });
+      });
+      b.box(BR * 2, 0.03, L, roadStone, { at: [0, DECK - 0.03, zm], jitter: false });
+      b.sym((s) => {
+        b.box(0.45, 0.85, L + 0.05, brick, { at: [s * (BR - 0.22), DECK, zm], jitter: false });
+        b.box(0.55, 0.12, L + 0.05, trav, { at: [s * (BR - 0.22), DECK + 0.85, zm], jitter: false });
+      });
+    }
 
     // ---------------------------------------------------------------- walking
     b.sym((s) => {

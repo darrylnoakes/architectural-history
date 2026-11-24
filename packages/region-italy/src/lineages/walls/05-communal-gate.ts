@@ -12,6 +12,7 @@ const FT = 2.2; // front wall thickness
 const ST = 1.5; // side wall thickness
 const OW = 4.4; // gate arch
 const OH = 7.6;
+const ASPHALT = 1950; // the revision (see `revisions` below)
 
 export const communalGate: BuildingDef = {
   id: 'communal-gate',
@@ -23,6 +24,7 @@ export const communalGate: BuildingDef = {
     'The tower let the guard see far down the road and showed the commune’s pride to every arrival. Its back is left open to the town, so an enemy who took it would have no cover from the defenders inside. ' +
     'At the gate the commune’s officials collected the gabella, the toll on goods coming in to market, and over the arch a painting of the Virgin and saints put the gate under heaven’s protection.',
   materials: ['rubble and squared stone (pietraforte)', 'oak floors and gates', 'fresco on lime plaster', 'clay roof tiles on the customs post'],
+  revisions: [{ year: ASPHALT, note: 'For motor traffic the road through the gate was surfaced with asphalt, like the street.' }],
   modelledOn: 'The Porta San Niccolò, Florence (1324), and the gate-towers of the communal walls of Florence and Siena',
   lookFor: [
     { label: 'Gate-tower', note: 'A tall square tower over the gate passage, the guard’s lookout and a show of the commune’s power.', at: [-TW / 2 - 0.2, 18, TF + 0.3] },
@@ -36,7 +38,9 @@ export const communalGate: BuildingDef = {
     const shade = tint(stone, -0.1);
     const oak = mix(P.oak, P.oakDark, 0.3);
 
-    road(b, 5.0, mix(P.cobble, P.pietraForte, 0.35));
+    // the road through the gate: stone, until it is surfaced with asphalt for motor traffic
+    const asphalt = b.since(ASPHALT);
+    road(b, 5.0, asphalt ? P.tarmac : mix(P.cobble, P.pietraForte, 0.35));
 
     // ---------------------------------------------------------------- the curtain wall
     b.sym((s) => curtain(b, 'communal', s > 0 ? TW / 2 : -HALF, s > 0 ? HALF : -TW / 2, { towers: false }));
@@ -135,7 +139,7 @@ export const communalGate: BuildingDef = {
     // the gate leaves, folded back inside the passage
     b.sym((s) => b.box(0.18, OH - 0.8, OW / 2, oak, { at: [s * (OW / 2 - 0.15), 0, TF - FT - OW / 4 - 0.1] }));
     // the floor of the passage, paved flush with the road
-    b.box(OW, 0.05, FT + 0.6, tint(P.cobble, -0.06), { at: [0, 0, TF - FT / 2], jitter: false });
+    b.box(OW, 0.05, FT + 0.6, asphalt ? P.tarmac : tint(P.cobble, -0.06), { at: [0, 0, TF - FT / 2], jitter: false });
 
     // ---------------------------------------------------------------- the customs post (casotto della gabella)
     b.group({ at: [6.9, 0, -5.6] }, () => {

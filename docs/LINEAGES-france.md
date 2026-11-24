@@ -343,7 +343,7 @@ The stage with no wall (`monumental-arch`) has no curtain.
 | 1200 | `philippian-gate` | A new wall for the grown town: a gate between two round towers with arrow loops, a portcullis, a curtain with round towers and a ditch. Cameo: the walls of Philip Augustus |
 | 1420 | `fortified-gate` | The Hundred Years' War: the gate raised with machicolations and steep roofs, a drawbridge, and an outwork (boulevard) for the first guns |
 | 1680 | `vauban-gate` | Vauban: low brick-faced ramparts with angled bastions, a ditch and a triangular outwork, and a gate dressed as a triumphal arch with the king's trophies. Cameo: the Porte de Paris and the citadel, Lille |
-| 1885 | `gate-and-boulevard` | The fortress declassified: ramparts levelled for a tree-lined boulevard, the monumental gate left standing on a roundabout, with the toll (octroi) pavilions |
+| 1885 | `gate-and-boulevard` | The fortress declassified: ramparts levelled and the ditch filled for a tree-lined boulevard that passes in front of the monumental gate, kept as a monument on the town side; the old road, now a narrow street, still runs through the arch. A small square beside it with the toll (octroi) pavilions, a railed garden and lamps. Revisions: octroi abolished (1949), electric street lights (1958) |
 
 ## gare: "La Gare"
 

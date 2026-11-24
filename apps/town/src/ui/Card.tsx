@@ -175,6 +175,14 @@ export function Card() {
               {until ? ` until ${until}.` : ' to the present.'}
               {cur.survivor && ` A survivor: about ${Math.round((year - cur.from) / 10) * 10} years old and still in use.`}
             </p>
+            {!street &&
+              (def.revisions ?? [])
+                .filter((r) => r.year > cur.from && r.year <= year)
+                .map((r) => (
+                  <p className="stood" key={r.year}>
+                    {formatYear(r.year)}: {r.note}
+                  </p>
+                ))}
             <p>{def.summary}</p>
             {street && cur.end?.note && <p>{cur.end.note}</p>}
             {def.modelledOn && <p className="modelled">Modelled on: {def.modelledOn}</p>}

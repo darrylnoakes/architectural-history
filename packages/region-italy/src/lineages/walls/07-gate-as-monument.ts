@@ -3,6 +3,9 @@ import { HALF } from './shared';
 import { GATE, gateBlock } from './06-bastion-gate';
 
 const ROAD = 3.4; // half-width of the old road through the gate, kept clear of kerbs
+// the revisions (see `revisions` below)
+const NO_DAZIO = 1930;
+const ASPHALT = 1950;
 
 /** A cast-iron gas lamp on a fluted post. */
 function lamp(b: Builder, x: number, z: number): void {
@@ -16,7 +19,7 @@ function lamp(b: Builder, x: number, z: number): void {
 }
 
 /** One of the pair of little neoclassical toll-houses of the dazio. */
-function tollHouse(b: Builder, x: number, z: number, facing: 1 | -1, o: { render: number; stone: number }): void {
+function tollHouse(b: Builder, x: number, z: number, facing: 1 | -1, o: { render: number; stone: number; sign: boolean }): void {
   const w = 4.6;
   const d = 3.8;
   const h = 3.9;
@@ -32,7 +35,7 @@ function tollHouse(b: Builder, x: number, z: number, facing: 1 | -1, o: { render
     b.panel(1.6, 0.22, o.stone, { at: [0, 3.0, d / 2], depth: 0.12 });
     b.extrude([[-1.0, 0], [1.0, 0], [0, 0.55]], 0.25, o.stone, { at: [0, 3.22, d / 2 + 0.1] });
     b.panel(2.4, 0.45, P.white, { at: [0, h - 0.2, d / 2], depth: 0.04 });
-    b.panel(1.8, 0.12, P.black, { at: [0, h - 0.04, d / 2 + 0.03], depth: 0.02 }); // the word DAZIO
+    if (o.sign) b.panel(1.8, 0.12, P.black, { at: [0, h - 0.04, d / 2 + 0.03], depth: 0.02 }); // the word DAZIO
     for (const sx of [-1, 1]) {
       b.window(0.9, 1.7, { at: [sx * 1.55, 1.3, d / 2], frame: o.stone, bars: [2, 3] });
       b.panel(0.42, 1.7, P.doorGreen, { at: [sx * 1.55 + sx * 0.68, 1.3, d / 2], depth: 0.04 }); // louvred shutters
@@ -56,7 +59,11 @@ export const gateAsMonument: BuildingDef = {
   summary:
     'After unification the walls were no longer needed for defence and stood in the way of growth, traffic and fresh air. Town after town pulled them down, filled in the ditches and laid a ring of tree-lined boulevards on their line, as Giuseppe Poggi did in Florence from 1865, when the city was briefly the capital of Italy. ' +
     'The old gates were kept as monuments, standing alone in new squares with the cut ends of the wall faced off. The town still taxed food and goods coming in (the dazio, abolished only in 1930), so the line of the vanished wall became a customs line, with a pair of little toll-houses at each gate.',
-  materials: ['the 16th-century stone gate', 'stucco and stone for the toll-houses', 'stone setts and macadam', 'cast iron'],
+  materials: ['the 16th-century stone gate', 'stucco and stone for the toll-houses', 'stone setts and macadam, later asphalt', 'cast iron'],
+  revisions: [
+    { year: NO_DAZIO, note: 'The dazio was abolished in 1930: the toll-houses lost their lettering and were turned to other uses.' },
+    { year: ASPHALT, note: 'For motor traffic the carriageways of the boulevard and of the road through the gate were surfaced with asphalt, over the granite wheel-strips.' },
+  ],
   modelledOn: 'The gates kept by Giuseppe Poggi in Florence’s new squares (Porta San Gallo, Porta alla Croce) and the toll-houses at Milan’s Porta Venezia',
   lookFor: [
     { label: 'Freestanding gate', note: 'The walls have gone and the gate stands alone, kept as a monument to the town’s history and its new square.', at: [-GATE.w / 2 - 0.4, 5, (GATE.front + GATE.back) / 2] },
@@ -67,7 +74,7 @@ export const gateAsMonument: BuildingDef = {
   build(b) {
     const stone = mix(P.travertine, P.tufa, 0.35);
     const sett = mix(P.cobble, P.paving, 0.4);
-    const macadam = mix(P.gravel, P.tarmac, 0.25);
+    const macadam = b.since(ASPHALT) ? P.tarmac : mix(P.gravel, P.tarmac, 0.25);
 
     // ---------------------------------------------------------------- the square and the boulevard
     b.box(HALF * 2, 0.06, 16, sett, { jitter: false });
@@ -75,8 +82,9 @@ export const gateAsMonument: BuildingDef = {
     b.box(HALF * 2, 0.08, 4.4, macadam, { at: [0, 0, 3.5], jitter: false });
     // its kerbs stop either side of the old road, which crosses it on the level
     for (const z of [1.3, 5.7]) b.sym((s) => b.box(HALF - ROAD, 0.16, 0.3, P.limestone, { at: [(s * (HALF + ROAD)) / 2, 0, z], jitter: false }));
-    // the old road through the gate, in stone setts with wheel-strips of granite
-    b.sym((s) => b.box(0.6, 0.09, 16, P.granite, { at: [s * 0.8, 0, 0], jitter: false }));
+    // the old road through the gate, in stone setts with wheel-strips of granite; later asphalt over both
+    if (b.since(ASPHALT)) b.box(ROAD * 2 - 1.4, 0.1, 16, P.tarmac, { jitter: false });
+    else b.sym((s) => b.box(0.6, 0.09, 16, P.granite, { at: [s * 0.8, 0, 0], jitter: false }));
     // young plane trees, newly planted along the walks
     for (const x of [-13, -9.5, -6, 6, 9.5, 13]) plane(b, x, 6.5, 4.6);
     for (const x of [-13.4, -7.6, 7.6, 13.4]) plane(b, x, -6.6, 4.4);
@@ -89,7 +97,7 @@ export const gateAsMonument: BuildingDef = {
     // ---------------------------------------------------------------- the toll-houses and the customs line
     const render = mix(P.intonacoCream, P.intonacoOchre, 0.35);
     b.sym((s) => {
-      tollHouse(b, s * 10.6, -1.4, 1, { render, stone: P.limestone });
+      tollHouse(b, s * 10.6, -1.4, 1, { render, stone: P.limestone, sign: !b.since(NO_DAZIO) });
       // iron railings from the toll-house to the gate, with a swing barrier across the boulevard walk
       const x0 = GATE.w / 2 + 0.6;
       const x1 = 10.6 - 2.5;

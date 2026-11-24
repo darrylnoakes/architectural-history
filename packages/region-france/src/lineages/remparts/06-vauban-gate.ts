@@ -115,6 +115,8 @@ const { depth: D, cs: CS, cw: CW } = VAUBAN;
 const NOTCH = 3.6; // in front of the passage the ditch begins at the threshold; either side it runs in under the gate
 const GG = 3.6; // half-width of the cut through the glacis for the road
 const B2 = { z0: 4.0, z1: CS + 0.2 }; // the second bridge, over the ravelin's ditch
+/** The town's asphalt in the motor age (the colour of its tarmac streets). */
+const TARMAC = 0x4c4e52;
 
 export const vaubanGateStage: BuildingDef = {
   id: 'vauban-gate',
@@ -130,6 +132,13 @@ export const vaubanGateStage: BuildingDef = {
   modelledOn:
     'Lille, refortified by Vauban after its capture in 1667, with the Porte de Paris (Simon Vollant, 1685 to 1692), a triumphal arch with trophies and the king’s emblems; the citadel of Lille (1667 to 1670) for the bastions. The fronts are compressed: Vauban’s bastions stood about 350 m apart, not 100, and the ditches were many times wider and deeper.',
   influences: ['bastions', 'vauban'],
+  revisions: [
+    {
+      year: 1890,
+      note: 'Once the fortress was declassified in 1885 the guns and the barrier went, and, as in most kept fortresses, the drawbridge and the timber bridge were replaced by fixed bridges of brick with stone parapets.',
+    },
+    { year: 1950, note: 'The roadway through the gate and over the bridges was surfaced with asphalt for motor traffic.' },
+  ],
   lookFor: [
     { label: 'Angled bastion', note: 'An arrowhead of rampart thrust out from the line: its two faces glance off shot, and every foot of ground in front can be swept by fire.', at: [13.6, 8.0, 4.6] },
     { label: 'Flank', note: 'The short side of the bastion facing along the wall, where guns fire across the ditch and the face of the gate.', at: [FX - 0.4, 4.0, 1.2] },
@@ -155,7 +164,6 @@ export const vaubanGateStage: BuildingDef = {
     // ---------------------------------------------------------------- the gate, standing on the scarp
     vaubanGate(b);
     b.box(VGATE.w, D, 2.4, tint(stone, -0.06), { at: [0, -D, F - 1.15], ...NJ });
-    road(b, VGATE.ow, sett, { z0: -8, z1: F });
 
     // ---------------------------------------------------------------- the ditch in front of the gate, the ravelin and the covered way
     b.dig(
@@ -167,48 +175,9 @@ export const vaubanGateStage: BuildingDef = {
     // the counterscarp, level with the road, which crosses the covered way and goes out through a cut in the glacis
     counterscarpWorks(b, [[-SX, CS], [SX, CS]], -SX, SX, { gaps: [[-GG, GG]] });
 
-    // ---------------------------------------------------------------- the road across: drawbridge, ravelin, bridge, covered way
-    // the drawbridge from the threshold to the ravelin's gorge, lifted by chains from the gate
-    b.box(4.0, 0.32, RG + 0.15 - F, oak, { at: [0, -0.22, (RG + 0.15 + F) / 2] });
-    for (let z = F + 0.3; z < RG; z += 0.45) b.box(4.0, 0.01, 0.05, tint(oak, -0.15), { at: [0, 0.1, z], ...NJ });
-    b.sym((s) => b.beam([s * 1.8, 6.0, F + 0.2], [s * 1.8, 0.1, RG - 0.1], 0.08, 0.08, P.iron));
-    // over the ravelin, through the cut in its parapet
-    road(b, 4.0, sett, { z0: RG, z1: B2.z0 + 0.1, y: 0.12 });
-    // the second bridge, fixed, on trestles standing on the bottom of the ravelin's ditch
+    // ---------------------------------------------------------------- walking
     const len = B2.z1 - B2.z0;
     const zm = (B2.z0 + B2.z1) / 2;
-    b.box(4.0, 0.32, len, oak, { at: [0, -0.2, zm] });
-    for (let z = B2.z0 + 0.2; z < B2.z1; z += 0.45) b.box(4.0, 0.01, 0.05, tint(oak, -0.15), { at: [0, 0.12, z], ...NJ });
-    for (const z of [5.4, 6.6]) {
-      b.box(4.2, 0.3, 0.3, oak, { at: [0, -0.5, z], ...NJ });
-      b.sym((s) => {
-        b.box(0.28, D - 0.5, 0.28, oak, { at: [s * 1.7, -D, z], ...NJ });
-        b.beam([s * 1.65, -D + 0.2, z], [-s * 1.4, -0.55, z], 0.14, 0.14, tint(oak, -0.08), NJ);
-      });
-    }
-    b.sym((s) => {
-      for (const z of [B2.z0 + 0.3, 5.4, 6.6, B2.z1 - 0.3]) b.box(0.16, 1.05, 0.16, oak, { at: [s * 1.95, 0.12, z], ...NJ });
-      b.box(0.1, 0.1, len - 0.4, oak, { at: [s * 1.95, 1.12, zm], ...NJ });
-    });
-    // over the covered way and out through the glacis; a barrier at the cut, standing open
-    road(b, VGATE.ow, sett, { z0: CS, z1: CS + CW, y: 0.12 });
-    road(b, VGATE.ow, mix(P.gravel, P.earth, 0.3), { z0: CS + CW, z1: CS + CW + 4.5, y: 0.06 });
-    b.sym((s) => {
-      b.box(0.3, 1.9, 0.3, oak, { at: [s * (GG - 0.4), 0, CS + CW + 0.7] });
-      b.group({ at: [s * (GG - 0.4), 0, CS + CW + 0.55], rotY: -s * 1.35 }, () => b.box(GG - 0.6, 1.2, 0.1, oak, { at: [-s * (GG - 0.6) / 2, 0.3, 0] }));
-    });
-    b.deck(4.0, CS + CW - F + 1.6, 0.12, { at: [0, 0, (CS + CW + F - 1.6) / 2] });
-
-    // ---------------------------------------------------------------- cannon on the bastions, trained along the ditch
-    b.sym((s) => {
-      b.group({ at: [s * 12.4, VAUBAN.top, 0.9], rotY: -s * 1.35 }, () => {
-        b.box(0.9, 0.5, 1.8, P.oak, { at: [0, 0.32, 0] });
-        b.sym((t) => b.log(0.4, 0.14, P.oakDark, { at: [t * 0.55, 0, 0.35], segs: 10 }));
-        b.log(0.2, 2.6, P.castIron, { at: [0, 0.82, 0.6], axis: 'z', segs: 8 });
-      });
-    });
-
-    // ---------------------------------------------------------------- walking
     b.sym((s) => {
       b.collider(FX - SX + 2.0, 7.4, { at: [s * (SX + FX) / 2, 0, -4.3] });
       b.collider(HALF - FX, 11.0, { at: [s * (FX + HALF) / 2, 0, -2.5] });
@@ -217,5 +186,62 @@ export const vaubanGateStage: BuildingDef = {
       b.collider(0.3, len, { at: [s * 1.95, 0, zm] });
     });
     vaubanGateColliders(b);
+    b.deck(4.0, CS + CW - F + 1.6, 0.12, { at: [0, 0, (CS + CW + F - 1.6) / 2] });
+
+    // ---------------------------------------------------------------- the road across: drawbridge, ravelin, bridge, covered way
+    // (built last: these are the pieces the revisions alter, so everything above stays the same)
+    const fixed = b.since(1890); // the bridges rebuilt in masonry, the guns and the barrier gone
+    const asphalt = b.since(1950); // the roadway surfaced for motor traffic
+    const way = asphalt ? TARMAC : sett;
+    const lay = (w: number, z0: number, z1: number, y0: number, y1: number, color: number) =>
+      b.box(w, y1 - y0, z1 - z0, color, { at: [0, y0, (z0 + z1) / 2], ...NJ });
+    lay(VGATE.ow, -8, F, 0, 0.04, way); // through the passage
+    lay(4.0, RG, B2.z0 + 0.1, 0, 0.12, way); // over the ravelin, through the cut in its parapet
+    lay(VGATE.ow, CS, CS + CW, 0, 0.12, way); // over the covered way
+    lay(VGATE.ow, CS + CW, CS + CW + 4.5, 0, 0.06, asphalt ? TARMAC : mix(P.gravel, P.earth, 0.3)); // out through the glacis
+    if (!fixed) {
+      // the drawbridge from the threshold to the ravelin's gorge, lifted by chains from the gate
+      b.box(4.0, 0.32, RG + 0.15 - F, oak, { at: [0, -0.22, (RG + 0.15 + F) / 2], ...NJ });
+      for (let z = F + 0.3; z < RG; z += 0.45) b.box(4.0, 0.01, 0.05, tint(oak, -0.15), { at: [0, 0.1, z], ...NJ });
+      b.sym((s) => b.beam([s * 1.8, 6.0, F + 0.2], [s * 1.8, 0.1, RG - 0.1], 0.08, 0.08, P.iron, NJ));
+      // the second bridge, fixed, on trestles standing on the bottom of the ravelin's ditch
+      b.box(4.0, 0.32, len, oak, { at: [0, -0.2, zm], ...NJ });
+      for (let z = B2.z0 + 0.2; z < B2.z1; z += 0.45) b.box(4.0, 0.01, 0.05, tint(oak, -0.15), { at: [0, 0.12, z], ...NJ });
+      for (const z of [5.4, 6.6]) {
+        b.box(4.2, 0.3, 0.3, oak, { at: [0, -0.5, z], ...NJ });
+        b.sym((s) => {
+          b.box(0.28, D - 0.5, 0.28, oak, { at: [s * 1.7, -D, z], ...NJ });
+          b.beam([s * 1.65, -D + 0.2, z], [-s * 1.4, -0.55, z], 0.14, 0.14, tint(oak, -0.08), NJ);
+        });
+      }
+      b.sym((s) => {
+        for (const z of [B2.z0 + 0.3, 5.4, 6.6, B2.z1 - 0.3]) b.box(0.16, 1.05, 0.16, oak, { at: [s * 1.95, 0.12, z], ...NJ });
+        b.box(0.1, 0.1, len - 0.4, oak, { at: [s * 1.95, 1.12, zm], ...NJ });
+      });
+      // a barrier at the cut through the glacis, standing open
+      b.sym((s) => {
+        b.box(0.3, 1.9, 0.3, oak, { at: [s * (GG - 0.4), 0, CS + CW + 0.7], ...NJ });
+        b.group({ at: [s * (GG - 0.4), 0, CS + CW + 0.55], rotY: -s * 1.35 }, () => b.box(GG - 0.6, 1.2, 0.1, oak, { at: [-s * (GG - 0.6) / 2, 0.3, 0], ...NJ }));
+      });
+      // cannon on the bastions, trained along the ditch
+      b.sym((s) => {
+        b.group({ at: [s * 12.4, VAUBAN.top, 0.9], rotY: -s * 1.35 }, () => {
+          b.box(0.9, 0.5, 1.8, P.oak, { at: [0, 0.32, 0], ...NJ });
+          b.sym((t) => b.log(0.4, 0.14, P.oakDark, { at: [t * 0.55, 0, 0.35], segs: 10, jitter: false }));
+          b.log(0.2, 2.6, P.castIron, { at: [0, 0.82, 0.6], axis: 'z', segs: 8, jitter: false });
+        });
+      });
+    } else {
+      // two fixed bridges of brick on stone-capped arches over the dry ditch, with low parapets along their sides
+      const arch = (z0: number, z1: number, openW: number, openH: number) => {
+        gateMass(b, z1 - z0, D - 0.1, 4.2, brick, { at: [0, -D, (z0 + z1) / 2], facing: '+x', xs: [0], openW, openH, shape: 'round' });
+        b.box(4.3, 0.12, z1 - z0, stone, { at: [0, -0.12, (z0 + z1) / 2], ...NJ });
+        b.sym((s) => b.box(0.3, 0.85, z1 - z0, stone, { at: [s * 2.0, 0, (z0 + z1) / 2], ...NJ }));
+      };
+      arch(F, RG + 0.15, 1.5, 2.2);
+      arch(B2.z0, B2.z1, 2.6, 2.6);
+      lay(3.7, F, RG + 0.15, 0, 0.12, way);
+      lay(3.7, B2.z0, B2.z1, 0, 0.12, way);
+    }
   },
 };

@@ -1,6 +1,7 @@
 import * as THREE from 'three';
-import { construct, getRuinMaterials, placeCut, type Built, type Cut, type BuildingDef, type Deck, type Lineage, type Plot, type Region, type Stage } from '@ah/kit';
+import { construct, getRuinMaterials, placeCut, revisionYear, type Built, type Cut, type BuildingDef, type Deck, type Lineage, type Plot, type Region, type Stage } from '@ah/kit';
 import { plotSchedule, scheduleAt, type PlotStage, type WorldCollider } from '@ah/engine';
+import { Morph, diffBuilt } from './morph';
 
 export interface WorldDeck extends Deck {}
 
@@ -17,20 +18,19 @@ export interface PlotState {
   /** Index into `schedule` of the building standing now, or -1. */
   shown: number;
   current: Built | null;
-  phase: 'idle' | 'out' | 'in';
+  /** The year of the building's latest revision in force (-Infinity as built). */
+  rev: number;
+  /** While one model is turning into the next: the pieces in motion, shown in place of `current`. */
+  morph: Morph | null;
+  phase: 'idle' | 'morph';
   t: number;
-  cache: Map<number, Built>;
+  /** Models already built, by schedule index, form (open or closed) and revision. */
+  cache: Map<string, Built>;
   colliders: WorldCollider[];
   decks: WorldDeck[];
   variant: number;
   /** Height of the ground the plot stands on: 0 in the flat town, more for a castle on its hill. */
   base: number;
-}
-
-function easeOutBack(t: number) {
-  const c1 = 1.4;
-  const c3 = c1 + 1;
-  return 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2);
 }
 
 /** Turn a building-local collider or deck into world space for a plot. */
@@ -61,7 +61,8 @@ export function deckHeightAt(d: WorldDeck, x: number, z: number): number {
 
 /**
  * The buildings of the town. Each plot owns a schedule of stages; as the year moves, the building
- * that should be standing is swapped in with a short sink-and-rise so the change is visible.
+ * that should be standing takes the place of the last one piece by piece: what the two share stays
+ * put, what is gone shrinks away and what is new grows in its place.
  */
 export class Town {
   readonly group = new THREE.Group();
@@ -102,6 +103,8 @@ export class Town {
         holder,
         shown: -1,
         current: null,
+        rev: -Infinity,
+        morph: null,
         phase: 'idle',
         t: 0,
         cache: new Map(),
@@ -144,13 +147,13 @@ export class Town {
    * `open` builds the cut-away form of a building that has one (cached beside the closed form, half
    * an index along).
    */
-  private build(p: PlotState, i: number, open = false): Built {
-    const key = open ? i + 0.5 : i;
+  private build(p: PlotState, i: number, open = false, rev = -Infinity): Built {
+    const key = `${i}|${open ? 1 : 0}|${rev}`;
     let b = p.cache.get(key);
     if (!b) {
       const def = p.lineage.stages[p.schedule[i].index].def;
       try {
-        b = construct(def, p.plot.seed, p.variant, open);
+        b = construct(def, p.plot.seed, p.variant, open, rev);
       } catch (err) {
         console.error(`Failed to build ${def.id}`, err);
         b = { object: new THREE.Group(), parts: [], bounds: new THREE.Box3(), colliders: [], decks: [], cuts: [], triangles: 0, hasCutaway: false };
@@ -180,23 +183,69 @@ export class Town {
     const was = this.openId ? this.byId.get(this.openId) : undefined;
     this.openId = plotId;
     const now = plotId ? this.byId.get(plotId) : undefined;
-    for (const p of [was, now]) if (p && p.current?.hasCutaway && p.phase === 'idle') this.place(p, p.shown);
+    for (const p of [was, now]) if (p && p.current?.hasCutaway && p.phase === 'idle') this.change(p, p.shown, p.rev);
   }
 
   private trim(p: PlotState) {
-    for (const [i, b] of p.cache) {
-      if (Math.abs(i - p.shown) <= 1) continue;
+    for (const [key, b] of p.cache) {
+      if (b === p.current || Math.abs(parseInt(key, 10) - p.shown) <= 1) continue;
       b.object.traverse((o) => (o as THREE.Mesh).geometry?.dispose());
-      p.cache.delete(i);
+      p.cache.delete(key);
     }
   }
 
-  private place(p: PlotState, i: number) {
+  /** What a plot should hold at a year: the schedule entry, and which of that building's revisions are in force. */
+  private target(p: PlotState, year: number): { i: number; rev: number } {
+    const i = scheduleAt(p.schedule, year);
+    if (i < 0) return { i, rev: -Infinity };
+    const e = p.schedule[i];
+    // a ruin stays as the building was when it was wrecked
+    return { i, rev: revisionYear(p.lineage.stages[e.index].def, e.state === 'ruin' ? e.from : year) };
+  }
+
+  /** The model for a schedule entry in the form to show: closed, or opened up if the plot is selected. */
+  private form(p: PlotState, i: number, rev: number): Built | null {
+    if (i < 0) return null;
+    const b = this.build(p, i, false, rev);
+    // the closed form says whether there is an open one; a ruin is open to the sky already
+    return b.hasCutaway && p.plot.id === this.openId && p.schedule[i].state !== 'ruin' ? this.build(p, i, true, rev) : b;
+  }
+
+  private endMorph(p: PlotState) {
+    if (p.morph) {
+      p.holder.remove(p.morph.group);
+      p.morph.dispose();
+      p.morph = null;
+    }
+    if (p.current) p.current.object.visible = true;
+    p.phase = 'idle';
+  }
+
+  /**
+   * Put a different model on a plot, turning the one that stands there into it piece by piece: a new
+   * stage, a revision of the same building, or the same building opened up.
+   */
+  private change(p: PlotState, i: number, rev: number) {
+    const prev = p.current;
+    const next = this.form(p, i, rev);
+    const morph = prev !== next ? new Morph(prev, next, diffBuilt(prev, next)) : null;
+    this.place(p, i, rev);
+    if (!morph || morph.idle) return morph?.dispose();
+    // the pieces in motion stand in for the new model until they have settled
+    p.morph = morph;
+    p.holder.add(morph.group);
+    morph.group.traverse((o) => (o.userData.plotId = p.plot.id));
+    if (p.current) p.current.object.visible = false;
+    p.phase = 'morph';
+    p.t = 0;
+  }
+
+  private place(p: PlotState, i: number, rev = -Infinity) {
+    this.endMorph(p);
     if (p.current) p.holder.remove(p.current.object);
     p.shown = i;
-    p.current = i >= 0 ? this.build(p, i) : null;
-    // the closed form says whether there is an open one; a ruin is open to the sky already
-    if (p.current?.hasCutaway && p.plot.id === this.openId && p.schedule[i].state !== 'ruin') p.current = this.build(p, i, true);
+    p.rev = rev;
+    p.current = this.form(p, i, rev);
     if (p.current) {
       p.current.object.scale.set(1, 1, 1);
       p.current.object.position.y = 0;
@@ -220,65 +269,38 @@ export class Town {
   setYear(year: number, instant = false) {
     this.year = year;
     for (const p of this.plots) {
-      const want = scheduleAt(p.schedule, year);
+      const { i, rev } = this.target(p, year);
+      const same = i === p.shown && rev === p.rev;
       if (instant) {
-        p.phase = 'idle';
-        if (want !== p.shown) this.place(p, want);
-        else if (p.current) p.current.object.scale.set(1, 1, 1);
-        continue;
-      }
-      if (want !== p.shown && p.phase === 'idle') {
-        if (p.current) {
-          p.phase = 'out';
-          p.t = 0;
-        } else {
-          this.place(p, want);
-          p.phase = 'in';
-          p.t = 0;
-          const placed = p.current as Built | null;
-          if (placed) placed.object.scale.y = 0.001;
-        }
-      }
+        if (!same) this.place(p, i, rev);
+        else this.endMorph(p);
+      } else if (!same && p.phase === 'idle') this.change(p, i, rev);
     }
   }
 
   update(dt: number) {
     let built = false;
     for (const p of this.plots) {
-      if (p.phase === 'out' && p.current) {
-        p.t += dt / 0.3;
-        const k = Math.min(1, p.t);
-        p.current.object.scale.y = Math.max(0.001, 1 - k * k);
-        if (k >= 1) {
-          this.place(p, scheduleAt(p.schedule, this.year));
-          built = true;
-          if (p.current) {
-            p.current.object.scale.y = 0.001;
-            p.phase = 'in';
-            p.t = 0;
-          } else p.phase = 'idle';
-        }
-      } else if (p.phase === 'in' && p.current) {
-        p.t += dt / 0.55;
-        const k = Math.min(1, p.t);
-        p.current.object.scale.y = Math.max(0.001, easeOutBack(k));
-        if (k >= 1) {
-          p.current.object.scale.y = 1;
-          p.phase = 'idle';
-          // time may have moved on while we were animating
-          if (scheduleAt(p.schedule, this.year) !== p.shown) {
-            p.phase = 'out';
-            p.t = 0;
-          }
-        }
+      if (p.phase !== 'morph' || !p.morph) continue;
+      p.t += dt;
+      if (!p.morph.update(p.t)) continue;
+      this.endMorph(p);
+      // time may have moved on while the pieces were moving
+      const { i, rev } = this.target(p, this.year);
+      if (i !== p.shown || rev !== p.rev) {
+        this.change(p, i, rev);
+        built = true;
       }
     }
     // spread construction cost: quietly prepare one upcoming building per frame
     if (!built) {
       for (const p of this.plots) {
         const next = p.shown + 1;
-        if (next < p.schedule.length && !p.cache.has(next) && p.schedule[next].from - this.year < 60) {
-          this.build(p, next);
+        if (next >= p.schedule.length || p.schedule[next].from - this.year >= 60) continue;
+        const e = p.schedule[next];
+        const rev = revisionYear(p.lineage.stages[e.index].def, e.from);
+        if (!p.cache.has(`${next}|0|${rev}`)) {
+          this.build(p, next, false, rev);
           break;
         }
       }
@@ -315,8 +337,9 @@ export class Town {
   }
 
   pick(raycaster: THREE.Raycaster): PlotState | null {
+    // (a model whose pieces are still moving is picked through the pieces)
     const hits = raycaster.intersectObjects(
-      this.plots.filter((p) => p.current).map((p) => p.current!.object),
+      this.plots.filter((p) => p.current || p.morph).map((p) => (p.morph ? p.morph.group : p.current!.object)),
       true,
     );
     if (!hits.length) return null;

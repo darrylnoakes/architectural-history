@@ -44,6 +44,21 @@ the named features up close on foot.
   be whole; it is true when the building is selected or shown on its own (the gallery shows the
   open form; add `&cutaway=0` to its URL for the closed one). Everything outside the cut must be
   the same in both.
+- When one building replaces another on a plot, the town compares the two models piece by piece
+  (each `b.box`, `b.gable`, `b.add` and so on is a piece). Pieces that are exactly where they were
+  stay put, pieces that are gone shrink away and new ones grow in their place. So when a stage is
+  the same building altered (a choir added to a nave, a town hall built on to a belfry), build the
+  surviving parts with the same code and the same numbers in both stages, from a shared function,
+  and the change happens in place. A stage that is a different building needs no care: nothing
+  matches and the whole of it is replaced. Random position jitter stops a piece matching; the small
+  random lightness of colours does not. `tools/morph-report.ts` lists how much each stage keeps of
+  the one before.
+- A small dated alteration that does not make a new building (a drawbridge replaced by a fixed
+  bridge, a road surfaced with asphalt, lettering removed) is a revision, not a stage: list
+  `revisions: [{ year, note }]` on the definition and ask `b.since(year)` in `build`. The card keeps
+  its title and text and gains the note from that year; in the town only the altered pieces change.
+  Build the pieces a revision touches last and with `jitter: false`, so nothing else shifts. Two or
+  three revisions at most. `tools/shot.mjs … --year=1950` shows a model as it stood in a year.
 - A ditch, a moat or a sunken yard is dug out of the ground itself, never painted on it:
   `b.dig(outline, depth, { slope, color, open })` lowers the ground inside an outline of (x, z)
   points, and `b.trench(x0, x1, z0, z1, depth, { slope, color })` is the straight case, a ditch
