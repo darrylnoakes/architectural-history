@@ -17,11 +17,11 @@ export const fanum: BuildingDef = {
   date: 'c. AD 40',
   summary:
     'Under Rome the gods of the tribe were given a temple in mortared stone, but not a Roman one. The fanum keeps the square Celtic shrine: a tall cella, the room of the god, rising like a tower out of a lower gallery that runs round all four sides, where worshippers walked and left offerings. ' +
-    'It is built the Roman way, in small squared stones with bands of brick, under tiled roofs, and stands in a walled precinct entered through a gate, with an altar in front. Temples of this kind are found only in Gaul, the Rhineland and Britain. ' +
+    'It is built the Roman way, in small squared stones with bands of brick, under tiled roofs, and stands in a walled precinct entered through a gate, with an altar in front. Temples of this kind are found almost only in Gaul, the Rhineland and Britain. ' +
     'Nothing of the Gaulish sanctuary survives above ground, though the precinct keeps its place and its square shape.',
   materials: ['small squared limestone (petit appareil)', 'brick courses', 'lime mortar and plaster', 'Roman roof tiles'],
   lookFor: [
-    { label: 'Cella tower', note: 'The tall square room of the god, lit by high windows above the gallery roof; the Temple of Janus at Autun still stands over twenty metres high.', at: [C + 0.3, 11.0, ZC] },
+    { label: 'Cella tower', note: 'The tall square room of the god, lit by high windows above the gallery roof; the Temple of Janus at Autun still stands over twenty metres high. Most fana faced east, with the door and altar on that side.', at: [C + 0.3, 11.0, ZC] },
     { label: 'Gallery', note: 'A lower covered walk on all four sides, its roof on a ring of columns standing on a low wall.', at: [G + 0.3, 3.0, ZC + 4] },
     { label: 'Brick bands', note: 'Courses of flat brick laid through the stone walls, a Roman habit that levelled and bonded the work.', at: [-C - 0.2, 7.6, ZC + 2] },
     { label: 'Precinct wall', note: 'The sacred enclosure (temenos), as in the Gaulish sanctuary before it, now walled in stone.', at: [-14.3, 2.0, 4.0] },

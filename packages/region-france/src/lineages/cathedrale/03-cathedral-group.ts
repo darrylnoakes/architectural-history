@@ -31,7 +31,7 @@ export const cathedralGroup: BuildingDef = {
   style: 'Late Antique (Early Christian)',
   date: 'c. 380',
   summary:
-    'After the raids of 275 the town shrank behind a wall built from its own ruined monuments, and the bishop, head of a Christian community that was now the emperor’s religion, built in a corner against it. ' +
+    'After the raids of 275 the town shrank behind a wall built from its own ruined monuments, and the bishop, head of a Christian community whose faith was now the emperor’s, built in a corner against it. ' +
     'As at Geneva, Trier and Aquileia the cathedral is a pair of plain halls side by side: one perhaps for the full Eucharist, the other for teaching those preparing for baptism, though how the two were used is still debated. Between them stands the baptistery, a small room round a sunken pool where adults were baptised, at Easter, by the bishop himself. ' +
     'The walls are small stone and brick, plastered, under Roman tiles. Nothing of the temple survives: its stones may well be in the town wall.',
   materials: ['rubble and reused stone', 'brick bands', 'lime plaster', 'Roman roof tiles'],
@@ -42,7 +42,7 @@ export const cathedralGroup: BuildingDef = {
     { label: 'Apses', note: 'Each hall ends in a half-round apse to the east, where the bishop’s chair and the altar stood.', at: [8.5, 6.0, -19.2] },
   ],
   modelledOn:
-    'The Baptistery of Saint-Jean at Poitiers (a fourth-century foundation, rebuilt in the late seventh century) for the baptistery with its gables, pediments and polygonal apse; the double cathedrals of Geneva and Trier for the plan of two halls. Their size and details here are generic.',
+    'The Baptistery of Saint-Jean at Poitiers (founded in the late fourth or the fifth century and much remodelled in the seventh, when its pediments were made) for the baptistery with its gables, pediments and polygonal apse; the double cathedrals of Geneva and Trier for the plan of two halls. Their size and details here are generic.',
   influences: ['christian-basilica'],
   build(b) {
     b.box(32, 0.03, 66, mix(P.earth, P.grassDry, 0.45), { at: [0, 0, 0], jitter: false });

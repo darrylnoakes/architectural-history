@@ -55,7 +55,7 @@ export const fair: BuildingDef = {
   summary:
     'With the Roman market gone, trade comes back as a fair: once a year, on the feast of the abbey’s saint, the monks hold the right to a market on open ground and take a toll on everything sold. ' +
     'For a few weeks rows of timber booths and cloth tents go up round a cross that marks the fair’s peace, selling wine, honey, cloth, madder for dye and horses, and then they are taken down again. ' +
-    'King Dagobert is said to have granted the abbey of Saint-Denis its fair in the 630s; by the twelfth century the great fairs of Champagne at Troyes, Provins, Lagny and Bar-sur-Aube were where Flemish cloth met Italian bankers.',
+    'King Dagobert is said to have granted the abbey of Saint-Denis its fair in the 630s; in the twelfth and thirteenth centuries the great fairs of Champagne at Troyes, Provins, Lagny and Bar-sur-Aube were where Flemish cloth met Italian merchants and bankers.',
   materials: ['oak and pine boards', 'shingles', 'linen and wool cloth'],
   lookFor: [
     { label: 'Fair cross', note: 'The cross in the middle stands for the peace of the fair: crimes committed during it were judged by the abbey’s court.', at: [0, 4.6, 0] },

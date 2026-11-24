@@ -182,10 +182,10 @@ export const renaissanceChateau: BuildingDef = {
   style: 'French Renaissance',
   date: 'c. 1520',
   summary:
-    'After the Italian wars the king’s financiers and courtiers build country houses that keep the look of a castle but none of its purpose. ' +
+    'Back from the Italian wars, the king’s financiers and courtiers build country houses that keep the look of a castle but none of its purpose. ' +
     'The plan is regular and the fronts symmetrical, ruled into a grid of pilasters and string courses round big cross windows, and the staircase is the centrepiece: straight flights behind open loggias, rising through the roof as a great dormer. ' +
     'Turrets, a corbelled cornice like machicolations and a moat remain, but only for show and for reflection: the walls are pierced on every side and the steep slate roofs bristle with carved dormers and tall chimneys.',
-  materials: ['tuffeau (soft white limestone)', 'slate', 'lead', 'glass in leaded lights'],
+  materials: ['fine white limestone (on the Loire, tuffeau)', 'slate', 'lead', 'glass in leaded lights'],
   lookFor: [
     { label: 'Grand staircase', note: 'Straight flights stacked behind open loggias in the middle of the front, an Italian idea; the castle had hidden its stair in a turret.', at: [STAIR.x, 6.5, MAIN.z1 + STAIR.d + 0.2] },
     { label: 'Pilasters and cross windows', note: 'Flat classical pilasters frame windows divided by a stone cross into four lights, in a regular grid.', at: [-0.6 + 1.15, 4, MAIN.z1 + 0.2] },

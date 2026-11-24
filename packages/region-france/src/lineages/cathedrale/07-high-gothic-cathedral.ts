@@ -20,7 +20,7 @@ export const highGothicCathedral: BuildingDef = {
     { label: 'Unfinished south tower', note: 'Work stopped at the foot of the belfry and the stump was roofed over: lopsided fronts like this were normal for centuries.', at: [TX, BEL0 + 4.6, TZC + 3.4] },
   ],
   modelledOn:
-    'Amiens (nave begun 1220) and Reims (begun 1211) for the nave, the two-tier flying buttresses with pinnacles, the deep sculpted portals and the gallery of kings; Senlis (stone spire about 1240) for the finished north tower. Amiens, Paris and Reims all kept flat-topped towers, the spires planned for them never built.',
+    'Amiens (nave begun 1220) and Reims (begun 1211) for the nave, the two-tier flying buttresses with pinnacles, the deep sculpted portals and the gallery of kings; the stone spire of Senlis (about 1240, on its south tower) for the finished north tower. Amiens, Paris and Reims all kept flat-topped towers, the spires planned for them never built.',
   influences: ['gothic-export'],
   build(b) {
     cathedral(b, HIGH);

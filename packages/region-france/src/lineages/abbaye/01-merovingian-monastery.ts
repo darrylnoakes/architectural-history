@@ -188,7 +188,7 @@ export const merovingianMonastery: BuildingDef = {
     { label: 'Enclosure wall', note: 'The monastic precinct is walled off from the world, with one gate towards the road.', at: [CX + 2.3, 3.4, 21.4] },
   ],
   modelledOn:
-    'Generic. The burial church over a saint’s grave follows Saint-Médard at Soissons, founded by Clothar I about 557 for Bishop Médard (nothing of the first church stands); the half-sunk crypt with marble columns and sarcophagi follows the seventh-century crypts of Jouarre.',
+    'Generic. The burial church over a saint’s grave follows Saint-Médard at Soissons, begun by Clothar I about 557 over the grave of Médard, bishop of Noyon, and finished by his son Sigebert (nothing of the first church stands); the half-sunk crypt with marble columns and sarcophagi follows the seventh-century crypts of Jouarre.',
   influences: ['christian-basilica'],
   build,
 };

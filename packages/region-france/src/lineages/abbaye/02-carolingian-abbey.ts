@@ -81,14 +81,14 @@ export const carolingianAbbey: BuildingDef = {
   style: 'Carolingian',
   date: 'c. 830',
   summary:
-    'Under Charlemagne and his son Louis the Pious every monastery is made to follow the Rule of St Benedict, and the monastery is now planned as a whole: church, cloister and the three ranges round it, as on the Plan of St Gall drawn about 820. ' +
+    'Under Charlemagne and his son Louis the Pious every monastery is required to follow the Rule of St Benedict (councils of Aachen, 816 and 817), and the monastery is now planned as a whole: church, cloister and the three ranges round it, as on the Plan of St Gall drawn about 820. ' +
     'The church is a timber-roofed basilica with a round tower over the crossing and a westwork, a tall towered block at the entrance with a chapel upstairs. ' +
     'Round the cloister walk stand the dormitory, the refectory and the cellar range, and in the forecourt a gate hall of red and white stone imitates a Roman triumphal arch.',
   materials: ['rubble, limewashed', 'red and white stone facing', 'flat clay tiles', 'oak shingles', 'lead'],
   lookFor: [
     { label: 'Westwork', note: 'A towered entrance block with a chapel on the upper floor, a Carolingian invention and the ancestor of the twin-towered front.', at: [CX, 9, 14.6] },
     { label: 'Cloister', note: 'An open garth with a covered walk on four sides, linking the church to the rooms the monks use every day.', at: [3.75, 2.2, 3] },
-    { label: 'Dormitory and chapter house', note: 'The east range: the chapter house where the monks meet each morning below, the common dormitory above.', at: [3.75, 4.2, -5] },
+    { label: 'Dormitory and chapter house', note: 'The east range: the common dormitory above, and below it a room for the monks’ daily meeting (on the Plan of St Gall, a warming room; the chapter met in the cloister walk).', at: [3.75, 4.2, -5] },
     { label: 'Refectory', note: 'The dining hall, on the side of the cloister opposite the church, as the Plan of St Gall lays it out.', at: [19, 4.2, 3] },
     { label: 'Gate hall', note: 'A free-standing hall of three arches with a chapel above, faced in a lozenge pattern of red and white stone.', at: [CX, 7.8, GATEHALL.z + 2.4] },
   ],

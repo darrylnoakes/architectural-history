@@ -24,7 +24,7 @@ export const carolingianCathedral: BuildingDef = {
   summary:
     'Under Charlemagne and his son Louis the Pious, bishops and abbots rebuilt in stone on a scale not seen since Rome, copying the basilicas of Rome: a tall nave lit by a clerestory over lower aisles, a transept and an apse. ' +
     'Under the apse a crypt held the relics, with a passage round them so that pilgrims could pass without entering the choir; it shows outside as small windows at ground level. Over the crossing rises a round tower of diminishing stages, as at Saint-Riquier. ' +
-    'The great novelty is at the west: the westwork, a tower-like block with an entrance hall below and a chapel upstairs, flanked by stair turrets, where the emperor or the bishop could sit in state. ' +
+    'The great novelty is at the west: the westwork, a tower-like block with an entrance hall below and a chapel upstairs, flanked by stair turrets, where, it is thought, the emperor or the bishop could sit in state. ' +
     'Nothing of the first cathedral group survives above ground; the halls were cleared for the new church.',
   materials: ['coursed rubble with dressed stone', 'lime plaster', 'clay tiles', 'timber roofs'],
   lookFor: [

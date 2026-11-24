@@ -24,7 +24,7 @@ const lineage: Lineage = {
         year: 1617,
         fate: 'ruin',
         note:
-          'Held against the king in the troubles of Louis XIII’s minority, the castle was besieged in 1617 and then slighted on royal orders: its towers were breached and its roofs and floors burned, and it was left a ruin for two hundred and fifty years.',
+          'Held against the king in the troubles of Louis XIII’s early reign, the castle was besieged in 1617 and then slighted on royal orders: its towers were breached and its roofs and floors burned, and it was left a ruin for almost two hundred and fifty years.',
       },
       def: residentialCastleDef,
     },

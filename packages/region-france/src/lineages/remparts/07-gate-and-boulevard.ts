@@ -57,8 +57,8 @@ export const gateAndBoulevard: BuildingDef = {
   date: '1860s to 1900s',
   summary:
     'With railways, a conscript army and long-range rifled guns, the old fortifications were useless, and they stopped the town from growing. One after another the fortified towns of the north were declassified and their ramparts levelled, from the 1850s to the 1920s. ' +
-    'On their line the town laid out a ring of tree-lined boulevards, as Haussmann was doing in Paris. The gate, the one piece of the walls that was architecture, was kept as a monument and left standing alone on an island where the boulevard crosses the old road. ' +
-    'The town still taxed food, drink and fuel coming in, the octroi, so the vanished wall lived on as a tax line, with a pair of little toll pavilions at the gate. The octroi was abolished only in 1943.',
+    'On their line the town laid out a ring of tree-lined boulevards, as Haussmann had done in Paris. The gate, the one piece of the walls that was architecture, was kept as a monument and left standing alone on an island where the boulevard crosses the old road. ' +
+    'The town still taxed food, drink and fuel coming in, the octroi, so the vanished wall lived on as a tax line, with a pair of little toll pavilions at the gate. The octroi was abolished only in 1943, and for good in 1948.',
   materials: ['the stone gate of the 1680s', 'brick and stone for the pavilions', 'zinc roofs', 'macadam and granite setts', 'cast iron'],
   modelledOn: 'The Porte de Paris at Lille, left standing when the ramparts round it went, and the octroi pavilions that stood at the gates of most French towns. The roundabout is generic.',
   influences: ['haussmann-export'],

@@ -36,11 +36,11 @@ export const gaulishSanctuary: BuildingDef = {
   date: 'c. 300 BC',
   summary:
     'The holy place of the tribe, two and a half centuries before Rome: a square of ground closed by a palisade and a ditch, entered by a single gate hung with captured weapons and skulls. ' +
-    'In the middle a small timber shrine covers a great pit. As the excavators read the finds, old oxen were sacrificed and left in it to rot, an offering to the gods below, and their bones were later laid in the ditch. ' +
+    'In the middle a small timber shrine covers a great pit. As the excavators read the finds, very old cattle, oxen and cows, were sacrificed and left in it to rot, an offering to the gods below, and their bones were later laid in the ditch. ' +
     'Weapons taken in battle were shown on a trophy and on the gate, then bent, broken and thrown into the ditch too. Nothing here is stone: the sacred is a place marked out, not yet a building.',
   materials: ['oak posts and stakes', 'wattle and daub', 'thatch', 'earth'],
   lookFor: [
-    { label: 'Palisade and ditch', note: 'A square enclosure that set the gods’ ground apart from the world outside; the ditch inside the fence received the offerings.', at: [-E + 1.3, 0.6, ZC + 4] },
+    { label: 'Palisade and ditch', note: 'A square enclosure that set the gods’ ground apart from the world outside; the ditch along the fence received the offerings.', at: [-E + 1.3, 0.6, ZC + 4] },
     { label: 'Gate with trophies', note: 'The one entrance, a timber porch hung with shields, swords and the skulls of beasts and perhaps of enemies.', at: [0, 4.2, ZC + E + 0.4] },
     { label: 'Timber shrine', note: 'A small thatched building raised over the central pit, open on the side facing the gate.', at: [0, 4.0, ZC + 2.9] },
     { label: 'Sacrificial pits', note: 'A large oval pit with smaller ones round it, where the offerings were left.', at: [0, 0.4, ZC + 1.2] },

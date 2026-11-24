@@ -11,7 +11,7 @@ export const renaissanceHotel: BuildingDef = {
     'Ornament comes from antiquity: roundels with heads of emperors, shell-headed dormers with candelabra, and on the court an open loggia of round arches on columns. ' +
     'The house now stands behind its court, which the street sees only through a portal like a Roman arch: the first step towards the hôtel between court and garden.',
   materials: ['fine limestone', 'slate', 'oak', 'leaded glass'],
-  modelledOn: 'The Hôtel d’Assézat, Toulouse (begun 1555, probably by Nicolas Bachelier) for the tiered orders, the court loggia, the street portal and the tall stair tower crowned by a lantern; the Hôtel Pincé, Angers (Jean de Lespine, about 1523 to 1530) for the medallions, the dormers and the corbelled corner turret. Built in stone, as in the north, rather than Toulouse brick',
+  modelledOn: 'The Hôtel d’Assézat, Toulouse (Nicolas Bachelier, begun 1555) for the tiered orders, the court loggia, the street portal and the tall stair tower crowned by a lantern; the Hôtel Pincé, Angers (Jean de Lespine, about 1523 to 1530) for the medallions, the dormers and the corbelled corner turret. Built in stone, as in the north, rather than Toulouse brick',
   influences: ['italian-renaissance'],
   lookFor: [
     { label: 'Pilasters in tiers', note: 'Flat classical pilasters, Doric on the ground floor and Ionic above, divide the wall into a grid of bays.', at: [-2.65, 6.0, -4.45] },

@@ -22,7 +22,7 @@ const lineage: Lineage = {
       end: {
         year: -20,
         fate: 'cleared',
-        note: 'After the conquest the new Roman town spread out over the plain and needed no wall. The old rampart was abandoned, its stones and timbers carted off for building, and by about 20 BC it had been levelled.',
+        note: 'After the conquest the new Roman town spread out over the plain and needed no wall. The old rampart was abandoned, its stones and timbers carted off for building, and by about 20 BC it had probably been levelled.',
       },
       def: murusGallicus,
     },

@@ -11,10 +11,10 @@ export const mauristAbbey: BuildingDef = {
   style: 'Classical',
   date: 'c. 1700',
   summary:
-    'The Benedictines of the Congregation of Saint-Maur, the reformed order of scholars who edit the Church Fathers and write the history of France, rebuild their monasteries one after another from the late seventeenth century. ' +
+    'The Benedictines of the Congregation of Saint-Maur, a reformed congregation (founded 1618) famed for the scholars who edit the Church Fathers and write the history of France, rebuild their monasteries one after another from the late seventeenth century. ' +
     'The medieval church is kept, but the monks’ quarters go up again as long, plain ranges of fine ashlar three storeys high, with tall windows in strict rows, string courses, hipped slate roofs and a pediment on the front: a monastery that looks like a palace or a hospital. ' +
     'The old common dormitory gives way to separate rooms with fireplaces, a library and guest apartments; the cloister is rebuilt with round arches.',
-  materials: ['limestone ashlar', 'slate', 'oak sashes and casements', 'the medieval church in stone and tile'],
+  materials: ['limestone ashlar', 'slate', 'oak casement windows', 'the medieval church in stone and tile'],
   lookFor: [
     { label: 'Classical ranges', note: 'Long blocks of three storeys with identical tall windows on a regular rhythm, like a château.', at: [RANGE.R.x1 + 0.2, 7, -2.5] },
     { label: 'Pediment', note: 'A triangular gable from classical architecture crowning the centre of the front.', at: [RANGE.R.x1 + 0.5, 12.8, 3] },

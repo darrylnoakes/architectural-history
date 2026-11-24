@@ -61,7 +61,7 @@ export const murusGallicus: BuildingDef = {
   modelledOn:
     'The Porte du Rebout at Bibracte (Mont Beuvray, Burgundy), the main gate of the oppidum of the Aedui, with its inturned rampart and timber gate as excavated and reconstructed on the site; the rampart follows Caesar’s description (Gallic War VII.23). Proportions are compressed to fit the plot.',
   lookFor: [
-    { label: 'Murus gallicus', note: 'A vertical face of dry stone with the ends of the timber beams showing in rows: Caesar thought it handsome as well as strong.', at: [-11.5, 2.2, FACE + 0.3] },
+    { label: 'Murus gallicus', note: 'A vertical face of dry stone with the ends of the timber beams showing in rows: Caesar found it not unsightly as well as strong.', at: [-11.5, 2.2, FACE + 0.3] },
     { label: 'Timber grid and iron spikes', note: 'Inside, layers of beams cross at right angles and are pinned with iron spikes 20 to 30 cm long, packed with earth and stone.', at: [-HALF - 0.2, 2.7, -0.6] },
     { label: 'Funnel entrance', note: 'The rampart turns inward along the road, so an enemy at the gate is under fire from both sides and from above.', at: [5.4, 3.0, -1.6] },
     { label: 'Gate tower', note: 'A timber tower over the passage, set back at the inner end of the funnel, with a fighting platform level with the rampart walk.', at: [0, 8.0, GATE_Z + 0.2] },

@@ -23,7 +23,7 @@ export const romanesqueAbbey: BuildingDef = {
     { label: 'Cloister arcade', note: 'Round arches on little columns, standing on a low wall round the garth.', at: [GARTH.x0, 2.2, 3] },
   ],
   modelledOn:
-    'Generic, after the great churches of the Cluniac family: the third church of Cluny (begun 1088), very much reduced, and Paray-le-Monial (about 1090 to 1130), which keeps Cluny’s narthex towers, octagonal crossing tower and stepped east end.',
+    'Generic, after the great churches of the Cluniac family: the third church of Cluny (begun 1088), very much reduced, and Paray-le-Monial (about 1090 to 1130), a smaller cousin of Cluny III, with a twin-towered narthex older than the rest of the church, an octagonal crossing tower and a stepped east end.',
   influences: ['cluny'],
   build,
 };

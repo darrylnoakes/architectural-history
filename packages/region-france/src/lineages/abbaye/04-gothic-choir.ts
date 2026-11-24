@@ -17,7 +17,7 @@ export const gothicChoir: BuildingDef = {
   summary:
     'The abbot pulls down the Romanesque east end and builds a new choir that is lighter than anything before it. Pointed arches of different widths can be made to rise to the same height, so even the wedge-shaped bays of a curved walkway can be vaulted; stone ribs gather the weight of each vault on to a few points, slender single columns carry it, and buttresses outside take the thrust. ' +
     'The outer wall is freed to become glass: seven shallow chapels, so close together that they read as one rippling ring of windows, open off a double ambulatory. ' +
-    'The old nave, narthex and towers are left standing behind it, as they were at Saint-Denis for another ninety years: Gothic begins as a choir added to a Romanesque church.',
+    'The old nave, narthex and towers are left standing behind it, as the Carolingian nave was at Saint-Denis for almost ninety years: Gothic begins as a choir added to an older church.',
   materials: ['fine limestone', 'monolithic columns', 'stained glass', 'flat clay tiles'],
   lookFor: [
     { label: 'Double ambulatory', note: 'Two concentric walkways round the sanctuary, divided only by a ring of columns, so the whole east end is one open space.', at: [amb[0], 6.8, amb[1]] },
@@ -28,6 +28,6 @@ export const gothicChoir: BuildingDef = {
   ],
   modelledOn:
     'The choir of the abbey church of Saint-Denis, built for Abbot Suger from 1140 and consecrated in 1144: the double ambulatory with seven radiating chapels survives, but Suger’s upper storey was rebuilt from 1231, so its height and windows here are conjectural. Suger’s own new west front (about 1135 to 1140) is not shown; this abbey keeps its Romanesque narthex.',
-  influences: ['gothic-birth', 'gothic-export'],
+  influences: ['gothic-birth'],
   build,
 };

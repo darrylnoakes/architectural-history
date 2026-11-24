@@ -234,7 +234,7 @@ export const classicalChateau: BuildingDef = {
   date: 'c. 1660',
   summary:
     'A minister of finance builds the house that sets the pattern for Louis XIV. It stands on a moated platform between a forecourt and a garden, all laid out on one axis: a main block of fine ashlar, end pavilions each under its own tall slate roof, and in the middle an oval salon that swells into the garden under a dome. ' +
-    'Behind it the garden is architecture too: parterres of clipped box embroidered on red and gravel ground, ranks of yews cut into cones, a basin with a fountain and, across the far end, a canal. ' +
+    'Behind it the garden is architecture too: parterres of clipped box embroidered on red and gravel ground, ranks of yews cut into cones, a basin with a fountain and, further on, a long canal lying across the axis. ' +
     'Service buildings of brick with stone dressings flank the forecourt. The castle is gone: the defences are now a moat and railings, and the power on show is wealth and taste.',
   materials: ['limestone ashlar', 'slate and lead', 'brick and stone (the outbuildings)', 'box, yew and gravel', 'water'],
   lookFor: [
@@ -242,7 +242,7 @@ export const classicalChateau: BuildingDef = {
     { label: 'Pavilions', note: 'The ends of the house stand forward under their own tall roofs, so the front reads as separate blocks.', at: [MAIN.x1 + PAV.w / 2, 15, PAV.z1 + 0.6] },
     { label: 'Forecourt', note: 'The cour d’honneur, a gravelled court between the outbuildings, closed by railings and a gate on the axis.', at: [0, 1.2, 18] },
     { label: 'Parterre de broderie', note: 'Low box hedges clipped into scrolls like embroidery, on red brick dust and gravel, to be seen from the windows above.', at: [8.5, 0.8, ISLE.z0 - MOAT - 3.5] },
-    { label: 'Canal', note: 'A long sheet of water across the end of the garden, as at Vaux, where it lies at right angles to the axis.', at: [-12, 0.5, -22.5] },
+    { label: 'Canal', note: 'A long sheet of water lying across the garden at right angles to the axis, as at Vaux, where it is hidden from the house until one is almost upon it.', at: [-12, 0.5, -22.5] },
   ],
   modelledOn:
     'Vaux-le-Vicomte, built for Nicolas Fouquet by Louis Le Vau (house), André Le Nôtre (garden) and Charles Le Brun (decoration), 1656 to 1661, much reduced: the moated platform, pavilions with separate roofs, domed oval salon, brick-and-stone outbuildings, parterres and transverse canal are taken from it; the entrance frontispiece is simplified.',

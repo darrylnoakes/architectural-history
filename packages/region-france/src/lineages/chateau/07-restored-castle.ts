@@ -14,10 +14,10 @@ export const restoredCastle: BuildingDef = {
   style: 'Gothic Revival',
   date: '1865',
   summary:
-    'Left a ruin since it was slighted on royal orders in 1617, the castle is bought back and rebuilt as the Middle Ages ought to have looked. ' +
+    'Left a ruin since it was slighted on royal orders in 1617, the castle is bought and rebuilt as the Middle Ages ought to have looked. ' +
     'The architect follows the surviving walls but completes everything the ruin left in doubt: every wall-walk is roofed over, every tower gets a taller cone with a gilded finial, dormers and statues multiply, and the stone is new and white. ' +
     'The result is more complete, more regular and more medieval than the castle ever was: a lesson in the Gothic and a showpiece for an emperor, as much a work of the nineteenth century as a railway station.',
-  materials: ['new limestone', 'slate', 'lead and gilding', 'cast iron hidden in the roofs'],
+  materials: ['new limestone', 'slate', 'lead and gilding', 'oak roof frames'],
   lookFor: [
     { label: 'Covered wall-walks', note: 'Every wall-walk roofed in slate, a defence the restorer believed in and built everywhere at once.', at: [C.x1 + 1.3, 13.5, 6] },
     { label: 'Gilded finials', note: 'Lead spikes and golden balls and vanes on the tower roofs, the restorer’s finishing touch.', at: [tx, 27, tz] },

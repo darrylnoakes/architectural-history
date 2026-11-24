@@ -147,7 +147,7 @@ export const residentialCastleDef: BuildingDef = {
     { label: 'Stair tower', note: 'A spiral stair in its own round tower, serving every floor of the hall and the lodgings.', at: [STAIR.x - 1.2, 9, STAIR.z + 1.2] },
   ],
   modelledOn:
-    'Pierrefonds, rebuilt for Louis of Orléans, the king’s brother, from 1393 to about 1407, in spirit; the plan is this site’s own, and its round keep and towers are smaller than Pierrefonds’ great rectangular towers.',
+    'Pierrefonds, rebuilt for Louis of Orléans, the king’s brother, from 1393 to about 1407, in spirit; the plan is this site’s own, and its round keep and towers are much smaller than Pierrefonds’ eight great towers and its rectangular keep.',
   build,
 };
 

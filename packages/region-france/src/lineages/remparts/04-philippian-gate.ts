@@ -114,7 +114,7 @@ export const philippianGate: BuildingDef = {
     'The gate passage is closed first by a portcullis of oak shod with iron, dropped in grooves, and then by heavy doors; in front is a dry ditch crossed by a timber bridge.',
   materials: ['limestone rubble faced with dressed stone', 'oak and iron for the portcullis and doors', 'timber bridge'],
   modelledOn:
-    'The walls of Philip Augustus at Paris (1190 to about 1215), with their round towers and twin-towered gates, and the gatehouses of his castles such as Dourdan; the details are generic',
+    'The walls of Philip Augustus at Paris (1190 to about 1215), with their round towers and twin-towered gates, and the gatehouses of his castles such as Dourdan; the details are generic.',
   influences: ['crusader-castles'],
   lookFor: [
     { label: 'Twin round towers', note: 'Two round towers stand out either side of the passage so that archers in them could shoot at anyone attacking the gate.', at: [GATE.tx, 10.5, GATE.tz + GATE.tr + 0.3] },

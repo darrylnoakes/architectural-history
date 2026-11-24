@@ -125,7 +125,7 @@ export const motteDef: BuildingDef = {
   summary:
     'As royal power breaks up in the tenth century, counts, viscounts and lesser lords fortify themselves against their neighbours and the raiders. ' +
     'The quickest castle is earth and timber: a mound, the motte, thrown up from a ring ditch and crowned by a timber tower and a palisade, and beside it a larger enclosure, the bailey, holding the hall, stables and stores behind its own bank, ditch and fence. ' +
-    'A sloping bridge links the two, so that the tower can be held when the bailey falls. Gangs of peasants could raise one in a few weeks; the oldest known are in the Loire valley and northern France.',
+    'A sloping bridge links the two, so that the tower can be held when the bailey falls. Gangs of peasants could raise one, it is reckoned, in a few weeks; the oldest known are in the Loire valley and northern France.',
   materials: ['rammed earth and turf', 'oak posts and planks', 'oak shingles', 'thatch'],
   lookFor: [
     { label: 'Motte', note: 'The earth mound, about six metres high, dug from the ditch round its foot.', at: [MOTTE.x + 8.5, 3, MOTTE.z + 5] },
@@ -134,7 +134,7 @@ export const motteDef: BuildingDef = {
     { label: 'Bailey', note: 'The lower enclosure, where the household lived and worked: here the hall, stables, a forge and a well.', at: [6, 5, -2.6] },
     { label: 'Palisade and ditch', note: 'A fence of split oak stakes with a dry ditch outside it, the bailey’s only defence.', at: [18.5, 3.5, 0] },
   ],
-  modelledOn: 'Generic. The earliest dated mottes are in the Loire valley and northern France, among them Doué-la-Fontaine (a stone hall heaped round with earth about 950) and the mottes of the counts of Anjou and Blois.',
+  modelledOn: 'Generic. The earliest dated mottes are in the Loire valley and northern France, among them Doué-la-Fontaine (a stone hall of about 900, made into a tower about 950 and later heaped round with earth) and the mottes of the counts of Anjou and Blois.',
   build,
 };
 
