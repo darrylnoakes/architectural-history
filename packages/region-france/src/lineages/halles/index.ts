@@ -31,7 +31,8 @@ const lineage: Lineage = {
     // the Paris passages date from the 1790s to the 1840s; provincial cities built theirs in the 1830s and 1840s
     { from: 1838, builtUntil: 1860, def: passage },
     { from: 1866, def: ironHalles },
-    { from: 1887, def: grandMagasin },
+    // Paris had its great stores by the 1870s; a provincial town of the north got one in the 1890s
+    { from: 1895, def: grandMagasin },
     { from: 1929, def: concreteMarket1929 },
     { from: 1969, def: hypermarket },
     { from: 2012, def: marketToday },

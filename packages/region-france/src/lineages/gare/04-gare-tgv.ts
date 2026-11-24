@@ -28,12 +28,11 @@ export const gareTgv: BuildingDef = {
   style: 'Contemporary',
   date: '2007',
   summary:
-    'The high-speed line from Paris to the east opened in 2007 and put the cities of Champagne and Lorraine within an hour or two of the capital. Some towns were served at their old stations; others were given new ones, often outside the centre, where TGVs, buses, cars and the line into town could meet. ' +
+    'The high-speed line from Paris to the east (LGV Est) opened in June 2007 and put the cities of Champagne and Lorraine within an hour or two of the capital. Some towns were served at their old stations; others were given new ones, often outside the centre, where TGVs, buses, cars and the line into town could meet. ' +
     'The new station is hardly a building at all: a long canopy of steel and glass on branching columns shelters the platforms, and the hall beneath it is a glass box of ticket machines, a café and seats, open to the light. ' +
     'Glass printed with a pattern of white dots shades the platforms from the sun, and the wires overhead carry 25,000 volts to the train.',
   materials: ['steel', 'fritted glass', 'concrete', 'timber soffit', 'granite paving'],
   modelledOn: 'Champagne-Ardenne TGV at Bezannes, outside Reims (AREP for SNCF, opened 2007), and the other new stations of the LGV Est, in general terms; the canopy here is generic',
-  influences: ['high-tech'],
   lookFor: [
     { label: 'Long glass canopy', note: 'One continuous roof of steel and glass over the hall, the platform and both tracks.', at: [10.0, CY + 1.6, -5.0] },
     { label: 'Branching columns', note: 'Steel columns that divide into struts like the branches of a tree, so that few supports carry a wide roof.', at: [-12.0, 5.0, -4.6] },

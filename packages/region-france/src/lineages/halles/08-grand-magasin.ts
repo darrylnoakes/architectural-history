@@ -70,7 +70,7 @@ export const grandMagasin: BuildingDef = {
   id: 'grand-magasin',
   name: 'Department store (grand magasin)',
   style: 'Belle Époque, iron frame behind a stone front',
-  date: 'c. 1887',
+  date: 'c. 1895',
   summary:
     'The department store is a Paris invention, and the town gets its own. Shopping is turned into a show: anyone may walk in without being expected to buy, prices are fixed and marked, and goods can be returned. ' +
     'To sell everything under one roof the store needs huge, light floors, so it is built on an iron frame with walls of plate glass between stone piers, round a central light well with galleries on every floor and a grand staircase rising through it. ' +

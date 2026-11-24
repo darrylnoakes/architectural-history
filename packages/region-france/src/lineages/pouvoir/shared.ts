@@ -283,14 +283,14 @@ function roofSlate(st: Stage): number {
   return st >= 1928 ? tint(P.ardoise, 0.05) : st >= 1760 ? tint(P.ardoise, -0.03) : P.ardoise;
 }
 
-/** A clock dial with hour and minute hands, on a wall facing +Z at (x, y, z). */
-function clock(b: Builder, x: number, y: number, z: number, d: number, frame: number): void {
+/** A clock dial on a wall facing +Z at (x, y, z): one hour hand, and a minute hand too once clocks had them. */
+function clock(b: Builder, x: number, y: number, z: number, d: number, frame: number, minutes = true): void {
   b.panel(d + 0.4, d + 0.4, frame, { at: [x, y - 0.2, z], facing: '+z', shape: 'circle', depth: 0.08 });
   b.panel(d, d, P.ardoise, { at: [x, y, z], facing: '+z', shape: 'circle', depth: 0.12 });
   b.panel(d - 0.35, d - 0.35, P.gold, { at: [x, y + 0.175, z], facing: '+z', shape: 'circle', depth: 0.13 });
   b.panel(d - 0.6, d - 0.6, P.ardoise, { at: [x, y + 0.3, z], facing: '+z', shape: 'circle', depth: 0.14 });
   b.box(0.12, d * 0.42, 0.04, P.gold, { at: [x, y + d / 2, z + 0.18], jitter: false });
-  b.box(d * 0.32, 0.12, 0.04, P.gold, { at: [x + d * 0.16, y + d / 2, z + 0.18], jitter: false });
+  if (minutes) b.box(d * 0.32, 0.12, 0.04, P.gold, { at: [x + d * 0.16, y + d / 2, z + 0.18], jitter: false });
 }
 
 /**
@@ -364,9 +364,8 @@ export function belfry(b: Builder, st: Stage): void {
           b.panel(0.6, 0.9, P.windowDark, { at: [0, BEL_CHAMBER + 2.45, 2.3] });
           b.gable(0.9, 1.6, 0.6, slate, { at: [0, BEL_CHAMBER + 3.6, 1.5], ridge: 'z' });
         });
-      // the town clock on the face to the square (a single hour hand would be truer before about 1700,
-      // but the dial is kept as one model through every later stage)
-      clock(b, 0, 25.2, h, 2.6, dark);
+      // the town clock on the face to the square: a single hour hand until the eighteenth century
+      clock(b, 0, 25.2, h, 2.6, dark, st >= 1760);
     }
   });
   if (st >= 1835) flag(b, [x + 0.9, BEL_GALLERY - 0.9, z + 0.9], 4.5, TRICOLOUR, { w: 1.8, h: 1.2 });

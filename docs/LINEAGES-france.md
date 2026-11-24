@@ -245,7 +245,7 @@ piers only.
 | 1785 | `grain-hall` | A circular grain hall round an open court, all arcades. Cameo: the Halle au Blé, Paris (Le Camus de Mézières, 1763 to 1767) |
 | 1838 | `passage` | A covered arcade of shops under a glass roof, with a rotunda. Cameo: the Galerie Vivienne, Paris; the Passage Pommeraye, Nantes. Use `b.cutaway` if the glass roof hides the inside |
 | 1866 | `iron-halles` | A market pavilion of cast iron and glass on a brick base, with louvred clerestories. Cameo: Baltard's Halles of Paris (1853 to 1870) |
-| 1887 | `grand-magasin` | A department store: an iron frame, a great glazed front, a corner dome, a light well with galleries and a grand stair. Cameo: Au Bon Marché, Paris (Boileau and Eiffel) |
+| 1895 | `grand-magasin` | A department store: an iron frame, a great glazed front, a corner dome, a light well with galleries and a grand stair. Cameo: Au Bon Marché, Paris (Boileau and Eiffel) |
 | 1929 | `concrete-market` | A covered market under a thin parabolic concrete vault only a few centimetres thick. Cameo: the Halles du Boulingrin, Reims (Maigrot and Freyssinet, 1927 to 1929) |
 | 1969 | `hypermarket` | A hypermarket: one vast flat shed with a canopy, a sign on a mast and a car park. Cameo: the first Carrefour, Sainte-Geneviève-des-Bois (1963) |
 | 2012 | `market-today` | The concrete market of 1929 restored and reopened, with a market square outside. **The same building as `concrete-market`** (share the geometry with a `restored` flag). Cameo: the Boulingrin, reopened 2012 |

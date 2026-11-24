@@ -57,7 +57,7 @@ export const grandeGare: BuildingDef = {
     'The two halves, an architect’s front and an engineer’s shed, were often designed by different men and rarely spoke the same language.',
   materials: ['limestone', 'slate', 'zinc', 'wrought-iron arched ribs', 'glass'],
   modelledOn: 'The station of Tours (Victor Laloux, 1895 to 1898), much reduced and simplified: Tours has two great arches, one for each of its sheds, and statues of the cities its trains served on its piers',
-  influences: ['beaux-arts-export', 'iron-and-rail'],
+  influences: ['iron-and-rail'],
   lookFor: [
     { label: 'Great glazed arch', note: 'One huge arch filled with glass lights the booking hall and announces the station from the end of the avenue.', at: [0, 7.0, ZF + 0.4] },
     { label: 'Clock between figures', note: 'The clock sits at the top of the front, flanked by reclining sculpted figures.', at: [0, FH + 1.2, ZF + 0.5] },

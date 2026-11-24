@@ -258,11 +258,11 @@ export const brasserie: BuildingDef = {
   style: 'Art Nouveau (School of Nancy)',
   date: 'c. 1905',
   modelledOn:
-    'In the spirit of the Brasserie Excelsior, Nancy (opened 1911) and the shopfronts of the School of Nancy; the glazed front, ceramics and canopy are generic Art Nouveau rather than copied from any one building',
+    'In the spirit of the Brasserie Excelsior, Nancy (Lucien Weissenburger and Alexandre Mienville, opened 1911) and the shopfronts of the School of Nancy; the glazed front, ceramics and canopy are generic Art Nouveau rather than copied from any one building',
   summary:
-    'A brasserie was first a brewery, and the beer hall came west with the Alsatians who left their province when Germany annexed it in 1871: a big, bright room open from morning to midnight, beer on draught, sauerkraut and oysters, waiters in long aprons. ' +
+    'A brasserie was first a brewery. Alsatians had opened beer halls in Paris since the 1860s, and more came west when Germany annexed Alsace in 1871: a big, bright room open from morning to midnight, beer on draught, sauerkraut and oysters, waiters in long aprons. ' +
     'This one fills the ground floor of a new block of flats in the style that Nancy, swollen by those same refugees, made its own: a front of glass in curving frames of wood and iron, piers faced with glazed stoneware painted with flowers, a glass canopy on iron brackets over a terrace, and above, a bow window and balconies whose lines swell and twist like plant stems. ' +
-    'For the first time on this plot the guest stays nowhere: the brasserie sells food, drink and company, and the bed is upstairs in somebody’s flat.',
+    'Like the café before it, the brasserie offers no bed: it sells food, drink and company, and the rooms upstairs are somebody’s flat.',
   materials: ['limestone', 'carved and varnished wood', 'plate glass', 'cast and wrought iron', 'glazed stoneware', 'zinc'],
   lookFor: [
     { label: 'Glazed front', note: 'Great sheets of plate glass in wooden frames whose heads swell upward in a soft curve, with whiplash ironwork inside: no straight line where a curve will do.', at: [-6.1, 3.8, ZF + 0.3] },

@@ -42,11 +42,11 @@ export const reconstructionStation: BuildingDef = {
   style: 'Art Deco, reinforced concrete and brick',
   date: 'c. 1928',
   summary:
-    'The stations of the north were wrecked in the Great War, and the Compagnie du Nord rebuilt them in the 1920s in the new manner: a frame of reinforced concrete filled with red brick, the structure frankly shown as ribs and bands. ' +
+    'Many stations of the north were wrecked in the Great War, and the Compagnie du Nord rebuilt them in the 1920s in the new manner: a frame of reinforced concrete filled with red brick, the structure frankly shown as ribs and bands. ' +
     'The new station is long, low and wide, its hall lit by tall windows of geometric glazing, with a concrete canopy along the front, mosaics in bright colours over the doors, and a clock tower to mark it from across the town. ' +
     'On the platform the iron shed has gone: in its place a row of slender concrete columns carries a thin cantilevered canopy, cheaper to build and needing no painting.',
   materials: ['reinforced concrete', 'red brick', 'glass mosaic', 'steel-framed windows'],
-  modelledOn: 'The stations of Lens (Urbain Cassan, 1926 to 1927, with mosaics of mining life) and Rouen Rive-Droite (Adolphe Dervaux, 1913 to 1928, with its clock tower), in general terms',
+  modelledOn: 'The stations of Lens (Urbain Cassan, 1926 to 1927, its outline said to recall a locomotive, with mosaics of mining life) and Rouen Rive-Droite (Adolphe Dervaux, begun 1913, opened 1928, with its clock tower), in general terms',
   influences: ['art-deco', 'reinforced-concrete'],
   lookFor: [
     { label: 'Clock tower', note: 'A square tower of brick and concrete, stepped back at the top in the Art Deco way, with a clock on each face.', at: [TX, TH - 3.0, -1.0 + TW / 2 + 0.3] },

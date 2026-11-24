@@ -45,7 +45,7 @@ export const plots: Plot[] = [
   { id: 'halle-au-ble', lineage: 'halles', x: -46, z: 18.5, rotY: N, seed: 22, since: 1767, keep: 'grain-hall' },
   { id: 'passage', lineage: 'halles', x: 16.5, z: 38.5, rotY: W, seed: 23, since: 1826, keep: 'passage' },
   { id: 'marche-couvert', lineage: 'halles', x: 104, z: 71.5, rotY: N, seed: 24, since: 1866, skip: ['grand-magasin', 'hypermarket'], struck: greatWar },
-  { id: 'grand-magasin', lineage: 'halles', x: -16.5, z: 20, rotY: E, seed: 25, since: 1887, keep: 'grand-magasin' },
+  { id: 'grand-magasin', lineage: 'halles', x: -16.5, z: 20, rotY: E, seed: 25, since: 1895, keep: 'grand-magasin' },
   { id: 'hypermarche', lineage: 'halles', x: 190, z: 152.5, rotY: N, seed: 26, since: 1969, keep: 'hypermarket' },
 
   // --- work: the mills on the north bank, the iron mill in the river on the south

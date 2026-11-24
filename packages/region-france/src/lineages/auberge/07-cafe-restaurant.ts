@@ -42,7 +42,7 @@ export const cafeRestaurant: BuildingDef = {
     'The arcades of the Palais-Royal, Paris (Victor Louis, 1781 to 1784), where the first grand restaurants opened: the arcade with a mezzanine in each arch and the giant pilasters above are taken from it, at a provincial scale; the rest is generic',
   summary:
     'Two Paris novelties reach the town on its new arcaded square. The café, serving coffee, chocolate, ices and liqueurs at small marble tables before walls of mirrors, had been the fashion in Paris since the Procope opened in the 1680s. The restaurant is newer: from the later 1760s a few Paris traders sold restorative broths, “restaurants”, at private tables, at any hour, from a bill of fare with prices, instead of the innkeeper’s one common table at a fixed time. ' +
-    'By the 1780s the grandest, such as Beauvilliers’, stood in the arcades of the Palais-Royal, and in the years after the Revolution the idea spread to the provinces. ' +
+    'By the 1780s the grandest, such as Beauvilliers’ (1782), stood in and around the arcades of the Palais-Royal, and in the years after the Revolution the idea spread to the provinces. ' +
     'The building is in the sober classical manner of Louis XVI: an arcade on the square with the painted shopfronts behind it, giant pilasters binding two upper floors, and a balustrade hiding the roof. Here, for the first time on this plot, the guest chooses his own dinner.',
   materials: ['limestone', 'painted and gilded wood', 'plate glass and mirror', 'marble', 'wrought iron', 'slate'],
   lookFor: [

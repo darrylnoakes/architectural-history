@@ -47,7 +47,7 @@ export const embarcadere: BuildingDef = {
   style: 'Neoclassical, with a timber and iron shed',
   date: 'c. 1849',
   summary:
-    'The Compagnie du Nord opened its line from Paris to Lille in 1846, and branches soon reached the cathedral towns of Picardy and Champagne. The first stations, still often called embarcadères (landing stages), were placed outside the old walls where land was cheap. ' +
+    'The Compagnie du Nord opened its line from Paris to Lille, by way of Creil and Amiens, in 1846; within about ten years the lines of the Nord and the Est had reached most of the cathedral towns of Picardy and Champagne. The first stations, still often called embarcadères (landing stages), were placed outside the old walls where land was cheap. ' +
     'The passenger building is a neat classical pavilion of dressed stone with low wings for the waiting rooms and offices, its arches leading straight through to the platform, and a clock to keep railway time. ' +
     'Behind it a long shed covers the platform and both tracks: timber rafters trussed with iron rods in the way devised by the French engineer Camille Polonceau, under a roof of slate with a glazed strip to let out the smoke.',
   materials: ['dressed limestone', 'slate', 'oak rafters', 'cast-iron columns', 'wrought-iron tie rods', 'glass'],
@@ -56,9 +56,9 @@ export const embarcadere: BuildingDef = {
   lookFor: [
     { label: 'Classical pavilion', note: 'A two-storey centre of dressed stone with round arches and a cornice, so that the railway looks respectable.', at: [-4.4, 6.2, ZF + 0.3] },
     { label: 'Station clock', note: 'Railway time, kept to Paris time along the whole line, shown over the entrance.', at: [0, CH + 1.0, ZF + 0.4] },
-    { label: 'Polonceau truss', note: 'Rafters propped by struts and tied by thin iron rods: a light French roof truss of 1837, used in sheds all over Europe.', at: [-11.0, EAVE + 1.0, (SZ0 + SZ1) / 2] },
+    { label: 'Polonceau truss', note: 'Rafters propped by struts and tied by thin iron rods: a light roof truss devised by Camille Polonceau in the late 1830s and used in sheds all over Europe.', at: [-11.0, EAVE + 1.0, (SZ0 + SZ1) / 2] },
     { label: 'Train shed', note: 'A long roof on cast-iron columns over the platform and both tracks, open at the ends, with a glazed strip along the ridge for the smoke.', at: [6.0, RIDGE + 0.4, (SZ0 + SZ1) / 2] },
-    { label: 'Crampton locomotive', note: 'One pair of huge driving wheels behind the firebox: the fast engine of the Nord in the 1850s, so common that “taking the Crampton” meant taking the train.', at: [-11.2, 2.4, TRACKS[0] + 1.5] },
+    { label: 'Crampton locomotive', note: 'One pair of huge driving wheels behind the firebox: an English design, the fast engine of the Nord and the Est from 1849, so common that “prendre le Crampton” came to mean taking the train.', at: [-11.2, 2.4, TRACKS[0] + 1.5] },
   ],
   build(b) {
     const stone = tint(P.pierreBlonde, b.range(-0.03, 0.02));

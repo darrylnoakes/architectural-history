@@ -31,12 +31,12 @@ export const gaulishHall: BuildingDef = {
   summary:
     'Among the Gauls hospitality was politics: a chief kept his followers by feasting them, and a stranger at the door was fed before he was asked his business. ' +
     'This long hall of oak posts, wattle and daub under a steep thatch stands in its own fenced enclosure, with a granary on posts in the yard. Inside, a fire burns on a clay hearth between iron firedogs, meat seethes in a bronze cauldron hung from the roof, and the company sits on hay and hides at low tables, as the Greek traveller Posidonius saw them. ' +
-    'From the later second century BC the drink is Italian wine, shipped up the Rhône in amphorae by the hundred thousand; Diodorus says a merchant could get a slave for a single jar. Their broken sherds, heaped by the fence, are how archaeologists find such feasts.',
+    'At first the feast is washed down with beer and mead. From the later second century BC the drink is Italian wine, shipped up the Rhône and the Saône in amphorae by the hundred thousand; Diodorus says a merchant could get a slave for a single jar. Their broken sherds, heaped by the fence, are how archaeologists find such feasts.',
   materials: ['oak posts', 'wattle and daub', 'straw thatch', 'iron and bronze', 'Italian amphorae'],
   lookFor: [
-    { label: 'Hearth and firedogs', note: 'A clay hearth in the middle of the floor, with a pair of iron firedogs (chenets) whose ends are forged as ox heads to hold the logs and spits.', at: [0.9, 0.8, HZ] },
+    { label: 'Hearth and firedogs', note: 'A clay hearth in the middle of the floor, with a pair of iron firedogs (chenets) whose ends are forged as animal heads, often oxen or rams, to hold the logs and spits.', at: [0.9, 0.8, HZ] },
     { label: 'Cauldron', note: 'A bronze cauldron hung on a chain from a tie beam over the fire: the feast was mostly boiled meat, pork above all.', at: [0, 2.4, HZ - 0.9] },
-    { label: 'Wine amphorae', note: 'Tall jars of the Dressel 1 type, made in Italy and filled with wine. Gauls drank it neat, which shocked the Greeks and Romans.', at: [-7.4, 1.2, 6.2] },
+    { label: 'Wine amphorae', note: 'Tall jars of the Dressel 1 type, made in Italy and filled with wine, which reach the north only from the later second century BC. Gauls drank it neat, which shocked the Greeks and Romans.', at: [-7.4, 1.2, 6.2] },
     { label: 'Steep thatch', note: 'Straw thatch on a roof of about fifty degrees sheds the rain fast; smoke from the open hearth finds its own way out through it.', at: [4.0, WH + 2.6, HZ + 1.6] },
     { label: 'Enclosure fence', note: 'A fence of posts and woven hurdles marks out the household’s ground, with a gateway on the lane.', at: [6.0, 1.4, E] },
   ],

@@ -46,9 +46,9 @@ export const relaisDePoste: BuildingDef = {
   style: 'Louis XIV, brick and stone',
   date: 'c. 1690',
   summary:
-    'The king’s posts, begun for royal messengers in the later fifteenth century, are by now open to anyone who can pay. Along each main road stands a relay every few leagues, run by a postmaster (maître de poste) holding the king’s commission, who must keep horses ready day and night for couriers and for travellers riding post; most, like this one, also keep an inn. ' +
+    'The king’s posts, begun for royal messengers in the later fifteenth century, are by now open to anyone who can pay. Along each main road stands a relay every few leagues, run by a postmaster (maître de poste) holding the king’s commission, who must keep horses ready day and night for couriers and for travellers riding post; many, like this one, also keep an inn. ' +
     'The building is northern classical: red brick with stone quoins and bands, tall windows of small panes, a steep tiled roof with dormers, and a carriage gate wide enough for a coach. ' +
-    'Behind it the yard is a horse factory: stables for dozens of post horses, coach houses, a barn for hay and oats, a trough, a dung heap, and a dovecote, a privilege of landholding that the Revolution abolished on the night of 4 August 1789.',
+    'Behind it the yard is a horse factory: stables for dozens of post horses, coach houses, a barn for hay and oats, a trough, a dung heap, and a dovecote, a right tied to lordship and land (the droit de colombier) that the Revolution abolished in August 1789.',
   materials: ['red brick', 'limestone dressings', 'flat clay tiles', 'oak', 'wrought iron'],
   lookFor: [
     { label: 'Carriage gate', note: 'The porte charretière: a broad arch with a keystone, its oak leaves folded back by day so coaches could swing straight in off the road.', at: [0, AH + 0.4, ZF + 0.3] },
