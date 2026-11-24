@@ -11,8 +11,7 @@ export const ecoHouse: BuildingDef = {
     'construction and triple glazing cut heat loss so far, in the manner of the German Passivhaus standard, that the house needs no ' +
     'chimney and no gas boiler: a small heat pump outside does the heating. The roof is lopsided so that its long slope faces the sun ' +
     'and carries solar panels, and the outside is clad in untreated larch boards that weather to silver-grey. ' +
-    'Houses like this usually go up on a garden plot, a gap in a street or cleared ground. A sound interwar semi is rarely pulled down for one; ' +
-    'where this house takes the place of one in the town, it does so to show the type.',
+    'Houses like this usually go up on a garden plot, a gap in a street or a paddock left over between older buildings, as here, and seldom in place of a sound older house.',
   materials: ['vertical larch cladding', 'standing-seam zinc', 'insulated timber frame', 'triple-glazed windows', 'photovoltaic panels'],
   lookFor: [
     {

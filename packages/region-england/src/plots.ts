@@ -33,7 +33,8 @@ export const plots: Plot[] = [
   { id: 'merchant-3', lineage: 'merchant', x: 48, z: 118, rotY: N, seed: 23, since: 1865, lag: 0.2, keep: 'victorian-villa' },
 
   // --- the family home, repeated along the streets
-  { id: 'home-1', lineage: 'home', x: -14.5, z: 36, rotY: E, seed: 31, hero: true, skip: ['sixties-house'] },
+  // (the hero plot keeps its interwar semi: a sound one was rarely pulled down for a newer house)
+  { id: 'home-1', lineage: 'home', x: -14.5, z: 36, rotY: E, seed: 31, hero: true, keep: 'interwar-semi' },
   { id: 'home-2', lineage: 'home', x: -14.5, z: 53, rotY: E, seed: 32, lag: 0.3, keep: 'georgian-townhouse' },
   { id: 'home-3', lineage: 'home', x: 14.5, z: 33, rotY: W, seed: 33, lag: 0.2, keep: 'victorian-terrace' },
   { id: 'home-4', lineage: 'home', x: 14.5, z: 58, rotY: W, seed: 34, since: 80, lag: 0.45, keep: 'tudor-jettied-house' },
@@ -51,6 +52,8 @@ export const plots: Plot[] = [
   { id: 'home-15', lineage: 'home', x: 14.5, z: 127, rotY: W, seed: 45, since: 1962, lag: 0.4, keep: 'sixties-house' },
   { id: 'home-16', lineage: 'home', x: -14.5, z: 144, rotY: E, seed: 46, since: 2012, lag: 0.3 },
   { id: 'home-17', lineage: 'home', x: 14.5, z: 144, rotY: W, seed: 47, since: 1962, lag: 0.1, keep: 'sixties-house' },
+  // a low-energy house on a paddock that was never built on, across Castle Lane from the Big House
+  { id: 'home-18', lineage: 'home', x: -76, z: -15.5, rotY: S, seed: 48, since: 2012, lag: 0.15 },
 
   // --- the row: labourers' housing on the edges of town
   { id: 'row-1', lineage: 'cottage', x: 74, z: -12.5, rotY: S, seed: 51, hero: true, skip: ['council-cottages'] },
