@@ -1,5 +1,5 @@
 import { P, spread, tint, type Builder, type BuildingDef } from '@ah/kit';
-import { dormer, ground, lozengeRoof } from './shared';
+import { dormer, ground } from './shared';
 
 const XO = 10.4;
 const ZF = 9.6; // street face of the great hall
@@ -55,9 +55,8 @@ function wing(b: Builder, len: number, stone: number, timber: number, plaster: n
     b.window(0.8, 1.1, { at: [x + 0.6, WG + 0.9, rz + 2.12], facing: '+z', frame: timber, border: 0.07 });
     b.window(0.6, 0.9, { at: [x, WG + 1.0, rz - 2.1], facing: '-z', frame: stone, border: 0.08 });
   }
-  // the roof, swept down over the galleries, covered in glazed tiles in lozenges
+  // the roof, swept down over the galleries, in plain flat tiles
   b.gable(len, span, WRISE, tiles[0], { at: [0, WTOP, 0], overhang: 0.4, thick: 0.14, wall: plaster });
-  lozengeRoof(b, len, span, WRISE, tiles, { at: [0, WTOP, 0], overhang: 0.4, thick: 0.14, cell: 0.95, skipX: o.dormers.map((x) => [x - 0.9, x + 0.9] as [number, number]) });
   for (const x of o.dormers) {
     dormer(b, 1.3, 1.7, tiles[0], plaster, { at: [x, WTOP - 0.25, span / 2 - 0.1], facing: '+z', back: 1.8, rise: 1.4, frame: timber, finial: P.lead, bars: [2, 2] });
   }
@@ -67,19 +66,19 @@ function wing(b: Builder, len: number, stone: number, timber: number, plaster: n
 export const hotelDieu: BuildingDef = {
   id: 'hotel-dieu',
   name: 'Hôtel-Dieu (hospital for the poor)',
-  style: 'Late Gothic, Burgundian',
+  style: 'Late Gothic',
   date: 'c. 1445',
   modelledOn:
-    'The Hôtel-Dieu of Beaune, founded in 1443 by Nicolas Rolin, chancellor of the Duke of Burgundy, and his wife Guigone de Salins: the great hall with its chapel, the galleried court, the canopy at the door and the glazed roofs are taken from it, much reduced and fitted to this plot. The glazed roofs are Burgundian and would not have been seen in a town of the north',
+    'The Hôtel-Dieu of Beaune, founded in 1443 by Nicolas Rolin, chancellor of the Duke of Burgundy, and his wife Guigone de Salins: the great hall with its chapel, the galleried court and the canopy at the door are taken from it, much reduced and fitted to this plot. Beaune’s roofs of coloured glazed tiles are a Burgundian fashion and are left out: the roofs here are slate and plain tile, as in the north',
   summary:
     'A different house altogether from the inn: the Hôtel-Dieu, “God’s house”, took in the sick poor, pilgrims and travellers without money for charity, not for payment, and stood on its own ground near the cathedral for centuries. This one is a rich layman’s foundation of the kind built after the miseries of the Hundred Years’ War, and it borrows its looks from the most famous of them, at Beaune in Burgundy. ' +
     'Its heart is one great hall of the poor: beds in curtained alcoves down both long walls, often two patients to a bed, facing a chapel at the far end so that the sick could follow Mass without rising. ' +
-    'Round the court run two tiers of galleries, and the wings on the court are roofed in glazed tiles laid in coloured lozenges, as at Beaune, where the hall itself is slated. That patterned roof is a Burgundian fashion borrowed for this model: the hôtels-Dieu of Picardy and Champagne were roofed in slate or plain tile and looked much plainer. The tiles seen at Beaune today were largely relaid in the nineteenth and twentieth centuries; Beaune served as a hospital until 1971.',
-  materials: ['limestone', 'oak framing and galleries', 'slate', 'glazed clay tiles', 'lead'],
+    'Round the court run two tiers of galleries on stone columns and oak posts, sheltering the doors of the wards, the kitchen and the pharmacy. The hall is roofed in slate and the wings on the court in plain flat tiles: the hôtels-Dieu of Picardy and Champagne did not have the coloured glazed roofs that make Beaune famous, and looked plainer. Beaune served as a hospital until 1971.',
+  materials: ['limestone', 'oak framing and galleries', 'slate', 'plain clay tiles', 'lead'],
   lookFor: [
     { label: 'Great hall of the poor', note: 'The Grande Salle des Pôvres: one long, lofty hall of curtained beds under a timber roof, its tie beams painted, open from end to end so air could move and nurses see every bed.', at: [-2.0, HH + 1.2, (ZF + ZH) / 2] },
     { label: 'Chapel at the end', note: 'The last bay of the hall is the chapel, behind an open screen, lit by the great window in the end wall: the sick lay within sight of the altar.', at: [-XO - 0.2, 4.6, (ZF + ZH) / 2] },
-    { label: 'Glazed tile roof', note: 'Clay tiles glazed in yellow, green, red-brown and black, laid in interlocking lozenges: a costly display of the founder’s wealth.', at: [-3.0, WTOP + 2.4, ZG + 1.4] },
+    { label: 'Plain tile roof', note: 'Small flat clay tiles hung on oak laths, the common roof of the north before slate took over; the dormers light the rooms under the roof.', at: [-3.0, WTOP + 2.4, ZG + 1.4] },
     { label: 'Galleries', note: 'Two tiers of open galleries on slender stone columns and oak posts run round the court, sheltering the doors of the wards and offices.', at: [XG - 0.2, WG + 0.8, -1.0] },
     { label: 'Canopy (auvent)', note: 'A pointed timber canopy roofed in slate, with pinnacles and finials, shelters the street door where the poor came to ask for a bed.', at: [XP + PW / 2 + 0.5, 5.6, ZF + 1.0] },
   ],
@@ -88,7 +87,8 @@ export const hotelDieu: BuildingDef = {
     const timber = P.oakDark;
     const plaster = P.torchis;
     const slate = b.pick([P.ardoise, tint(P.ardoise, -0.03)]);
-    const glazed = [0x8a3b24, 0xd8a83a, 0x3f6a44, 0x26292b];
+    const tile = b.pick([P.tuilePlate, tint(P.tuilePlate, -0.05)]);
+    const glazed = [tile];
 
     ground(b, 21.4, 1.0, P.cobble, [0, ZF + 0.5], 0.05);
     ground(b, XG + XO, ZH - ZG, tint(P.paving, -0.05), [(XG - XO) / 2, (ZH + ZG) / 2], 0.04);
@@ -181,7 +181,7 @@ export const hotelDieu: BuildingDef = {
       }
     });
 
-    // ---------------- the courtyard wings with their galleries and glazed roofs
+    // ---------------- the courtyard wings with their galleries and tiled roofs
     const ex = (XG + XO) / 2;
     const elen = ZH - ZG;
     b.group({ at: [ex, 0, (ZH + ZG) / 2], rotY: -Math.PI / 2 }, () => {

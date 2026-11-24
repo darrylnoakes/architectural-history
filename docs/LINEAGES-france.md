@@ -280,10 +280,10 @@ bed about y = -2.4. A deck must meet the road (y = 0) at z = ±17. Call `b.noCol
 |---|---|---|
 | -300 | `ford` | A ford with a line of stakes and a dugout canoe |
 | -90 | `gaulish-bridge` | A timber bridge on trestles of driven piles, as Caesar found on the rivers of Gaul |
-| 120 | `roman-bridge` | Stone piers with cutwaters carrying round arches, the roadway nearly level. Cameo: the Pont Julien, Bonnieux; Vaison-la-Romaine |
+| 120 | `roman-bridge` | Stone piers with cutwaters carrying a timber road on strutted beams, the usual Roman bridge of the north. Cameo: the Roman bridge at Trier |
 | 1185 | `inhabited-bridge` | A medieval bridge of pointed arches with a chapel on one pier, houses along it and mill wheels under the arches. Cameo: the Pont Saint-Bénézet, Avignon; the Grand Pont, Paris |
 | 1320 | `fortified-bridge` | The bridge closed by tall square gate towers. Cameo: the Pont Valentré, Cahors (1308 to 1378) |
-| 1630 | `pont-neuf` | A new kind of bridge: wide, no houses, raised pavements, half-round bays over every pier, carved masks, a bronze king on horseback. Cameo: the Pont Neuf, Paris (1578 to 1607) |
+| 1630 | `pont-neuf` | A new kind of bridge: wide, no houses, raised pavements, half-round bays over every pier, carved masks (no royal statue: a provincial town could not afford one). Cameo: the Pont Neuf, Paris (1578 to 1607) |
 | 1775 | `perronet-bridge` | Very flat arches on piers so thin they hardly block the river, a level road, a stone balustrade. Cameo: the Pont de Neuilly and Pont de la Concorde (Perronet) |
 | 1830 | `suspension-bridge` | A light road hung from cables of iron wire over masonry pylons. Cameo: Marc Seguin's bridge at Tournon (1825) |
 | 1947 | `prestressed-bridge` | After two wars of demolitions: one very flat span of prestressed concrete, hinged at the abutments. Cameo: Freyssinet's bridge at Luzancy on the Marne (1941 to 1946) |
@@ -316,7 +316,7 @@ per range, arch and yard walkable.
 | 50 | `mansio` | A Roman road station: rooms round a courtyard, stables, a small bath suite |
 | 800 | `hostelry` | The abbey's guest house by the road: a timber hall, a kitchen, a stable |
 | 1380 | `hostellerie` | A medieval inn: timber-framed, a carriage arch to a galleried yard, stables, a hanging sign |
-| 1445 | `hotel-dieu` | **(stands alone)** A hospital for the poor: one great hall of beds with a chapel at its end, a galleried courtyard, and a roof of glazed tiles in coloured lozenges. Cameo: the Hôtel-Dieu, Beaune (1443 to 1451) |
+| 1445 | `hotel-dieu` | **(stands alone)** A hospital for the poor: one great hall of beds with a chapel at its end, a galleried courtyard, roofs of slate and plain tile (Beaune's glazed roofs are Burgundian and left out). Cameo: the Hôtel-Dieu, Beaune (1443 to 1451) |
 | 1690 | `relais-de-poste` | A posting inn on the royal road: a wide carriage gate, a yard of stables and coach houses, a dovecote |
 | 1800 | `cafe-restaurant` | A café and one of the first restaurants: mirrors, small tables, a painted shopfront under an arcade. Cameo: the arcades of the Palais-Royal, Paris |
 | 1905 | `brasserie` | A big Art Nouveau brasserie: a glazed front in curving wood and iron, ceramic panels, a glass canopy, a terrace. Cameo: the Brasserie Excelsior, Nancy (1911) |

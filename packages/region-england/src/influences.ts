@@ -40,7 +40,7 @@ export const influences: Influence[] = [
     at: [48.2, 3.28],
     year: 1175,
     dir: 'in',
-    place: 'Île-de-France',
+    place: 'Sens',
     region: 'france',
     title: 'Gothic arrives from France',
     text: 'After a fire at Canterbury the French mason William of Sens rebuilds the choir with pointed arches, rib vaults and flying buttresses. Within fifty years the round arch has largely gone out of use.',
