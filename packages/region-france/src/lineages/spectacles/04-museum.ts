@@ -39,13 +39,12 @@ export const museum: BuildingDef = {
     'Where the theatre was for an evening’s pleasure, the museum is meant to improve: it holds the town’s archaeology, its paintings and its pride.',
   materials: ['cut limestone', 'slate roofs', 'glass and iron rooflights', 'sculpted stone', 'gilded lead finials'],
   modelledOn:
-    'The Musée de Picardie, Amiens (built 1855 to 1867 by Henri Parent and Arthur Diet as the Musée Napoléon; often said to be the first building in France designed from the start as a museum), much simplified. ' +
-    'The domed centre, pavilions, sculpture and top-lit galleries follow it; the exact elevations here are generic.',
-  influences: ['beaux-arts-export'],
+    'The Musée de Picardie, Amiens (built 1855 to 1867 as the Musée Napoléon, designed by Henri Parent and completed by Arthur-Stanislas Diet; often said to be among the first buildings in France designed from the start as a museum), much simplified. ' +
+    'The pavilions, sculpture, top-lit galleries and the central staircase hall follow it; the square dome over that hall and the exact elevations here are generic.',
   lookFor: [
     {
       label: 'Square dome',
-      note: 'A curved slate dome on a square base with a lantern, in the manner of the new Louvre. Under it the grand staircase, where Puvis de Chavannes painted the walls at Amiens.',
+      note: 'A curved slate dome on a square base with a lantern, in the manner of the new Louvre. Under it the grand staircase; at Amiens Puvis de Chavannes painted the walls of the staircase and galleries.',
       at: [0, 20.5, DOME_Z + 4.6],
     },
     {

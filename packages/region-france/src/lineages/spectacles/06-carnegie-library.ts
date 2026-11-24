@@ -46,7 +46,7 @@ export const carnegieLibrary: BuildingDef = {
     'Behind, the books live in a separate semicircular stack of many floors, fireproof and lit by narrow slits; the public rooms in front are for reading, where the museum had been for looking.',
   materials: ['reinforced concrete faced with limestone', 'mosaic', 'stained glass', 'wrought iron', 'oak panelling'],
   modelledOn:
-    'The Bibliothèque Carnegie, Reims, by Max Sainsaulieu (built 1921 to 1927, opened 1928), simplified: the mosaic porch, the top-lit hall and the bookstack behind follow it; the wings here are generic.',
+    'The Bibliothèque Carnegie, Reims, by Max Sainsaulieu (built 1921 to 1927, opened 1928), simplified: the mosaic and the stained-glass hall follow it; the stepped attic, the semicircular stack and the wings here are generic.',
   influences: ['art-deco', 'reinforced-concrete'],
   lookFor: [
     {

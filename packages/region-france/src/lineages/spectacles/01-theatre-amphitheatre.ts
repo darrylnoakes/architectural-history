@@ -73,7 +73,7 @@ export const theatreAmphitheatre: BuildingDef = {
     'Nothing like it stood here before: the Gauls had held their gatherings in the open.',
   materials: ['limestone in small squared blocks (petit appareil)', 'courses of flat brick', 'earth fill', 'stone seats', 'sand', 'clay roof tiles'],
   modelledOn:
-    'The Arènes de Lutèce, Paris (late 1st or early 2nd century AD), whose stage cut into one long side of the arena, and the amphitheatre of Grand, Vosges (about AD 80); ' +
+    'The Arènes de Lutèce, Paris (probably late 1st century AD; its stones were later reused in the wall of the Île de la Cité), whose stage cut into one long side of the arena, and the amphitheatre of Grand, Vosges (about AD 80); ' +
     'reduced to roughly a third of their size. The plan is taken from them; the outer wall and the stage front are generic.',
   influences: ['roman-conquest'],
   lookFor: [

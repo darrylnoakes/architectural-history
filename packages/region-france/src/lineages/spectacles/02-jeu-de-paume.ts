@@ -34,9 +34,8 @@ export const jeuDePaume: BuildingDef = {
   summary:
     'Jeu de paume, the ancestor of tennis, was the passion of the French Renaissance: players hit the ball first with the palm (paume) and then with a racket, off the walls and the sloping roof of a gallery. ' +
     'A covered court is a plain, very tall hall: solid walls below, where the ball is played, and openings high up hung with nets to let in the light. Inside, a gallery under a lean-to roof, the penthouse, runs along one side and one end, and spectators watch through its openings. ' +
-    'Courts were businesses kept by a master (maître paumier), who lived next door, and they were long, roofed and had galleries: so when travelling actors needed a hall, they hired one. In Paris the Théâtre du Marais (1634) and Molière’s Illustre Théâtre (1643) both opened in tennis courts, and the long, narrow French playhouse grew out of them.',
+    'Courts were businesses kept by a master (maître paumier), who lived next door, and they were long, roofed and had galleries: so when travelling actors needed a hall, they hired one. In Paris the Théâtre du Marais (1634) and Molière’s Illustre Théâtre (1644) both opened in tennis courts, and the long, narrow French playhouse grew out of them.',
   materials: ['brick with stone dressings', 'oak roof frame', 'flat clay tiles', 'stone floor', 'walls painted black inside', 'nets'],
-  influences: ['italian-renaissance'],
   lookFor: [
     {
       label: 'Penthouse (le toit)',

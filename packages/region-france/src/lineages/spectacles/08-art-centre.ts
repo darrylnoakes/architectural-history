@@ -82,7 +82,7 @@ export const artCentre: BuildingDef = {
   style: 'Contemporary',
   date: '2010',
   summary:
-    'The Paris arts centre of 1977 opens a branch in the provinces, the first of the great museums to do so, and the region pays for a showpiece. ' +
+    'The Paris arts centre of 1977 opens a branch in the provinces, the first of the great national museums to do so, and the city and the region pay for a showpiece. ' +
     'Over the galleries floats one vast roof like a woven hat: a lattice of laminated timber strips crossing in hexagons, covered with a white membrane of glass fibre coated with Teflon that glows by night. ' +
     'Under it three long gallery boxes are stacked and turned at different angles, and each pushes out through the roof to end in a picture window aimed at a view of the town. ' +
     'Where the Maison de la Culture was heavy concrete with its life behind glass, this is light, curved and made by computer-driven machines.',
@@ -109,7 +109,7 @@ export const artCentre: BuildingDef = {
     },
     {
       label: 'Spire',
-      note: 'A steel mast rises from the crown of the roof, which hangs from it and from the columns like a tent.',
+      note: 'A mast rises from the crown of the roof, which it helps to carry, with the columns, like the pole of a tent.',
       at: [0, 26, 0.6],
     },
     {

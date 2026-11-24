@@ -51,7 +51,7 @@ export const ironFrameMill: BuildingDef = {
     'The filling is decoration: red and cream brick and glazed tiles patterned with cocoa flowers and the Menier M, so the frame reads like a textile. ' +
     'Here a cloth firm’s mill of the same kind stands out in the river on stone piers, reached by an iron footbridge from its brick yard buildings on the bank.',
   materials: ['wrought and cast iron frame', 'polychrome brick', 'glazed ceramic tiles', 'limestone piers', 'slate'],
-  modelledOn: 'The Moulin Saulnier of the Menier chocolate works, Noisiel (Jules Saulnier, 1869 to 1872). Taken from it: the mill standing in the river on stone piers over its turbines, and the exposed iron frame with diagonal braces filled with coloured brick and glazed tiles. Simplified: the pattern, the roof and the proportions are generic',
+  modelledOn: 'The Moulin Saulnier of the Menier chocolate works, Noisiel (Jules Saulnier, architect, with the ironwork by Armand Moisant’s firm, about 1869 to 1872). Taken from it: the mill standing in the river on stone piers over its turbines, and the exposed iron frame with diagonal braces filled with coloured brick and glazed tiles. Simplified: the pattern, the roof and the proportions are generic',
   lookFor: [
     { label: 'Exposed iron frame', note: 'The iron posts and beams carry the floors and roof; they are shown on the face of the building, not hidden in the wall.', at: [-8.0, 6.0, -13.2] },
     { label: 'Diamond lattice of braces', note: 'Iron diagonals cross each panel to stiffen the frame, making the lozenge pattern of the facade.', at: [-4.6, 9.0, -13.2] },

@@ -64,15 +64,14 @@ export const cirque: BuildingDef = {
   style: 'Third Republic eclectic, iron frame',
   date: '1889',
   summary:
-    'In the later nineteenth century the circus was the most popular show in France, and towns of any size built it a permanent home. ' +
+    'In the later nineteenth century the circus was among the most popular shows in France, and a number of large towns built it a permanent home. ' +
     'The form follows the act: horses cantering round a ring about 13 m across, the size that lets a rider stand on a horse’s back, with every seat close to the ring and none blocked by a pillar. ' +
     'So the building is round, or many-sided, under a tent-like roof carried on iron trusses that meet at a ventilating lantern; the walls are brick with stone dressings, and only the entrance is grand. ' +
     'Select it to see inside: the roof comes off to show the ring, the stalls, the gallery and the iron frame.',
   materials: ['red brick with stone dressings', 'iron trusses and columns', 'zinc roof', 'timber seating', 'sawdust ring'],
   modelledOn:
-    'The Cirque d’Amiens by Émile Ricquier, opened in June 1889 with a speech by Jules Verne, then a town councillor (now the Cirque Jules Verne); also the circus of Reims (1865). ' +
+    'The Cirque d’Amiens by Émile Ricquier, opened in June 1889 with a speech by Jules Verne, then a town councillor (now the Cirque Jules Verne); also the circus of Reims (Narcisse Brunette, opened 1867). ' +
     'The many-sided brick drum, tent roof, lantern and grand entrance follow them; the number of sides and the details are simplified.',
-  influences: ['iron-and-rail'],
   lookFor: [
     {
       label: 'The ring (piste)',

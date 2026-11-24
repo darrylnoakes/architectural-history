@@ -38,12 +38,12 @@ export const maisonDeLaCulture: BuildingDef = {
   style: 'Modernist (béton brut)',
   date: '1966',
   summary:
-    'André Malraux, de Gaulle’s minister of culture, wanted a house of culture in every region, where theatre, music, film and exhibitions would reach people who had never set foot in the old municipal theatre. ' +
+    'André Malraux, de Gaulle’s minister of culture, wanted a house of culture in every département, where theatre, music, film and exhibitions would reach people who had never set foot in the old municipal theatre. ' +
     'The state and the town share the bill, and the building says the opposite of the horseshoe theatre: no grand stair and no boxes for rank, but one open glazed foyer under a single great concrete roof, shared by two halls of different shapes. ' +
     'The large hall is a fan of steeply raked seats, every one facing the stage; the small hall can be rearranged for experimental work. Behind rises the fly tower, in rough concrete still showing the grain of its timber formwork.',
   materials: ['reinforced concrete left rough from the boards (béton brut)', 'plate glass in aluminium frames', 'timber and fabric seating', 'steel'],
   modelledOn:
-    'The Maison de la Culture, Amiens, opened by André Malraux in March 1966 (architects Pierre Sonrel, with Jean Duthilleul and Marcel Gogois): the programme of two halls round a shared foyer is taken from it; the forms here are simplified and partly generic.',
+    'The Maison de la Culture, Amiens, opened by André Malraux in March 1966 (architects Pierre Sonrel, with Jean Duthilleul and Marcel Gogois), often called the first built for the purpose: the programme of two halls round a shared foyer is taken from it; the forms here are simplified and partly generic.',
   influences: ['reinforced-concrete', 'le-corbusier'],
   lookFor: [
     {
