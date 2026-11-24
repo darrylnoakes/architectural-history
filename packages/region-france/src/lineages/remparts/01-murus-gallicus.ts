@@ -65,7 +65,7 @@ export const murusGallicus: BuildingDef = {
     { label: 'Timber grid and iron spikes', note: 'Inside, layers of beams cross at right angles and are pinned with iron spikes 20 to 30 cm long, packed with earth and stone.', at: [-HALF - 0.2, 2.7, -0.6] },
     { label: 'Funnel entrance', note: 'The rampart turns inward along the road, so an enemy at the gate is under fire from both sides and from above.', at: [5.4, 3.0, -1.6] },
     { label: 'Gate tower', note: 'A timber tower over the passage, set back at the inner end of the funnel, with a fighting platform level with the rampart walk.', at: [0, 8.0, GATE_Z + 0.2] },
-    { label: 'Ditch', note: 'Dug outside the rampart and kept clear, so attackers had to cross open ground under the wall.', at: [12.5, 0.4, 4.7] },
+    { label: 'Ditch', note: 'Dug outside the rampart and kept clear, so attackers had to cross open ground under the wall.', at: [12.5, -GAULISH.depth + 0.5, 4.7] },
   ],
   build(b) {
     const c = WALL_COLOURS.gaulish;
@@ -133,7 +133,7 @@ export const murusGallicus: BuildingDef = {
         }
       });
     });
-    b.box(GATE_X * 2, 0.12, 0.3, timber, { at: [0, 0, zf - 0.3] }); // sill beam
+    b.box(GATE_X * 2, 0.05, 0.3, timber, { at: [0, 0, zf - 0.3] }); // sill beam, laid flush with the road
 
     // ---------------------------------------------------------------- the inside of the rampart, where the plot cuts it
     if (b.cutaway) section(b, -HALF);

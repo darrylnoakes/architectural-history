@@ -1,6 +1,6 @@
 import { P, mix, tint, type Builder, type BuildingDef } from '@ah/kit';
 import { HALF, NJ, WALL_COLOURS, archPanel, gateMass, road, slab, voussoirs } from './shared';
-import { VAUBAN, curtain, ravelin } from './curtain';
+import { VAUBAN, counterscarpWorks, curtain, ravelin } from './curtain';
 
 // ------------------------------------------------------------------ the gate (kept when the walls come down)
 
@@ -109,8 +109,12 @@ export function vaubanGateColliders(b: Builder): void {
 
 const SX = VGATE.w / 2; // where the ramparts meet the gate
 const FX = VAUBAN.PLOT_C - VAUBAN.G; // the inner flanks of the two bastions (±10.2)
-const RCUT = 2.5; // half-width of the way cut through the ravelin
-const { gorge: RG } = VAUBAN.ravelin;
+const RCUT = 2.5; // half-width of the way through the ravelin's parapet
+const { gorge: RG, half: RH, tip: RT } = VAUBAN.ravelin;
+const { depth: D, cs: CS, cw: CW } = VAUBAN;
+const NOTCH = 3.6; // in front of the passage the ditch begins at the threshold; either side it runs in under the gate
+const GG = 3.6; // half-width of the cut through the glacis for the road
+const B2 = { z0: 4.0, z1: CS + 0.2 }; // the second bridge, over the ravelin's ditch
 
 export const vaubanGateStage: BuildingDef = {
   id: 'vauban-gate',
@@ -119,25 +123,25 @@ export const vaubanGateStage: BuildingDef = {
   date: 'c. 1670 to 1700',
   summary:
     'After Louis XIV’s conquests in Flanders (1667 to 1678) the northern frontier was refortified by his engineer Sébastien Le Prestre de Vauban (1633 to 1707), who rebuilt or improved some 150 fortified places. ' +
-    'Against cannon the wall sinks: low ramparts of earth, faced in the north with brick and capped by a stone cordon and a thick parapet of turf; angled bastions whose flanks sweep the ditch; and in the ditch, in front of the curtain, a triangular outwork, the demi-lune (ravelin), that the enemy must take before he can even fire at the gate. ' +
+    'Against cannon the wall sinks into a deep dry ditch: low ramparts of earth, faced in the north with brick and capped by a stone cordon and a thick parapet of turf; angled bastions whose flanks sweep the ditch; and in the ditch, in front of the curtain, a triangular outwork, the demi-lune (ravelin), that the enemy must take before he can even fire at the gate. The far side of the ditch, the counterscarp, is walled too, and along its top runs the covered way behind the low bank of the glacis. ' +
+    'The road crosses the ditch by a drawbridge to the demi-lune and leaves it by a second bridge to the covered way. Here it runs straight through; in most real fortresses it turned inside the demi-lune and left by a bridge from one side, at an angle. ' +
     'Vauban did not invent the bastion, which came from Italy, but he made its geometry and the art of siege a system that all Europe studied. The gate is the one place where the fortress speaks: it is dressed as a triumphal arch to the king’s glory.',
-  materials: ['brick facing on an earth rampart', 'white stone (cordon, gate)', 'turf', 'timber bridge', 'iron cannon'],
+  materials: ['brick facing on the earth rampart and the counterscarp', 'white stone (cordon, gate)', 'turf', 'gravel on the covered way', 'timber bridges and drawbridge', 'iron cannon'],
   modelledOn:
-    'Lille, refortified by Vauban after its capture in 1667, with the Porte de Paris (Simon Vollant, 1685 to 1692), a triumphal arch with trophies and the king’s emblems; the citadel of Lille (1667 to 1670) for the bastions. The fronts are compressed: Vauban’s bastions stood about 350 m apart, not 100, and the ditches were many times wider.',
+    'Lille, refortified by Vauban after its capture in 1667, with the Porte de Paris (Simon Vollant, 1685 to 1692), a triumphal arch with trophies and the king’s emblems; the citadel of Lille (1667 to 1670) for the bastions. The fronts are compressed: Vauban’s bastions stood about 350 m apart, not 100, and the ditches were many times wider and deeper.',
   influences: ['bastions', 'vauban'],
   lookFor: [
     { label: 'Angled bastion', note: 'An arrowhead of rampart thrust out from the line: its two faces glance off shot, and every foot of ground in front can be swept by fire.', at: [13.6, 8.0, 4.6] },
     { label: 'Flank', note: 'The short side of the bastion facing along the wall, where guns fire across the ditch and the face of the gate.', at: [FX - 0.4, 4.0, 1.2] },
-    { label: 'Demi-lune (ravelin)', note: 'A low triangular outwork in the ditch covering the gate and the curtain: the attacker has to take it first.', at: [-4.2, VAUBAN.ravelin.h + 1.2, RG + 1.8] },
-    { label: 'Triumphal-arch gate', note: 'Paired columns, statues of Mars and Hercules and a great arch: the gate tells every traveller whose town this is.', at: [0, VGATE.oh + 0.8, VGATE.front + 0.5] },
-    { label: 'Trophies and the sun', note: 'Carved arms and banners, and Louis XIV’s emblem of the sun under a crown, crown the attic.', at: [-4.6, VGATE.h + 5.6, VGATE.front - 1.4] },
+    { label: 'Demi-lune (ravelin)', note: 'A low triangular outwork standing in the ditch, covering the gate and the curtain: the attacker has to take it first.', at: [-3.6, 2.0, RG + 1.0] },
+    { label: 'Covered way and glacis', note: 'Along the top of the counterscarp runs a path for the defenders, sheltered by a bank of earth that slopes gently away to the field: the glacis.', at: [-9.0, 1.4, CS + CW + 0.6] },
+    { label: 'Triumphal-arch gate', note: 'Paired columns, statues of Mars and Hercules, trophies of arms and Louis XIV’s emblem of the sun under a crown: the gate tells every traveller whose town this is.', at: [0, VGATE.oh + 0.8, VGATE.front + 0.5] },
   ],
   build(b) {
     const { brick, grass, stone } = WALL_COLOURS.vauban;
     const sett = mix(P.cobble, P.gravel, 0.3);
-
-    road(b, 4.4, sett, { z0: -8, z1: VGATE.front });
-    road(b, 4.2, mix(P.gravel, P.earth, 0.3), { z0: RG, z1: 8, y: 0.06 });
+    const oak = mix(P.oak, P.oakDark, 0.25);
+    const F = VGATE.front;
 
     // ---------------------------------------------------------------- the ramparts and bastions either side
     b.sym((s) => curtain(b, 'vauban', s > 0 ? SX : -HALF, s > 0 ? HALF : -SX));
@@ -148,28 +152,52 @@ export const vaubanGateStage: BuildingDef = {
     b.box(2 * SX, 0.3, 0.3, stone, { at: [0, VAUBAN.top - 0.3, -8.0] });
     b.vault(VGATE.ow - 0.04, VGATE.back + 8, tint(brick, -0.2), { at: [0, 5.4 - VGATE.ow / 2, (VGATE.back - 8) / 2], segs: 8 });
 
-    // ---------------------------------------------------------------- the gate
+    // ---------------------------------------------------------------- the gate, standing on the scarp
     vaubanGate(b);
+    b.box(VGATE.w, D, 2.4, tint(stone, -0.06), { at: [0, -D, F - 1.15], ...NJ });
+    road(b, VGATE.ow, sett, { z0: -8, z1: F });
 
-    // ---------------------------------------------------------------- the ditch, the bridge and the ravelin
-    // the ditch floor in front of the gate (either side the ramparts bring their own)
-    b.box(2 * SX, 0.03, VAUBAN.cs - VAUBAN.CF - 0.2, WALL_COLOURS.vauban.ditch, { at: [0, 0, (VAUBAN.cs + VAUBAN.CF) / 2], ...NJ });
-    b.box(2 * SX, 0.9, 0.6, brick, { at: [0, 0, VAUBAN.cs], ...NJ });
-    b.box(2 * SX, 0.14, 0.7, stone, { at: [0, 0.9, VAUBAN.cs], ...NJ });
-    // a bridge on brick piers, its last span next to the gate a timber drawbridge
-    const oak = mix(P.oak, P.oakDark, 0.25);
-    b.box(4.0, 0.35, RG - VGATE.front, oak, { at: [0, 0, (RG + VGATE.front) / 2] });
+    // ---------------------------------------------------------------- the ditch in front of the gate, the ravelin and the covered way
+    b.dig(
+      [[-SX, -2.0], [-NOTCH, -2.0], [-NOTCH, F], [NOTCH, F], [NOTCH, -2.0], [SX, -2.0], [SX, CS + CW], [-SX, CS + CW]],
+      D,
+      { slope: VAUBAN.behind, color: WALL_COLOURS.vauban.ditch, open: [5, 7] },
+    );
+    ravelin(b, 0, -HALF, HALF, { road: RCUT });
+    // the counterscarp, level with the road, which crosses the covered way and goes out through a cut in the glacis
+    counterscarpWorks(b, [[-SX, CS], [SX, CS]], -SX, SX, { gaps: [[-GG, GG]] });
+
+    // ---------------------------------------------------------------- the road across: drawbridge, ravelin, bridge, covered way
+    // the drawbridge from the threshold to the ravelin's gorge, lifted by chains from the gate
+    b.box(4.0, 0.32, RG + 0.15 - F, oak, { at: [0, -0.22, (RG + 0.15 + F) / 2] });
+    for (let z = F + 0.3; z < RG; z += 0.45) b.box(4.0, 0.01, 0.05, tint(oak, -0.15), { at: [0, 0.1, z], ...NJ });
+    b.sym((s) => b.beam([s * 1.8, 6.0, F + 0.2], [s * 1.8, 0.1, RG - 0.1], 0.08, 0.08, P.iron));
+    // over the ravelin, through the cut in its parapet
+    road(b, 4.0, sett, { z0: RG, z1: B2.z0 + 0.1, y: 0.12 });
+    // the second bridge, fixed, on trestles standing on the bottom of the ravelin's ditch
+    const len = B2.z1 - B2.z0;
+    const zm = (B2.z0 + B2.z1) / 2;
+    b.box(4.0, 0.32, len, oak, { at: [0, -0.2, zm] });
+    for (let z = B2.z0 + 0.2; z < B2.z1; z += 0.45) b.box(4.0, 0.01, 0.05, tint(oak, -0.15), { at: [0, 0.12, z], ...NJ });
+    for (const z of [5.4, 6.6]) {
+      b.box(4.2, 0.3, 0.3, oak, { at: [0, -0.5, z], ...NJ });
+      b.sym((s) => {
+        b.box(0.28, D - 0.5, 0.28, oak, { at: [s * 1.7, -D, z], ...NJ });
+        b.beam([s * 1.65, -D + 0.2, z], [-s * 1.4, -0.55, z], 0.14, 0.14, tint(oak, -0.08), NJ);
+      });
+    }
     b.sym((s) => {
-      b.box(0.4, 1.3, RG - VGATE.front, oak, { at: [s * 2.0, 0.35, (RG + VGATE.front) / 2] });
-      b.beam([s * 1.8, 0.6, RG - 0.1], [s * 1.8, 6.0, VGATE.front + 0.2], 0.08, 0.08, P.iron);
+      for (const z of [B2.z0 + 0.3, 5.4, 6.6, B2.z1 - 0.3]) b.box(0.16, 1.05, 0.16, oak, { at: [s * 1.95, 0.12, z], ...NJ });
+      b.box(0.1, 0.1, len - 0.4, oak, { at: [s * 1.95, 1.12, zm], ...NJ });
     });
-    // the ravelin, with the road cut through it and a barrier at the cut
-    ravelin(b, 0, -HALF, -RCUT);
-    ravelin(b, 0, RCUT, HALF);
+    // over the covered way and out through the glacis; a barrier at the cut, standing open
+    road(b, VGATE.ow, sett, { z0: CS, z1: CS + CW, y: 0.12 });
+    road(b, VGATE.ow, mix(P.gravel, P.earth, 0.3), { z0: CS + CW, z1: CS + CW + 4.5, y: 0.06 });
     b.sym((s) => {
-      b.box(0.3, 2.6, 0.3, oak, { at: [s * (RCUT - 0.2), 0, 6.4] });
-      b.group({ at: [s * (RCUT - 0.2), 0, 6.3], rotY: -s * 1.3 }, () => b.box(RCUT - 0.3, 1.4, 0.1, oak, { at: [-s * (RCUT - 0.3) / 2, 0.3, 0] }));
+      b.box(0.3, 1.9, 0.3, oak, { at: [s * (GG - 0.4), 0, CS + CW + 0.7] });
+      b.group({ at: [s * (GG - 0.4), 0, CS + CW + 0.55], rotY: -s * 1.35 }, () => b.box(GG - 0.6, 1.2, 0.1, oak, { at: [-s * (GG - 0.6) / 2, 0.3, 0] }));
     });
+    b.deck(4.0, CS + CW - F + 1.6, 0.12, { at: [0, 0, (CS + CW + F - 1.6) / 2] });
 
     // ---------------------------------------------------------------- cannon on the bastions, trained along the ditch
     b.sym((s) => {
@@ -185,8 +213,8 @@ export const vaubanGateStage: BuildingDef = {
       b.collider(FX - SX + 2.0, 7.4, { at: [s * (SX + FX) / 2, 0, -4.3] });
       b.collider(HALF - FX, 11.0, { at: [s * (FX + HALF) / 2, 0, -2.5] });
       b.collider(SX - VGATE.ow / 2, VGATE.back + 8 + 0.05, { at: [s * (SX + VGATE.ow / 2) / 2, 0, (VGATE.back - 8) / 2] });
-      b.collider(VAUBAN.ravelin.half - RCUT + 0.4, 3.6, { at: [s * (VAUBAN.ravelin.half + RCUT) / 2, 0, RG + 1.6], rotY: 0 });
-      b.collider(0.4, RG - VGATE.front, { at: [s * 2.0, 0, (RG + VGATE.front) / 2] });
+      b.collider(RH - RCUT, 2.4, { at: [s * (RH + RCUT) / 2, 0, (RG + RT) / 2 - 0.3] });
+      b.collider(0.3, len, { at: [s * 1.95, 0, zm] });
     });
     vaubanGateColliders(b);
   },

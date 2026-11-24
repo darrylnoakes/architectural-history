@@ -42,6 +42,7 @@ export const WALL_COLOURS = {
     stone: P.pierreBlonde,
     grass: mix(P.turf, P.grassDry, 0.4),
     ditch: mix(P.turf, P.hedge, 0.45),
+    path: mix(P.gravel, P.earth, 0.3), // the covered way
   },
 };
 

@@ -36,7 +36,8 @@ import {
  * continues a plot stub continues its pattern.
  */
 
-export type WallStage = 'gaulish' | 'castrum' | 'philippian' | 'fortified' | 'vauban';
+/** `vauban-surviving`: what was kept of the bastioned front after 1885, once the north gate had gone (see `vaubanStretch`). */
+export type WallStage = 'gaulish' | 'castrum' | 'philippian' | 'fortified' | 'vauban' | 'vauban-surviving';
 
 /** For walk collisions: the z of the wall's centre line and its thickness at ground level, per stage; height of the top of the defences. */
 export const CURTAIN: Record<WallStage, { z: number; thick: number; height: number }> = {
@@ -45,6 +46,7 @@ export const CURTAIN: Record<WallStage, { z: number; thick: number; height: numb
   philippian: { z: -3.5, thick: 3.2, height: 9.8 }, // battered foot 3.2, the wall 2.6
   fortified: { z: -3.5, thick: 3.2, height: 9.8 },
   vauban: { z: -4.3, thick: 7.4, height: 7.6 }, // scarp foot at -0.6 to the foot of the inner slope at -8
+  'vauban-surviving': { z: -4.3, thick: 7.4, height: 7.6 },
 };
 
 /** Grid positions k·step + off that fall inside a..b (with a margin). */
@@ -150,19 +152,32 @@ function gaulishCorner(b: Builder): void {
   b.box(0.2, 1.45, 0.2, c.timber, { at: [(face - 0.25) * 0.71, h, (face - 0.25) * 0.71], ...NJ });
 }
 
-function gaulishTerminal(b: Builder): void {
+/**
+ * How far past the end of the wall a ditch runs on toward the river (the walls end on the bank a few
+ * metres short of the water, and the ditch drains into it).
+ */
+const RIVER_RUN = 5;
+
+/** The ditch carried on past a terminal at x = 0 into the river, on the side away from the wall (sx). */
+function riverDitch(b: Builder, sx: number, z0: number, z1: number, depth: number, slope: number, color: number): void {
+  b.trench(sx > 0 ? 0 : -RIVER_RUN, sx > 0 ? RIVER_RUN : 0, z0, z1, depth, { slope, color });
+}
+
+function gaulishTerminal(b: Builder, sx: number): void {
   const c = WALL_COLOURS.gaulish;
-  const { face, h, top, toe } = GAULISH;
+  const { face, h, top, toe, ditch } = GAULISH;
   // the stone face returns round the end of the core; the ramp ends in a slope of earth
-  b.box(0.7, h, face - top + 0.7, c.stone, { at: [0.35, 0, (face + top) / 2 - 0.35 + 0.35], ...NJ });
+  b.box(0.7, h, face - top + 0.7, c.stone, { at: [sx * 0.35, 0, (face + top) / 2 - 0.35 + 0.35], ...NJ });
   const ends: number[] = [];
   GAULISH.rows.forEach((y, i) => {
     for (let z = top + (i % 2 ? 0.4 : 1.2); z < face - 0.2; z += 1.6) {
-      quad(ends, [0.712, y, z - 0.13], [0.712, y, z + 0.13], [0.712, y + 0.26, z + 0.13], [0.712, y + 0.26, z - 0.13]);
+      const x = sx * 0.712;
+      quad(ends, [x, y, z - 0.13], [x, y, z + 0.13], [x, y + 0.26, z + 0.13], [x, y + 0.26, z - 0.13]);
     }
   });
   soup(b, ends, c.beam);
-  b.group({ at: [0.02, 0, 0], rotY: Math.PI / 2 }, () => b.extrude([[-top, h], [-toe, 0], [-top + 0.01, 0]], 0.04, c.earth, NJ));
+  b.group({ at: [sx * 0.02, 0, 0], rotY: Math.PI / 2 }, () => b.extrude([[-top, h], [-toe, 0], [-top + 0.01, 0]], 0.04, c.earth, NJ));
+  riverDitch(b, sx, ditch[0], ditch[1], GAULISH.depth, GAULISH.slope, c.ditch);
 }
 
 // ================================================================== the late Roman castrum (late 3rd century)
@@ -238,8 +253,21 @@ export function castrumTower(b: Builder, x: number, z: number, r: number, h: num
  * The wall of Philip Augustus: a curtain about 2.6 m thick and 8 m to the wall-walk, crenellated, with
  * round towers about every sixty metres and a dry ditch. In the Hundred Years' War ('fortified') the
  * towers are roofed in slate and pierced low down for small guns.
+ *
+ * The ditch is dug with earth sides from a narrow berm at the foot of the wall, so the towers stand out
+ * into it and are built up from its bottom.
  */
-export const PHILIP = { z: -3.5, t: 2.6, h: 8.0, spacing: 60, tower: { r: 3.0, h: 12.0, z: -1.7 }, ditch: [2.0, 7.2] as [number, number] };
+export const PHILIP = {
+  z: -3.5,
+  t: 2.6,
+  h: 8.0,
+  spacing: 60,
+  tower: { r: 3.0, h: 12.0, z: -1.7 },
+  /** The lips of the ditch (z), its depth and the run of its sloping sides. */
+  ditch: [-1.0, 7.6] as [number, number],
+  depth: 2.8,
+  slope: 1.6,
+};
 
 function philipStretch(b: Builder, x0: number, x1: number, towers: boolean, late: boolean): void {
   const { stone, dress, ditch } = WALL_COLOURS.philippian;
@@ -248,7 +276,7 @@ function philipStretch(b: Builder, x0: number, x1: number, towers: boolean, late
   const L = x1 - x0;
   const xc = (x0 + x1) / 2;
   b.box(L, h, t, stone, { at: [xc, 0, z], ...NJ });
-  b.box(L, 1.1, t + 0.6, tint(stone, -0.06), { at: [xc, 0, z], ...NJ }); // battered foot
+  b.box(L, 2.3, t + 0.6, tint(stone, -0.06), { at: [xc, -1.2, z], ...NJ }); // battered foot, carried down below the lip of the ditch
   b.box(L, 0.18, t + 0.1, dress, { at: [xc, h - 0.18, z], ...NJ }); // string course at the walk
   // course lines on the field face
   const lines: number[] = [];
@@ -258,24 +286,22 @@ function philipStretch(b: Builder, x0: number, x1: number, towers: boolean, late
   for (const [a, c] of gaps(x0, x1, xs, PHILIP.tower.r - 0.3)) merlonsX(b, a, c, h, WF - 0.25, stone, { w: 1.1, h: 1.8, t: 0.5, gap: 0.75 });
   b.box(L, 0.8, 0.4, stone, { at: [xc, h, z - t / 2 + 0.2], ...NJ });
   for (const x of xs) philipTower(b, x, PHILIP.tower.z, PHILIP.tower.r, PHILIP.tower.h, { roof: late, guns: late });
-  // the dry ditch, and the low stone lip of its counterscarp
-  const [d0, d1] = PHILIP.ditch;
-  prismX(b, x0, x1, [[d0, 0.02], [d0 + 1.2, 0.02]], tint(ditch, 0.05));
-  prismX(b, x0, x1, [[d0 + 1.2, 0.03], [d1 - 1.0, 0.03]], ditch);
-  prismX(b, x0, x1, [[d1 - 1.0, 0.02], [d1, 0.02]], tint(ditch, 0.05));
-  b.box(L, 0.45, 0.5, tint(stone, -0.04), { at: [xc, 0, d1 + 0.25], ...NJ });
+  // the dry ditch, dug out of the ground, its ends open to run on into the next stretch
+  b.trench(x0, x1, PHILIP.ditch[0], PHILIP.ditch[1], PHILIP.depth, { slope: PHILIP.slope, color: ditch });
 }
 
 /**
  * A round tower of Philip Augustus's pattern, centred at (x, z): a battered foot, tall arrow loops,
  * a crenellated top. Options for the later Middle Ages: `roof` (a steep conical roof of slate),
  * `machi` (a parapet carried out on corbels, with holes between them: machicolations), `guns`
- * (keyhole gunports low down), `h` raised.
+ * (keyhole gunports low down), `h` raised. The foot is carried down to the bottom of the ditch, which
+ * the towers stand out into.
  */
 export function philipTower(b: Builder, x: number, z: number, r: number, h: number, o?: { roof?: boolean; machi?: boolean; guns?: boolean; loops?: number[] }): void {
   const { stone, dress, roof } = WALL_COLOURS.philippian;
   const segs = 16;
   b.group({ at: [x, 0, z] }, () => {
+    b.cyl(r + 0.45, PHILIP.depth + 0.02, tint(stone, -0.08), { at: [0, -PHILIP.depth, 0], segs, ...NJ });
     b.cyl(r + 0.45, 1.6, tint(stone, -0.06), { segs, rTop: r, ...NJ });
     b.cyl(r, h - 1.6, stone, { at: [0, 1.6, 0], segs, ...NJ });
     ring(b, r + 0.04, PHILIP.h - 0.18, 0.18, dress, segs);
@@ -318,19 +344,29 @@ export function philipTower(b: Builder, x: number, z: number, r: number, h: numb
   });
 }
 
-function philipCorner(b: Builder, late: boolean): void {
-  const { ditch, stone } = WALL_COLOURS.philippian;
-  const [d0, d1] = PHILIP.ditch;
-  const q = { segs: 6, start: 0, sweep: Math.PI / 2, ...NJ };
-  philipTower(b, -2.0, -2.0, 4.1, 13.0, { roof: late, guns: late, loops: [-0.2, 0.78, 1.77] });
-  b.lathe([[d0, 0.02], [d0 + 1.2, 0.02]], tint(ditch, 0.05), q);
-  b.lathe([[d0 + 1.2, 0.03], [d1 - 1.0, 0.03]], ditch, q);
-  b.lathe([[d1 - 1.0, 0.02], [d1, 0.02]], tint(ditch, 0.05), q);
-  b.lathe([[d1, 0], [d1, 0.45], [d1 + 0.5, 0.45], [d1 + 0.5, 0]], tint(stone, -0.04), q);
+/**
+ * The outline of a ditch filling a corner's outer quadrant out to radius r: a quarter disc whose two
+ * straight sides join the stretches either side (dig it with `open: fanEnds(n)`). Used where the
+ * stretches' ditches start right at the corner's origin or inside it.
+ */
+export function quarterFan(r: number, n = 6): XY[] {
+  const pts: XY[] = [[0, 0]];
+  for (let i = 0; i <= n; i++) pts.push([Math.sin((Math.PI / 2) * (i / n)) * r, Math.cos((Math.PI / 2) * (i / n)) * r]);
+  return pts;
 }
 
-function philipTerminal(b: Builder, late: boolean): void {
-  philipTower(b, 0, -2.5, 3.4, 12.5, { roof: late, guns: late, loops: [-0.6, 0.5, 1.6] });
+/** The two open sides of a `quarterFan(r, n)` outline. */
+export const fanEnds = (n = 6): number[] => [0, n + 1];
+
+function philipCorner(b: Builder, late: boolean): void {
+  const { ditch } = WALL_COLOURS.philippian;
+  philipTower(b, -2.0, -2.0, 4.1, 13.0, { roof: late, guns: late, loops: [-0.2, 0.78, 1.77] });
+  b.dig(quarterFan(PHILIP.ditch[1]), PHILIP.depth, { slope: PHILIP.slope, color: ditch, open: fanEnds() });
+}
+
+function philipTerminal(b: Builder, late: boolean, sx: number): void {
+  philipTower(b, 0, -2.5, 3.4, 12.5, { roof: late, guns: late, loops: [-0.6 * sx, 0.5 * sx, 1.6 * sx] });
+  riverDitch(b, sx, PHILIP.ditch[0], PHILIP.ditch[1], PHILIP.depth, PHILIP.slope, WALL_COLOURS.philippian.ditch);
 }
 
 // ================================================================== Vauban (1670s to 1700s)
@@ -342,6 +378,11 @@ function philipTerminal(b: Builder, late: boolean): void {
  * flanks are at ±10.2. Between every pair of bastions a ravelin (demi-lune) stands in the ditch in front
  * of the curtain: on the gate plot it covers the gate. The real fronts were three times as long (about
  * 350 m from salient to salient), the ditch much wider: everything is compressed to fit the town.
+ *
+ * The ditch is dug `depth` deep with walled sides: the brick scarp of the rampart and the counterscarp
+ * opposite, which runs straight at z = cs and turns out round each bastion to keep W metres from its
+ * faces. The dig reaches `behind` metres in under the rampart and under the covered way that runs along
+ * the top of the counterscarp, behind its low crest, the glacis.
  */
 export const VAUBAN = {
   CF: -0.6,
@@ -351,27 +392,65 @@ export const VAUBAN = {
   PLOT_C: 10.2 + 13,
   spacing: 105,
   top: 6.2, // the terreplein behind the parapet
-  cs: 7.6, // the counterscarp wall
-  // the brick scarp, battered, up to the stone cordon; then a parapet of turf
-  scarp: [[0, 0], [1.0, 6.0], [4.5, 6.0], [4.5, 0]] as XY[],
+  cs: 7.6, // the counterscarp where it runs straight
+  W: 3.0, // the ditch in front of a bastion's face
+  depth: 3.2,
+  behind: 2.0,
+  cw: 2.0, // the covered way
+  S: 9.4, // the salient of a corner bastion, on the diagonal
+  // the brick scarp, battered, from the bottom of the ditch up to the stone cordon; then a parapet of turf
+  scarp: [[-3.2 / 6, -3.2], [1.0, 6.0], [4.5, 6.0], [4.5, -3.2]] as XY[],
   parapet: [[1.05, 6.0], [1.5, 7.55], [3.9, 7.3], [4.6, 6.15]] as XY[],
-  ravelin: { gorge: 2.4, half: 5.6, tip: 7.2, h: 3.1 },
+  /** The ravelin: an island in the ditch whose brick sides rise from the bottom to the level of the field. */
+  ravelin: { gorge: 2.4, half: 5.4, tip: 5.4 },
 };
 
-/** Centres of the bastions that touch the stretch x0..x1. */
+/** The line n·p = c parallel to the face p→q, moved w to its left (the outside of a trace). */
+function faceLine(p: XY, q: XY, w: number): { n: XY; c: number } {
+  const L = Math.hypot(q[0] - p[0], q[1] - p[1]);
+  const n: XY = [-(q[1] - p[1]) / L, (q[0] - p[0]) / L];
+  return { n, c: n[0] * p[0] + n[1] * p[1] + w };
+}
+const zOn = (l: { n: XY; c: number }, x: number): number => (l.c - l.n[0] * x) / l.n[1];
+const xOn = (l: { n: XY; c: number }, z: number): number => (l.c - l.n[1] * z) / l.n[0];
+/** Where the line meets the diagonal x = z (a corner's line of symmetry). */
+const dOn = (l: { n: XY; c: number }): number => l.c / (l.n[0] + l.n[1]);
+
+// a bastion's left face (centred on x = 0), and the counterscarp line W in front of it
+const BASTION_FACE: [XY, XY] = [[-VAUBAN.G, VAUBAN.SH], [0, VAUBAN.SH + VAUBAN.K * VAUBAN.G]];
+const BASTION_CS = faceLine(...BASTION_FACE, VAUBAN.W);
+/** The counterscarp leaves z = cs at c - G + BA and reaches its salient (c, BZ). */
+const BA = xOn(BASTION_CS, VAUBAN.cs) + VAUBAN.G;
+const BZ = zOn(BASTION_CS, 0);
+// a corner bastion's face along the arm that arrives along -X (the corner's origin at x = 0); the
+// half-bastion at the river end has its face on the same line
+const CORNER_FACE: [XY, XY] = [[-VAUBAN.G, VAUBAN.SH], [VAUBAN.S, VAUBAN.S]];
+const CORNER_CS = faceLine(...CORNER_FACE, VAUBAN.W);
+/** The counterscarp turns out CB before a corner and crosses the corner's origin line at z = ZC. */
+const CB = -xOn(CORNER_CS, VAUBAN.cs);
+const ZC = zOn(CORNER_CS, 0);
+const CSLOPE = -CORNER_CS.n[0] / CORNER_CS.n[1];
+/** Where the half-bastion's face meets the river end (x = 0). */
+const ZS = zOn(faceLine(...CORNER_FACE, 0), 0);
+
+/**
+ * Centres of the bastions of the stretch x0..x1. On the gate plot, its two; on a stretch the town draws
+ * from a gate to a corner or the river, the gate's bastion and then evenly spaced ones short of the
+ * bastion at the far end (which the corner or terminal piece draws).
+ */
 function bastionCentres(x0: number, x1: number): number[] {
   const { G, PLOT_C, spacing } = VAUBAN;
   const eps = 0.01;
   if (x0 >= -HALF - eps && x1 <= HALF + eps) return [-PLOT_C, PLOT_C].filter((c) => c + G > x0 && c - G < x1);
   if (Math.abs(x0 - HALF) < eps) {
-    const res = [PLOT_C];
-    while (res[res.length - 1] + spacing + G <= x1 - 2) res.push(res[res.length - 1] + spacing);
-    return res;
+    const L = x1 - PLOT_C;
+    const n = Math.max(1, Math.round(L / spacing));
+    return Array.from({ length: n }, (_, i) => PLOT_C + (i * L) / n);
   }
   if (Math.abs(x1 + HALF) < eps) {
-    const res = [-PLOT_C];
-    while (res[0] - spacing - G >= x0 + 2) res.unshift(res[0] - spacing);
-    return res;
+    const L = -PLOT_C - x0;
+    const n = Math.max(1, Math.round(L / spacing));
+    return Array.from({ length: n }, (_, i) => -PLOT_C - ((n - 1 - i) * L) / n);
   }
   const L = x1 - x0;
   if (L < 60) return [];
@@ -389,10 +468,55 @@ function ravelinCentres(cs: number[]): number[] {
 
 function bastionTrace(cs: number[], x0: number, x1: number): XY[] {
   const { CF, SH, G, K } = VAUBAN;
-  const pts: XY[] = [[Math.min(x0, ...cs.map((c) => c - G)) - 1, CF]];
+  const pts: XY[] = [[Math.min(x0, ...cs.map((c) => c - G)) - 3, CF]];
   for (const c of [...cs].sort((a, d) => a - d)) pts.push([c - G, CF], [c - G, SH], [c, SH + K * G], [c + G, SH], [c + G, CF]);
-  pts.push([Math.max(x1, ...cs.map((c) => c + G)) + 1, CF]);
+  pts.push([Math.max(x1, ...cs.map((c) => c + G)) + 3, CF]);
   return pts;
+}
+
+/** The part of the segment p→q with x0 <= x <= x1, and which of its ends were cut. */
+function clipSeg(p: XY, q: XY, x0: number, x1: number): { p: XY; q: XY; clipP: boolean; clipQ: boolean } | null {
+  const eps = 1e-6;
+  const dx = q[0] - p[0];
+  const dz = q[1] - p[1];
+  if (Math.hypot(dx, dz) < eps) return null;
+  if (Math.abs(dx) < eps) return p[0] < x0 - eps || p[0] > x1 + eps ? null : { p, q, clipP: false, clipQ: false };
+  if (Math.max(p[0], q[0]) <= x0 + eps || Math.min(p[0], q[0]) >= x1 - eps) return null;
+  const at = (x: number): XY => [x, p[1] + (dz * (x - p[0])) / dx];
+  let a = p;
+  let c = q;
+  let clipP = false;
+  let clipQ = false;
+  if (dx > 0) {
+    if (p[0] < x0) (a = at(x0)), (clipP = true);
+    if (q[0] > x1) (c = at(x1)), (clipQ = true);
+  } else {
+    if (p[0] > x1) (a = at(x1)), (clipP = true);
+    if (q[0] < x0) (c = at(x0)), (clipQ = true);
+  }
+  return { p: a, q: c, clipP, clipQ };
+}
+
+/** A polyline moved d to the left of travel (mitred at the bends). */
+function offsetLine(pts: XY[], d: number): XY[] {
+  const P = pts.filter((p, i) => i === 0 || Math.hypot(p[0] - pts[i - 1][0], p[1] - pts[i - 1][1]) > 1e-6);
+  const nrm = (i: number): XY => {
+    const dx = P[i + 1][0] - P[i][0];
+    const dz = P[i + 1][1] - P[i][1];
+    const L = Math.hypot(dx, dz);
+    return [-dz / L, dx / L];
+  };
+  return P.map((p, i): XY => {
+    if (i === 0 || i === P.length - 1) {
+      const m = nrm(i === 0 ? 0 : i - 1);
+      return [p[0] + m[0] * d, p[1] + m[1] * d];
+    }
+    const a = nrm(i - 1);
+    const c = nrm(i);
+    const k = 1 + a[0] * c[0] + a[1] * c[1];
+    if (k < 1e-6) return [p[0] + c[0] * d, p[1] + c[1] * d];
+    return [p[0] + ((a[0] + c[0]) * d) / k, p[1] + ((a[1] + c[1]) * d) / k];
+  });
 }
 
 /**
@@ -400,36 +524,19 @@ function bastionTrace(cs: number[], x0: number, x1: number): XY[] {
  * scarp and parapet sections and a stone cordon at `cordon`, clipped to x0..x1.
  */
 function scarpRuns(b: Builder, pts: XY[], x0: number, x1: number, o?: { scarp?: XY[]; parapet?: XY[]; cordon?: number }): void {
-  const { brick, grass, stone } = { ...WALL_COLOURS.vauban };
+  const { brick, grass, stone } = WALL_COLOURS.vauban;
   const scarp = o?.scarp ?? VAUBAN.scarp;
   const parapet = o?.parapet ?? VAUBAN.parapet;
   const cy = o?.cordon ?? 6.0;
   const eps = 1e-6;
   for (let i = 0; i < pts.length - 1; i++) {
-    let p = pts[i];
-    let q = pts[i + 1];
+    const s = clipSeg(pts[i], pts[i + 1], x0, x1);
+    if (!s) continue;
+    const { p, q, clipP, clipQ } = s;
     const dx = q[0] - p[0];
     const dz = q[1] - p[1];
     const L = Math.hypot(dx, dz);
-    if (L < eps) continue;
     const n: XY = [dz / L, -dx / L];
-    let clipP = false;
-    let clipQ = false;
-    if (Math.abs(dx) < eps) {
-      if (p[0] < x0 - eps || p[0] > x1 + eps) continue;
-    } else {
-      const lo = Math.min(p[0], q[0]);
-      const hi = Math.max(p[0], q[0]);
-      if (hi <= x0 + eps || lo >= x1 - eps) continue;
-      const at = (x: number): XY => [x, p[1] + (dz * (x - p[0])) / dx];
-      if (dx > 0) {
-        if (p[0] < x0) (p = at(x0)), (clipP = true);
-        if (q[0] > x1) (q = at(x1)), (clipQ = true);
-      } else {
-        if (p[0] > x1) (p = at(x1)), (clipP = true);
-        if (q[0] < x0) (q = at(x0)), (clipQ = true);
-      }
-    }
     run(b, p, q, n, scarp, brick, { clipP, clipQ });
     run(b, p, q, n, parapet, grass, { clipP, clipQ });
     // the stone cordon along the top of the scarp, cut square to X where clipped
@@ -464,85 +571,210 @@ export function guerite(b: Builder, x: number, y: number, z: number, rotY: numbe
   });
 }
 
-/** The counterscarp line, bulging round each bastion so the ditch follows its faces. */
-function counterscarpLine(cs: number[], x0: number, x1: number): XY[] {
-  const { G, cs: z, SH, K } = VAUBAN;
-  const sal = SH + K * G;
-  const pts: XY[] = [[Math.min(x0, ...cs.map((c) => c - G)) - 1, z]];
-  for (const c of [...cs].sort((a, d) => a - d)) pts.push([c - G + 7.5, z], [c, sal + 3.6], [c + G - 7.5, z]);
-  pts.push([Math.max(x1, ...cs.map((c) => c + G)) + 1, z]);
-  return clipX(pts, x0, x1);
-}
-
-function counterscarp(b: Builder, line: XY[]): void {
-  const { brick, ditch, stone } = WALL_COLOURS.vauban;
-  for (let i = 0; i < line.length - 1; i++) {
-    segBox(b, line[i], line[i + 1], 0.6, 0.9, brick);
-    segBox(b, line[i], line[i + 1], 0.7, 0.14, stone, 0.9);
-  }
-  if (line.length > 1) slab(b, [[line[0][0], VAUBAN.CF + 0.2], [line[line.length - 1][0], VAUBAN.CF + 0.2], ...[...line].reverse().map(([x, z]) => [x, z - 0.3] as XY)], 0, 0.03, ditch);
+/**
+ * The counterscarp line of a stretch: straight at z = cs, turning out round each bastion so that the
+ * ditch keeps W metres in front of its faces, and round the bastion of a corner or the river end at
+ * x0 (`endLo`) or x1 (`endHi`). It runs on a little past both ends, for the dig.
+ */
+function counterscarpLine(cs: number[], x0: number, x1: number, endLo: boolean, endHi: boolean): XY[] {
+  const { G, cs: z } = VAUBAN;
+  const pts: XY[] = [];
+  if (endLo) pts.push([x0 - 3, ZC + 3 * CSLOPE], [x0, ZC], [x0 + CB, z]);
+  else pts.push([Math.min(x0, ...cs.map((c) => c - G)) - 3, z]);
+  for (const c of [...cs].sort((a, d) => a - d)) pts.push([c - G + BA, z], [c, BZ], [c + G - BA, z]);
+  if (endHi) pts.push([x1 - CB, z], [x1, ZC], [x1 + 3, ZC + 3 * CSLOPE]);
+  else pts.push([Math.max(x1, ...cs.map((c) => c + G)) + 3, z]);
+  return pts;
 }
 
 /**
- * The ravelin (demi-lune) centred at x = c: a low triangle of brick-faced earth in the ditch, its two
- * faces meeting at a point toward the field, clipped to x0..x1.
+ * Along a counterscarp line (outside to its left), clipped to x0..x1: the brick revetment from the
+ * bottom of the ditch to a stone coping level with the ground; behind it the covered way, a path of
+ * gravel; and beyond that the crest of the glacis, a low bank of turf that slopes away to the field.
+ * `gaps` are x ranges where the glacis is cut for a road (the covered way and the revetment carry on,
+ * level with the road).
  */
-export function ravelin(b: Builder, c: number, x0: number, x1: number): void {
-  const { grass } = WALL_COLOURS.vauban;
-  const { gorge, half, tip, h } = VAUBAN.ravelin;
-  const scarp: XY[] = [[0, 0], [0.5, h - 0.2], [2.2, h - 0.2], [2.2, 0]];
-  const parapet: XY[] = [[0.55, h - 0.2], [0.9, h + 0.7], [2.0, h + 0.6], [2.4, h - 0.1]];
-  // faces drawn from the left shoulder to the tip to the right shoulder, outside to the left of travel
-  scarpRuns(b, [[c - half, gorge], [c, tip], [c + half, gorge]], x0, x1, { scarp, parapet, cordon: h - 0.2 });
-  const fill = clipPolyX([[c - half + 1.6, gorge + 0.3], [c, tip - 2.4], [c + half - 1.6, gorge + 0.3]], x0, x1);
-  if (fill.length > 2) slab(b, fill, 0, h - 0.15, grass);
-  // the open gorge toward the curtain: a low brick wall
-  const gx0 = Math.max(x0, c - half + 0.2);
-  const gx1 = Math.min(x1, c + half - 0.2);
-  if (gx1 - gx0 > 0.2) b.box(gx1 - gx0, 1.3, 0.5, WALL_COLOURS.vauban.brick, { at: [(gx0 + gx1) / 2, 0, gorge + 0.25], ...NJ });
+export function counterscarpWorks(b: Builder, line: XY[], x0: number, x1: number, o?: { gaps?: [number, number][] }): void {
+  const { brick, stone, grass, path } = WALL_COLOURS.vauban;
+  const { depth: D, cw } = VAUBAN;
+  const revet: XY[] = [[0, -D], [0, 0], [0.6, 0], [0.6, -D]];
+  const coping: XY[] = [[0, 0], [0, 0.1], [0.6, 0.1], [0.6, 0]];
+  const way: XY[] = [[0.6, -D], [0.6, 0.08], [cw + 0.1, 0.08], [cw + 0.1, -D]];
+  const glacis: XY[] = [[cw, 0], [cw + 0.3, 0.9], [cw + 0.9, 1.0], [cw + 4.5, 0]];
+  const gaps = [...(o?.gaps ?? [])].sort((a, c) => a[0] - c[0]);
+  const ranges: [number, number][] = [];
+  let a = x0;
+  for (const [g0, g1] of gaps) {
+    if (g0 > a) ranges.push([a, Math.min(g0, x1)]);
+    a = Math.max(a, g1);
+  }
+  if (x1 > a) ranges.push([a, x1]);
+  const normal = (p: XY, q: XY): XY => {
+    const L = Math.hypot(q[0] - p[0], q[1] - p[1]);
+    return [-(q[1] - p[1]) / L, (q[0] - p[0]) / L];
+  };
+  for (let i = 0; i < line.length - 1; i++) {
+    const s = clipSeg(line[i], line[i + 1], x0, x1);
+    if (!s) continue;
+    const out = normal(s.p, s.q);
+    const o2 = { clipP: s.clipP, clipQ: s.clipQ };
+    run(b, s.p, s.q, out, revet, brick, o2);
+    run(b, s.p, s.q, out, coping, stone, o2);
+    run(b, s.p, s.q, out, way, path, o2);
+    for (const [r0, r1] of ranges) {
+      const g = clipSeg(line[i], line[i + 1], r0, r1);
+      if (g) run(b, g.p, g.q, out, glacis, grass, { clipP: g.clipP, clipQ: g.clipQ });
+    }
+  }
+  // where the line bends away from the ditch the runs part on the outside: fill the angle with a turned piece
+  for (let i = 1; i < line.length - 1; i++) {
+    const v = line[i];
+    if (v[0] <= x0 + 1e-6 || v[0] >= x1 - 1e-6) continue;
+    const n1 = normal(line[i - 1], v);
+    const n2 = normal(v, line[i + 1]);
+    const cross = n1[0] * n2[1] - n1[1] * n2[0];
+    if (cross > -1e-6) continue;
+    const start = Math.atan2(n1[0], n1[1]);
+    let sweep = Math.atan2(n2[0], n2[1]) - start;
+    while (sweep < 0) sweep += Math.PI * 2;
+    const q = { segs: 4, start, sweep, ...NJ };
+    const inGap = gaps.some(([g0, g1]) => v[0] > g0 && v[0] < g1);
+    b.group({ at: [v[0], 0, v[1]] }, () => {
+      b.lathe([[0.6, -D], [0.6, 0.1], [0.001, 0.1]], stone, q);
+      b.lathe([[cw + 0.1, -D], [cw + 0.1, 0.08], [0.6, 0.08]], path, q);
+      if (!inGap) b.lathe([...glacis].reverse(), grass, q);
+    });
+  }
 }
 
-function vaubanStretch(b: Builder, x0: number, x1: number, o?: { ravelins?: boolean }): void {
+/**
+ * The outline of the ditch between a scarp trace and a counterscarp line, reaching `behind` metres in
+ * under each, clipped to xa..xb and dug. Ends listed open carry on into the next cut.
+ */
+function vaubanDitch(b: Builder, trace: XY[], line: XY[], xa: number, xb: number, openLo: boolean, openHi: boolean): void {
+  const { depth, behind, cw } = VAUBAN;
+  const poly = clipPolyX([...offsetLine(trace, -behind), ...offsetLine(line, cw).reverse()], xa, xb);
+  if (poly.length < 3) return;
+  const on = (x: number, v: number) => Math.abs(x - v) < 1e-4;
+  const open: number[] = [];
+  poly.forEach((p, i) => {
+    const q = poly[(i + 1) % poly.length];
+    if ((openLo && on(p[0], xa) && on(q[0], xa)) || (openHi && on(p[0], xb) && on(q[0], xb))) open.push(i);
+  });
+  b.dig(poly, depth, { slope: behind, color: WALL_COLOURS.vauban.ditch, open });
+}
+
+/**
+ * The ravelin (demi-lune) centred at x = c: a triangular island in the ditch, its two faces meeting at
+ * a point toward the field. Its brick sides rise from the bottom of the ditch to a stone cordon level
+ * with the field; a parapet of turf runs along the faces, cut for the road where `road` is given (its
+ * half-width). The gorge toward the curtain is open. Clipped to x0..x1.
+ */
+export function ravelin(b: Builder, c: number, x0: number, x1: number, o?: { road?: number }): void {
+  const { brick, stone, grass } = WALL_COLOURS.vauban;
+  const { gorge, half, tip } = VAUBAN.ravelin;
+  const D = VAUBAN.depth;
+  const tri = clipPolyX([[c - half, gorge], [c, tip], [c + half, gorge]], x0, x1);
+  if (tri.length < 3) return;
+  slab(b, tri, -D, -0.15, brick);
+  slab(b, tri, -0.15, 0.06, stone);
+  const inner = clipPolyX([[c - half + 1.1, gorge + 0.3], [c, tip - 0.7], [c + half - 1.1, gorge + 0.3]], x0, x1);
+  if (inner.length > 2) slab(b, inner, 0.06, 0.1, grass);
+  const parapet: XY[] = [[0.5, 0.06], [1.0, 1.6], [2.0, 1.5], [2.6, 0.06]];
+  const road = o?.road ?? 0;
+  const ranges: [number, number][] = road ? [[x0, Math.min(x1, c - road)], [Math.max(x0, c + road), x1]] : [[x0, x1]];
+  const faces: [XY, XY][] = [[[c - half, gorge], [c, tip]], [[c, tip], [c + half, gorge]]];
+  for (const [r0, r1] of ranges) {
+    if (r1 - r0 < 0.05) continue;
+    for (const [p, q] of faces) {
+      const s = clipSeg(p, q, r0, r1);
+      if (!s) continue;
+      const L = Math.hypot(s.q[0] - s.p[0], s.q[1] - s.p[1]);
+      run(b, s.p, s.q, [(s.q[1] - s.p[1]) / L, -(s.q[0] - s.p[0]) / L], parapet, grass, { clipP: s.clipP, clipQ: s.clipQ });
+    }
+  }
+}
+
+/**
+ * A stretch of the bastioned front from x0 to x1. On the gate plot (both ends within it) the ditch is
+ * closed at the plot's edges and open toward the gate, whose model digs the middle. A stretch the town
+ * draws digs 2 m on into the gate plot it leaves, so that the two cuts overlap and the plot's closed end
+ * disappears; at a corner or the river its scarp stops at the flank of the bastion the corner or terminal
+ * piece draws. `surviving`: the gate at x1 = -HALF has gone (the north gate after 1885), so the stretch
+ * closes its own ditch there.
+ */
+function vaubanStretch(b: Builder, x0: number, x1: number, o?: { ravelins?: boolean; surviving?: boolean }): void {
   const { grass } = WALL_COLOURS.vauban;
-  const { G, SH, K, top } = VAUBAN;
+  const { G, SH, K, top, depth: D } = VAUBAN;
+  const eps = 0.01;
+  const plot = x0 >= -HALF - eps && x1 <= HALF + eps;
+  const gateLo = !plot && Math.abs(x0 - HALF) < eps;
+  const gateHi = !plot && Math.abs(x1 + HALF) < eps;
+  const endLo = !plot && !gateLo;
+  const endHi = !plot && !gateHi;
   const cs = bastionCentres(x0, x1);
-  scarpRuns(b, bastionTrace(cs, x0, x1), x0, x1);
-  // the terreplein: one fill behind the curtain, and one inside each bastion
-  slab(b, [[x0, -1.5], [x1, -1.5], [x1, -6.0], [x0, -6.0]], 0, top, grass);
+  const trace = bastionTrace(cs, x0, x1);
+  scarpRuns(b, trace, x0 + (endLo ? G : 0), x1 - (endHi ? G : 0));
+  // the terreplein: one fill behind the curtain, and one inside each bastion, built up from the bottom of the ditch
+  const ta = x0 + (endLo ? 6 : 0);
+  const tb = x1 - (endHi ? 6 : 0);
+  if (tb > ta) slab(b, [[ta, -1.5], [tb, -1.5], [tb, -6.0], [ta, -6.0]], -D, top, grass);
   for (const c of cs) {
     const poly = clipPolyX([[c - G + 1, -1.5], [c - G + 1, SH - 0.4], [c, SH + K * G - 1.9], [c + G - 1, SH - 0.4], [c + G - 1, -1.5]], x0, x1);
-    if (poly.length > 2) slab(b, poly, 0, top, grass);
+    if (poly.length > 2) slab(b, poly, -D, top, grass);
     if (c >= x0 && c <= x1) guerite(b, c, 6.3, SH + K * G - 0.75, 0);
   }
-  if (o?.ravelins !== false) for (const r of ravelinCentres(cs)) if (r + VAUBAN.ravelin.half > x0 && r - VAUBAN.ravelin.half < x1) ravelin(b, r, x0, x1);
+  if (o?.ravelins !== false) {
+    const all = [...cs, ...(endLo ? [x0] : []), ...(endHi ? [x1] : [])];
+    for (const r of ravelinCentres(all)) if (r + VAUBAN.ravelin.half > x0 && r - VAUBAN.ravelin.half < x1) ravelin(b, r, x0, x1);
+  }
   // the inner slope down to the town
   prismX(b, x0, x1, [[-6.0, top], [-8, 0], [-6.0, 0]], tint(grass, -0.04));
-  counterscarp(b, counterscarpLine(cs, x0, x1));
+  const line = counterscarpLine(cs, x0, x1, endLo, endHi);
+  counterscarpWorks(b, line, x0, x1);
+  const closeLo = plot && Math.abs(x0 + HALF) < eps;
+  const closeHi = (plot && Math.abs(x1 - HALF) < eps) || (gateHi && !!o?.surviving);
+  vaubanDitch(b, trace, line, gateLo ? x0 - 2 : x0, gateHi && !o?.surviving ? x1 + 2 : x1, !closeLo, !closeHi);
 }
 
 function vaubanCorner(b: Builder): void {
-  const { CF, SH, top, cs } = VAUBAN;
-  const { grass, ditch, brick, stone } = WALL_COLOURS.vauban;
-  const G = 13;
-  const S = 9.4; // the salient lies on the diagonal
+  const { CF, SH, top, G, S, depth: D, behind, W, cw } = VAUBAN;
+  const { grass, ditch } = WALL_COLOURS.vauban;
   scarpRuns(b, [[-G, CF], [-G, SH], [S, S], [SH, -G], [CF, -G]], -1e9, 1e9);
-  slab(b, [[-G + 1, -1.5], [-G + 1, SH - 0.4], [S - 2.2, S - 2.2], [SH - 0.4, -G + 1], [-1.5, -G + 1], [-1.5, -1.5]], 0, top, grass);
+  // the fill, taking in the inner angle of the two stretches' terrepleins
+  slab(b, [[-G + 1, -1.5], [-G + 1, SH - 0.4], [S - 2.2, S - 2.2], [SH - 0.4, -G + 1], [-1.5, -G + 1], [-1.5, -6], [-6, -6], [-6, -1.5]], -D, top, grass);
   guerite(b, S - 0.6, 6.3, S - 0.6, Math.PI / 4);
-  const line: XY[] = [[0, cs], [S + 3.6, S + 3.6], [cs, 0]];
-  for (let i = 0; i < 2; i++) {
-    segBox(b, line[i], line[i + 1], 0.6, 0.9, brick);
-    segBox(b, line[i], line[i + 1], 0.7, 0.14, stone, 0.9);
-  }
-  slab(b, [[0, 0], [0, cs - 0.3], [S + 3.3, S + 3.3], [cs - 0.3, 0]], 0, 0.03, ditch);
+  // the counterscarp round the salient
+  const dc = dOn(CORNER_CS);
+  counterscarpWorks(b, [[0, ZC], [dc, dc], [ZC, 0]], -1e9, 1e9);
+  // the ditch in the outer quadrant; the stretches dig the rest up to the origin
+  const inn = faceLine(...CORNER_FACE, -behind);
+  const out = faceLine(...CORNER_FACE, W + cw);
+  const zi = zOn(inn, 0);
+  const zo = zOn(out, 0);
+  b.dig([[0, zi], [0, zo], [dOn(out), dOn(out)], [zo, 0], [zi, 0], [dOn(inn), dOn(inn)]], D, { slope: behind, color: ditch, open: [0, 3] });
 }
 
-function vaubanTerminal(b: Builder): void {
-  const { CF, SH, top } = VAUBAN;
-  const { grass } = WALL_COLOURS.vauban;
-  const G = 13;
-  const ZS = 6.6; // a half-bastion whose face ends on the river bank
-  scarpRuns(b, [[-G, CF], [-G, SH], [0, ZS], [0, CF - 0.01]], -1e9, 1e9);
-  slab(b, [[-G + 1, -1.5], [-G + 1, SH - 0.4], [-1.0, ZS - 1.6], [-1.0, -1.5]], 0, top, grass);
+/**
+ * The end of the bastioned front on the river bank: a half-bastion whose face ends on the bank, the
+ * ditch carried on into the river. sx = 1 for a stretch arriving along -X, -1 for one arriving along +X.
+ */
+function vaubanTerminal(b: Builder, sx: number): void {
+  const { CF, SH, top, G, depth: D, behind, W, cw } = VAUBAN;
+  const { grass, ditch } = WALL_COLOURS.vauban;
+  const mx = (pts: XY[]): XY[] => pts.map(([x, z]) => [sx * x, z] as XY);
+  // the flank and face, then the end on the bank, walled but with no parapet
+  const trace = mx([[-G, CF], [-G, SH], [0, ZS]]);
+  const end = mx([[0, ZS], [0, CF - 0.01]]);
+  scarpRuns(b, sx > 0 ? trace : trace.reverse(), -1e9, 1e9);
+  scarpRuns(b, sx > 0 ? end : end.reverse(), -1e9, 1e9, { parapet: [] });
+  slab(b, mx([[-G + 1, -1.5], [-G + 1, SH - 0.4], [-1.0, ZS - 1.6], [-1.0, CF], [0, CF], [0, -6], [-6, -6], [-6, -1.5]]), -D, top, grass);
+  const R = RIVER_RUN;
+  const line = mx([[0, ZC], [R, ZC + R * CSLOPE]]);
+  counterscarpWorks(b, sx > 0 ? line : line.reverse(), -1e9, 1e9);
+  const zi = zOn(faceLine(...CORNER_FACE, -behind), 0);
+  const zo = zOn(faceLine(...CORNER_FACE, W + cw), 0);
+  b.dig(mx([[0, zi], [0, zo], [R, zo + R * CSLOPE], [R, zi]]), D, { slope: behind, color: ditch, open: [0, 2] });
 }
 
 // ================================================================== the public functions
@@ -567,6 +799,8 @@ export function curtain(b: Builder, stage: WallStage, x0: number, x1: number, o?
       return philipStretch(b, x0, x1, towers, true);
     case 'vauban':
       return vaubanStretch(b, x0, x1, { ravelins: towers });
+    case 'vauban-surviving':
+      return vaubanStretch(b, x0, x1, { ravelins: towers, surviving: true });
   }
 }
 
@@ -586,23 +820,29 @@ export function corner(b: Builder, stage: WallStage): void {
     case 'fortified':
       return philipCorner(b, true);
     case 'vauban':
+    case 'vauban-surviving':
       return vaubanCorner(b);
   }
 }
 
-/** A terminal piece centred on the origin for where a stretch arriving along -X simply ends (at the river bank). */
-export function terminal(b: Builder, stage: WallStage): void {
+/**
+ * A terminal piece centred on the origin for where a stretch simply ends (at the river bank), outside
+ * to +Z. sx = 1 (the default) for a stretch arriving along -X, -1 for one arriving along +X (the mirror
+ * image). The ditch runs on past the origin into the river.
+ */
+export function terminal(b: Builder, stage: WallStage, sx: 1 | -1 = 1): void {
   switch (stage) {
     case 'gaulish':
-      return gaulishTerminal(b);
+      return gaulishTerminal(b, sx);
     case 'castrum':
-      return castrumTower(b, 0, 1.0, 3.2, 12.2, { windows: [0, Math.PI / 2, 1.0] });
+      return castrumTower(b, 0, 1.0, 3.2, 12.2, { windows: [0, sx * (Math.PI / 2), sx * 1.0] });
     case 'philippian':
-      return philipTerminal(b, false);
+      return philipTerminal(b, false, sx);
     case 'fortified':
-      return philipTerminal(b, true);
+      return philipTerminal(b, true, sx);
     case 'vauban':
-      return vaubanTerminal(b);
+    case 'vauban-surviving':
+      return vaubanTerminal(b, sx);
   }
 }
 

@@ -67,9 +67,10 @@ const roads: Road[] = [
   { id: 'new-paris-road', kind: 'main', pts: [[-150, 136], [-153, 200], [-130, 300], [-96, 380], [-90, 480]], since: 1849 },
   { id: 'rue-du-pont-neuf', kind: 'main', pts: [[128, 55], [128, 79]], since: 1830 },
   { id: 'rue-du-pont-neuf-sud', kind: 'main', pts: [[128, 113], [128, 136]], since: 1830 },
-  // after 1885: boulevards on the line of the western and north-western ramparts
-  { id: 'boulevard-ouest', kind: 'main', pts: [[-150, 55], [-150, 26], [-138, 17], [-138, -17], [-150, -26], [-150, -128]], since: 1890 },
-  { id: 'boulevard-nord', kind: 'main', pts: [[-150, -128], [-136, -142], [0, -142]], since: 1890 },
+  // after 1885: boulevards on the line of the western and north-western ramparts, meeting the old
+  // roads at the roundabouts where the kept gates stand on their islands
+  { id: 'boulevard-ouest', kind: 'main', pts: [[-150, 55], [-150, -128]], since: 1890 },
+  { id: 'boulevard-nord', kind: 'main', pts: [[-150, -128], [0, -128]], since: 1890 },
   { id: 'rue-neuve', kind: 'lane', pts: [[-150, 55], [-66, 55]], since: 1890 },
   { id: 'footbridge-path-north', kind: 'lane', pts: [[-62, 74], [-62, 79]], since: 2006 },
   { id: 'footbridge-path-south', kind: 'lane', pts: [[-62, 113], [-62, 136]], since: 2006 },

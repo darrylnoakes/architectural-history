@@ -88,6 +88,8 @@ function ribbon(
   lift: number,
   out: { pos: number[]; idx: number[] },
   flatUntil = 0,
+  /** Width of the widest layer laid along the same line: every layer lies in its plane, so they stack cleanly on a slope. */
+  span = width,
 ) {
   // resample the polyline every few metres so it follows the ground and stops at a ditch
   const samples: [number, number][] = [];
@@ -95,7 +97,10 @@ function ribbon(
     const [ax, az] = pts[i];
     const [bx, bz] = pts[i + 1];
     const len = Math.hypot(bx - ax, bz - az);
-    const steps = Math.max(1, Math.ceil(len / 4));
+    // in short steps near anything dug, so the road stops close to the lip
+    const cb = land.cuts.bounds;
+    const near = cb && Math.max(ax, bx) > cb[0] - 4 && Math.min(ax, bx) < cb[2] + 4 && Math.max(az, bz) > cb[1] - 4 && Math.min(az, bz) < cb[3] + 4;
+    const steps = Math.max(1, Math.ceil(len / (near ? 0.8 : 4)));
     for (let s = 0; s < steps; s++) samples.push([ax + ((bx - ax) * s) / steps, az + ((bz - az) * s) / steps]);
   }
   samples.push(pts[pts.length - 1]);
@@ -111,11 +116,16 @@ function ribbon(
     tz /= tl;
     const nx = -tz;
     const nzz = tx;
+    // the ground at the two edges of the widest layer, lifted if it bulges between them
+    const half = Math.max(span, width) / 2;
+    const yl = Math.max(flatUntil, land.natural(x - nx * half, z - nzz * half));
+    const yr = Math.max(flatUntil, land.natural(x + nx * half, z + nzz * half));
+    const bulge = Math.max(0, Math.max(flatUntil, land.natural(x, z)) - (yl + yr) / 2);
     for (const s of [-1, 1]) {
       const px = x + (nx * s * width) / 2;
       const pz = z + (nzz * s * width) / 2;
-      const y = Math.max(flatUntil, land.natural(px, pz)) + lift;
-      out.pos.push(px, y, pz);
+      const t = 0.5 + (s * width) / (4 * half);
+      out.pos.push(px, yl + (yr - yl) * t + bulge + lift, pz);
     }
   }
   for (let i = 0; i < samples.length - 1; i++) {
@@ -344,7 +354,7 @@ export class Terrain {
       const w = r.kind === 'main' ? st.main : st.lane;
       // the carriageway lies above the pavement strip it runs along, so near or far it is what you see
       if (st.pavement) ribbon(land, r.pts, w + st.pavement * 2, PAVE_Y, pave);
-      ribbon(land, r.pts, w, ROAD_Y, road);
+      ribbon(land, r.pts, w, ROAD_Y, road, 0, w + st.pavement * 2);
       if (st.lines && r.kind === 'main') {
         // dashed centre line
         for (let i = 0; i < r.pts.length - 1; i++) {
@@ -364,6 +374,8 @@ export class Terrain {
               0.16,
               LINE_Y,
               lines,
+              0,
+              w + st.pavement * 2,
             );
           }
         }

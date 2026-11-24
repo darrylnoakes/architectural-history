@@ -1,5 +1,5 @@
 import { P, mix, tint, type Builder, type BuildingDef } from '@ah/kit';
-import { HALF, NJ, WALL_COLOURS, archOutline, gateLeaves, gateMass, prismX, road } from './shared';
+import { HALF, NJ, WALL_COLOURS, archOutline, gateLeaves, gateMass, road } from './shared';
 import { PHILIP, curtain, philipTower } from './curtain';
 
 /*
@@ -30,9 +30,11 @@ export function philipGate(b: Builder, late: boolean): void {
   const zc = (front + back) / 2;
   const groove = tint(stone, -0.3);
 
-  // the block and its passage, a battered plinth
+  // the block and its passage, a battered plinth that stops at the jambs (the passage floor is the road)
   gateMass(b, w, h, d, stone, { at: [0, 0, zc], xs: [0], openW: ow, openH: oh, shape: 'pointed' });
   b.sym((s) => b.box((w - ow) / 2, 1.1, d + 0.5, tint(stone, -0.06), { at: [s * (w + ow) / 4, 0, zc] }));
+  // under the threshold the front of the gate goes down to the bottom of the ditch, which starts at its foot
+  b.box(w + 0.5, PHILIP.depth, 1.6, tint(stone, -0.08), { at: [0, -PHILIP.depth, front - 0.55], ...NJ });
   // a dressed arch, a chamfered order round it, and the portcullis in its groove just inside
   b.group({ at: [0, 0, front + 0.03] }, () => {
     const outer = archOutline(ow + 1.1, oh + 0.6, 'pointed', 5);
@@ -83,7 +85,10 @@ export function philipGate(b: Builder, late: boolean): void {
     b.panel(1.1, 1.3, P.doorBlue, { at: [0, oh + 0.9, front], depth: 0.1, shape: 'round' });
     for (const [x, y] of [[-0.25, 1.35], [0.25, 1.35], [0, 1.75]]) b.panel(0.18, 0.24, P.gold, { at: [x, oh + y, front + 0.04], depth: 0.1 });
     // the drawbridge's lifting arms (flèches) rest in vertical slots when it is raised; a recess takes the deck
-    b.panel(ow + 0.9, oh + 0.9, groove, { at: [0, 0, front], depth: 0.015 });
+    // (a frame round the arch, so the passage itself stays open)
+    b.group({ at: [0, 0, front + 0.01] }, () => {
+      b.extrude(archOutline(ow + 1.7, oh + 1.1, 'rect'), 0.03, groove, { holes: [archOutline(ow + 1.1, oh + 0.6, 'pointed', 5)], ...NJ });
+    });
     b.sym((s) => b.panel(0.3, 4.6, P.black, { at: [s * (ow / 2 + 0.75), oh + 0.5, front], depth: 0.02 }));
   }
 
@@ -92,16 +97,17 @@ export function philipGate(b: Builder, late: boolean): void {
   b.sym((s) => philipTower(b, s * tx, tz, tr, th, { machi: late, guns: late, loops: [0, s * 0.9, s * 1.8] }));
 }
 
-/** The timber bridge across the ditch, and the ditch in front of the gate (between the towers' stubs). */
-export function gateDitch(b: Builder): void {
-  const { ditch, stone } = WALL_COLOURS.philippian;
-  const [d0, d1] = PHILIP.ditch;
-  const x = GATE.tx;
-  prismX(b, -x, x, [[d0, 0.02], [d0 + 1.2, 0.02]], tint(ditch, 0.05));
-  prismX(b, -x, x, [[d0 + 1.2, 0.03], [d1 - 1.0, 0.03]], ditch);
-  prismX(b, -x, x, [[d1 - 1.0, 0.02], [d1, 0.02]], tint(ditch, 0.05));
-  b.box(2 * x, 0.45, 0.5, tint(stone, -0.04), { at: [0, 0, d1 + 0.25], ...NJ });
+/**
+ * The approach road: on the ground up to the lip of the ditch and on again from its far side, a few
+ * metres past the plot (the town's own road begins a little way out).
+ */
+export function fieldRoad(b: Builder, w: number, color: number): void {
+  road(b, w, color, { z0: PHILIP.ditch[1] - 0.1, z1: PHILIP.ditch[1] + 4.5 });
 }
+
+const [d0, d1] = PHILIP.ditch;
+/** The trestles of the bridge, standing on the bottom of the ditch. */
+const BENTS = [1.6, 3.8, 6.0];
 
 export const philippianGate: BuildingDef = {
   id: 'philippian-gate',
@@ -111,7 +117,7 @@ export const philippianGate: BuildingDef = {
   summary:
     'The town had long outgrown its late Roman wall: suburbs had spread round the abbey and the market. Around 1200, as King Philip Augustus was doing at Paris (from 1190), the town built a new and much longer wall round them, paid for by the commune. ' +
     'It follows the royal pattern: a crenellated curtain wall, round towers about every sixty metres, and gates set between two round towers that stand out from the wall. Round towers have no corners to be knocked off or undermined, and their arrow loops cover every approach. ' +
-    'The gate passage is closed first by a portcullis of oak shod with iron, dropped in grooves, and then by heavy doors; in front is a dry ditch crossed by a timber bridge.',
+    'The gate passage is closed first by a portcullis of oak shod with iron, dropped in grooves, and then by heavy doors; in front is a dry ditch crossed by a timber bridge on trestles.',
   materials: ['limestone rubble faced with dressed stone', 'oak and iron for the portcullis and doors', 'timber bridge'],
   modelledOn:
     'The walls of Philip Augustus at Paris (1190 to about 1215), with their round towers and twin-towered gates, and the gatehouses of his castles such as Dourdan; the details are generic.',
@@ -121,26 +127,40 @@ export const philippianGate: BuildingDef = {
     { label: 'Arrow loops', note: 'Tall narrow slits (archères), splayed inside so that an archer could aim widely while showing almost nothing to the enemy.', at: [-GATE.tx, 4.2, GATE.tz + GATE.tr + 0.25] },
     { label: 'Portcullis', note: 'A grid of iron-shod oak that drops in grooves in the passage walls: it could be let fall in an instant.', at: [0, GATE.oh - 1.0, GATE.front + 0.3] },
     { label: 'Crenellated wall-walk', note: 'The wall-walk runs behind battlements: solid merlons to shelter behind, gaps (crenels) to shoot through.', at: [11.5, PHILIP.h + 2.1, PHILIP.z + PHILIP.t / 2 + 0.3] },
-    { label: 'Dry ditch', note: 'A broad ditch keeps siege towers and battering rams away from the foot of the wall.', at: [11.5, 0.4, 4.6] },
+    { label: 'Dry ditch', note: 'A broad ditch dug in front of the wall keeps siege towers and battering rams away from its foot; the towers rise straight out of it.', at: [11.5, -PHILIP.depth + 0.5, 3.3] },
   ],
   build(b) {
     const { stone } = WALL_COLOURS.philippian;
     road(b, 4.6, mix(P.cobble, P.gravel, 0.3), { z0: -8, z1: GATE.front });
-    road(b, 4.6, mix(P.earth, P.gravel, 0.4), { z0: GATE.front, z1: 8 });
+    fieldRoad(b, 4.6, mix(P.earth, P.gravel, 0.4));
 
     b.sym((s) => curtain(b, 'philippian', s > 0 ? GATE.tx : -HALF, s > 0 ? HALF : -GATE.tx, { towers: false }));
     philipGate(b, false);
-    gateDitch(b);
+    // the ditch in front of the gate, between the stubs either side
+    b.trench(-GATE.tx, GATE.tx, d0, d1, PHILIP.depth, { slope: PHILIP.slope, color: WALL_COLOURS.philippian.ditch });
 
-    // the bridge over the ditch: timber trestles and a plank deck with rails
-    const [d0, d1] = PHILIP.ditch;
+    // the bridge over the ditch from the threshold: a plank deck on timber trestles standing on the bottom
     const oak = mix(P.oak, P.oakSilver, 0.2);
-    b.box(4.2, 0.3, d1 - d0 + 1.2, oak, { at: [0, 0.02, (d0 + d1) / 2] });
-    for (let z = d0 - 0.4; z < d1 + 0.6; z += 0.45) b.box(4.2, 0.02, 0.05, tint(oak, -0.15), { at: [0, 0.32, z], ...NJ });
+    const z0 = GATE.front;
+    const z1 = d1 + 0.3;
+    const len = z1 - z0;
+    const zm = (z0 + z1) / 2;
+    b.box(4.2, 0.1, len, tint(oak, 0.04), { at: [0, 0, zm] }); // the planks, flush with the road
+    for (let z = z0 + 0.3; z < z1; z += 0.45) b.box(4.2, 0.01, 0.05, tint(oak, -0.15), { at: [0, 0.1, z], ...NJ });
+    b.sym((s) => b.box(0.3, 0.35, len, oak, { at: [s * 1.6, -0.35, zm], ...NJ })); // the stringers
+    for (const z of BENTS) {
+      b.box(4.4, 0.3, 0.3, oak, { at: [0, -0.65, z], ...NJ }); // the cap of each trestle
+      b.sym((s) => {
+        b.box(0.26, PHILIP.depth - 0.6, 0.26, oak, { at: [s * 1.8, -PHILIP.depth, z], ...NJ });
+        b.beam([s * 1.75, -PHILIP.depth + 0.2, z], [-s * 1.5, -0.7, z], 0.14, 0.14, tint(oak, -0.08), NJ);
+      });
+    }
     b.sym((s) => {
-      for (const z of [d0, (d0 + d1) / 2, d1]) b.box(0.18, 1.1, 0.18, oak, { at: [s * 2.0, 0.3, z], ...NJ });
-      b.box(0.1, 0.1, d1 - d0 + 0.2, oak, { at: [s * 2.0, 1.3, (d0 + d1) / 2], ...NJ });
+      // the rails, posts along the edge (none across the way)
+      for (const z of [z0 + 0.4, ...BENTS, z1 - 0.3]) b.box(0.16, 1.05, 0.16, oak, { at: [s * 2.0, 0.1, z], ...NJ });
+      b.box(0.1, 0.1, len - 0.4, oak, { at: [s * 2.0, 1.1, zm], ...NJ });
     });
+    b.deck(4.0, len + 1.6, 0.1, { at: [0, 0, zm - 0.6] });
 
     // the town side: a stair up to the wall-walk
     b.stairs(1.3, PHILIP.h, 6.0, 14, tint(stone, -0.05), { at: [12.0, 0, PHILIP.z - PHILIP.t / 2 - 0.7], rotY: -Math.PI / 2 });
@@ -150,7 +170,7 @@ export const philippianGate: BuildingDef = {
       b.collider(HALF - GATE.tx, PHILIP.t + 0.6, { at: [s * (HALF + GATE.tx) / 2, 0, PHILIP.z] });
       b.collider(GATE.tr * 2, GATE.tr * 2, { at: [s * GATE.tx, 0, GATE.tz] });
       b.collider((GATE.w - GATE.ow) / 2, GATE.front - GATE.back, { at: [s * (GATE.w + GATE.ow) / 4, 0, (GATE.front + GATE.back) / 2] });
-      b.collider(0.4, d1 - d0 + 1.2, { at: [s * 2.1, 0, (d0 + d1) / 2] });
+      b.collider(0.4, d1 - GATE.front, { at: [s * 2.1, 0, (d1 + GATE.front) / 2] });
     });
     b.collider(6.0, 1.3, { at: [12.0, 0, PHILIP.z - PHILIP.t / 2 - 0.7] });
   },
