@@ -1,5 +1,5 @@
 import { P, mix, tint, type BuildingDef, type Builder } from '@ah/kit';
-import { BAILEY_LEFT, BAILEY_RIGHT, GATE, MOTTE, arcade, arch, archWindow, baileyEarthworks, baileyWell, curtain, ditchLine, lineColliders, motte, strip } from './shared';
+import { BAILEY_LEFT, BAILEY_RIGHT, DITCH, GATE, MOTTE, arcade, arch, archWindow, baileyBank, baileyWell, castleDitches, curtain, lineColliders, motte } from './shared';
 import { CURTAIN_1130, KEEP, normanChapel, stoneKeep } from './05-stone-keep';
 
 /** Height to which the round towers' lower stage rises; the Elizabethan ruin keeps this much of one. */
@@ -12,6 +12,9 @@ export const RUIN_CORNER = BAILEY_RIGHT[2];
 export const FLANK = { r: 2.5, h: 10.6 };
 export const flankAt = (p: [number, number]): [number, number] => [3 + (p[0] - 3) * 0.94, 1 + (p[1] - 1) * 0.94];
 
+/** Depth of the footing under every round tower, down to the bottom of the moat its base stands in. */
+const TOWER_FOOT = DITCH.depth + 0.1;
+
 /** Arrow loops in the lower stage of a round tower. */
 function towerLoops(b: Builder, r: number) {
   for (const a of [0.5, 2.6, 4.7]) {
@@ -23,6 +26,7 @@ function towerLoops(b: Builder, r: number) {
 /** The lower stage of a round tower: spurred base, the shaft up to TOWER_STUMP, arrow loops. */
 export function roundTowerStump(b: Builder, x: number, z: number, r: number, stone: number) {
   b.group({ at: [x, 0, z] }, () => {
+    b.cyl(r + 0.5, TOWER_FOOT, tint(stone, -0.06), { at: [0, -TOWER_FOOT, 0], segs: 10 }); // footing
     b.cyl(r + 0.5, 1.4, tint(stone, -0.04), { segs: 10, rTop: r }); // spurred base
     b.cyl(r, TOWER_STUMP, stone, { segs: 10 });
     towerLoops(b, r);
@@ -38,6 +42,7 @@ export function roundTower(b: Builder, x: number, z: number, r: number, h: numbe
   b.group({ at: [x, 0, z] }, () => {
     if (o?.stump) b.cyl(r, h - TOWER_STUMP, stone, { at: [0, TOWER_STUMP, 0], segs: 10 });
     else {
+      b.cyl(r + 0.5, TOWER_FOOT, tint(stone, -0.06), { at: [0, -TOWER_FOOT, 0], segs: 10 }); // footing
       b.cyl(r + 0.5, 1.4, tint(stone, -0.04), { segs: 10, rTop: r }); // spurred base
       b.cyl(r, h, stone, { segs: 10 });
       if (o?.loops !== false) towerLoops(b, r);
@@ -97,10 +102,18 @@ export function gatehouse(b: Builder, stone: number, o?: { ruin?: boolean }) {
     b.box(3.2, 1.6, 0.4, stone, { at: [0, 4.6, 4.6] });
     archWindow(b, 1.1, 2.4, { at: [0, 7, 4.9], facing: '+z', frame: tint(stone, -0.06), mullion: true });
     if (!o?.ruin) {
-      b.box(3.2, 0.3, 3.8, P.oak, { at: [0, 0.3, 4.4] });
+      // the drawbridge, let down from the gate on to a stone pier standing in the middle of the moat,
+      // and a fixed timber span from the pier to the far bank
+      const zp = DITCH.off + 3.4; // middle of the moat, in this group's frame
+      b.box(3.2, 0.3, zp - 2.5, P.oak, { at: [0, 0.3, (zp + 2.5) / 2] });
       b.sym((s) => b.box(0.1, 0.1, 4.4, P.iron, { at: [s * 1.5, 0.6, 4.2], rot: [-0.28, 0, 0] }));
+      b.box(3.8, DITCH.depth + 0.4, 0.8, tint(stone, -0.06), { at: [0, -DITCH.depth - 0.1, zp + 0.4] });
+      const z1 = zp + DITCH.half + 1.2;
+      b.box(3.2, 0.3, z1 - zp, P.oak, { at: [0, 0.3, (zp + z1) / 2] });
+      b.sym((s) => b.box(0.12, 0.9, z1 - zp - 0.8, P.oakDark, { at: [s * 1.5, 0.6, (zp + z1) / 2 + 0.4] }));
     }
   });
+  if (!o?.ruin) b.deck(3.0, DITCH.off + DITCH.half + 3.2, 0.6, { at: [GATE[0], 0, GATE[1] - 0.9 + (DITCH.off + DITCH.half + 1.2) / 2] });
 }
 
 export const edwardianCastle: BuildingDef = {
@@ -118,6 +131,7 @@ export const edwardianCastle: BuildingDef = {
     { label: 'Portcullis', note: 'An iron-shod grille that drops in grooves to close the gate passage in moments.', at: [GATE[0], 3.6, GATE[1] + 0.4] },
     { label: 'Round flanking towers', note: 'Towers bulging out from the curtain wall so defenders can shoot along its face; round towers had no corners to undermine.', at: [19.5, 11.5, -6] },
     { label: 'Wall-walk', note: 'A path along the top of the curtain wall behind the battlements, linking tower to tower.', at: [-19.5, 7.3, 6.5] },
+    { label: 'Moat', note: 'The ditch of the first castle, kept and held full of water, so that attackers cannot reach the foot of the wall or tunnel under it.', at: [BAILEY_RIGHT[3][0] + DITCH.off, DITCH.water + 0.2, 2] },
     { label: 'Great hall', note: 'The setting for feasts and courts: tall pointed two-light windows, buttresses and a steep roof with a louvre over the hearth.', at: [8.5, 7.4, -7.6] },
   ],
   modelledOn: 'Later 13th-century gatehouses such as Tonbridge and Harlech, applied to an older castle',
@@ -125,29 +139,25 @@ export const edwardianCastle: BuildingDef = {
   build(b) {
     const stone = tint(P.limestone, b.range(-0.03, 0.01));
     const wall = tint(stone, -0.03);
-    motte(b, { color: mix(P.turf, P.grassDry, 0.3), ditch: 'water' });
+    motte(b, { color: mix(P.turf, P.grassDry, 0.3) });
+    // the ditches of 1068, kept and held full of water as a moat
+    castleDitches(b, { wet: true });
     stoneKeep(b, tint(stone, -0.05));
 
     // the Norman curtain is kept on its bank and raised higher, with round towers at the angles;
     // only the stretches either side of the new gatehouse are rebuilt
-    baileyEarthworks(b, { ditch: false });
+    baileyBank(b);
     const C = CURTAIN_1130;
     const right: [number, number][] = [...C.right.slice(0, -1), [GATE[0] + 5, 19]];
     const left: [number, number][] = [[GATE[0] - 5, 19], ...C.left.slice(1)];
-    curtain(b, right, C.h, C.t, wall, { base: C.base, piece: C.piece, outer: -1, merlon: 1, raise: 1.6 });
-    curtain(b, left, C.h, C.t, wall, { base: C.base, piece: C.piece, outer: -1, merlon: 1, raise: 1.6 });
+    curtain(b, right, C.h, C.t, wall, { base: C.base, foot: C.foot, piece: C.piece, outer: -1, merlon: 1, raise: 1.6 });
+    curtain(b, left, C.h, C.t, wall, { base: C.base, foot: C.foot, piece: C.piece, outer: -1, merlon: 1, raise: 1.6 });
     for (const p of [...BAILEY_RIGHT.slice(1, -1), ...BAILEY_LEFT.slice(1, -1)]) {
       // pulled a little inwards so the towers stay on the plot
       const [tx, tz] = flankAt(p);
       roundTower(b, tx, tz, FLANK.r, FLANK.h, stone, { stump: p === RUIN_CORNER });
     }
     gatehouse(b, stone);
-
-    // the ditch is flooded as a wet moat
-    const moatPts = (pts: [number, number][]) => ditchLine(pts, 1.06);
-    strip(b, moatPts(BAILEY_RIGHT.slice(1, -1)), 1.6, 0.04, P.water, { mat: 'glass' });
-    strip(b, moatPts(BAILEY_LEFT.slice(1, -1)), 1.6, 0.04, P.water, { mat: 'glass' });
-    strip(b, [[-13, 20.8], [14, 20.8]], 2, 0.04, P.water, { mat: 'glass' });
 
     // the great hall, a kitchen, stables
     greatHall(b, stone, P.stoneSlate);

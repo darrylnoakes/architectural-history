@@ -13,10 +13,10 @@ export const millenniumFootbridge: BuildingDef = {
     'Where earlier bridges hid their structure inside masonry, this one makes the structure the ornament.',
   materials: ['welded steel', 'steel cables', 'glass', 'reinforced concrete (1936 bridge)'],
   lookFor: [
-    { label: 'Raked mast', note: 'An A-shaped steel mast leaning back from the river, balancing the pull of the cables that hold up the span.', at: [6.0, 11.0, 12.0] },
-    { label: 'Cable stays', note: 'Each straight cable carries a slice of the deck straight back to the mast, so no piers are needed in the river.', at: [6.0, 5.5, 3.5] },
-    { label: 'Backstay', note: 'Cables from the mast head down to a concrete anchor block in the bank, tying the mast back.', at: [6.0, 4.0, 14.0] },
-    { label: 'Steel box deck', note: 'A shallow welded steel box girder, light and stiff, hung from the cables along both edges.', at: [7.0, 0.4, -4.0] },
+    { label: 'Raked mast', note: 'An A-shaped steel mast leaning back from the river, balancing the pull of the cables that hold up the span.', at: [6.25, 11.0, 12.0] },
+    { label: 'Cable stays', note: 'Each straight cable carries a slice of the deck straight back to the mast, so no piers are needed in the river.', at: [6.25, 5.5, 3.5] },
+    { label: 'Backstay', note: 'Cables from the mast head down to a concrete anchor block in the bank, tying the mast back.', at: [6.25, 4.0, 14.0] },
+    { label: 'Steel box deck', note: 'A shallow welded steel box girder, light and stiff, hung from the cables along both edges.', at: [6.9, 0.4, -4.0] },
     { label: 'The 1936 bridge', note: 'Kept and repaired rather than replaced, as more and more old bridges now are.', at: [-4.6, 2.8, 0] },
   ],
   influences: ['high-tech-export'],
@@ -25,8 +25,9 @@ export const millenniumFootbridge: BuildingDef = {
     concreteBridge(b, { aged: true });
 
     // ---- the footbridge, downstream of the road bridge
-    const xc = 6.0;
-    const w = 1.8;
+    // just downstream of the widened 1936 bridge, clear of its end pylons and inside the plot
+    const xc = 6.25;
+    const w = 1.5;
     const crown = 1.0;
     const f = hump(crown);
     const z0 = -12.6;
@@ -44,17 +45,17 @@ export const millenniumFootbridge: BuildingDef = {
       band(b, x, 0.08, z0 + 0.3, z1 - 0.3, (z) => f(z) + 1.05, (z) => f(z) + 1.12, steel, 26);
     });
     // landings: concrete bearing seats on each bank
-    for (const z of [-BANK - 1.0, BANK + 1.0]) b.box(w + 0.3, f(z) - 0.5 + 0.4, 1.0, P.concrete, { at: [xc, -0.4, z] });
+    for (const z of [-BANK - 1.0, BANK + 1.0]) b.box(w + 0.1, f(z) - 0.5 + 0.4, 1.0, P.concrete, { at: [xc, -0.4, z] });
 
     // A-frame mast on the north bank, raked back away from the river
     const apex: [number, number, number] = [xc, 13.0, 12.8];
     const feet: [number, number, number][] = [
-      [xc - 0.95, 0, 10.6],
-      [xc + 0.85, 0, 10.6],
+      [xc - 0.68, 0, 10.6],
+      [xc + 0.68, 0, 10.6],
     ];
-    b.box(w + 0.6, 0.5, 1.2, P.concrete, { at: [xc, -0.3, 10.6] });
+    b.box(w + 0.1, 0.5, 1.2, P.concrete, { at: [xc, -0.3, 10.6] });
     for (const p of feet) bar(b, p, apex, 0.26, white);
-    bar(b, [xc - 0.6, 3.0, 11.1], [xc + 0.55, 3.0, 11.1], 0.16, white); // portal tie above head height
+    bar(b, [xc - 0.45, 3.0, 11.1], [xc + 0.45, 3.0, 11.1], 0.16, white); // portal tie above head height
     b.box(0.5, 0.9, 0.5, white, { at: [apex[0], apex[1] - 0.4, apex[2]] }); // mast head
 
     // forward stays to both deck edges, and backstays to an anchor block
@@ -62,7 +63,7 @@ export const millenniumFootbridge: BuildingDef = {
       for (const s of [-1, 1]) bar(b, [apex[0], apex[1] - 0.2, apex[2]], [xc + s * (w / 2), f(z) - 0.1, z], 0.04, steel);
     }
     const anchor: [number, number, number] = [xc, 0.4, 14.6];
-    b.box(1.6, 0.8, 0.8, P.concrete, { at: [xc, -0.4, 14.6] });
-    for (const dx of [-0.4, 0.4]) bar(b, [apex[0], apex[1] - 0.3, apex[2]], [anchor[0] + dx, anchor[1], anchor[2]], 0.06, steel);
+    b.box(1.4, 0.8, 0.8, P.concrete, { at: [xc, -0.4, 14.6] });
+    for (const dx of [-0.35, 0.35]) bar(b, [apex[0], apex[1] - 0.3, apex[2]], [anchor[0] + dx, anchor[1], anchor[2]], 0.06, steel);
   },
 };

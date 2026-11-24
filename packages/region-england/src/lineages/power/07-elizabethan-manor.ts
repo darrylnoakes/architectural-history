@@ -49,7 +49,7 @@ export function castleFragment(b: Builder, stone: number) {
   arch(b, 1.4, 2.4, P.black, { at: [tx - 2.4, 0, tz + 0.6], facing: -1.2 });
   // the curtain wall: the same pieces as the castle's, the later ones robbed down to stumps
   const C = CURTAIN_1130;
-  const pieces = curtainPieces(RUIN_RUN, C.h, C.t, { base: C.base, piece: C.piece });
+  const pieces = curtainPieces(RUIN_RUN, C.h, C.t, { base: C.base, foot: C.foot, piece: C.piece });
   pieces.forEach((p, i) => {
     if (i === 0) {
       wallBody(b, p, C.t, ruin);
@@ -96,7 +96,7 @@ export const elizabethanManor: BuildingDef = {
       b.window(w, h, { at, facing, frame: stone, bars: [cols, rows], border: 0.14, glass: mix(P.windowDark, P.glass, 0.15) });
 
     // ------------------------------------------------------- garden mount (the old motte) and the ruin
-    motte(b, { color: tint(P.grass, 0.02), ditch: 'none' });
+    motte(b, { color: tint(P.grass, 0.02) });
     // spiral walk winding up the mount
     const path: number[] = [];
     const turns = 1.6;

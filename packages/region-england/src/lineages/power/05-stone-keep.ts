@@ -7,7 +7,11 @@ import {
   arcade,
   arch,
   archWindow,
-  baileyEarthworks,
+  DITCH,
+  baileyBank,
+  castleDitches,
+  castleGround,
+  ditchDepth,
   baileyStables,
   baileyWell,
   curtain,
@@ -84,7 +88,20 @@ export function stoneKeep(b: Builder, stone: number, o?: { ruin?: boolean }) {
   if (!o?.ruin) {
     // stone stair up the motte side to the forebuilding door
     const sx = MOTTE.x + KEEP.w / 2 + 1.9;
-    b.stairs(2.0, MOTTE.h - 0.7, 8.4, 14, tint(stone, -0.06), { at: [sx, 0, MOTTE.z + 2.4 + 4.2] });
+    const sz = MOTTE.z + 2.4 + 4.2;
+    b.stairs(2.0, MOTTE.h - 0.7, 8.4, 14, tint(stone, -0.06), { at: [sx, 0, sz] });
+    // its foot stands in the motte ditch on a masonry pier, and a timber bridge carries the path on
+    // across the rest of the ditch to the bailey
+    const step = (MOTTE.h - 0.7) / 14;
+    const zFoot = sz + 4.2;
+    let zOut = zFoot;
+    while (ditchDepth(sx, zOut) > 0.01) zOut += 0.25;
+    b.box(2.0, DITCH.depth + 0.1, 2.4, tint(stone, -0.08), { at: [sx, -DITCH.depth - 0.1, zFoot - 1.2] });
+    const len = zOut - zFoot + 0.3;
+    b.box(2.0, 0.2, len, P.oak, { at: [sx, step - 0.2, zFoot + len / 2] });
+    for (const t of [0.45, 0.85]) b.box(1.8, DITCH.depth + step - 0.1, 0.24, P.oakDark, { at: [sx, -DITCH.depth - 0.1, zFoot + len * t] });
+    b.sym((s) => b.box(0.1, 0.9, len, P.oakDark, { at: [sx + s * 0.95, step, zFoot + len / 2] }));
+    b.deck(2.0, len, step, { at: [sx, 0, zFoot + len / 2] });
   }
 }
 
@@ -96,6 +113,8 @@ export const CURTAIN_1130 = {
   t: 1.6,
   piece: 6,
   base: (x: number, z: number) => motteY(x, z),
+  /** Founded down in the ditch where the wall crosses it to the motte. */
+  foot: castleGround,
 };
 
 /**
@@ -136,15 +155,16 @@ export const stoneKeepDef: BuildingDef = {
   influences: ['norman-romanesque'],
   build(b) {
     const stone = tint(P.limestone, b.range(-0.02, 0.02));
-    motte(b, { color: mix(P.turf, P.grassDry, 0.3), ditch: 'dry' });
+    motte(b, { color: mix(P.turf, P.grassDry, 0.3) });
+    castleDitches(b);
     stoneKeep(b, stone);
 
     // the bank and ditch of 1068 are kept; a stone curtain wall replaces the palisade on the bank
-    baileyEarthworks(b);
+    baileyBank(b);
     const wall = tint(stone, -0.05);
     const C = CURTAIN_1130;
-    curtain(b, C.right, C.h, C.t, wall, { base: C.base, piece: C.piece, outer: -1 });
-    curtain(b, C.left, C.h, C.t, wall, { base: C.base, piece: C.piece, outer: -1 });
+    curtain(b, C.right, C.h, C.t, wall, { base: C.base, foot: C.foot, piece: C.piece, outer: -1 });
+    curtain(b, C.left, C.h, C.t, wall, { base: C.base, foot: C.foot, piece: C.piece, outer: -1 });
 
     // square gate tower, behind the old timber bridge over the ditch
     b.group({ at: [GATE[0], 0, GATE[1] - 1.8] }, () => {

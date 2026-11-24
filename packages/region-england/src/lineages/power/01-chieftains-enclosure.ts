@@ -75,17 +75,11 @@ export const chieftainsEnclosure: BuildingDef = {
       44,
       earth,
     );
-    arcLathe(
-      b,
-      [
-        [19.3, 0.03],
-        [21.6, 0.03],
-      ],
-      FRONT + GAP * 1.3,
-      FRONT + Math.PI * 2 - GAP * 1.3,
-      44,
-      ditchCol,
-    );
+    // the ditch, a V about 1.6 m deep dug out beyond the foot of the bank, stopping either side
+    // of the causeway that leads to the gate
+    const d0 = FRONT + GAP * 1.3;
+    const d1 = FRONT + Math.PI * 2 - GAP * 1.3;
+    b.dig([...arcPts(0, 0, 19.3, d0, d1, 44), ...arcPts(0, 0, 22.3, d1, d0, 44)], 1.6, { slope: 1.4, color: ditchCol });
     // inturned bank ends: short banks running into the enclosure either side of the gate passage
     b.sym((s) => {
       b.extrude([[-1.8, 0], [0, 1.75], [1.8, 0]], 5.2, earth, { at: [s * 4.3, 0, 13.8] });

@@ -1,13 +1,15 @@
 import { P, mix, tint, type BuildingDef, type Builder } from '@ah/kit';
 import {
-  BAILEY_BANK_H,
   BAILEY_LEFT,
   BAILEY_RIGHT,
   GATE,
   MOTTE,
   arcPts,
   arch,
-  baileyEarthworks,
+  baileyBank,
+  bankY,
+  castleDitches,
+  ditchDepth,
   baileyStables,
   baileyWell,
   gateBridge,
@@ -97,13 +99,15 @@ export const motteAndBailey: BuildingDef = {
   ],
   influences: ['norman-romanesque'],
   build(b) {
-    motte(b, { color: tint(P.turf, -0.02), ditch: 'dry' });
+    motte(b, { color: tint(P.turf, -0.02) });
+    castleDitches(b);
 
     // ----------------------------------------------------------- the bailey: bank, palisade, ditch
     const rightLine: XZ[] = [toSummit(BAILEY_RIGHT[0]), ...BAILEY_RIGHT];
     const leftLine: XZ[] = [...BAILEY_LEFT, toSummit(BAILEY_LEFT[BAILEY_LEFT.length - 1])];
-    baileyEarthworks(b);
-    const base = (x: number, z: number) => Math.max(motteY(x, z), BAILEY_BANK_H - 0.1);
+    baileyBank(b);
+    // stakes stand on the motte, the crest of the bank, or down in the ditch where the line crosses it
+    const base = (x: number, z: number) => Math.max(motteY(x, z), bankY(x, z) - 0.1) - ditchDepth(x, z);
     palisade(b, rightLine, 3, tint(P.oak, 0.05), { base, rail: 2 });
     palisade(b, leftLine, 3, tint(P.oak, 0.05), { base, rail: 2 });
 

@@ -1,7 +1,8 @@
 import { P, tint, type BuildingDef, type Builder } from '@ah/kit';
 import { BANK, BED, END, hump, band, side, steps, archCurve, archRing, type ZY } from './shared';
 
-export const CONCRETE_W = 8.6;
+/** Overall width: a 7 m carriageway, like the High Street it carries, between 1.4 m pavements. */
+export const CONCRETE_W = 9.8;
 export const CONCRETE_CROWN = 1.9;
 
 /** Art Deco lamp: a slim fluted post with a stepped cap and a tall glass lantern. */
@@ -32,7 +33,7 @@ export function concreteBridge(b: Builder, o: { aged?: boolean } = {}): void {
   const rise = 2.15;
   const intra = archCurve(-BANK, BANK, spring, rise, 'segmental', 24);
   const ribT = 0.5;
-  const ribs = [-3.85, -1.3, 1.3, 3.85];
+  const ribs = [-4.4, -1.47, 1.47, 4.4];
   const slabT = 0.38;
   const under = (z: number) => f(z) - slabT;
   const ribTop = (z: number) => {
@@ -110,11 +111,11 @@ export const concreteArchBridge: BuildingDef = {
     'The engineering is plain, but the pylons, lamps and finned parapets are styled in the Art Deco manner of the new cinemas and roadhouses.',
   materials: ['reinforced concrete', 'Portland stone facing', 'bronze', 'tarmac'],
   lookFor: [
-    { label: 'Open spandrels', note: 'Between the arch and the deck there are only columns, not solid walls: the arch ribs do the work.', at: [4.4, 1.0, -5.6] },
-    { label: 'Arch rib', note: 'Four parallel ribs of reinforced concrete, with a rise of only about a seventh of the span.', at: [4.4, -0.3, 6.4] },
-    { label: 'Pylon', note: 'Stepped and fluted pylons crowned with lanterns mark the ends of the bridge in the Art Deco manner.', at: [4.6, 4.6, 12.3] },
-    { label: 'Deco lamp', note: 'Slim bronze lamp posts with tall glass lanterns, lit by electricity rather than gas.', at: [4.4, 5.6, 5.0] },
-    { label: 'Kerbed footway', note: 'Raised pavements either side of a tarmac carriageway with a white centre line, laid out for motor traffic.', at: [-3.8, 1.8, -2.0] },
+    { label: 'Open spandrels', note: 'Between the arch and the deck there are only columns, not solid walls: the arch ribs do the work.', at: [4.9, 1.0, -5.6] },
+    { label: 'Arch rib', note: 'Four parallel ribs of reinforced concrete, with a rise of only about a seventh of the span.', at: [4.9, -0.3, 6.4] },
+    { label: 'Pylon', note: 'Stepped and fluted pylons crowned with lanterns mark the ends of the bridge in the Art Deco manner.', at: [5.0, 4.6, 12.3] },
+    { label: 'Deco lamp', note: 'Slim bronze lamp posts with tall glass lanterns, lit by electricity rather than gas.', at: [4.75, 5.6, 5.0] },
+    { label: 'Kerbed footway', note: 'Raised pavements either side of a tarmac carriageway with a white centre line, laid out for motor traffic.', at: [-4.2, 1.8, -2.0] },
   ],
   influences: ['art-deco'],
   build(b) {

@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { P, facingAngle, mix, tint, type Builder, type Facing, type Opts } from '@ah/kit';
+import { CutField, P, facingAngle, mix, tint, type Builder, type Cut, type Facing, type Opts } from '@ah/kit';
 
 /*
  * Local helpers for the power lineage: raw triangle meshes (partial lathes, serrated palisades,
@@ -53,29 +53,6 @@ export function arcLathe(
         [r1 * Math.cos(t0), y1, r1 * Math.sin(t0)],
       );
     }
-  }
-  soup(b, out, color, o);
-}
-
-/** A flat polygon strip on the ground (ditches, paths, beds), from a list of [x, z] centre points. */
-export function strip(b: Builder, pts: XZ[], width: number, y: number, color: number, o?: Opts): void {
-  const out: number[] = [];
-  for (let i = 0; i < pts.length - 1; i++) {
-    const [x0, z0] = pts[i];
-    const [x1, z1] = pts[i + 1];
-    const L = Math.hypot(x1 - x0, z1 - z0) || 1;
-    const nx = (-(z1 - z0) / L) * (width / 2);
-    const nz = ((x1 - x0) / L) * (width / 2);
-    // extend each piece a little so the joints close
-    const ex = ((x1 - x0) / L) * (width / 2);
-    const ez = ((z1 - z0) / L) * (width / 2);
-    quad(
-      out,
-      [x0 - ex + nx, y, z0 - ez + nz],
-      [x1 + ex + nx, y, z1 + ez + nz],
-      [x1 + ex - nx, y, z1 + ez - nz],
-      [x0 - ex - nx, y, z0 - ez - nz],
-    );
   }
   soup(b, out, color, o);
 }
@@ -208,29 +185,12 @@ export function motteY(x: number, z: number): number {
 
 /**
  * The motte: a turfed (or, later, grown-over) cone of rammed earth with a flat top, and the walkable
- * deck on its summit. `ditch` paints the dry ditch on the bailey side ('water' for a wet moat).
+ * deck on its summit. Its ditch is dug with the bailey's (see `castleDitches`).
  */
-export function motte(b: Builder, o?: { color?: number; ditch?: 'dry' | 'water' | 'none' }): void {
+export function motte(b: Builder, o?: { color?: number }): void {
   const col = o?.color ?? P.turf;
   b.lathe(MOTTE_PROFILE, col, { at: [MOTTE.x, 0, MOTTE.z], segs: 20 });
   b.deck(MOTTE.rTop * 1.4, MOTTE.rTop * 1.4, MOTTE.h, { at: [MOTTE.x, 0, MOTTE.z] });
-  const ditch = o?.ditch ?? 'dry';
-  if (ditch !== 'none') {
-    // the ditch that cuts the motte off from the bailey (the outer sides run off the plot)
-    const wet = ditch === 'water';
-    arcLathe(
-      b,
-      [
-        [MOTTE.rBase + 0.1, 0.03],
-        [MOTTE.rBase + 2.4, 0.03],
-      ],
-      -0.85,
-      2.4,
-      18,
-      wet ? P.water : mix(P.soil, P.earth, 0.3),
-      { at: [MOTTE.x, 0, MOTTE.z], mat: wet ? 'glass' : 'matte' },
-    );
-  }
 }
 
 // ------------------------------------------------------------------ the bailey outline
@@ -264,42 +224,163 @@ export function toSummit(p: XZ, r = MOTTE.rTop - 0.4): XZ {
   return [MOTTE.x + r * Math.cos(a), MOTTE.z + r * Math.sin(a)];
 }
 
-/** Offset a bailey line outwards (scaled about a point near the bailey centre) for the outer ditch. */
-export function ditchLine(pts: XZ[], k = 1.06): XZ[] {
-  return pts.map(([x, z]) => [x * k, 2 + (z - 2) * k]);
+
+/** Height and width of the bailey bank. */
+export const BAILEY_BANK_H = 1.0;
+export const BAILEY_BANK_W = 2.4;
+
+/**
+ * The bank of the bailey, thrown up in 1068 and kept by the stone castle: the palisade (later the
+ * curtain wall) stands on its crest.
+ */
+export function baileyBank(b: Builder): void {
+  bank(b, BAILEY_RIGHT.slice(1), BAILEY_BANK_W, BAILEY_BANK_H, tint(P.turf, 0.03));
+  bank(b, BAILEY_LEFT.slice(0, -1), BAILEY_BANK_W, BAILEY_BANK_H, tint(P.turf, 0.03));
+}
+
+/** Height of the bank at plan point (x, z); 0 off it. */
+export function bankY(x: number, z: number): number {
+  let best = 0;
+  for (const line of [BAILEY_RIGHT.slice(1), BAILEY_LEFT.slice(0, -1)]) {
+    for (let i = 0; i < line.length - 1; i++) {
+      const [ax, az] = line[i];
+      const [bx, bz] = line[i + 1];
+      const dx = bx - ax;
+      const dz = bz - az;
+      const t = Math.max(0, Math.min(1, ((x - ax) * dx + (z - az) * dz) / (dx * dx + dz * dz)));
+      const d = Math.hypot(x - (ax + t * dx), z - (az + t * dz));
+      best = Math.max(best, BAILEY_BANK_H * (1 - d / (BAILEY_BANK_W / 2)));
+    }
+  }
+  return best;
+}
+
+// ------------------------------------------------------------------ the castle ditches (1068 to 1575)
+
+/**
+ * The ditches dug in 1068 and kept, then flooded, until the castle was given up: depth and side
+ * slope (a V with a narrow bottom), how far the bailey ditch's centre line runs outside the bank's
+ * crest, its half width, and the level of the water when it is a moat.
+ */
+export const DITCH = { depth: 1.6, slope: 1.4, off: 2.6, half: 1.4, water: -0.6 };
+/** The motte ditch: a ring round the bailey side of the mound, between these radii and angles. */
+export const MOTTE_DITCH = { r0: MOTTE.rBase, r1: MOTTE.rBase + 2 * DITCH.half, a0: 0.45, a1: 2.45 };
+
+/**
+ * Offset a polyline sideways by d along its right-hand normal (-dz, dx), mitring the corners (so a
+ * positive d moves the bailey line inwards).
+ */
+export function offsetLine(pts: XZ[], d: number): XZ[] {
+  const n = (i: number): XZ => {
+    const [x0, z0] = pts[i];
+    const [x1, z1] = pts[i + 1];
+    const L = Math.hypot(x1 - x0, z1 - z0) || 1;
+    return [-(z1 - z0) / L, (x1 - x0) / L];
+  };
+  return pts.map(([x, z], i) => {
+    if (i === 0 || i === pts.length - 1) {
+      const m = n(Math.min(i, pts.length - 2));
+      return [x + m[0] * d, z + m[1] * d] as XZ;
+    }
+    const a = n(i - 1);
+    const c = n(i);
+    let mx = a[0] + c[0];
+    let mz = a[1] + c[1];
+    const L = Math.hypot(mx, mz) || 1;
+    mx /= L;
+    mz /= L;
+    const k = d / (mx * a[0] + mz * a[1]);
+    return [x + mx * k, z + mz * k] as XZ;
+  });
 }
 
 /**
- * The earthworks of the bailey, thrown up in 1068 and kept by the stone castle: the bank the
- * palisade (later the curtain wall) stands on, and the dry ditch outside it, broken at the gate.
+ * Centre line of the bailey ditch: from the foot of the motte at the back, round the outside of the
+ * bank (across the front of the gate) and into the motte ditch on the left.
  */
-export function baileyEarthworks(b: Builder, o?: { bank?: boolean; ditch?: boolean }): void {
-  if (o?.bank !== false) {
-    bank(b, BAILEY_RIGHT.slice(1), 3.2, BAILEY_BANK_H, tint(P.turf, 0.03));
-    bank(b, BAILEY_LEFT.slice(0, -1), 3.2, BAILEY_BANK_H, tint(P.turf, 0.03));
-  }
-  if (o?.ditch !== false) {
-    const ditch = mix(P.soil, P.earth, 0.4);
-    strip(b, ditchLine(BAILEY_RIGHT.slice(1)), 1.5, 0.03, ditch);
-    strip(b, ditchLine(BAILEY_LEFT.slice(0, -1)), 1.5, 0.03, ditch);
-    strip(b, [[-12.6, 20.6], [-0.8, 20.6]], 1.7, 0.03, ditch);
-    strip(b, [[3.8, 20.6], [14, 20.6]], 1.7, 0.03, ditch);
-  }
+export const BAILEY_DITCH_PATH: XZ[] = (() => {
+  const line: XZ[] = [BAILEY_RIGHT[1], ...BAILEY_RIGHT.slice(2, -1), ...BAILEY_LEFT.slice(1, -1)];
+  const mid = offsetLine(line, -DITCH.off);
+  const am = MOTTE_DITCH.a1 - 0.05;
+  const rm = (MOTTE_DITCH.r0 + MOTTE_DITCH.r1) / 2;
+  return [[-3, mid[0][1]] as XZ, ...mid, [MOTTE.x + rm * Math.cos(am), MOTTE.z + rm * Math.sin(am)] as XZ];
+})();
+
+function ringOutline(cx: number, cz: number, r0: number, r1: number, a0: number, a1: number, n: number): XZ[] {
+  return [...arcPts(cx, cz, r0, a0, a1, n), ...arcPts(cx, cz, r1, a1, a0, n)];
 }
 
-/** Height of the bailey bank. */
-export const BAILEY_BANK_H = 1.0;
+/** The two hollows of the castle ditch, as cuts in the plot's own frame. */
+export const CASTLE_CUTS: Cut[] = (() => {
+  const color = mix(P.soil, P.earth, 0.4);
+  const { r0, r1, a0, a1 } = MOTTE_DITCH;
+  const band = [...offsetLine(BAILEY_DITCH_PATH, DITCH.half), ...offsetLine(BAILEY_DITCH_PATH, -DITCH.half).reverse()];
+  return [
+    { pts: ringOutline(MOTTE.x, MOTTE.z, r0, r1, a0, a1, 16), depth: DITCH.depth, slope: DITCH.slope, color },
+    { pts: band, depth: DITCH.depth, slope: DITCH.slope, color },
+  ];
+})();
 
-/** The timber bridge over the ditch in front of the gate (1068, kept in front of the stone gate tower). */
-export function gateBridge(b: Builder): void {
-  b.group({ at: [GATE[0], 0, GATE[1]] }, () => {
-    b.box(3.2, 0.25, 2.6, P.oak, { at: [0, 0.35, 1.7] });
-    b.sym((s) => {
-      b.box(0.12, 1.0, 2.6, P.oakDark, { at: [s * 1.5, 0.6, 1.7] });
-      b.box(0.24, 0.6, 0.24, P.oakDark, { at: [s * 1.4, 0, 1.0] });
-      b.box(0.24, 0.6, 0.24, P.oakDark, { at: [s * 1.4, 0, 2.6] });
-    });
+let castleField: CutField | null = null;
+
+/** How far the castle ditches lower the ground at (x, z). */
+export function ditchDepth(x: number, z: number): number {
+  castleField ??= new CutField(CASTLE_CUTS);
+  return castleField.depth(x, z);
+}
+
+/** Ground height in the castle while its ditches are open: the motte, less the ditches. */
+export function castleGround(x: number, z: number): number {
+  return motteY(x, z) - ditchDepth(x, z);
+}
+
+/**
+ * Dig the motte ditch and the bailey ditch (1068 to 1575). `wet` floods them as a moat: a flat sheet
+ * of water DITCH.water below the ground, inside the hollow, with its sloping banks showing above.
+ */
+export function castleDitches(b: Builder, o?: { wet?: boolean }): void {
+  for (const c of CASTLE_CUTS) b.dig(c.pts, c.depth, { slope: c.slope, color: c.color });
+  if (!o?.wet) return;
+  // how far in from the lip the sides have sunk below the water level
+  const inset = (-DITCH.water / DITCH.depth) * DITCH.slope;
+  const { r0, r1, a0, a1 } = MOTTE_DITCH;
+  const da = inset / ((r0 + r1) / 2);
+  arcLathe(b, [[r0 + inset, DITCH.water], [r1 - inset, DITCH.water]], a0 + da, a1 - da, 16, P.water, {
+    at: [MOTTE.x, 0, MOTTE.z],
+    mat: 'glass',
+    jitter: false,
   });
+  // the bailey moat, drawn back from the closed end at the foot of the motte
+  const path = BAILEY_DITCH_PATH.slice();
+  const [p0, p1] = path;
+  const L = Math.hypot(p1[0] - p0[0], p1[1] - p0[1]);
+  path[0] = [p0[0] + ((p1[0] - p0[0]) / L) * inset, p0[1] + ((p1[1] - p0[1]) / L) * inset];
+  const lo = offsetLine(path, DITCH.half - inset);
+  const hi = offsetLine(path, -(DITCH.half - inset));
+  const out: number[] = [];
+  const y = DITCH.water;
+  for (let i = 0; i < path.length - 1; i++) {
+    quad(out, [lo[i][0], y, lo[i][1]], [hi[i][0], y, hi[i][1]], [hi[i + 1][0], y, hi[i + 1][1]], [lo[i + 1][0], y, lo[i + 1][1]]);
+  }
+  soup(b, out, P.water, { mat: 'glass', jitter: false });
+}
+
+/**
+ * The timber bridge over the ditch in front of the gate (1068, kept in front of the stone gate
+ * tower): a plank deck on two trestles standing on the bottom of the ditch.
+ */
+export function gateBridge(b: Builder): void {
+  const z = DITCH.off; // over the middle of the ditch
+  const len = 2 * DITCH.half + 1.4;
+  b.group({ at: [GATE[0], 0, GATE[1]] }, () => {
+    b.box(3.2, 0.25, len, P.oak, { at: [0, 0.35, z] });
+    b.sym((s) => {
+      b.box(0.12, 1.0, len, P.oakDark, { at: [s * 1.5, 0.6, z] });
+      for (const dz of [-0.7, 0.7]) b.box(0.24, DITCH.depth + 0.45, 0.24, P.oakDark, { at: [s * 1.4, -DITCH.depth - 0.1, z + dz] });
+    });
+    for (const dz of [-0.7, 0.7]) b.box(3.1, 0.2, 0.26, P.oakDark, { at: [0, 0.15, z + dz] }); // trestle caps
+  });
+  b.deck(3.0, len, 0.6, { at: [GATE[0], 0, GATE[1] + z] });
 }
 
 /** The timber stables along the right side of the bailey, thatched (1068, kept in 1130). */
@@ -465,9 +546,10 @@ export function curtainPieces(
   pts: XZ[],
   h: number,
   t: number,
-  o?: { base?: (x: number, z: number) => number; piece?: number },
+  o?: { base?: (x: number, z: number) => number; foot?: (x: number, z: number) => number; piece?: number },
 ): WallPiece[] {
   const base = o?.base ?? (() => 0);
+  const foot = o?.foot;
   const piece = o?.piece ?? 4;
   const out: WallPiece[] = [];
   for (let i = 0; i < pts.length - 1; i++) {
@@ -498,7 +580,10 @@ export function curtainPieces(
         mz,
         ang,
         len: L / n + t * 0.6,
-        lo: Math.min(base(ax, az), base(bx, bz)) - 0.6,
+        // the foot goes down to the lowest ground under the piece (into a ditch it crosses)
+        lo: foot
+          ? Math.min(...[0, 0.25, 0.5, 0.75, 1].map((u) => foot(ax + (bx - ax) * u, az + (bz - az) * u))) - 0.6
+          : Math.min(base(ax, az), base(bx, bz)) - 0.6,
         top: base(mx, mz) + h,
         run: L / n,
         nx,
@@ -518,6 +603,7 @@ export function wallBody(b: Builder, p: WallPiece, t: number, color: number): vo
  * A battlemented stone curtain wall along a polyline, stepping up where it climbs the motte.
  * `h` is the height of the wall-walk above the ground under it; merlons stand on the outer edge.
  * `outer` is +1 if the outside is to the right of the direction of travel, -1 if to the left.
+ * `foot` gives the ground the wall is founded on, where it differs from `base` (a ditch it crosses).
  * `raise` builds the wall to `h` as before and then heightens it by that much: the old wall body
  * stays the same piece, and the battlements are rebuilt on top of the new course.
  */
@@ -527,7 +613,15 @@ export function curtain(
   h: number,
   t: number,
   color: number,
-  o?: { base?: (x: number, z: number) => number; outer?: 1 | -1; merlon?: number; piece?: number; walk?: number; raise?: number },
+  o?: {
+    base?: (x: number, z: number) => number;
+    foot?: (x: number, z: number) => number;
+    outer?: 1 | -1;
+    merlon?: number;
+    piece?: number;
+    walk?: number;
+    raise?: number;
+  },
 ): void {
   const outer = o?.outer ?? 1;
   const mw = o?.merlon ?? 0.8;
