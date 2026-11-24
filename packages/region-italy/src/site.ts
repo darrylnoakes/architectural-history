@@ -49,22 +49,35 @@ function relief(x: number, z: number): number {
 
 const roads: Road[] = [
   // the consular road: in from the north, through the city, over the bridge
-  { id: 'cardo', kind: 'main', pts: [[60, -480], [40, -340], [10, -240], [0, -150], [0, 79]] },
+  { id: 'cardo-north', kind: 'main', pts: [[60, -480], [40, -340], [10, -240], [8.7, -228]] },
+  // (through the kept north gate it is only a narrow street once the ring road takes the traffic)
+  { id: 'cardo-gate', kind: 'main', pts: [[8.7, -228], [0, -150], [0, -112]], until: 1880 },
+  { id: 'cardo-gate-street', kind: 'lane', pts: [[8.7, -228], [0, -150], [0, -112]], since: 1880 },
+  { id: 'cardo', kind: 'main', pts: [[0, -112], [0, 79]] },
   { id: 'via-roma', kind: 'main', pts: [[0, 113], [0, 156]] },
   { id: 'old-south-road', kind: 'main', pts: [[0, 156], [0, 190], [-14, 260], [-50, 360], [-80, 480]], until: 1864 },
-  { id: 'decumanus-west', kind: 'main', pts: [[0, 0], [-170, 0], [-250, 16], [-340, 30], [-480, 70]] },
-  { id: 'decumanus-east', kind: 'main', pts: [[0, 0], [230, 0], [290, 12], [350, -18], [480, -30]] },
+  { id: 'decumanus-west', kind: 'main', pts: [[0, 0], [-128, 0]] },
+  // (through the kept west gate tower it is a narrow street in the motor age)
+  { id: 'decumanus-gate', kind: 'main', pts: [[-128, 0], [-172, 0]], until: 1880 },
+  { id: 'decumanus-gate-street', kind: 'lane', pts: [[-128, 0], [-172, 0]], since: 1880 },
+  { id: 'decumanus-west-road', kind: 'main', pts: [[-172, 0], [-250, 16], [-340, 30], [-480, 70]] },
+  { id: 'decumanus-east', kind: 'main', pts: [[0, 0], [130, 0]] },
+  // (through the old east gate, kept as a monument on the boulevard, it is a narrow street)
+  { id: 'decumanus-east-gate', kind: 'main', pts: [[130, 0], [160, 0]], until: 1880 },
+  { id: 'decumanus-east-gate-street', kind: 'lane', pts: [[130, 0], [160, 0]], since: 1880 },
+  { id: 'decumanus-east-road', kind: 'main', pts: [[160, 0], [230, 0], [290, 12], [350, -18], [480, -30]] },
   { id: 'via-dei-mulini', kind: 'lane', pts: [[-26, 55], [128, 55]], since: -200 },
   { id: 'via-del-mercato', kind: 'lane', pts: [[-64, 0], [-64, 36]], since: -250 },
   // united Italy: an avenue to the station, a boulevard where the east wall stood, a second bridge
   { id: 'viale', kind: 'main', pts: [[-150, 136], [146, 136]], since: 1864 },
   { id: 'viale-west', kind: 'main', pts: [[-200, 136], [-150, 136]], since: 2002 },
   { id: 'new-south-road', kind: 'main', pts: [[146, 136], [149, 200], [126, 300], [92, 380], [70, 480]], since: 1864 },
-  // (it runs on the line of the east wall, pulled down after 1870, and steps aside round the old gate)
-  { id: 'boulevard-north', kind: 'main', pts: [[146, -128], [146, -26], [134, -17], [134, 17], [146, 26], [146, 79]], since: 1880 },
+  // (it runs on the line of the east wall, pulled down after 1870, and passes in front of the old gate)
+  { id: 'boulevard-north', kind: 'main', pts: [[146, -128], [146, -26], [149.5, -17], [149.5, 17], [146, 26], [146, 79]], since: 1880 },
   { id: 'via-dei-mulini-east', kind: 'lane', pts: [[128, 55], [146, 55]], since: 1880 },
-  // ...and round the north-east corner to join the old road outside the north gate
-  { id: 'boulevard-ring', kind: 'main', pts: [[146, -128], [132, -142], [0, -142]], since: 1880 },
+  // ...and round the north-east corner, then clear of the kept north gate's ditch and glacis and
+  // behind the villas, to join the old road well north of the gate
+  { id: 'boulevard-ring', kind: 'main', pts: [[146, -128], [132, -142], [52, -142], [42, -152], [42, -212], [8.7, -228]], since: 1880 },
   { id: 'boulevard-south', kind: 'main', pts: [[146, 113], [146, 136]], since: 1880 },
   { id: 'footbridge-path-north', kind: 'lane', pts: [[-36, 74], [-36, 79]], since: 2008 },
   { id: 'footbridge-path-south', kind: 'lane', pts: [[-36, 113], [-36, 136]], since: 2008 },

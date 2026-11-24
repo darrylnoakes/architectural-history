@@ -55,7 +55,11 @@ const roads: Road[] = [
   { id: 'old-paris-road', kind: 'main', pts: [[0, 156], [0, 190], [14, 260], [50, 360], [90, 480]], until: 1849 },
   // the road from the west, bending round the foot of the castle hill, and on to Reims
   { id: 'route-ouest', kind: 'main', pts: [[0, 0], [-170, 0], [-250, 40], [-350, 30], [-480, -10]] },
-  { id: 'route-de-reims', kind: 'main', pts: [[0, 0], [250, 0], [310, -14], [370, 10], [480, 30]] },
+  { id: 'route-de-reims', kind: 'main', pts: [[0, 0], [124, 0]] },
+  // (through the kept east gate and over its bridges it is a narrow street in the motor age)
+  { id: 'route-de-reims-porte', kind: 'main', pts: [[124, 0], [184, 0]], until: 1885 },
+  { id: 'rue-de-la-porte-est', kind: 'lane', pts: [[124, 0], [184, 0]], since: 1885 },
+  { id: 'route-de-reims-est', kind: 'main', pts: [[184, 0], [250, 0], [310, -14], [370, 10], [480, 30]] },
   { id: 'rue-des-moulins', kind: 'lane', pts: [[0, 55], [128, 55]], since: 20 },
   { id: 'rue-du-marche', kind: 'lane', pts: [[-64, 0], [-64, 36]], since: 20 },
   { id: 'chemin-du-chateau', kind: 'lane', pts: [[-222, 26], [-245, -2], [-245, -34]], since: 960 },
