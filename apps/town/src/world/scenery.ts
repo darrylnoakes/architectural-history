@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { Builder, P, getMaterials, mulberry32, type Collider, type Era, type Region, type TreeKind } from '@ah/kit';
+import { Builder, P, getMaterials, mulberry32, type Collider, type Cut, type Era, type Region, type TreeKind } from '@ah/kit';
 import type { Land } from './land';
 
 interface TreeInst {
@@ -20,6 +20,8 @@ interface Prop {
   until: number;
   /** What a walker bumps into while this prop stands. */
   colliders: Collider[];
+  /** What it digs out of the ground while it stands. */
+  cuts: Cut[];
   object: THREE.Object3D;
   cur: number;
   spin?: THREE.Object3D[];
@@ -142,11 +144,11 @@ export class Scenery {
     this.meshes[t.kind].setMatrixAt(t.slot, this.dummy.matrix);
   }
 
-  private addProp(object: THREE.Object3D, since: number, until = Infinity, spin?: THREE.Object3D[], colliders: Collider[] = []) {
+  private addProp(object: THREE.Object3D, since: number, until = Infinity, spin?: THREE.Object3D[], colliders: Collider[] = [], cuts: Cut[] = []) {
     object.scale.setScalar(0.0001);
     object.visible = false;
     this.group.add(object);
-    this.props.push({ since, until, object, cur: 0, spin, colliders });
+    this.props.push({ since, until, object, cur: 0, spin, colliders, cuts });
   }
 
   /** The solid parts of whatever scenery stands in the current year. */
@@ -156,6 +158,19 @@ export class Scenery {
       this.solid = this.props.filter((p) => p.colliders.length && this.year >= p.since && this.year < p.until).flatMap((p) => p.colliders);
     }
     return this.solid;
+  }
+
+  /** The props standing now that dig into the ground: a key that changes when the set does, and their cuts. */
+  cutsKey(): string {
+    let key = '';
+    this.props.forEach((p, i) => {
+      if (p.cuts.length && this.year >= p.since && this.year < p.until) key += i + ',';
+    });
+    return key;
+  }
+
+  cuts(): Cut[] {
+    return this.props.filter((p) => p.cuts.length && this.year >= p.since && this.year < p.until).flatMap((p) => p.cuts);
   }
 
   private makeProps() {
@@ -169,7 +184,7 @@ export class Scenery {
         return;
       }
       const built = b.finish();
-      this.addProp(built.object, prop.since ?? -Infinity, prop.until ?? Infinity, undefined, prop.solid ? built.colliders : []);
+      this.addProp(built.object, prop.since ?? -Infinity, prop.until ?? Infinity, undefined, prop.solid ? built.colliders : [], built.cuts);
     });
 
     if (site.turbines) {

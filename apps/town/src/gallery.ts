@@ -9,7 +9,7 @@
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { Builder, P, construct, type BuildingDef, type Lineage } from '@ah/kit';
+import { Builder, P, construct, type BuildingDef, type Lineage, cutGround, getMaterials, placeCut, type Cut } from '@ah/kit';
 import { createStage } from '@ah/engine';
 
 const lineageModules = import.meta.glob<{ default: Lineage }>('../../../packages/region-*/src/lineages/*/index.ts');
@@ -71,12 +71,14 @@ async function main() {
   const spacing = plot ? plot[0] + 8 : 30;
   const total = new THREE.Box3();
   const lines: string[] = [];
+  const cuts: Cut[] = [];
 
   defs.forEach((entry, i) => {
     const built = construct(entry.def, seed, variant, cutaway);
     const x = (i - (defs.length - 1) / 2) * spacing;
     built.object.position.x = x;
     scene.add(built.object);
+    cuts.push(...built.cuts.map((c) => placeCut(c, { x, z: 0, rotY: 0 })));
     const bb = built.bounds.clone().translate(new THREE.Vector3(x, 0, 0));
     total.union(bb);
     const s = built.bounds.getSize(new THREE.Vector3());
@@ -115,6 +117,13 @@ async function main() {
     ground.box(W, 3, 80 - z1, P.grass, { at: [0, -3, (z1 + 80) / 2], jitter: false });
     ground.box(W, 0.8, z1 - z0, P.mud, { at: [0, -3, (z0 + z1) / 2], jitter: false });
     ground.box(W, 0.02, z1 - z0, P.water, { at: [0, -1.2, (z0 + z1) / 2], jitter: false, mat: 'glass' });
+  } else if (cuts.length) {
+    // the ground is dug where the buildings ask: a sheet with their ditches in it, over an earth floor
+    const deep = Math.max(...cuts.map((c) => c.depth));
+    ground.box(W, 0.5, 160, P.mud, { at: [0, -deep - 0.7, 0], jitter: false });
+    const sheet = new THREE.Mesh(cutGround({ x0: -W / 2, z0: -80, x1: W / 2, z1: 80, color: P.grass }, cuts), getMaterials().matte);
+    sheet.receiveShadow = true;
+    scene.add(sheet);
   } else {
     ground.box(W, 0.5, 160, P.grass, { at: [0, -0.5, 0], jitter: false });
   }

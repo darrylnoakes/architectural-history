@@ -32,18 +32,18 @@ function section(b: Builder, x: number): void {
   const { rows, h } = GAULISH;
   const back = GAULISH.top;
   b.group({ at: [x - 0.012, 0, 0], rotY: -Math.PI / 2 }, () => {
-    // local +x is world -z here; local panels face world -x
+    // local +x is world +z here; local panels face world -x
     rows.forEach((y, i) => {
       // a cross-beam running back from the face into the core, cut along its length
-      b.panel(FACE - back - 0.5, 0.24, c.beam, { at: [-(FACE + back) / 2 - 0.15, y, 0], depth: 0.03 });
+      b.panel(FACE - back - 0.5, 0.24, c.beam, { at: [(FACE + back) / 2 - 0.15, y, 0], depth: 0.03 });
       // the long beams running along the wall, cut across: square ends, with the iron spike that pins each crossing
       for (const z of i % 2 ? [-0.35, -1.55] : [0.15, -0.95]) {
-        b.panel(0.24, 0.24, tint(c.beam, 0.1), { at: [-z, y + 0.24, 0], depth: 0.05 });
-        b.panel(0.06, 0.06, P.iron, { at: [-z, y + 0.33, 0], depth: 0.08 });
+        b.panel(0.24, 0.24, tint(c.beam, 0.1), { at: [z, y + 0.24, 0], depth: 0.05 });
+        b.panel(0.06, 0.06, P.iron, { at: [z, y + 0.33, 0], depth: 0.08 });
       }
     });
     // rubble and earth packed between the timbers, darker than the ramp
-    b.panel(FACE - back - 0.68, h - 0.1, mix(c.earth, c.stone, 0.4), { at: [-(FACE - 0.68 + back) / 2, 0.05, 0], depth: 0.01 });
+    b.panel(FACE - back - 0.68, h - 0.1, mix(c.earth, c.stone, 0.4), { at: [(FACE - 0.68 + back) / 2, 0.05, 0], depth: 0.01 });
   });
 }
 
@@ -89,8 +89,10 @@ export const murusGallicus: BuildingDef = {
       b.group({ at: [s * GATE_X, 0, GATE_Z - 3.0] }, () => {
         b.extrude([[0, 0], [s * 4.6, 0], [0, GAULISH.h]], 3.0, c.earth, { at: [0, 0, 1.5], ...NJ });
       });
-      // the ditch turns out round the mouth of the funnel
-      b.box(0.9, 0.04, GAULISH.ditch[1] - GAULISH.ditch[0], c.ditch, { at: [s * (MOUTH + 0.45), 0, (GAULISH.ditch[0] + GAULISH.ditch[1]) / 2], ...NJ });
+      // the ditch stops short of the road: its end slopes up beside the mouth of the funnel (the
+      // edge toward the rampart's own ditch is open, so the two run together)
+      const [d0, d1] = GAULISH.ditch;
+      b.dig([[s * MOUTH, d0], [s * (MOUTH - 2.4), d0], [s * (MOUTH - 2.4), d1], [s * MOUTH, d1]], GAULISH.depth, { slope: GAULISH.slope, color: c.ditch, open: [3] });
     });
 
     // ---------------------------------------------------------------- the gate tower

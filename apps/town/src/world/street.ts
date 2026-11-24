@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { Builder, P, construct, type Built, type Era, type Lineage } from '@ah/kit';
+import { Builder, CutField, P, construct, cutGround, getMaterials, placeCut, type Built, type Cut, type Era, type Lineage } from '@ah/kit';
 import type { Walkable, WorldCollider } from '@ah/engine';
 import { deckHeightAt, toWorld, type WorldDeck } from './town';
 
@@ -26,6 +26,7 @@ export class Street implements Walkable {
   private cols: WorldCollider[] = [];
   private dks: WorldDeck[] = [];
   private river: [number, number] | null = null;
+  private dug = new CutField([]);
 
   constructor() {
     this.group.visible = false;
@@ -45,7 +46,7 @@ export class Street implements Walkable {
         b = construct(st.def, seed, variant);
       } catch (err) {
         console.error(`Failed to build ${st.def.id}`, err);
-        b = { object: new THREE.Group(), bounds: new THREE.Box3(), colliders: [], decks: [], triangles: 0, hasCutaway: false };
+        b = { object: new THREE.Group(), bounds: new THREE.Box3(), colliders: [], decks: [], cuts: [], triangles: 0, hasCutaway: false };
       }
       builts.push(b);
       const s = b.bounds.isEmpty() ? pw * 0.6 : b.bounds.max.x - b.bounds.min.x;
@@ -59,6 +60,7 @@ export class Street implements Walkable {
       return c;
     };
     const ground = new Builder(5);
+    const cuts: Cut[] = [];
     const W = total + 260;
     const front = pd / 2;
     const bridgeLike = !!this.river && this.river[0] < 0 && this.river[1] > 0;
@@ -68,8 +70,6 @@ export class Street implements Walkable {
       ground.box(W, 3, 200 - z1, P.grass, { at: [0, -3, (z1 + 200) / 2], jitter: false });
       ground.box(W, 0.7, z1 - z0, 0x7a7458, { at: [0, -3, (z0 + z1) / 2], jitter: false });
       ground.box(W, 0.02, z1 - z0, 0x5f9bb0, { at: [0, -1.2, (z0 + z1) / 2], jitter: false, mat: 'glass' });
-    } else {
-      ground.box(W, 0.5, 400, P.grass, { at: [0, -0.5, 0], jitter: false });
     }
     // the path you walk along, in front of the row
     ground.box(total + 40, 0.05, 3.6, P.gravel, { at: [0, 0, front + 5], jitter: false });
@@ -89,6 +89,7 @@ export class Street implements Walkable {
         ground.box(5, 0.05, 30, P.gravel, { at: [ox, 0, -28], jitter: false });
       }
       const origin = { x: ox, z: 0, rotY: 0 };
+      cuts.push(...b.cuts.map((c) => placeCut(c, origin)));
       this.cols.push(...b.colliders.map((c) => toWorld(c, origin)));
       this.dks.push(...b.decks.map((d) => toWorld(d, origin)));
       // the date tag floats over the building, where the timeline panel cannot hide it
@@ -102,6 +103,18 @@ export class Street implements Walkable {
     for (let tx = -total / 2 - 30; tx < total / 2 + 30; tx += 11) {
       ground.tree(ground.range(9, 15), { at: [tx + ground.range(-3, 3), 0, back - ground.range(0, 22)], kind: ground.chance(0.2) ? 'conifer' : 'round' });
     }
+    if (!this.river) {
+      if (cuts.length) {
+        // the ground is dug where the buildings ask: a sheet with their ditches in it, over an earth floor
+        const deep = Math.max(...cuts.map((c) => c.depth));
+        ground.box(W, 0.5, 400, P.mud, { at: [0, -deep - 0.7, 0], jitter: false });
+        const sheet = new THREE.Mesh(cutGround({ x0: -W / 2, z0: -200, x1: W / 2, z1: 200, color: P.grass, step: 0.75 }, cuts), getMaterials().matte);
+        sheet.receiveShadow = true;
+        sheet.userData.ground = true;
+        this.group.add(sheet);
+      } else ground.box(W, 0.5, 400, P.grass, { at: [0, -0.5, 0], jitter: false });
+    }
+    this.dug = new CutField(cuts);
     const g = ground.finish().object;
     g.traverse((o) => {
       (o as THREE.Mesh).castShadow = true;
@@ -134,7 +147,7 @@ export class Street implements Walkable {
   }
 
   groundHeight(x: number, z: number): number {
-    let h = 0;
+    let h = this.dug.empty ? 0 : -this.dug.depth(x, z);
     if (this.river && z > this.river[0] + 0.5 && z < this.river[1] - 0.5) h = -2.2;
     for (const d of this.dks) h = Math.max(h, deckHeightAt(d, x, z));
     return h;

@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { P, hash2, smoothstep, valueNoise, type Era } from '@ah/kit';
+import { P, hash2, smoothstep, valueNoise, type CutSample, type Era } from '@ah/kit';
 import { STREET_STYLES, WATER_Y, type Land } from './land';
 
 // Heights of the street layers above the ground. They must stack in this order: the depth offsets on
@@ -9,12 +9,26 @@ const SQUARE_Y = 0.05;
 const ROAD_Y = 0.07;
 const LINE_Y = 0.09;
 
-const N = 300;
 const SPAN = 1700;
 
-function warp(u: number): number {
-  const a = Math.abs(u);
-  return Math.sign(u) * SPAN * (0.17 * a + 0.83 * a * a * a * a);
+/**
+ * Grid lines along one axis: evenly spaced at `fine` between a and b (where the town and its
+ * earthworks are), then wider and wider out to the horizon.
+ */
+function gridLines(centre: number, a: number, b: number, fine: number): Float32Array {
+  const out: number[] = [];
+  const n = Math.max(1, Math.round((b - a) / fine));
+  for (let i = 0; i <= n; i++) out.push(a + ((b - a) * i) / n);
+  for (const dir of [-1, 1]) {
+    let x = dir < 0 ? a : b;
+    let step = fine;
+    while (Math.abs(x - centre) < SPAN) {
+      step = Math.min(80, step * 1.07);
+      x += dir * step;
+      out.push(x);
+    }
+  }
+  return Float32Array.from(out.sort((p, q) => p - q));
 }
 
 const c1 = new THREE.Color();
@@ -75,13 +89,13 @@ function ribbon(
   out: { pos: number[]; idx: number[] },
   flatUntil = 0,
 ) {
-  // resample the polyline every few metres so it follows the ground
+  // resample the polyline every few metres so it follows the ground and stops at a ditch
   const samples: [number, number][] = [];
   for (let i = 0; i < pts.length - 1; i++) {
     const [ax, az] = pts[i];
     const [bx, bz] = pts[i + 1];
     const len = Math.hypot(bx - ax, bz - az);
-    const steps = Math.max(1, Math.ceil(len / 7));
+    const steps = Math.max(1, Math.ceil(len / 4));
     for (let s = 0; s < steps; s++) samples.push([ax + ((bx - ax) * s) / steps, az + ((bz - az) * s) / steps]);
   }
   samples.push(pts[pts.length - 1]);
@@ -100,11 +114,13 @@ function ribbon(
     for (const s of [-1, 1]) {
       const px = x + (nx * s * width) / 2;
       const pz = z + (nzz * s * width) / 2;
-      const y = Math.max(flatUntil, land.height(px, pz)) + lift;
+      const y = Math.max(flatUntil, land.natural(px, pz)) + lift;
       out.pos.push(px, y, pz);
     }
   }
   for (let i = 0; i < samples.length - 1; i++) {
+    // where the ground has been dug away the road stops: a gate's own bridge carries it over
+    if (!land.cuts.empty && land.cuts.depth((samples[i][0] + samples[i + 1][0]) / 2, (samples[i][1] + samples[i + 1][1]) / 2) > 0.05) continue;
     const a = base + i * 2;
     out.idx.push(a, a + 1, a + 2, a + 1, a + 3, a + 2);
   }
@@ -132,6 +148,14 @@ export class Terrain {
   private ground: THREE.Mesh;
   private colFrom: Float32Array;
   private colTo: Float32Array;
+  /** Height of the natural ground at each vertex, and the heights the surface is moving between. */
+  private natY: Float32Array;
+  private yFrom: Float32Array;
+  private yTo: Float32Array;
+  private moving = false;
+  private nx = 0;
+  private nz = 0;
+  private cutsVersion = 0;
   private blend = 1;
   private roadGroup = new THREE.Group();
   private roadMat = new THREE.MeshStandardMaterial({ roughness: 1, color: 0xffffff, side: THREE.DoubleSide });
@@ -143,31 +167,30 @@ export class Terrain {
 
   constructor(private land: Land) {
     const [cx, cz] = land.site.centre;
-    const pos = new Float32Array((N + 1) * (N + 1) * 3);
-    for (let j = 0; j <= N; j++) {
-      for (let i = 0; i <= N; i++) {
-        const x = warp((i / N) * 2 - 1) + cx;
-        const z = warp((j / N) * 2 - 1) + cz;
-        const k = (j * (N + 1) + i) * 3;
-        pos[k] = x;
-        pos[k + 1] = land.height(x, z);
-        pos[k + 2] = z;
+    // fine enough to shape a ditch where the site says there are earthworks, coarser elsewhere
+    const d = land.site.detail;
+    const xs = d ? gridLines(cx, d.x0, d.x1, 1.5) : gridLines(cx, cx - 110, cx + 110, 2);
+    const zs = d ? gridLines(cz, d.z0, d.z1, 1.5) : gridLines(cz, cz - 110, cz + 110, 2);
+    const NX = xs.length;
+    const NZ = zs.length;
+    const pos = new Float32Array(NX * NZ * 3);
+    this.natY = new Float32Array(NX * NZ);
+    for (let j = 0; j < NZ; j++) {
+      for (let i = 0; i < NX; i++) {
+        const k = j * NX + i;
+        pos[k * 3] = xs[i];
+        pos[k * 3 + 1] = this.natY[k] = land.natural(xs[i], zs[j]);
+        pos[k * 3 + 2] = zs[j];
       }
     }
-    const idx: number[] = [];
-    for (let j = 0; j < N; j++) {
-      for (let i = 0; i < N; i++) {
-        const a = j * (N + 1) + i;
-        const b = a + 1;
-        const c = a + N + 1;
-        const d = c + 1;
-        idx.push(a, c, b, b, c, d);
-      }
-    }
+    this.yFrom = Float32Array.from(this.natY);
+    this.yTo = Float32Array.from(this.natY);
+    this.nx = NX;
+    this.nz = NZ;
+    const idx = new Uint32Array((NX - 1) * (NZ - 1) * 6);
     const g = new THREE.BufferGeometry();
     g.setAttribute('position', new THREE.BufferAttribute(pos, 3));
-    g.setIndex(idx);
-    g.computeVertexNormals();
+    g.setIndex(new THREE.BufferAttribute(idx, 1));
     this.colFrom = new Float32Array(pos.length);
     this.colTo = new Float32Array(pos.length);
     g.setAttribute('color', new THREE.BufferAttribute(new Float32Array(pos.length), 3));
@@ -177,6 +200,7 @@ export class Terrain {
     );
     this.ground.receiveShadow = true;
     this.group.add(this.ground);
+    this.triangulate();
 
     // river surface: a ribbon a little wider than the channel
     const w = { pos: [] as number[], idx: [] as number[] };
@@ -209,28 +233,98 @@ export class Terrain {
   setEra(era: Era, year: number, instant: boolean) {
     const squares = this.land.site.squares.filter((q) => (q.since ?? -Infinity) <= year).length;
     const lanes = this.land.roadsAt(year).map((r) => r.id).join(',');
-    const key = era.id + '|' + lanes + '|' + squares;
+    const key = era.id + '|' + lanes + '|' + squares + '|' + this.land.cutsVersion;
     if (key !== this.roadKey) {
       this.roadKey = key;
       this.buildRoads(era, year);
     }
-    if (era.id === this.eraId) return;
+    const dug = this.land.cutsVersion !== this.cutsVersion;
+    if (era.id === this.eraId && !dug) return;
     this.eraId = era.id;
-    const pos = this.ground.geometry.attributes.position;
+    this.cutsVersion = this.land.cutsVersion;
+    const pos = this.ground.geometry.attributes.position as THREE.BufferAttribute;
     const col = this.ground.geometry.attributes.color as THREE.BufferAttribute;
-    // start the fade from whatever is on screen now
+    const arr = pos.array as Float32Array;
+    // start the change from whatever is on screen now
     this.colFrom.set(col.array as Float32Array);
     const c = new THREE.Color();
+    const cc = new THREE.Color();
+    const cuts = this.land.cuts;
+    const s: CutSample = { depth: 0, color: undefined, weight: 0 };
     for (let i = 0; i < pos.count; i++) {
-      groundColour(this.land, pos.getX(i), pos.getZ(i), pos.getY(i), era, c);
+      const x = arr[i * 3];
+      const z = arr[i * 3 + 2];
+      groundColour(this.land, x, z, this.natY[i], era, c);
+      if (dug) {
+        this.yFrom[i] = arr[i * 3 + 1];
+        this.yTo[i] = this.natY[i];
+      }
+      if (!cuts.empty && cuts.sample(x, z, s).depth > 0) {
+        // the bottom of a ditch takes its own colour, or lies in shade
+        if (s.color !== undefined) c.lerp(cc.setHex(s.color, THREE.SRGBColorSpace), s.weight);
+        else c.multiplyScalar(1 - 0.22 * s.weight);
+        this.yTo[i] = this.natY[i] - s.depth;
+      }
       this.colTo[i * 3] = c.r;
       this.colTo[i * 3 + 1] = c.g;
       this.colTo[i * 3 + 2] = c.b;
     }
+    if (dug) {
+      this.moving = true;
+      this.triangulate();
+    }
     this.blend = instant ? 1 : 0;
-    if (instant) {
-      (col.array as Float32Array).set(this.colTo);
-      col.needsUpdate = true;
+    if (instant) this.settle();
+  }
+
+  /**
+   * Split each cell along whichever diagonal is the more level in the ground as it is going to be, so
+   * the lip of a ditch running across the grid comes out as a clean crease and not a row of steps.
+   */
+  private triangulate() {
+    const index = this.ground.geometry.index!;
+    const idx = index.array as Uint32Array;
+    const y = this.yTo;
+    const NX = this.nx;
+    let k = 0;
+    for (let j = 0; j < this.nz - 1; j++) {
+      for (let i = 0; i < NX - 1; i++) {
+        const a = j * NX + i;
+        const b = a + 1;
+        const c = a + NX;
+        const d = c + 1;
+        if (Math.abs(y[a] - y[d]) < Math.abs(y[b] - y[c])) {
+          idx[k++] = a;
+          idx[k++] = c;
+          idx[k++] = d;
+          idx[k++] = a;
+          idx[k++] = d;
+          idx[k++] = b;
+        } else {
+          idx[k++] = a;
+          idx[k++] = c;
+          idx[k++] = b;
+          idx[k++] = b;
+          idx[k++] = c;
+          idx[k++] = d;
+        }
+      }
+    }
+    index.needsUpdate = true;
+  }
+
+  /** Put the colours, and the heights if the ground is being dug or filled, where they are going. */
+  private settle() {
+    const g = this.ground.geometry;
+    const col = g.attributes.color as THREE.BufferAttribute;
+    (col.array as Float32Array).set(this.colTo);
+    col.needsUpdate = true;
+    if (this.moving) {
+      const pos = g.attributes.position as THREE.BufferAttribute;
+      const arr = pos.array as Float32Array;
+      for (let i = 0; i < this.yTo.length; i++) arr[i * 3 + 1] = this.yTo[i];
+      pos.needsUpdate = true;
+      this.moving = false;
     }
   }
 
@@ -304,11 +398,18 @@ export class Terrain {
 
   update(dt: number) {
     if (this.blend >= 1) return;
-    this.blend = Math.min(1, this.blend + dt / 1.1);
+    this.blend = Math.min(1, this.blend + dt / (this.moving ? 0.7 : 1.1));
+    if (this.blend >= 1) return this.settle();
     const col = this.ground.geometry.attributes.color as THREE.BufferAttribute;
     const arr = col.array as Float32Array;
     const k = this.blend * this.blend * (3 - 2 * this.blend);
     for (let i = 0; i < arr.length; i++) arr[i] = this.colFrom[i] + (this.colTo[i] - this.colFrom[i]) * k;
     col.needsUpdate = true;
+    if (this.moving) {
+      const pos = this.ground.geometry.attributes.position as THREE.BufferAttribute;
+      const p = pos.array as Float32Array;
+      for (let i = 0; i < this.yTo.length; i++) if (this.yFrom[i] !== this.yTo[i]) p[i * 3 + 1] = this.yFrom[i] + (this.yTo[i] - this.yFrom[i]) * k;
+      pos.needsUpdate = true;
+    }
   }
 }

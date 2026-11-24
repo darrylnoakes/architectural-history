@@ -36,3 +36,4 @@ const phases: WallPhase<WallStage>[] = [
 const circuit = wallCircuit(WALL, { curtain, corner, terminal, info: CURTAIN }, phases);
 export const wallProps = circuit.props;
 export const wallClearings = circuit.clearings;
+export const wallDetail = circuit.detail;

@@ -5,6 +5,7 @@ export * from './builder';
 export * from './noise';
 export * from './props';
 export * from './circuit';
+export * from './cut';
 
 import { Builder, type Built } from './builder';
 import type { BuildingDef } from './types';

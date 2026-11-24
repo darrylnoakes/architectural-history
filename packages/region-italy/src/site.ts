@@ -1,5 +1,5 @@
 import { P, car, lamp, smoothstep, tint, type Road, type Site, type SiteProp } from '@ah/kit';
-import { wallClearings, wallProps } from './town-walls';
+import { wallClearings, wallDetail, wallProps } from './town-walls';
 
 /**
  * The ground the Italian city stands on. +x east, +z south. Two Roman streets cross at the origin:
@@ -332,5 +332,6 @@ export const site: Site = {
     ...wallClearings,
   ],
   props: [...wallProps, ...props],
+  detail: wallDetail,
   view: { target: [4, 4, 14], distance: 250, azimuth: 0.55, polar: 0.98 },
 };

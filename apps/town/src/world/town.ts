@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { construct, getRuinMaterials, type Built, type BuildingDef, type Deck, type Lineage, type Plot, type Region, type Stage } from '@ah/kit';
+import { construct, getRuinMaterials, placeCut, type Built, type Cut, type BuildingDef, type Deck, type Lineage, type Plot, type Region, type Stage } from '@ah/kit';
 import { plotSchedule, scheduleAt, type PlotStage, type WorldCollider } from '@ah/engine';
 
 export interface WorldDeck extends Deck {}
@@ -72,6 +72,8 @@ export class Town {
   private allDecks: WorldDeck[] = [];
   private dirty = true;
   private openId: string | null = null;
+  /** Goes up whenever a plot's building changes, so the ground can be dug again to suit. */
+  cutsVersion = 0;
   /** Fired when the building on a plot changes (after the swap). */
   onSwap: ((p: PlotState) => void) | null = null;
 
@@ -151,7 +153,7 @@ export class Town {
         b = construct(def, p.plot.seed, p.variant, open);
       } catch (err) {
         console.error(`Failed to build ${def.id}`, err);
-        b = { object: new THREE.Group(), bounds: new THREE.Box3(), colliders: [], decks: [], triangles: 0, hasCutaway: false };
+        b = { object: new THREE.Group(), bounds: new THREE.Box3(), colliders: [], decks: [], cuts: [], triangles: 0, hasCutaway: false };
       }
       const ruin = p.schedule[i].state === 'ruin' ? getRuinMaterials() : null;
       b.object.traverse((o) => {
@@ -209,6 +211,7 @@ export class Town {
       p.decks = [];
     }
     this.dirty = true;
+    this.cutsVersion++;
     this.trim(p);
     this.onSwap?.(p);
   }
@@ -287,6 +290,11 @@ export class Town {
       for (const b of p.cache.values()) b.object.traverse((o) => (o as THREE.Mesh).geometry?.dispose());
       p.cache.clear();
     }
+  }
+
+  /** Everything the standing buildings dig out of the ground, in world space. */
+  cuts(): Cut[] {
+    return this.plots.flatMap((p) => (p.current ? p.current.cuts.map((c) => placeCut(c, p.plot)) : []));
   }
 
   colliders(): readonly WorldCollider[] {

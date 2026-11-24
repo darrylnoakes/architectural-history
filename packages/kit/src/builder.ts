@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import type { Cut } from './cut';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 import { P } from './palette';
 import { mulberry32 } from './rng';
@@ -46,6 +47,8 @@ export interface Built {
   bounds: THREE.Box3;
   colliders: Collider[];
   decks: Deck[];
+  /** Hollows the model digs into the ground it stands on (see `Builder.dig`). */
+  cuts: Cut[];
   triangles: number;
   /** True if the building asked whether to cut itself open (see `Builder.cutaway`): it has two forms. */
   hasCutaway: boolean;
@@ -216,6 +219,7 @@ export class Builder {
   private rng: () => number;
   private _colliders: Collider[] = [];
   private _decks: Deck[] = [];
+  private _cuts: Cut[] = [];
   private _noCollide = false;
 
   constructor(
@@ -928,6 +932,42 @@ export class Builder {
     return this;
   }
 
+  /**
+   * Dig a hollow into the ground: a ditch, a moat, a sunken yard. `pts` is its outline (x, z) in the
+   * current frame; the ground inside is lowered by `depth`, sloping down from the edges over `slope`
+   * metres (default 1.5). Wherever the model is shown the ground is reshaped to match, so build
+   * whatever stands in or beside the hollow down to -depth.
+   *
+   * The ground cannot make a vertical face: it changes height over a metre or two. For a hollow with
+   * walled sides, carry the outline about 2 m behind the face of the wall and draw the wall (and
+   * something over the strip behind it) yourself. `open` lists edges with no slope (edge i runs from
+   * point i to point i + 1), where the hollow carries on into the next cut. `color` paints the bottom.
+   */
+  dig(pts: [number, number][], depth: number, o?: { slope?: number; color?: number; open?: number[] }): this {
+    const m = this.top();
+    const v = new THREE.Vector3();
+    this._cuts.push({
+      pts: pts.map(([x, z]) => {
+        v.set(x, 0, z).applyMatrix4(m);
+        return [v.x, v.z] as [number, number];
+      }),
+      depth,
+      slope: o?.slope ?? 1.5,
+      color: o?.color,
+      open: o?.open,
+    });
+    return this;
+  }
+
+  /** A straight ditch along X from x0 to x1 between z0 and z1, its two ends open to carry on. */
+  trench(x0: number, x1: number, z0: number, z1: number, depth: number, o?: { slope?: number; color?: number; closed?: boolean }): this {
+    return this.dig(
+      [[x0, z0], [x1, z0], [x1, z1], [x0, z1]],
+      depth,
+      { slope: o?.slope, color: o?.color, open: o?.closed ? undefined : [1, 3] },
+    );
+  }
+
   // ---------------------------------------------------------------- output
 
   finish(): Built {
@@ -969,6 +1009,6 @@ export class Builder {
       const s = bounds.getSize(new THREE.Vector3());
       colliders = [{ x: c.x, z: c.z, w: s.x, d: s.z, rotY: 0 }];
     }
-    return { object, bounds, colliders, decks: this._decks, triangles, hasCutaway: this._askedCutaway };
+    return { object, bounds, colliders, decks: this._decks, cuts: this._cuts, triangles, hasCutaway: this._askedCutaway };
   }
 }

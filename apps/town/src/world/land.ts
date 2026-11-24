@@ -1,4 +1,4 @@
-import { smoothstep, type Road, type Site, type StreetSurface } from '@ah/kit';
+import { CutField, smoothstep, type Cut, type Road, type Site, type StreetSurface } from '@ah/kit';
 
 export const WATER_Y = -1.2;
 
@@ -30,6 +30,15 @@ export const STREET_STYLES: Record<StreetSurface, StreetStyle> = {
  */
 export class Land {
   readonly riverHalf: number;
+  /** The ditches and other hollows dug by whatever stands in the current year. */
+  cuts = new CutField([]);
+  /** Goes up each time the cuts change, so the terrain and the roads know to follow. */
+  cutsVersion = 0;
+
+  setCuts(cuts: readonly Cut[]) {
+    this.cuts = new CutField(cuts);
+    this.cutsVersion++;
+  }
 
   constructor(readonly site: Site) {
     this.riverHalf = site.river?.half ?? 0;
@@ -45,8 +54,14 @@ export class Land {
     return this.site.river ? Math.abs(z - this.site.river.z(x)) : Infinity;
   }
 
-  /** Height of the ground: the site's relief with the river channel cut into it. */
+  /** Height of the ground as it is now: the natural ground less whatever has been dug out of it. */
   height = (x: number, z: number): number => {
+    const h = this.natural(x, z);
+    return this.cuts.empty ? h : h - this.cuts.depth(x, z);
+  };
+
+  /** Height of the natural ground: the site's relief with the river channel cut into it. */
+  natural = (x: number, z: number): number => {
     let h = this.site.relief(x, z);
     if (this.site.river) {
       const d = Math.abs(z - this.site.river.z(x));

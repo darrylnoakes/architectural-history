@@ -44,6 +44,24 @@ the named features up close on foot.
   be whole; it is true when the building is selected or shown on its own (the gallery shows the
   open form; add `&cutaway=0` to its URL for the closed one). Everything outside the cut must be
   the same in both.
+- A ditch, a moat or a sunken yard is dug out of the ground itself, never painted on it:
+  `b.dig(outline, depth, { slope, color, open })` lowers the ground inside an outline of (x, z)
+  points, and `b.trench(x0, x1, z0, z1, depth, { slope, color })` is the straight case, a ditch
+  along X with both ends open. The town's terrain, the viewer, the lineage street and the gallery
+  all reshape their ground to match, and walkers go down into it. Rules:
+  - Build whatever stands in or beside the hollow down to `-depth` (a bridge's trestles, the foot
+    of a wall, an island outwork), and give a bridge over it a `b.deck(...)` so it can be walked.
+  - The ground cannot make a vertical face. It changes height over `slope` metres (default 1.5,
+    and not much less than 1.5 can be shown in the town). An earth ditch simply uses that slope. A
+    ditch with walled sides carries its outline about 2 m behind the face of the wall, and the
+    model draws the wall down to the bottom and something (a path, a coping, a strip of turf) over
+    the 2 m behind it.
+  - Edges listed in `open` have no slope: use them where one cut carries on into the next (edge
+    i runs from point i to point i + 1). Two cuts that only touch along sloped edges leave a ridge
+    between them.
+  - A road stops at the edge of a cut and the model's own bridge or causeway carries it over, so
+    a hollow across a road must have one. Nothing may be dug across a road that has no bridge.
+  - `dig` follows `b.group` moves and turns. `color` paints the bottom.
 
 Useful helpers: `b.beam(p0, p1, w, h, colour)` for any bar between two points (rafters, braces,
 struts, cables, railings), `b.lathe(profile, colour, { start, sweep })` for part of a turn (an apse,

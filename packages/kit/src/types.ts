@@ -241,6 +241,11 @@ export interface Site {
   squares: { x0: number; x1: number; z0: number; z1: number; since?: number }[];
   /** The woodland mix, most common first. `share` values are relative. */
   trees: { kind: TreeKind; share: number }[];
+  /**
+   * The area with earthworks (town ditches and the like): the ground is meshed finely enough there
+   * to be dug into shape. Without it only the middle of the town is fine.
+   */
+  detail?: { x0: number; z0: number; x1: number; z1: number };
   /** Places trees never grow (beyond roads, plots, squares and the river, which are kept clear anyway). */
   clearings?: { x: number; z: number; r: number }[];
   props: SiteProp[];

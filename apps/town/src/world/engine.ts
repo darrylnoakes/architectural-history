@@ -43,6 +43,7 @@ export class Engine {
   private last = performance.now();
   private raf = 0;
   private first = true;
+  private cutsKey = '';
   private ring: THREE.Mesh;
   private unsub: () => void;
   private callouts: { el: HTMLElement; world: THREE.Vector3 }[] = [];
@@ -159,6 +160,7 @@ export class Engine {
     this.region = region;
     this.timeScale = scaleOf(region);
     this.land = new Land(region.site);
+    this.cutsKey = '';
     this.terrain = new Terrain(this.land);
     this.town = new Town(region, this.land.height);
     this.scenery = new Scenery(region, this.land, { treeCount: this.treeCount });
@@ -578,9 +580,15 @@ export class Engine {
 
     const era = this.timeScale.era(year);
     if (!s.street) {
-      this.terrain.setEra(era, year, this.first);
       this.scenery.setEra(era, year, this.first);
       this.town.setYear(year, this.first);
+      // the ground is dug to suit whatever stands now: ditches come and go with their walls
+      const cutsKey = this.scenery.cutsKey() + '|' + this.town.cutsVersion;
+      if (cutsKey !== this.cutsKey) {
+        this.cutsKey = cutsKey;
+        this.land.setCuts([...this.scenery.cuts(), ...this.town.cuts()]);
+      }
+      this.terrain.setEra(era, year, this.first);
       this.terrain.update(dt);
       this.scenery.update(dt, this.elapsed);
       this.town.update(dt);

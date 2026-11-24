@@ -54,6 +54,21 @@ function grid(a: number, c: number, step: number, off = 0, margin = 0.15): numbe
   return xs;
 }
 
+/**
+ * The outline of a ditch turning a corner: a quarter ring between radii r0 and r1 in the corner's
+ * outer quadrant (+X, +Z). Its two straight ends join the stretches either side, so dig it with
+ * `open: ringEnds(n)`.
+ */
+export function quarterRing(r0: number, r1: number, n = 6): XY[] {
+  const pts: XY[] = [];
+  for (let i = 0; i <= n; i++) pts.push([Math.sin((Math.PI / 2) * (i / n)) * r0, Math.cos((Math.PI / 2) * (i / n)) * r0]);
+  for (let i = n; i >= 0; i--) pts.push([Math.sin((Math.PI / 2) * (i / n)) * r1, Math.cos((Math.PI / 2) * (i / n)) * r1]);
+  return pts;
+}
+
+/** The two open ends of a `quarterRing(r0, r1, n)` outline, as edge indices for `b.dig`. */
+export const ringEnds = (n = 6): number[] => [n, 2 * n + 1];
+
 // ================================================================== the murus gallicus (2nd to 1st century BC)
 
 /**
@@ -67,6 +82,9 @@ export const GAULISH = {
   top: -2.0,
   toe: -7.6,
   ditch: [2.2, 7.2] as [number, number],
+  /** Depth of the ditch and the run of its sloping sides: a V with a narrow flat bottom. */
+  depth: 1.9,
+  slope: 1.8,
   beamStep: 1.6,
   rows: [0.5, 1.25, 2.0, 2.75, 3.5],
 };
@@ -105,9 +123,8 @@ export function gaulishStretch(b: Builder, x0: number, x1: number, o?: { ditch?:
   b.box(L, 1.15, 0.12, c.wattle, { at: [xc, h, face - 0.25], ...NJ });
   for (const x of grid(x0, x1, 2.0, 1.0, 0.1)) b.box(0.18, 1.45, 0.18, c.timber, { at: [x, h, face - 0.25], ...NJ });
   if (o?.ditch !== false) {
-    prismX(b, x0, x1, [[ditch[0], 0.02], [ditch[0] + 1.3, 0.02]], tint(c.ditch, 0.07));
-    prismX(b, x0, x1, [[ditch[0] + 1.3, 0.03], [ditch[1] - 1.3, 0.03]], c.ditch);
-    prismX(b, x0, x1, [[ditch[1] - 1.3, 0.02], [ditch[1], 0.02]], tint(c.ditch, 0.07));
+    // the ditch is dug out of the ground itself, its ends open to run on into the next stretch
+    b.trench(x0, x1, ditch[0], ditch[1], GAULISH.depth, { slope: GAULISH.slope, color: c.ditch });
     // the spoil not needed for the rampart, thrown up in a low bank beyond the ditch
     prismX(b, x0, x1, [[ditch[1], 0], [ditch[1] + 0.3, 0.45], [ditch[1] + 0.75, 0.4], [ditch[1] + 0.8, 0]], c.grass);
   }
@@ -121,9 +138,7 @@ function gaulishCorner(b: Builder): void {
   b.lathe([[face, 0], [face, h]], c.stone, q);
   b.lathe([[0.001, h], [face, h]], c.earth, q);
   b.lathe([[face - 0.25, h], [face - 0.25, h + 1.15]], c.wattle, q);
-  b.lathe([[ditch[0], 0.02], [ditch[0] + 1.3, 0.02]], tint(c.ditch, 0.06), q);
-  b.lathe([[ditch[0] + 1.3, 0.03], [ditch[1] - 1.3, 0.03]], c.ditch, q);
-  b.lathe([[ditch[1] - 1.3, 0.02], [ditch[1], 0.02]], tint(c.ditch, 0.06), q);
+  b.dig(quarterRing(ditch[0], ditch[1]), GAULISH.depth, { slope: GAULISH.slope, color: c.ditch, open: ringEnds() });
   b.lathe([[ditch[1], 0], [ditch[1] + 0.3, 0.45], [ditch[1] + 0.75, 0.4], [ditch[1] + 0.8, 0]], c.grass, q);
   // beam ends on the curve
   for (const [i, y] of GAULISH.rows.entries()) {

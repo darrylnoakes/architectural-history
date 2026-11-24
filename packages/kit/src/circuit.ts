@@ -49,7 +49,7 @@ export function wallCircuit<S extends string>(
   bounds: WallBounds,
   pieces: WallPieces<S>,
   phases: WallPhase<S>[],
-): { props: SiteProp[]; clearings: { x: number; z: number; r: number }[] } {
+): { props: SiteProp[]; clearings: { x: number; z: number; r: number }[]; detail: { x0: number; z0: number; x1: number; z1: number } } {
   const g = bounds.gate ?? 15;
   // each stretch is measured in the frame of the gate plot it leaves: that plot's position and rotation
   const runs: Record<WallSide, { at: [number, number]; rotY: number; x0: number; x1: number }> = {
@@ -105,5 +105,8 @@ export function wallCircuit<S extends string>(
   const clearings: { x: number; z: number; r: number }[] = [];
   for (let z = bounds.north; z <= bounds.river; z += 14) clearings.push({ x: bounds.west, z, r: 11 }, { x: bounds.east, z, r: 11 });
   for (let x = bounds.west; x <= bounds.east; x += 14) clearings.push({ x, z: bounds.north, r: 11 });
-  return { props, clearings };
+  // the walls, their ditches and outworks: where the ground must be fine enough to dig
+  const m = 36;
+  const detail = { x0: bounds.west - m, z0: bounds.north - m, x1: bounds.east + m, z1: bounds.river + 14 };
+  return { props, clearings, detail };
 }

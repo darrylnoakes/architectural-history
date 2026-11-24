@@ -1,5 +1,5 @@
 import { P, car, lamp, smoothstep, tint, type Road, type Site, type SiteProp } from '@ah/kit';
-import { wallClearings, wallProps } from './town-walls';
+import { wallClearings, wallDetail, wallProps } from './town-walls';
 
 /**
  * The ground the French city stands on. +x east, +z south. The Grande Rue, the old road from
@@ -344,6 +344,7 @@ export const site: Site = {
     ...wallClearings,
   ],
   props: [...wallProps, ...props],
+  detail: wallDetail,
   turbines: { since: 2008, at: [[360, -330], [420, -270], [330, -400], [450, -340]] },
   view: { target: [4, 4, 4], distance: 255, azimuth: 0.6, polar: 0.98 },
 };

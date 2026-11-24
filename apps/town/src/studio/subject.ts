@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { Builder, P, construct, type BuildingDef, type Built, type Lineage } from '@ah/kit';
+import { Builder, P, construct, cutGround, getMaterials, type BuildingDef, type Built, type Lineage } from '@ah/kit';
 
 /** One building to show on its own: a stage of a lineage, built for a given seed. */
 export interface Subject {
@@ -22,7 +22,7 @@ function safeConstruct(def: BuildingDef, seed: number): Built {
     return construct(def, seed, 0);
   } catch (err) {
     console.error(`Failed to build ${def.id}`, err);
-    return { object: new THREE.Group(), bounds: new THREE.Box3(), colliders: [], decks: [], triangles: 0, hasCutaway: false };
+    return { object: new THREE.Group(), bounds: new THREE.Box3(), colliders: [], decks: [], cuts: [], triangles: 0, hasCutaway: false };
   }
 }
 
@@ -51,6 +51,14 @@ export function stageSubject(s: Subject, opts: { trees?: boolean } = {}): Staged
     g.box(span, 3, R * 1.3 - z1, P.grass, { at: [0, -3, (z1 + R * 1.3) / 2], jitter: false });
     g.box(span, 0.7, z1 - z0, 0x7a7458, { at: [0, -3, (z0 + z1) / 2], jitter: false });
     g.box(span, 0.02, z1 - z0, 0x5f9bb0, { at: [0, -1.2, (z0 + z1) / 2], jitter: false, mat: 'glass' });
+  } else if (built.cuts.length) {
+    // the pad is dug where the building asks: a round sheet with its ditches in it, on a deeper drum of earth
+    const deep = Math.max(...built.cuts.map((c) => c.depth));
+    const sheet = new THREE.Mesh(cutGround({ x0: -R, z0: -R, x1: R, z1: R, color: P.grass, step: 0.6, round: true }, built.cuts), getMaterials().matte);
+    sheet.receiveShadow = true;
+    group.add(sheet);
+    g.add(new THREE.CylinderGeometry(R, R, 1.2, 40, 1, true), P.grass, { at: [0, -0.6, 0], jitter: false });
+    g.cyl(R * 1.012, 0.9 + deep, 0x6f6348, { at: [0, -1.25 - deep, 0], segs: 40, jitter: false });
   } else {
     g.cyl(R, 1.2, P.grass, { at: [0, -1.2, 0], segs: 40, jitter: false });
     g.cyl(R * 1.012, 0.9, 0x6f6348, { at: [0, -1.25, 0], segs: 40, jitter: false });
