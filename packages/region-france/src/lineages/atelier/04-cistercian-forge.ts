@@ -8,7 +8,7 @@ export const cistercianForge: BuildingDef = {
   date: 'late twelfth century',
   summary:
     'The white monks of Cîteaux lived by the work of their own hands and their lay brothers’, and they were the best water engineers of their age. ' +
-    'Wherever their abbeys owned iron ore and woodland they built forges, and this one, on land given by the town, is a long, plain, beautifully built hall of squared stone with buttresses, round-headed windows and a steep roof of flat tiles. ' +
+    'Wherever their abbeys owned iron ore and woodland they built forges, and this one, on a stretch of river given to an abbey of the order, is a long, plain, beautifully built hall of squared stone with buttresses, round-headed windows and a steep roof of flat tiles. ' +
     'Inside, under vaults, a wheel driven by the river turns a shaft with cams that lift a heavy hammer, which falls again and again on blooms of iron to drive out the slag: muscle work done by water. ' +
     'Water-powered hammers are recorded in France from about the late twelfth century; how many forges had them so early, and how far the monks led the way, is still debated. Select the forge to see inside.',
   materials: ['squared limestone', 'flat clay tiles', 'oak machinery', 'iron'],

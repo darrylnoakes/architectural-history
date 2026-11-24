@@ -87,7 +87,7 @@ export const fortifiedBridge: BuildingDef = {
   summary:
     'The town rebuilds its crossing as a fortress. A bridge was the weakest point in a town’s defences, so this one is closed by three tall square towers, one at each end and one in the middle, each with a gate that can be shut, arrow slits, and a battlemented top built out on corbels so that defenders can drop stones through the gaps (machicolations) onto anyone at the gate. ' +
     'The arches are pointed and the piers have long cutwaters upstream, carried right up to the road to make triangular refuges where people on foot can step aside from carts. ' +
-    'In the Hundred Years’ War such bridges were fought over, as at Orléans in 1429. The model for it, the Pont Valentré at Cahors (begun in 1308 and finished about 1378), was never attacked; its tower tops were rebuilt in a restoration of the 1870s.',
+    'In the Hundred Years’ War such bridges were fought over, as at Orléans in 1429. The model for it, the Pont Valentré at Cahors (begun in 1308 and finished about 1378), was never attacked; its tower tops were rebuilt in Paul Gout’s restoration from 1879.',
   materials: ['limestone', 'oak gates', 'flat clay tiles'],
   modelledOn: 'The Pont Valentré, Cahors (1308 to about 1378): three square towers with gates, pointed arches and upstream cutwaters rising to refuges. Here shortened to four arches',
   lookFor: [

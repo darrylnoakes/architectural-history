@@ -47,7 +47,7 @@ export const ironFrameMill: BuildingDef = {
   date: 'c. 1872',
   summary:
     'For the Menier chocolate works at Noisiel, on the Marne east of Paris, the architect Jules Saulnier built a new mill between 1869 and 1872 on the piers of an old one, so that turbines in the river beneath could drive the cocoa grinders. ' +
-    'It is often counted the first building whose iron skeleton carries the whole load and is shown openly on the outside: iron posts, beams and diagonal braces form a diamond lattice, and the brick between them merely fills the gaps. ' +
+    'It is often counted among the first buildings whose iron skeleton carries the whole load and is shown openly on the outside: iron posts, beams and diagonal braces form a diamond lattice, and the brick between them merely fills the gaps. ' +
     'The filling is decoration: red and cream brick and glazed tiles patterned with cocoa flowers and the Menier M, so the frame reads like a textile. ' +
     'Here a cloth firm’s mill of the same kind stands out in the river on stone piers, reached by an iron footbridge from its brick yard buildings on the bank.',
   materials: ['wrought and cast iron frame', 'polychrome brick', 'glazed ceramic tiles', 'limestone piers', 'slate'],

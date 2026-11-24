@@ -8,10 +8,10 @@ export const eras: Era[] = [
     to: -52,
     tagline: 'Timber, earth and thatch behind a rampart',
     summary:
-      'The first town is an oppidum of a Belgic tribe: a broad enclosure on a river crossing, defended by a rampart of earth laced with ' +
+      'The first town is an oppidum of a Belgic tribe: a broad enclosure on a river crossing, defended by a rampart of earth, often laced with ' +
       'timber. Inside, rectangular houses of posts, wattle and thatch stand in fenced yards beside granaries, workshops and a sanctuary ' +
       'where captured weapons are hung up. The Gauls are fine carpenters and smiths, strike their own coins and drink Italian wine, but they build nothing in mortared stone.',
-    traits: ['Rectangular timber houses', 'Ramparts laced with timber (murus gallicus)', 'Granaries on posts', 'Ditched sanctuaries', 'No mortar, no tile'],
+    traits: ['Rectangular timber houses', 'Earth ramparts, some laced with timber (murus gallicus)', 'Granaries on posts', 'Ditched sanctuaries', 'No mortar, no tile'],
     materials: ['Oak posts', 'Wattle and daub', 'Thatch', 'Earth and dry stone'],
     color: 0x8a9460,
     env: { streets: 'track', treeCover: 0.9, ground: P.earth, fields: P.meadow, extent: 85, fieldSize: [30, 36] },
@@ -25,7 +25,7 @@ export const eras: Era[] = [
     summary:
       'After Caesar’s conquest the tribe’s capital is laid out again as a Roman town: a grid of streets, a forum with its basilica, baths, ' +
       'a theatre and a monumental arch, all in mortared stone with tiled roofs. Much is built the local way under the Roman surface: ' +
-      'houses are timber and cob on stone footings with deep cellars, and the old gods are housed in a temple of a shape found only in Gaul and Britain, a tall square tower inside a gallery.',
+      'houses are timber and cob on stone footings with deep cellars, and the old gods are housed in a temple of a shape found almost only in Gaul, Britain and the Rhineland, a tall square tower inside a gallery.',
     traits: ['A street grid and a forum', 'Small squared stone with bands of brick', 'The Romano-Celtic temple (fanum)', 'Cellars under the houses', 'Theatres with an arena'],
     materials: ['Limestone in small blocks (petit appareil)', 'Brick courses', 'Clay tile (tegula and imbrex)', 'Timber frame and cob'],
     color: 0xc0714e,
@@ -38,9 +38,9 @@ export const eras: Era[] = [
     to: 481,
     tagline: 'Behind a wall of borrowed stone',
     summary:
-      'The invasions of 275 and 276 end the open town. What is left draws in behind a wall, built in haste on foundations of tombstones, ' +
+      'The invasions of 275 and 276 end the open town. What is left draws in behind a wall, built over the next decades on foundations of tombstones, ' +
       'column drums and carved blocks from the ruined monuments, with towers and few gates. Inside it the bishop becomes the leading man ' +
-      'of the city, and the first cathedral, a pair of plain halls with a baptistery, goes up against the rampart.',
+      'of the city, and the first cathedral, plain halls (sometimes a pair) with a baptistery, goes up against the rampart.',
     traits: ['Town walls on reused carved blocks', 'Round-fronted towers', 'A shrunken, crowded town', 'The cathedral group and its baptistery', 'Ruins used as quarries'],
     materials: ['Reused Roman masonry', 'Small squared stone with brick bands', 'Timber and thatch', 'Clay tile'],
     color: 0xb59a6c,
@@ -68,7 +68,7 @@ export const eras: Era[] = [
     to: 1140,
     tagline: 'Round arches, stone vaults and the lord’s tower',
     summary:
-      'Around the year 1000, a monk wrote, the world put on a white robe of churches. Peace, pilgrims and the reformed abbeys of Cluny pay ' +
+      'Around the year 1000, a monk wrote, the world put on a white robe of churches. Peace, pilgrims and reformed abbeys such as Cluny pay ' +
       'for buildings in cut stone with round arches, thick walls and, for the first time since Rome, stone vaults over wide naves. The east end ' +
       'gains an ambulatory with a ring of chapels. Lords raise mottes and then square stone keeps, and the first stone houses appear in the towns.',
     traits: ['Round arches', 'Barrel and groin vaults', 'Ambulatory with radiating chapels', 'Carved capitals and portals', 'Mottes and square keeps'],
@@ -175,7 +175,7 @@ export const eras: Era[] = [
     summary:
       'From September 1914 the front runs a few kilometres from the town and four years of shellfire leave the centre in ruins, the ' +
       'cathedral roofless. The Reconstruction of the 1920s rebuilds street by street on the old plots, in brick and concrete with stepped ' +
-      'gables, geometric ironwork and bow windows: one of the largest ensembles of Art Deco anywhere. The same years see garden suburbs for workers and, on the edge of taste, the white villas of Le Corbusier.',
+      'gables, geometric ironwork and bow windows: at Reims one of the largest ensembles of Art Deco anywhere. The same years see garden suburbs for workers and, on the edge of taste, the white villas of Le Corbusier.',
     traits: ['Art Deco: stepped gables, zigzags, sunbursts', 'Concrete frames behind brick and stone', 'Monuments rebuilt as they were', 'Garden suburbs', 'White modern villas on stilts'],
     materials: ['Reinforced concrete', 'Brick', 'Artificial stone and mosaic', 'Wrought iron', 'Clay tile'],
     color: 0x9d7f6b,

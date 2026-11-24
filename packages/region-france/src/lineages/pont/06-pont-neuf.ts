@@ -35,8 +35,8 @@ export const pontNeuf: BuildingDef = {
   summary:
     'A new kind of bridge, on the model of the Pont Neuf in Paris (1578 to 1607), the first bridge in the capital built without houses: Henri IV wanted it kept open so that people could see the river and the palace. ' +
     'It is wide and almost level, with raised pavements either side of the carriageway, so that people on foot are kept out of the way of coaches; at every pier the cutwater is carried up as a half-round bay where they can stop to look at the river. ' +
-    'Under the cornice runs a frieze of carved stone masks on brackets, and in the middle a bronze king on horseback watches over the crossing: the bridge has become a public place and a royal monument. ' +
-    'In Paris the king’s statue, made by Giambologna and Pietro Tacca, was set up in 1614 on the island where the two arms of the bridge meet; here a statue stands in the central bay.',
+    'Under the cornice runs a frieze of carved stone masks on brackets, and in the middle a bronze king on horseback watches over the crossing, a luxury few provincial towns could afford: the bridge has become a public place and a royal monument. ' +
+    'In Paris the king’s statue, begun by Giambologna and finished by Pietro Tacca, was set up in 1614 on the island where the two arms of the bridge meet; here a statue stands in the central bay.',
   materials: ['limestone', 'stone setts', 'bronze'],
   modelledOn: 'The Pont Neuf, Paris (1578 to 1607): its pavements, half-round bays over the piers, mask frieze and the equestrian Henri IV of 1614. Shortened to four arches and much narrower',
   lookFor: [

@@ -32,7 +32,7 @@ const lineage: Lineage = {
     // the Pont Neuf opened in 1607; provincial bridges on its model followed from about 1620 to 1720
     { from: 1630, builtUntil: 1720, def: pontNeuf },
     { from: 1775, def: perronetBridge },
-    // wire suspension bridges were built until the Angers disaster of 1850
+    // wire suspension bridges were built in numbers until the Angers disaster of 1850, hardly at all for a generation after
     { from: 1830, builtUntil: 1850, def: suspensionBridge },
     { from: 1947, builtUntil: 1975, def: prestressedBridge },
     { from: 2006, def: footbridge },

@@ -9,7 +9,7 @@ export const gaulishBridge: BuildingDef = {
   summary:
     'The ford is replaced by a timber bridge: rows of oak piles driven into the river bed, each row capped by a cross-beam to make a trestle, with long beams laid from trestle to trestle and a road of split logs across them. ' +
     'When Caesar came to Gaul in 58 BC he found its tribes bridging their rivers like this, on the Aisne, the Loire, the Allier and the Seine, and he and the Gauls both broke bridges to stop the other crossing; at the Allier in 52 BC he rebuilt one on the stumps of its old piles. ' +
-    'Remains of such bridges survive in the mud: those at La Tène on Lake Neuchâtel, felled in the third and second centuries BC, were found among weapons and ornaments thrown into the water. ' +
+    'Remains of such bridges survive in the mud of the Swiss lakes: at La Tène, where the Thielle leaves Lake Neuchâtel, a bridge of about the third century BC stood among weapons and ornaments thrown into the water, and downstream at Cornaux another, built in the later second century BC, collapsed with people on it. ' +
     'Oak in water lasts for generations, but floods and ice tear at it, and the bridge is patched and rebuilt again and again.',
   materials: ['oak piles', 'oak beams', 'split oak logs', 'wattle'],
   lookFor: [

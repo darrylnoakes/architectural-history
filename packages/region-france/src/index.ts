@@ -29,7 +29,7 @@ export const france: Region = {
     title: 'One city, twenty-three centuries',
     text:
       'This is a cathedral city of northern France, between Paris and the Belgian border. It is burned by invaders, rebuilt in the Gothic it helped to invent, ' +
-      'stripped in the Revolution, and shelled to ruins in 1914: so some plots rebuild age by age, some keep what survived, and much of the centre dates from the 1920s.',
+      'stripped in the Revolution, and shelled to ruins in the Great War: so some plots rebuild age by age, some keep what survived, and much of the centre dates from the 1920s.',
   },
   start: -300,
   end: 2025,

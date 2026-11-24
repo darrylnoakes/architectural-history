@@ -40,13 +40,13 @@ export const gaulishForge: BuildingDef = {
   summary:
     'In the oppidum the metalworkers keep to the edge of town, near the river and away from the houses, because their fires are dangerous. ' +
     'The smith works under a thatched shelter open at the front for light and air, with a clay hearth blown by leather bellows, an anvil on an oak stump and a trough of water for quenching. ' +
-    'Iron came to him already smelted, as bars shaped like two pyramids joined at the base; he forged them into tools, tyres, nails and weapons. ' +
+    'Iron came to him already smelted, as trade bars, some of them shaped like two pyramids joined at the base (a form found mostly in eastern Gaul and the Rhineland), others flat like sword blanks; he forged them into tools, tyres, nails and weapons. ' +
     'Next door a bronze-caster melts copper and tin in small crucibles for brooches, harness fittings and the blanks for the tribe’s coins, and heaps of charcoal, the only fuel hot enough, stand ready in the yard.',
   materials: ['oak posts', 'wattle and daub', 'thatch', 'clay', 'iron and bronze'],
   lookFor: [
     { label: 'Smith’s hearth and bellows', note: 'A waist-high clay hearth, its fire blown hot through a clay nozzle by two leather bag bellows worked by hand.', at: [-6.4, 1.6, -1.0] },
     { label: 'Anvil and quenching trough', note: 'Hot iron was hammered on an iron block set in an oak stump and hardened by plunging it into water.', at: [-4.2, 1.1, 0.9] },
-    { label: 'Iron trade bars', note: 'Iron travelled in bars shaped like two pyramids base to base, a stock the smith could test and cut as he needed.', at: [-2.2, 0.9, 2.6] },
+    { label: 'Iron trade bars', note: 'Iron often travelled in bars shaped like two pyramids base to base, a stock the smith could test and cut as he needed.', at: [-2.2, 0.9, 2.6] },
     { label: 'Bronze-caster’s crucible hearth', note: 'A small pit fire where copper and tin were melted together in clay crucibles and poured into moulds.', at: [8.2, 1.0, -2.4] },
     { label: 'Charcoal stacks', note: 'Wood slowly charred under a skin of earth makes charcoal, which burns far hotter than wood.', at: [-14.2, 2.0, -5.5] },
   ],

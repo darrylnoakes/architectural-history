@@ -30,13 +30,13 @@ export const inhabitedBridge: BuildingDef = {
   style: 'Romanesque to Gothic',
   date: 'c. 1185',
   summary:
-    'The Roman bridge has fallen, and a new one is raised by a pious brotherhood that collects alms for the work: bridge building is a work of charity, and a chapel on one of the piers receives the offerings of travellers. ' +
+    'The Roman bridge has fallen, and a new one is raised by a brotherhood that collects alms for the work: bridge building is a work of charity, and a chapel on one of the piers receives the offerings of travellers. ' +
     'Its arches are the new pointed kind, tallest in the middle where the boats pass, so the road climbs over a steep hump, and its thick piers end in cutwaters that split the current. ' +
     'Over the following century the bridge fills with timber houses and shops let out to pay for its upkeep, hanging out over the water on struts, and millers fix wheels in the arches where the current runs fastest. ' +
-    'Bridges like this crowded every town of medieval France; their houses and mills held back floods and ice, and many were swept away with everyone living on them.',
+    'Many towns of medieval France had bridges like this; their houses and mills held back floods and ice, and several, as in Paris in 1408 and 1499, fell with people living on them.',
   materials: ['limestone', 'oak frame with cob infill (torchis)', 'flat clay tiles', 'oak mill wheels'],
   modelledOn:
-    'The chapel on a pier is taken from the Pont Saint-Bénézet, Avignon (traditionally 1177 to 1185), whose arches are in fact rounded, not pointed; the houses and mills from the bridges of medieval Paris such as the Grand Pont. The rest is generic',
+    'The chapel on a pier is taken from the Pont Saint-Bénézet, Avignon (traditionally 1177 to 1185), with its chapel of Saint Nicholas, whose arches are in fact low round-topped curves, not pointed; the houses and mills from the bridges of medieval Paris such as the Grand Pont. The rest is generic',
   lookFor: [
     { label: 'Pointed arch', note: 'Two arcs meeting at a point: they push less sideways than a half-circle and can be made as tall as the boats need.', at: [3.6, 1.0, 5.4] },
     { label: 'Bridge chapel', note: 'Built out over the upstream cutwater of a pier: travellers prayed for a safe crossing and gave alms for the bridge.', at: [-6.1, 4.0, -2.8] },

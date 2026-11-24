@@ -9,7 +9,7 @@ export const romanBridge: BuildingDef = {
   summary:
     'The road that the Romans laid across Gaul, straight and gravelled, now crosses the river on stone. Five round arches of large blocks laid without mortar spring from piers about half as thick as the arches are wide, so the roadway rises only a little over the river. ' +
     'Each pier has a pointed cutwater upstream to split the current and a small arch through it above the water so that floods can pass instead of pushing the bridge over, as on the Pont Julien in Provence. ' +
-    'Stone arches on this scale were costly, and in the north many Roman bridges kept a timber road on stone piers, as at Trier; a rich tribal capital could afford arches throughout. ' +
+    'Stone arches on this scale were costly, and in the north many Roman bridges kept a timber road on stone piers, as at Trier (about 150); only a rich tribal capital could afford arches throughout, and few are known so far north. ' +
     'Built of good stone on sound piers, a bridge like this could outlast the Empire by a thousand years.',
   materials: ['limestone in large blocks', 'rubble and mortar core', 'gravel road'],
   modelledOn: 'The Pont Julien, Bonnieux (about 3 BC): its flood openings through the piers and pointed cutwaters; the round arches and level road are generic',

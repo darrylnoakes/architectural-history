@@ -7,14 +7,14 @@ export const perronetBridge: BuildingDef = {
   style: 'Louis XV and Louis XVI',
   date: 'c. 1775',
   summary:
-    'The royal road is rebuilt by the engineers of the Ponts et Chaussées, trained at the school in Paris that Jean-Rodolphe Perronet ran from 1747, the first school of civil engineering anywhere. ' +
+    'The royal road is rebuilt by the engineers of the Ponts et Chaussées, trained at the school in Paris that Jean-Rodolphe Perronet ran from 1747, often called the first school of civil engineering anywhere. ' +
     'Perronet saw that the arches of a bridge lean on one another: if they are all built together and their timber centring struck at the same time, each pier only has to carry weight, not resist a thrust, and can be made as thin as a ninth or a tenth of the span. ' +
     'Thin piers block less of the river, so floods rise less, and very flat arches carry a level road. At the faces the arch edges are cut back in a curved bevel, the corne de vache, which makes the arches look flatter still and lets flood water in more easily. ' +
     'Perronet’s own bridges included Neuilly on the Seine (1768 to 1774), Sainte-Maxence on the Oise (1774 to 1786) and the Pont de la Concorde in Paris (1787 to 1791).',
   materials: ['dressed limestone', 'stone setts', 'stone balustrade'],
   modelledOn: 'Perronet’s bridges at Neuilly (1768 to 1774) and the Concorde, Paris (1787 to 1791): the cornes de vache from Neuilly, the balustrade from the Concorde; spans and number of arches generic',
   lookFor: [
-    { label: 'Flat arch', note: 'A shallow segment of a very large circle: the face of the arch rises only about a tenth of its span, so the road can run level.', at: [4.6, 0.0, 0] },
+    { label: 'Flat arch', note: 'A shallow curve that rises only a small part of its span, as on Perronet’s bridges at Pont-Sainte-Maxence and the Concorde, so the road can run level.', at: [4.6, 0.0, 0] },
     { label: 'Thin pier', note: 'About a ninth of the span: the arches each side push against each other, so the pier only has to carry their weight.', at: [4.6, -0.9, 4.2] },
     { label: 'Corne de vache', note: 'The edge of the arch is bevelled back at each face, a curved splay shaped like a cow’s horn, so the arch looks flatter and floods enter it more easily.', at: [4.5, -0.4, -3.4] },
     { label: 'Balustrade', note: 'Turned stone balusters between pedestals: the vocabulary of classical architecture on an engineer’s bridge.', at: [4.3, 1.4, -8.0] },

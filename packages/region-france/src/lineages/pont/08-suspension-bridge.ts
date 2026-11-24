@@ -9,7 +9,7 @@ export const suspensionBridge: BuildingDef = {
   summary:
     'The town wants a second crossing where no bridge has stood, but cannot pay for one of stone. Instead a private company is granted the right to build a suspension bridge and to take a toll from everyone who crosses until its money is repaid. ' +
     'Its timber road hangs on iron rods from cables, each made of hundreds of thin iron wires bound together, slung over two masonry pylons and anchored in the ground behind them. Marc Seguin of Annonay and his brothers showed that wire was lighter, cheaper and stronger than the iron chains the British used, and opened their bridge over the Rhône at Tournon in 1825. ' +
-    'Cheap and quick to put up, bridges like this were built in their hundreds across France between about 1825 and 1850, many of them at places that had only ever had a ferry, until in 1850 the bridge at Angers collapsed under a battalion marching across it in a storm, killing more than two hundred soldiers, and the fashion ended.',
+    'Cheap and quick to put up, bridges like this were built in their hundreds across France between about 1825 and 1850, many of them at places that had only ever had a ferry, until in 1850 the bridge at Angers collapsed under a battalion marching across it in a storm, killing more than two hundred soldiers, and for a generation hardly any more were built.',
   materials: ['iron wire cables', 'wrought-iron rods', 'oak deck', 'limestone pylons'],
   modelledOn: 'The bridges of Marc Seguin and his brothers, first at Tournon-Tain over the Rhône (1825): wire cables, masonry pylons, a light timber deck. Generic in its details',
   lookFor: [
@@ -19,7 +19,6 @@ export const suspensionBridge: BuildingDef = {
     { label: 'Anchorage', note: 'Behind each pylon the cables run down into a block of masonry buried in the bank, which holds the whole pull of the bridge.', at: [3.1, 0.6, -19.0] },
     { label: 'Toll house', note: 'The company that built the bridge collected a toll (péage) from people, horses and carts until its costs were paid.', at: [6.2, 2.4, 16.6] },
   ],
-  influences: ['iron-and-rail'],
   build(b) {
     b.noCollide();
     const crown = 0.4;

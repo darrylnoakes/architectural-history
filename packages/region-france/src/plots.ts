@@ -6,10 +6,10 @@ const W = -Math.PI / 2; // front faces west (-x)
 const S = 0; // front faces south (+z)
 const N = Math.PI; // front faces north (-z)
 
-/** Blown up in June 1940 to slow the German advance, like most bridges of the north. */
+/** Blown up in June 1940 to slow the German advance, like many bridges of the north. */
 const blown1940 = {
   year: 1940,
-  note: 'In June 1940 French engineers blew the bridge to slow the German advance. For seven years the crossing was a temporary timber footway on the stumps of the piers.',
+  note: 'In June 1940 French engineers blew the bridge to slow the German advance. For some years the river was crossed on a makeshift timber bridge built on what was left of it.',
 };
 
 /**

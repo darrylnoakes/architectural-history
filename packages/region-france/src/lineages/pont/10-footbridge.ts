@@ -7,7 +7,7 @@ export const footbridge: BuildingDef = {
   style: 'Contemporary',
   date: '2006',
   summary:
-    'The car has its ring road, and the old crossing is given back to people on foot and bicycles. The new footbridge leaps the whole river without a pier, made of two curves that cross each other: an arch rising from the water’s edge and a band hanging between the upper banks like a rope. ' +
+    'The car has its ring road, and the town builds a new crossing for people on foot and on bicycles only. The footbridge leaps the whole river without a pier, made of two curves that cross each other: an arch rising from the water’s edge and a band hanging between the upper banks like a rope. ' +
     'Each pulls against the other, the arch pushing outwards and the band pulling inwards, so between them they need only modest abutments, and where they part in the middle they enclose a lens-shaped space joined by slender struts. ' +
     'Both curves are walkways, so the bridge offers two ways across and a sheltered place in the middle. It follows the Passerelle Simone-de-Beauvoir in Paris (Dietmar Feichtinger, 2006), whose lens spans more than a hundred metres of the Seine.',
   materials: ['painted steel', 'timber decking', 'concrete abutments', 'stainless steel railings'],
@@ -19,7 +19,6 @@ export const footbridge: BuildingDef = {
     { label: 'No pier in the river', note: 'The whole river is crossed in one span, leaving the water clear for boats and floods.', at: [0, -1.1, 0] },
     { label: 'Timber decking', note: 'Both walkways are surfaced in hardwood boards, warm and quiet underfoot.', at: [0, -0.2, -8.5] },
   ],
-  influences: ['high-tech'],
   build(b) {
     b.noCollide();
     const crown = -0.35;
