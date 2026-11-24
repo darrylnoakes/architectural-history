@@ -391,16 +391,15 @@ export class Terrain {
     if (road.idx.length) this.roadGroup.add(meshFrom(road, this.roadMat));
     if (pave.idx.length) this.roadGroup.add(meshFrom(pave, this.paveMat));
     if (lines.idx.length) this.roadGroup.add(meshFrom(lines, this.lineMat));
-    // pavements must draw under the carriageway without z-fighting
-    this.roadMat.polygonOffset = true;
-    this.roadMat.polygonOffsetFactor = -2;
-    this.roadMat.polygonOffsetUnits = -2;
-    this.paveMat.polygonOffset = true;
-    this.paveMat.polygonOffsetFactor = -1;
-    this.paveMat.polygonOffsetUnits = -1;
-    this.lineMat.polygonOffset = true;
-    this.lineMat.polygonOffsetFactor = -3;
-    this.lineMat.polygonOffsetUnits = -3;
+    // The layers lie at their own heights, so near the camera they order themselves. A constant
+    // nudge in depth settles ties far away, where the depth buffer cannot tell centimetres apart.
+    // (No slope-scaled offset: it pulls the streets in front of anything a model lays on the ground
+    // within a hand's breadth of them, such as the cobbles of a market place.)
+    for (const [mat, units] of [[this.paveMat, -2], [this.roadMat, -4], [this.lineMat, -6]] as const) {
+      mat.polygonOffset = true;
+      mat.polygonOffsetFactor = 0;
+      mat.polygonOffsetUnits = units;
+    }
   }
 
   dispose() {

@@ -159,7 +159,8 @@ export function beast(b: Builder, at: Vec3, rotY: number, kind: 'sheep' | 'pig' 
  * way by every stage that trades in the open, so the ground stays put while the cross changes.
  */
 export function marketPlace(b: Builder, color: number): void {
-  b.group({ scale: [1.1, 1, 0.85] }, () => b.cyl(9.4, 0.04, color, { segs: 18 }));
+  // (its top lies just above the town's own square and street surfaces, which would otherwise cover it)
+  b.group({ scale: [1.1, 1, 0.85] }, () => b.cyl(9.4, 0.11, color, { segs: 18 }));
 }
 
 /**

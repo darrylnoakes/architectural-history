@@ -206,6 +206,8 @@ export const site: Site = {
   relief,
   roads,
   squares: [SQUARE],
+  // the town, finely enough meshed for the castle's ditches and moat to be dug
+  detail: { x0: -110, z0: -100, x1: 110, z1: 100 },
   trees: [
     { kind: 'round', share: 0.88 },
     { kind: 'conifer', share: 0.12 },
