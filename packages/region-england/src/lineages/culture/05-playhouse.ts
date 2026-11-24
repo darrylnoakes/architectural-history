@@ -140,7 +140,7 @@ export const playhouse: BuildingDef = {
     for (const [x, z, r] of [[-13.6, 10.2, 0.7], [-14.8, 6.6, 0.5], [-16.2, 14.2, 0.45]]) {
       b.blob(r, tint(stone, -0.04), { at: [x, 0, z], stretch: [1.3, 0.6, 1], detail: 0 });
     }
-    b.blob(0.9, P.leafDark, { at: [N.x0 + 0.4, 7.0, nz + 2.0], stretch: [1.2, 1.8, 0.6], detail: 0 }); // ivy
+    b.blob(0.9, P.leafDark, { at: [N.x0 + 1.15, 6.2, nz + 2.0], stretch: [0.6, 1.8, 1.2], detail: 0 }); // ivy
     b.tree(5.5, { at: [14.5, 0, -9] });
 
     // ---------------------------------------------------------------- walk collisions

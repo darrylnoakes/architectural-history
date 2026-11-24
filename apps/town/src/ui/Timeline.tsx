@@ -52,8 +52,11 @@ export function Timeline() {
   const onDown = (e: React.PointerEvent) => {
     if ((e.target as HTMLElement).closest('.tl-mark')) return;
     (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
+    useApp.setState({ scrubbing: true });
     scrub(e.clientX);
   };
+  // the town waits for a fast drag to settle, and catches up the moment the bar is let go
+  const onUp = () => useApp.setState({ scrubbing: false });
   const onMove = (e: React.PointerEvent) => {
     if ((e.currentTarget as HTMLElement).hasPointerCapture(e.pointerId)) scrub(e.clientX);
   };
@@ -131,7 +134,7 @@ export function Timeline() {
             </button>
           ))}
         </div>
-        <div className="tl-bar" ref={bar} onPointerDown={onDown} onPointerMove={onMove}>
+        <div className="tl-bar" ref={bar} onPointerDown={onDown} onPointerMove={onMove} onPointerUp={onUp} onPointerCancel={onUp} onLostPointerCapture={onUp}>
           {regions.map((r, k) => (
             <div className="tl-row" key={r.id}>
               {r.eras.map((e) => {

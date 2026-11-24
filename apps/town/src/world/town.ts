@@ -1,9 +1,12 @@
 import * as THREE from 'three';
 import { construct, getRuinMaterials, placeCut, revisionYear, type Built, type Cut, type BuildingDef, type Deck, type Lineage, type Plot, type Region, type Stage } from '@ah/kit';
 import { plotSchedule, scheduleAt, type PlotStage, type WorldCollider } from '@ah/engine';
-import { Morph, diffBuilt } from './morph';
+import { Morph, diffBuilt, tickMorphs } from './morph';
 
 export interface WorldDeck extends Deck {}
+
+/** Milliseconds a frame may spend building models for plots that have changed. */
+const BUILD_BUDGET = 7;
 
 export type PlotStatus =
   | { kind: 'standing' | 'ruin'; entry: PlotStage; scheduleIndex: number; stage: Stage; def: BuildingDef }
@@ -73,6 +76,7 @@ export class Town {
   private allDecks: WorldDeck[] = [];
   private dirty = true;
   private openId: string | null = null;
+  private lastDt = 0.016;
   /** Goes up whenever a plot's building changes, so the ground can be dug again to suit. */
   cutsVersion = 0;
   /** Fired when the building on a plot changes (after the swap). */
@@ -268,17 +272,31 @@ export class Town {
   /** Move the town to a year. `instant` skips the rebuild animation (first frame, big jumps). */
   setYear(year: number, instant = false) {
     this.year = year;
+    let spent = 0;
+    let started = 0;
+    // a share of the frame, so a slow device still gets through them: never fewer than three a frame
+    const budget = Math.min(30, Math.max(BUILD_BUDGET, this.lastDt * 400));
     for (const p of this.plots) {
       const { i, rev } = this.target(p, year);
       const same = i === p.shown && rev === p.rev;
       if (instant) {
         if (!same) this.place(p, i, rev);
         else this.endMorph(p);
-      } else if (!same && p.phase === 'idle') this.change(p, i, rev);
+      } else if (!same && p.phase === 'idle') {
+        // a big jump changes many plots at once: build the new models a few to a frame, so the
+        // town changes in a ripple and not after a long freeze
+        if (spent > budget && started >= 3) continue;
+        const t0 = performance.now();
+        this.change(p, i, rev);
+        spent += performance.now() - t0;
+        started++;
+      }
     }
   }
 
   update(dt: number) {
+    this.lastDt = dt;
+    tickMorphs(dt);
     let built = false;
     for (const p of this.plots) {
       if (p.phase !== 'morph' || !p.morph) continue;

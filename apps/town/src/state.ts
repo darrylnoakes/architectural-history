@@ -37,6 +37,8 @@ export interface AppState {
   regionId: string;
   year: number;
   playing: boolean;
+  /** True while the year is being dragged along the timeline. */
+  scrubbing: boolean;
   /** 1 = the whole story in about two minutes. */
   speed: number;
   mode: NavMode;
@@ -92,6 +94,7 @@ export const useApp = create<AppState>((set, get) => ({
   regionId: startRegion,
   year: Number.isFinite(startYear) ? startYear : REGIONS[startRegion].start,
   playing: false,
+  scrubbing: false,
   speed: 1,
   mode: 'orbit',
   street: null,

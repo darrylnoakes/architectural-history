@@ -39,32 +39,97 @@ export function diffBuilt(prev: Built | null, next: Built | null): Diff {
   return { leaving, kept, arriving, keptShare: total ? keptVerts / total : 0 };
 }
 
-interface Moving {
-  mesh: THREE.Mesh;
-  /** Where each vertex belongs, the point it grows from, and when its piece starts to move. */
-  base: Float32Array;
-  pivot: Float32Array;
-  start: Float32Array;
-  grow: boolean;
-}
-
 const LEAVE = 0.22;
 const ARRIVE = 0.32;
+
+/**
+ * The clock every moving piece reads. The pieces are moved on the graphics card: each vertex carries
+ * the point it grows from and the moment its piece starts, so a whole town changing at once costs
+ * the processor nothing per frame.
+ */
+const clock = { value: 0 };
+
+/** Advance the clock the moving pieces read (once a frame, by the town). */
+export function tickMorphs(dt: number) {
+  clock.value += dt;
+}
+
+const VERT_HEAD = /* glsl */ `
+attribute vec3 aPivot;
+attribute vec2 aWhen;
+uniform float uMorphNow;`;
+
+// aWhen.x is when the piece starts; aWhen.y how long it takes, positive to grow and negative to shrink
+const VERT_MOVE = /* glsl */ `
+{
+  float mk = clamp((uMorphNow - aWhen.x) / abs(aWhen.y), 0.0, 1.0);
+  float mu = mk - 1.0;
+  float ms = aWhen.y > 0.0 ? (mk <= 0.0 ? 0.0 : 1.0 + 2.1 * mu * mu * mu + 1.1 * mu * mu) : 1.0 - mk * mk;
+  transformed = aPivot + (transformed - aPivot) * ms;
+}`;
+
+function moving<T extends THREE.Material>(src: T, make: () => T): T {
+  const m = make();
+  m.onBeforeCompile = (shader, renderer) => {
+    src.onBeforeCompile(shader, renderer);
+    shader.uniforms.uMorphNow = clock;
+    shader.vertexShader = shader.vertexShader
+      .replace('#include <common>', '#include <common>' + VERT_HEAD)
+      .replace('#include <begin_vertex>', '#include <begin_vertex>' + VERT_MOVE);
+  };
+  m.customProgramCacheKey = () => src.customProgramCacheKey() + '|moving';
+  return m;
+}
+
+const surfaces = new WeakMap<THREE.Material, THREE.Material>();
+const depths = new WeakMap<THREE.Material, THREE.Material>();
+let plainDepth: THREE.Material | null = null;
+
+/** The material a mesh's moving pieces are drawn with: its own, with the movement added. */
+function movingSurface(src: THREE.Material): THREE.Material {
+  let m = surfaces.get(src);
+  if (!m) surfaces.set(src, (m = moving(src, () => src.clone())));
+  return m;
+}
+
+/** The same for the shadow it casts, so the shadow grows with the piece. */
+function movingDepth(src: THREE.Material | undefined): THREE.Material {
+  if (!src) {
+    if (!plainDepth) {
+      const base = new THREE.MeshDepthMaterial({ depthPacking: THREE.RGBADepthPacking });
+      plainDepth = moving(base, () => new THREE.MeshDepthMaterial({ depthPacking: THREE.RGBADepthPacking }));
+    }
+    return plainDepth;
+  }
+  let m = depths.get(src);
+  if (!m) depths.set(src, (m = moving(src, () => src.clone())));
+  return m;
+}
 
 function meshOf(b: Built, kind: MatKind): THREE.Mesh | undefined {
   return b.object.children.find((c) => c.userData.kind === kind) as THREE.Mesh | undefined;
 }
 
-/** A mesh holding just the given pieces of a model, copied out of its merged mesh. */
-function subset(b: Built, kind: MatKind, parts: Part[]): THREE.Mesh | null {
+/**
+ * A mesh holding just the given pieces of a model. If they are the whole of the model's mesh it
+ * shares the mesh's own data (nothing is copied); otherwise the pieces are copied out of it.
+ */
+function subset(b: Built, kind: MatKind, parts: Part[]): { mesh: THREE.Mesh; list: Part[]; shared: boolean } | null {
   const src = meshOf(b, kind);
   const list = parts.filter((p) => p.kind === kind);
   if (!src || !list.length) return null;
   const n = list.reduce((a, p) => a + p.count, 0);
   const g = new THREE.BufferGeometry();
+  const whole = n === src.geometry.attributes.position.count;
+  if (whole) list.sort((p, q) => p.start - q.start);
   for (const name of ['position', 'normal', 'color']) {
-    const from = src.geometry.attributes[name]?.array as Float32Array | undefined;
-    if (!from) continue;
+    const attr = src.geometry.attributes[name] as THREE.BufferAttribute | undefined;
+    if (!attr) continue;
+    if (whole) {
+      g.setAttribute(name, attr);
+      continue;
+    }
+    const from = attr.array as Float32Array;
     const to = new Float32Array(n * 3);
     let k = 0;
     for (const p of list) {
@@ -80,13 +145,7 @@ function subset(b: Built, kind: MatKind, parts: Part[]): THREE.Mesh | null {
   mesh.userData = { ...src.userData };
   // the pieces move, so the box round them is not worth keeping up to date
   mesh.frustumCulled = false;
-  return mesh;
-}
-
-function easeOutBack(t: number) {
-  const c1 = 1.1;
-  const c3 = c1 + 1;
-  return 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2);
+  return { mesh, list, shared: whole };
 }
 
 /**
@@ -97,30 +156,36 @@ function easeOutBack(t: number) {
 export class Morph {
   readonly group = new THREE.Group();
   readonly duration: number;
-  private moving: Moving[] = [];
+  private moves = false;
+  /** Geometry made here that borrows a model's own data, which must outlive this. */
+  private borrowed: THREE.BufferGeometry[] = [];
 
   constructor(prev: Built | null, next: Built | null, d: Diff) {
     const gap = d.leaving.length ? LEAVE + 0.12 : 0;
+    const t0 = clock.value;
     let end = 0;
     for (const kind of ['matte', 'glass'] as MatKind[]) {
       if (next) {
         const still = subset(next, kind, d.kept);
-        if (still) this.group.add(still);
+        if (still) {
+          this.group.add(still.mesh);
+          if (still.shared) this.borrowed.push(still.mesh.geometry);
+        }
       }
       for (const [built, parts, grow] of [
         [prev, d.leaving, false],
         [next, d.arriving, true],
       ] as [Built | null, Part[], boolean][]) {
         if (!built) continue;
-        const mesh = subset(built, kind, parts);
-        if (!mesh) continue;
-        const list = parts.filter((p) => p.kind === kind);
+        const sub = subset(built, kind, parts);
+        if (!sub) continue;
+        const { mesh, list } = sub;
         const lo = Math.min(...parts.map((p) => p.y0));
         const hi = Math.max(...parts.map((p) => p.y1));
         const span = Math.max(0.5, hi - lo);
         const n = mesh.geometry.attributes.position.count;
         const pivot = new Float32Array(n * 3);
-        const start = new Float32Array(n);
+        const when = new Float32Array(n * 2);
         let k = 0;
         for (const p of list) {
           // the new go up from the ground; the old come down from the top
@@ -130,47 +195,38 @@ export class Morph {
             pivot[k * 3] = p.cx;
             pivot[k * 3 + 1] = p.y0;
             pivot[k * 3 + 2] = p.cz;
-            start[k] = t;
+            when[k * 2] = t0 + t;
+            when[k * 2 + 1] = grow ? ARRIVE : -LEAVE;
           }
         }
-        this.moving.push({ mesh, base: Float32Array.from(mesh.geometry.attributes.position.array as Float32Array), pivot, start, grow });
+        mesh.geometry.setAttribute('aPivot', new THREE.BufferAttribute(pivot, 3));
+        mesh.geometry.setAttribute('aWhen', new THREE.BufferAttribute(when, 2));
+        if (sub.shared) this.borrowed.push(mesh.geometry);
+        mesh.customDepthMaterial = movingDepth(mesh.customDepthMaterial);
+        mesh.material = movingSurface(mesh.material as THREE.Material);
+        this.moves = true;
         this.group.add(mesh);
       }
     }
     this.duration = end;
-    this.update(0);
   }
 
   /** Whether anything actually moves (two forms of a building can be piece for piece the same). */
   get idle(): boolean {
-    return this.moving.length === 0;
+    return !this.moves;
   }
 
-  /** Move the pieces to where they are `t` seconds in. Returns true when it is over. */
+  /** True when the change, `t` seconds in, is over. */
   update(t: number): boolean {
-    for (const m of this.moving) {
-      const pos = m.mesh.geometry.attributes.position as THREE.BufferAttribute;
-      const arr = pos.array as Float32Array;
-      const dur = m.grow ? ARRIVE : LEAVE;
-      let last = NaN;
-      let s = 0;
-      for (let i = 0; i < m.start.length; i++) {
-        if (m.start[i] !== last) {
-          last = m.start[i];
-          const k = Math.min(1, Math.max(0, (t - last) / dur));
-          s = m.grow ? (k <= 0 ? 0 : easeOutBack(k)) : 1 - k * k;
-        }
-        const j = i * 3;
-        arr[j] = m.pivot[j] + (m.base[j] - m.pivot[j]) * s;
-        arr[j + 1] = m.pivot[j + 1] + (m.base[j + 1] - m.pivot[j + 1]) * s;
-        arr[j + 2] = m.pivot[j + 2] + (m.base[j + 2] - m.pivot[j + 2]) * s;
-      }
-      pos.needsUpdate = true;
-    }
     return t >= this.duration;
   }
 
   dispose() {
-    this.group.traverse((o) => (o as THREE.Mesh).geometry?.dispose());
+    for (const o of this.group.children) {
+      const g = (o as THREE.Mesh).geometry;
+      // a borrowed model's positions, normals and colours are not ours to free
+      if (this.borrowed.includes(g)) for (const name of ['position', 'normal', 'color']) g.deleteAttribute(name);
+      g.dispose();
+    }
   }
 }

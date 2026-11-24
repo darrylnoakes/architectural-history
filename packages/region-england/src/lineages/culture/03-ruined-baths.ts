@@ -10,6 +10,7 @@ export const ruinedBaths: BuildingDef = {
   summary:
     'Some town baths had fallen out of use in the 4th century, even before Roman rule ended around 410. With no money, no imported goods and no one paid to stoke ' +
     'the furnace or mend the roof, the timber roofs rotted and fell, frost split the vaults, and people carted off the dressed stone and tile to reuse. ' +
+    'What is left is the same building robbed down: the walls of the rooms and of the yard stand to ragged heights, half of the tepidarium vault still hangs, and a few columns of the colonnade are upright. ' +
     'Saplings rooted in the rubble. A later Anglo-Saxon poem, The Ruin, looks at walls like these and calls them the work of giants.',
   materials: ['limestone rubble', 'red tile', 'fallen roof tile', 'self-seeded trees'],
   lookFor: [

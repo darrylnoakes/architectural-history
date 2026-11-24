@@ -12,6 +12,8 @@ import { Town, deckHeightAt, type PlotState } from './town';
 
 /** Seconds for the whole story at speed 1. */
 const FULL_RUN = 150;
+/** A drag faster than this (in whole timelines a second) is a jump, not a search: the town waits for it. */
+const SCRUB_HOLD = 0.06;
 
 const _p = new THREE.Vector3();
 /** Marks the feature pins as needing a rebuild (distinct from '', which means there are none to show). */
@@ -44,6 +46,10 @@ export class Engine {
   private raf = 0;
   private first = true;
   private cutsKey = '';
+  /** The year the town is showing. It lags the timeline while the year is being dragged quickly. */
+  private worldYear = NaN;
+  private lastT = NaN;
+  private scrubSpeed = 0;
   private ring: THREE.Mesh;
   private unsub: () => void;
   private callouts: { el: HTMLElement; world: THREE.Vector3 }[] = [];
@@ -160,6 +166,8 @@ export class Engine {
     this.region = region;
     this.timeScale = scaleOf(region);
     this.land = new Land(region.site);
+    this.worldYear = NaN;
+    this.lastT = NaN;
     this.cutsKey = '';
     this.terrain = new Terrain(this.land);
     this.town = new Town(region, this.land.height);
@@ -577,6 +585,16 @@ export class Engine {
 
     // a full-screen view (library, viewer, compare) covers the town: keep time running, draw nothing
     if (s.screen.kind !== 'town') return;
+
+    // Dragging the year quickly across the bar would otherwise build and rebuild every plot once for
+    // each period passed on the way. While the drag is fast the town holds still; it follows again
+    // when the drag slows to a search, pauses, or ends, and goes straight to what stands then.
+    const tt = this.timeScale.toT(year);
+    const v = Number.isNaN(this.lastT) ? 0 : Math.abs(tt - this.lastT) / Math.max(dt, 0.004);
+    this.lastT = tt;
+    this.scrubSpeed = Math.min(0.3, Math.max(v, this.scrubSpeed * Math.exp(-dt / 0.12)));
+    if (!(s.scrubbing && this.scrubSpeed > SCRUB_HOLD) || Number.isNaN(this.worldYear) || this.first) this.worldYear = year;
+    if (!s.street) year = this.worldYear;
 
     const era = this.timeScale.era(year);
     if (!s.street) {
