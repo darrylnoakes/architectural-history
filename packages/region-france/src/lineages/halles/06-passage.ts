@@ -72,7 +72,7 @@ export const passage: BuildingDef = {
   id: 'passage',
   name: 'Covered shopping arcade (passage)',
   style: 'Restoration and July Monarchy',
-  date: 'c. 1840',
+  date: 'c. 1838',
   summary:
     'A private developer buys a block and drives a covered street of shops through it from one street to the other, roofed in glass on light iron bars. ' +
     'Out of the mud, rain and traffic, the well-off can stroll past lit shop windows of milliners, booksellers and pastry cooks, with a glazed rotunda halfway along. ' +

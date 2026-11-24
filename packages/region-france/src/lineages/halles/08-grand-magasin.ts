@@ -70,11 +70,11 @@ export const grandMagasin: BuildingDef = {
   id: 'grand-magasin',
   name: 'Department store (grand magasin)',
   style: 'Belle Époque, iron frame behind a stone front',
-  date: 'c. 1887',
+  date: 'c. 1895',
   summary:
     'The department store is a Paris invention, and the town gets its own. Shopping is turned into a show: anyone may walk in without being expected to buy, prices are fixed and marked, and goods can be returned. ' +
     'To sell everything under one roof the store needs huge, light floors, so it is built on an iron frame with walls of plate glass between stone piers, round a central light well with galleries on every floor and a grand staircase rising through it. ' +
-    'A dome on the corner advertises it down two streets. The model is Au Bon Marché in Paris, rebuilt from 1869 by Louis-Auguste Boileau, with Gustave Eiffel’s firm engineering the iron of the 1870s extension.',
+    'A dome on the corner advertises it down two streets. The model is Aristide Boucicaut’s Au Bon Marché in Paris, rebuilt from 1869 and finished in 1887, its iron extension of the 1870s by Louis-Auguste Boileau with Gustave Eiffel’s firm; from the 1890s chains such as the Nouvelles Galeries brought the type to provincial towns.',
   materials: ['cut stone fronts', 'iron and steel frame', 'plate glass', 'zinc and slate', 'oak and marble inside'],
   lookFor: [
     { label: 'Corner dome', note: 'The store’s landmark, set on the corner so it can be seen down both streets.', at: [8.4, 24.0, 6.4] },
@@ -83,7 +83,7 @@ export const grandMagasin: BuildingDef = {
     { label: 'Grand staircase', note: 'A double staircase rises in the light well, so that customers see the whole store, and each other, as they climb.', at: [0, 3.2, -1.6] },
     { label: 'Display windows and awnings', note: 'Plate-glass windows on the street, shaded by striped awnings, show the goods to passers-by.', at: [-8.0, 3.0, 10.9] },
   ],
-  modelledOn: 'Au Bon Marché, Paris (Louis-Auguste Boileau, from 1869, with the engineering firm of Gustave Eiffel, completed in stages to 1887), much reduced; the corner dome is more like the Printemps or the provincial Nouvelles Galeries',
+  modelledOn: 'Au Bon Marché, Paris (begun 1869; Louis-Auguste Boileau with the engineering firm of Gustave Eiffel in the 1870s, then his son Louis-Charles Boileau, completed in stages to 1887), much reduced; the corner dome is more like the Printemps or the provincial Nouvelles Galeries',
   influences: ['iron-and-rail'],
   build(b) {
     const open = b.cutaway;

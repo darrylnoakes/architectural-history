@@ -9,7 +9,7 @@ export const concreteMarket1929: BuildingDef = {
   summary:
     'After the shelling of 1914 to 1918 the town rebuilds its market not in iron but in reinforced concrete, the material in which French engineers now led the world. ' +
     'The nave is covered by a single vault of concrete only a few centimetres thick, held in shape by arches that stand up out of its back, and lit through bands of glass let into the shell and a great glazed screen at each end. ' +
-    'It is modelled on the Halles du Boulingrin at Reims, by the architect Émile Maigrot with Eugène Freyssinet as engineer (1927 to 1929), whose shell is about 7 cm thick and spans nearly 50 m; this one is a quarter of the size. ' +
+    'It is modelled on the Halles du Boulingrin at Reims, by the architect Émile Maigrot with Eugène Freyssinet, engineer to the contractors Limousin (1927 to 1929), whose shell is about 7 cm thick and spans about 38 m; this one is a quarter of the size. ' +
     'Shops in low ranges down each side open onto the street.',
   materials: ['reinforced concrete', 'glass in concrete frames', 'steel doors and windows', 'terrazzo and marble'],
   lookFor: [
@@ -19,7 +19,7 @@ export const concreteMarket1929: BuildingDef = {
     { label: 'Glazed end', note: 'Each end of the vault is filled with glass in a grid of slim concrete bars.', at: [0, 8.6, 8.8] },
     { label: 'Shops down the sides', note: 'Low flat-roofed ranges of shops line both sides and open onto the streets, so the hall earns rent all week.', at: [10.4, 2.2, -2.8] },
   ],
-  modelledOn: 'The Halles du Boulingrin, Reims (Émile Maigrot, architect, and Eugène Freyssinet, engineer, 1927 to 1929), much reduced and simplified',
+  modelledOn: 'The Halles du Boulingrin, Reims (Émile Maigrot, architect, and Eugène Freyssinet, engineer, for the firm of Claude Limousin, 1927 to 1929), much reduced and simplified',
   influences: ['reinforced-concrete'],
   build(b) {
     const open = b.cutaway;

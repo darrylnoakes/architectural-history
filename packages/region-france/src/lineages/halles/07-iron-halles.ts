@@ -46,7 +46,7 @@ export const ironHalles: BuildingDef = {
   summary:
     'The town copies the new central markets of Paris: a pavilion with no walls to speak of, a frame of slender cast-iron columns and wrought-iron trusses carrying a roof of zinc and glass. ' +
     'A low brick base keeps out dogs and draughts; above it, and in the raised clerestories of the roof, glass louvres let light in and the smells out, which was the whole point of the design. ' +
-    'Victor Baltard’s first pavilion for Les Halles in 1853 was of stone and was pulled down half-built; Napoleon III is said to have asked for umbrellas of iron instead, and the ten pavilions that followed from 1854 were copied in market towns across France. ' +
+    'Victor Baltard’s first pavilion for Les Halles in 1853 was of stone and was pulled down half-built; Napoleon III is said to have asked for umbrellas of iron instead, and the ten iron pavilions built from 1854 to 1874 were copied in market towns across France. ' +
     'The Paris pavilions were demolished in 1971 to 1973; one was rebuilt at Nogent-sur-Marne.',
   materials: ['cast and wrought iron', 'brick', 'glass louvres', 'zinc'],
   lookFor: [

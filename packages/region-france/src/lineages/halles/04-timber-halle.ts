@@ -89,7 +89,7 @@ export const timberHalle: BuildingDef = {
     { label: 'Braces and tie beams', note: 'Curved braces stiffen the frame; tie beams across the nave carry king posts up to the ridge. The front of the roof is cut away to show them.', at: [4.9, 9.2, 0] },
     { label: 'Grain measures', note: 'Stone blocks hollowed to the official measures of the market, so a buyer of grain could check what he was sold.', at: [9.3, 1.2, -1.2] },
   ],
-  modelledOn: 'The halles of Milly-la-Forêt (1479) and Saint-Pierre-sur-Dives (thirteenth century, rebuilt as it was after a fire in 1944), reduced in length; the form is common to the surviving halles of northern and central France',
+  modelledOn: 'The halles of Milly-la-Forêt (1479) and Saint-Pierre-sur-Dives (medieval, burnt in 1944 and rebuilt as it was with the old methods), reduced in length; the form is common to the surviving halles of northern and central France',
   build(b) {
     const cut = b.cutaway;
     // cobbled floor running a little beyond the eaves

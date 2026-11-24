@@ -61,10 +61,10 @@ export const fair: BuildingDef = {
     { label: 'Fair cross', note: 'The cross in the middle stands for the peace of the fair: crimes committed during it were judged by the abbey’s court.', at: [0, 4.6, 0] },
     { label: 'Booths (loges)', note: 'Each booth’s lower shutter folds down as a counter and the upper one props up as an awning; at the end of the fair the whole thing is taken apart.', at: [-2.6, 2.4, -7.3] },
     { label: 'Tents', note: 'Travelling merchants sell from cloth tents pegged out on poles.', at: [8.6, 2.6, 5.2] },
-    { label: 'Wine barrels', note: 'The fairs of Saint-Denis were known above all for wine; the barrel, an invention of the Gauls, had long replaced the Roman amphora.', at: [3.4, 1.0, -3.4] },
+    { label: 'Wine barrels', note: 'The fairs of Saint-Denis were known above all for wine; the barrel, which the Romans credited to the Gauls, had long replaced the Roman amphora.', at: [3.4, 1.0, -3.4] },
     { label: 'Toll table', note: 'At the entrance the abbey’s agent takes the toll (tonlieu) on goods coming in, the abbey’s main profit from the fair.', at: [-1.6, 1.3, 9.2] },
   ],
-  modelledOn: 'The fair of Saint-Denis, which by tradition King Dagobert granted to the abbey (later the Lendit fair), and the fairs of Champagne; the booths and tents are generic',
+  modelledOn: 'The autumn fair of Saint-Denis, which by tradition King Dagobert granted to the abbey in the 630s, and the Lendit, a second fair held near Saint-Denis from about 1100; also the fairs of Champagne; the booths and tents are generic',
   build(b) {
     b.noCollide();
     // a trodden meadow, worn bare along the lanes between the booths
