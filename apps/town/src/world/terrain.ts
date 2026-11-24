@@ -15,7 +15,7 @@ const SPAN = 1700;
  * Grid lines along one axis: evenly spaced at `fine` between a and b (where the town and its
  * earthworks are), then wider and wider out to the horizon.
  */
-function gridLines(centre: number, a: number, b: number, fine: number): Float32Array {
+function gridLines(centre: number, a: number, b: number, fine: number, grow: number): Float32Array {
   const out: number[] = [];
   const n = Math.max(1, Math.round((b - a) / fine));
   for (let i = 0; i <= n; i++) out.push(a + ((b - a) * i) / n);
@@ -23,7 +23,7 @@ function gridLines(centre: number, a: number, b: number, fine: number): Float32A
     let x = dir < 0 ? a : b;
     let step = fine;
     while (Math.abs(x - centre) < SPAN) {
-      step = Math.min(80, step * 1.07);
+      step = Math.min(80, step * grow);
       x += dir * step;
       out.push(x);
     }
@@ -169,8 +169,8 @@ export class Terrain {
     const [cx, cz] = land.site.centre;
     // fine enough to shape a ditch where the site says there are earthworks, coarser elsewhere
     const d = land.site.detail;
-    const xs = d ? gridLines(cx, d.x0, d.x1, 1.5) : gridLines(cx, cx - 110, cx + 110, 2);
-    const zs = d ? gridLines(cz, d.z0, d.z1, 1.5) : gridLines(cz, cz - 110, cz + 110, 2);
+    const xs = d ? gridLines(cx, d.x0, d.x1, 1.5, 1.05) : gridLines(cx, cx - 110, cx + 110, 2, 1.035);
+    const zs = d ? gridLines(cz, d.z0, d.z1, 1.5, 1.05) : gridLines(cz, cz - 110, cz + 110, 2, 1.035);
     const NX = xs.length;
     const NZ = zs.length;
     const pos = new Float32Array(NX * NZ * 3);
