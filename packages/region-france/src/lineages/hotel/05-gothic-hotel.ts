@@ -1,5 +1,6 @@
 import { P, tint, type Builder, type BuildingDef } from '@ah/kit';
 import { accolade, archPts, bar, croisee, dormer, onFace, plate, stairTurret, type Face, type Pt } from './shared';
+import { TOWER, courtWell, keepTower } from './04-maison-forte';
 
 /** A tall pointed window with Flamboyant tracery (two mullions, flame-shaped mouchettes in the head) in the local face frame. */
 function flamboyantWindow(b: Builder, x: number, y: number, w: number, h: number, stone: number): void {
@@ -28,11 +29,11 @@ export const gothicHotel: BuildingDef = {
   date: 'c. 1445',
   summary:
     'A merchant-banker grown rich on royal finance builds a town palace round a courtyard, one of the first true hôtels: a house for a household rather than a fortress. ' +
-    'The towers that remain hold spiral stairs, set in polygonal turrets on the court so that every room can be reached without passing through another. ' +
+    'The square tower of the family’s old Romanesque house is kept at the inner corner of the court as a sign of ancient rank (Jacques Cœur likewise built against towers of the Roman wall), while new polygonal turrets on the court hold spiral stairs, so that every room can be reached without passing through another. ' +
     'Everything that shows is carved in the late Gothic manner called Flamboyant after its flame-like tracery: steep slate roofs with tall dormers (lucarnes) under crocketed gables, ogee hoods, stone cross-windows, and over the gateway a chapel with a traceried window. ' +
     'On the street front, carved servants lean out of two false windows, a joke in stone that only a very rich man could afford.',
   materials: ['fine limestone', 'slate', 'oak', 'lead (roof finials)', 'leaded glass'],
-  modelledOn: 'The Palais Jacques-Cœur, Bourges (1443 to 1451): the gate pavilion with its chapel, canopied niche and false windows with figures, the stair turrets and the dormers; and the Hôtel de Cluny, Paris (about 1485 to 1510) for the plan round a court. Much reduced',
+  modelledOn: 'The Palais Jacques-Cœur, Bourges (1443 to 1451): the gate pavilion with its chapel, canopied niche and false windows with figures, the stair turrets, the dormers and the older towers kept in the new building; and the Hôtel de Cluny, Paris (about 1485 to 1510) for the plan round a court. Much reduced',
   lookFor: [
     { label: 'Chapel over the gateway', note: 'The household chapel sits above the entrance arch, lit by a tall window of Flamboyant tracery facing the street.', at: [0, 9.8, 12.4] },
     { label: 'False windows with figures', note: 'Two sham windows from which carved servants lean out to watch the street, as on Jacques Cœur’s palace.', at: [2.05, 6.0, 12.4] },
@@ -45,6 +46,7 @@ export const gothicHotel: BuildingDef = {
     const dress = tint(stone, 0.05);
     const slate = b.pick([P.ardoise, P.slateBlue, tint(P.ardoise, 0.04)]);
     const door = b.pick([P.oakDark, P.oak, tint(P.doorRed, -0.1)]);
+    const rub = tint(P.rubble, 0.02);
     const G = 3.9; // ground storey
     const F = 3.7; // first storey
     const H = G + F; // 7.6: eaves of the wings and street range
@@ -60,7 +62,12 @@ export const gothicHotel: BuildingDef = {
 
     // ---- the main range (corps de logis) across the back
     const mD = zM - zB;
-    b.box(2 * X, HM, mD, stone, { at: [0, 0, (zM + zB) / 2] });
+    // the old tower of the Romanesque house stands at the inner corner, the new ranges built against it
+    const tx0 = TOWER.x - TOWER.size / 2;
+    const tz0 = TOWER.z - TOWER.size / 2;
+    const tz1 = TOWER.z + TOWER.size / 2;
+    b.box(X + tx0, HM, mD, stone, { at: [(tx0 - X) / 2, 0, (zM + zB) / 2] });
+    b.box(X - tx0, HM, tz0 - zB, stone, { at: [(X + tx0) / 2, 0, (tz0 + zB) / 2] });
     b.collider(2 * X, mD, { at: [0, 0, (zM + zB) / 2] });
     const mR = (mD / 2) * 1.6;
     b.gable(2 * X, mD, mR, slate, { at: [0, HM, (zM + zB) / 2], overhang: 0.3, wall: stone });
@@ -75,7 +82,7 @@ export const gothicHotel: BuildingDef = {
     b.archWall(zFi - zM, G, 0.5, dress, { at: [-xW - 0.25, 0, (zFi + zM) / 2], facing: '+x', openings: 4, openW: 2.2, openH: 3.2, shape: 'pointed' });
     b.box(2.2, 0.05, zFi - zM, P.paving, { at: [-xW - 1.1, 0, (zFi + zM) / 2] });
     // right wing: kitchens and offices
-    b.box(wD, wingH, zFi - zM, stone, { at: [X - wD / 2, 0, (zFi + zM) / 2] });
+    b.box(wD, wingH, zFi - tz1, stone, { at: [X - wD / 2, 0, (zFi + tz1) / 2] });
     b.collider(wD, zFi - zM, { at: [X - wD / 2, 0, (zFi + zM) / 2] });
     const wR = (wD / 2) * 1.6;
     for (const s of [-1, 1]) b.gable(wD, zFi - zM, wR, slate, { at: [s * (X - wD / 2), wingH, (zFi + zM) / 2], ridge: 'z', overhang: 0.3 });
@@ -197,35 +204,33 @@ export const gothicHotel: BuildingDef = {
       onFace(b, s > 0 ? '+x' : '-x', [s * X, 0, 0], () => {
         for (const x of [-7.0, 3.0]) croisee(b, x, G + 0.7, 1.2, 2.3, dress, { hood: true, bars: 1 });
         croisee(b, 3.0, 1.8, 0.8, 1.4, dress, { mullion: false });
-        // the gable of the main range: a window in the attic
-        croisee(b, s > 0 ? 8.5 : -8.5, HM + 1.0, 0.9, 1.6, dress, { mullion: false, hood: true });
+        // the gable of the main range: a window in the attic (the old tower covers the other end)
+        if (s < 0) croisee(b, -8.5, HM + 1.0, 0.9, 1.6, dress, { mullion: false, hood: true });
       });
     }
     // the turrets: the great stair in the middle of the main range, a smaller one in the corner
     stairTurret(b, 0, zM + 1.3, 1.9, 13.6, stone, slate, { sides: 8, roofH: 5.2, face: '+z', door, frame: dress, windows: 3 });
     onFace(b, '+z', [0, 0, zM + 1.3 + 1.75], () => accolade(b, 0, 2.5, 1.3, 0.7, dress, 0.02, 0.1));
     b.collider(3.8, 3.4, { at: [0, 0, zM + 1.3] });
-    stairTurret(b, xW - 0.8, zM + 0.8, 1.1, 11.0, stone, slate, { sides: 6, roofH: 3.6, face: '+z', door, frame: dress, windows: 3 });
-    b.collider(2.2, 2.2, { at: [xW - 0.8, 0, zM + 0.8] });
     // lead finials on the gable ends and tall chimney stacks with moulded caps
-    for (const x of [-X, X]) {
+    for (const x of [-X]) {
       b.cyl(0.05, 1.3, P.lead, { at: [x, HM + mR, (zM + zB) / 2], segs: 4 });
       b.sphere(0.13, P.lead, { at: [x, HM + mR + 1.35, (zM + zB) / 2], segs: 5 });
     }
     for (const [x, z, y, hh] of [
-      [-7.5, -8.5, HM, 7.6],
-      [7.5, -8.5, HM, 7.6],
+      [-7.5, -10.6, HM, 7.6],
+      [7.5, -10.6, HM, 7.6],
       [X - 1.0, 1.0, H, 6.4],
       [-X + 1.0, 0.0, H, 6.4],
     ] as [number, number, number, number][]) {
       b.chimney(1.3, hh, 0.8, dress, { at: [x, y, z] });
       b.box(1.5, 0.3, 1.0, dress, { at: [x, y + hh - 0.6, z] });
     }
-    // the court paved, a well
+    // the old tower, and the court paved round the old well, which gets an iron frame
+    keepTower(b, rub, tint(stone, -0.04), door);
     b.box(2 * xW, 0.05, zFi - zM, P.paving, { at: [0, 0, (zFi + zM) / 2] });
-    b.cyl(0.8, 0.9, dress, { at: [-2.6, 0, 3.2], segs: 8 });
-    b.cyl(0.62, 0.92, 0x2a3036, { at: [-2.6, 0, 3.2], segs: 8 });
-    for (const s of [-1, 1]) b.box(0.14, 2.1, 0.14, P.iron, { at: [-2.6 + s * 0.7, 0.9, 3.2] });
-    b.beam([-3.3, 2.9, 3.2], [-1.9, 2.9, 3.2], 0.08, 0.08, P.iron);
+    courtWell(b, dress);
+    for (const s of [-1, 1]) b.box(0.14, 2.1, 0.14, P.iron, { at: [3.2 + s * 0.7, 0.9, 5.0] });
+    b.beam([2.5, 2.9, 5.0], [3.9, 2.9, 5.0], 0.08, 0.08, P.iron);
   },
 };

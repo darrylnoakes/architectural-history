@@ -117,6 +117,104 @@ export function riverWall(b: Builder, x0: number, x1: number, color: number, o?:
   if (o?.coping !== undefined) b.box(w + 0.1, 0.18, 0.95, o.coping, { at: [(x0 + x1) / 2, top, BANK + 0.2] });
 }
 
+// ---------------------------------------------------------------- the mill site
+// One race serves the abbey's corn mill (620), the Cistercian forge (1180) and the fulling mill
+// (1300): a wall built out into the river parallel to the bank makes a channel, with a sluice at its
+// head. On the hero plot local +X is upstream (west in the town), so the water comes in at the +X
+// end, passes the wheel at WHEEL_X and returns to the river at the -X end.
+
+/** Plot-local x of the wheel that every mill on the race has had. */
+export const WHEEL_X = 9.9;
+/** The line of the race wall out in the river. */
+export const RACE_Z = -13.8;
+/** The middle of the channel between the bank and the race wall. */
+export const RACE_C = (RACE_Z + BANK) / 2;
+const RACE_X0 = 0.5; // tail, downstream
+const RACE_X1 = 17.5; // head, upstream
+const PIT0 = WHEEL_X - 3; // the stretch beside the wheel, rebuilt in stone by the Cistercians
+const PIT1 = WHEEL_X + 3;
+
+/**
+ * The mill race. `pit: 'timber'` is the abbey's race as first built, a wall of piles and planks along
+ * its whole length; `'stone'` is the same race with the stretch beside the wheel rebuilt as a masonry
+ * wheel pit. The timber wall is built in three lifts so the two outer ones are the same pieces either way.
+ */
+export function millRace(b: Builder, pit: 'timber' | 'stone'): void {
+  const wood = P.oakDark;
+  const plank = tint(P.oakDark, 0.08);
+  const len = RACE_X1 - RACE_X0;
+  const mid = (RACE_X0 + RACE_X1) / 2;
+  // the bed of the channel and the water in it
+  b.box(len, 0.2, 2.8, wood, { at: [mid, BED, RACE_C], jitter: false });
+  water(b, len, 2.6, [mid, WATER + 0.1, RACE_C]);
+  // the race wall: piles and planks, upstream and downstream of the wheel
+  for (const [x0, x1] of [
+    [RACE_X0, PIT0],
+    [PIT1, RACE_X1],
+  ]) {
+    b.box(x1 - x0, 1.7, 0.14, plank, { at: [(x0 + x1) / 2, BED + 0.6, RACE_Z], jitter: false });
+    for (const x of lin(Math.round(x1 - x0) + 1, x0, x1)) b.cyl(0.12, 2.6, wood, { at: [x, BED, RACE_Z], segs: 5, jitter: false });
+  }
+  // beside the wheel
+  if (pit === 'timber') {
+    b.box(PIT1 - PIT0, 1.7, 0.14, plank, { at: [WHEEL_X, BED + 0.6, RACE_Z], jitter: false });
+    for (const x of lin(6, PIT0 + 0.5, PIT1 - 0.5)) b.cyl(0.12, 2.6, wood, { at: [x, BED, RACE_Z], segs: 5, jitter: false });
+  } else {
+    const stone = tint(P.pierreBlonde, -0.06);
+    b.box(PIT1 - PIT0, 0.6 - BED, 0.8, stone, { at: [WHEEL_X, BED, RACE_Z - 0.1], jitter: false });
+    b.box(PIT1 - PIT0 + 0.1, 0.15, 0.95, tint(stone, 0.06), { at: [WHEEL_X, 0.6, RACE_Z - 0.1], jitter: false });
+    b.box(PIT1 - PIT0, 0.12, 2.6, stone, { at: [WHEEL_X, BED + 0.2, RACE_C], jitter: false }); // a paved floor under the wheel
+  }
+  // the sluice at the head: two posts, a gate and a windlass beam over the channel
+  const sx = RACE_X1 - 0.9;
+  b.sym((s) => b.box(0.3, 3.4, 0.3, P.oak, { at: [sx, BED, RACE_C + s * 1.3], jitter: false }));
+  b.box(0.3, 0.3, 3.0, P.oak, { at: [sx, 1.0, RACE_C], jitter: false });
+  b.box(0.12, 1.4, 2.4, tint(P.oak, -0.06), { at: [sx, WATER - 0.2, RACE_C], jitter: false });
+  b.box(0.1, 1.4, 0.1, P.oak, { at: [sx, -0.3, RACE_C], jitter: false });
+}
+
+/**
+ * The precinct wall of the abbey's works on the street, with its gatehouse arch: built with the
+ * Cistercian forge and kept by the cloth works after it. `stone`, `dress` and `tile` only colour it.
+ */
+export function precinctWall(b: Builder, stone: number, dress: number, tile: number): void {
+  b.box(13.5, 2.4, 0.6, stone, { at: [-10.6, 0, 10.4] });
+  b.box(13.5, 2.4, 0.6, stone, { at: [10.6, 0, 10.4] });
+  b.box(13.7, 0.2, 0.8, tile, { at: [-10.6, 2.4, 10.4] });
+  b.box(13.7, 0.2, 0.8, tile, { at: [10.6, 2.4, 10.4] });
+  b.sym((s) => b.box(1.0, 3.4, 1.0, dress, { at: [s * 3.6, 0, 10.4] }));
+  b.archWall(8.2, 4.2, 0.8, stone, { at: [0, 0, 10.4], facing: '+z', openings: 1, openW: 3.4, openH: 3.6 });
+  b.gable(8.6, 1.6, 1.4, tile, { at: [0, 4.2, 10.4], overhang: 0.2 });
+  b.collider(13.5, 0.6, { at: [-10.6, 0, 10.4] });
+  b.collider(13.5, 0.6, { at: [10.6, 0, 10.4] });
+}
+
+/**
+ * The street wall and carriage gate of the royal manufactory's court (1680): brick walls with stone
+ * coping, two stone piers with balls, an iron gate. Kept by the spinning mill that replaced it.
+ */
+export function manufactoryGate(b: Builder, brick: number, stone: number): void {
+  const gz = 10.6;
+  const gw = 22; // between the wings of the manufactory
+  b.sym((s) => {
+    b.box(gw / 2 - 2.4, 2.6, 0.5, brick, { at: [s * (gw / 4 + 1.2), 0, gz] });
+    b.box(gw / 2 - 2.3, 0.2, 0.65, stone, { at: [s * (gw / 4 + 1.2), 2.6, gz] });
+    b.box(1.1, 4.0, 1.1, stone, { at: [s * 2.4, 0, gz] });
+    b.box(1.3, 0.3, 1.3, tint(stone, 0.04), { at: [s * 2.4, 4.0, gz] });
+    b.sphere(0.45, stone, { at: [s * 2.4, 4.75, gz], segs: 8 });
+    b.sym((t) => b.box(0.16, 1.4, 0.16, stone, { at: [s * (gw / 4 + 1.2) + t * 2, 2.8, gz] }));
+  });
+  for (const x of lin(12, -1.8, 1.8)) b.box(0.05, 2.9, 0.05, P.castIron, { at: [x, 0, gz], jitter: false });
+  b.box(3.8, 0.1, 0.1, P.castIron, { at: [0, 0.3, gz] });
+  b.box(3.8, 0.1, 0.1, P.castIron, { at: [0, 2.7, gz] });
+  b.sym((s) => b.collider(gw / 2 - 1.4, 0.6, { at: [s * (gw / 4 + 1.6), 0, gz] }));
+}
+
+/** Stone steps from the quay down into the river, where cloth was washed (the manufactory's, kept after it). */
+export function washingSteps(b: Builder, x: number, stone: number): void {
+  b.stairs(3.0, -WATER + 0.3, 2.2, 7, stone, { at: [x, WATER - 0.3, BANK - 1.0], rotY: Math.PI });
+}
+
 /** A revetment of driven stakes and planks along the bank from x0 to x1 (before stone quays). */
 export function stakeBank(b: Builder, x0: number, x1: number, color: number = P.oakDark): void {
   const n = Math.max(2, Math.round((x1 - x0) / 0.9));
@@ -337,8 +435,8 @@ export function concreteWorks(b: Builder, o: WorksOpts = {}): void {
   const bay = W / nb;
 
   b.box(35, 0.04, 21.6, reused ? tint(P.paving, 0.04) : tint(P.concrete, -0.06), { at: [0, 0, 0], jitter: false });
-  // the concrete quay: a river wall and a deck on concrete piles standing out over the water
-  b.box(35.2, 0.3 - BED, 1.0, concDark, { at: [0, BED, BANK + 0.3] });
+  // the old stone river wall, which outlived the mill, and in front of it a concrete deck on piles
+  riverWall(b, -17.6, 17.6, tint(P.pierreBlonde, -0.1), { coping: P.pierreBlonde, top: 0.3 });
   b.box(32, 0.3, 2.6, conc, { at: [-1, 0.2, BANK - 1.3] });
   for (const x of lin(9, -16.6, 14.6)) b.box(0.4, 0.2 - BED, 0.4, concDark, { at: [x, BED, BANK - 2.3] });
   b.box(32, 0.25, 0.3, concDark, { at: [-1, 0.5, BANK - 2.45] });

@@ -1,5 +1,6 @@
 import { P, mix, tint, type BuildingDef, type Vec3 } from '@ah/kit';
-import { lin, opening, roofZ, roofX, flat, archPts } from './shared';
+import { lin, opening, roofZ, roofX, flat, archPts, holyGround } from './shared';
+import { lateRomanWall } from './03-cathedral-group';
 
 const WALL = mix(P.pierreBlonde, P.rubble, 0.4);
 const DRESS = tint(P.pierreBlonde, 0.02);
@@ -25,7 +26,7 @@ export const carolingianCathedral: BuildingDef = {
     'Under Charlemagne and his son Louis the Pious, bishops and abbots rebuilt in stone on a scale not seen since Rome, copying the basilicas of Rome: a tall nave lit by a clerestory over lower aisles, a transept and an apse. ' +
     'Under the apse a crypt held the relics, with a passage round them so that pilgrims could pass without entering the choir; it shows outside as small windows at ground level. Over the crossing rises a round tower of diminishing stages, as at Saint-Riquier. ' +
     'The great novelty is at the west: the westwork, a tower-like block with an entrance hall below and a chapel upstairs, flanked by stair turrets, where, it is thought, the emperor or the bishop could sit in state. ' +
-    'Nothing of the first cathedral group survives above ground; the halls were cleared for the new church.',
+    'Nothing of the first cathedral group survives above ground: the halls and the baptistery were cleared for the new church, which still stands against the late Roman town wall on its north side.',
   materials: ['coursed rubble with dressed stone', 'lime plaster', 'clay tiles', 'timber roofs'],
   lookFor: [
     { label: 'Westwork', note: 'The towered entrance block, ancestor of the twin-towered fronts of the Romanesque and Gothic cathedrals.', at: [0, 16.0, WZ1 + 0.3] },
@@ -38,7 +39,8 @@ export const carolingianCathedral: BuildingDef = {
     'The abbey of Saint-Riquier (Centula, consecrated 799), known from a drawing copied in a printed book of 1612, for the westwork with its round stair turrets and the round crossing tower; the cathedral of Reims, rebuilt from 816 under Archbishop Ebbo and dedicated in 862. The best surviving westwork is at Corvey in Germany (873 to 885).',
   influences: ['carolingian-revival'],
   build(b) {
-    b.box(33.6, 0.03, 66, mix(P.earth, P.grassDry, 0.45), { at: [0, 0, 0], jitter: false });
+    holyGround(b, mix(P.earth, P.grassDry, 0.45));
+    lateRomanWall(b);
     b.box(20, 0.04, 10, mix(P.paving, P.earth, 0.3), { at: [0, 0, WZ1 + 5], jitter: false });
     const nl = WZ0 - Z0;
     const nz = (WZ0 + Z0) / 2;

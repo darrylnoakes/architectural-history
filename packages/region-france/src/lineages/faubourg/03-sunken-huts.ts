@@ -1,5 +1,5 @@
 import { P, mix, tint, type Builder, type BuildingDef } from '@ah/kit';
-import { granary, heap, hurdles, patch, thatchRoof } from './shared';
+import { granary, heap, hurdles, patch, road, thatchRoof } from './shared';
 
 /**
  * A sunken hut (fond de cabane): a pit about 3 m by 2.5 m and half a metre deep, roofed by a
@@ -69,7 +69,7 @@ export const sunkenHuts: BuildingDef = {
   build(b) {
     const thatch = b.pick([P.thatchOld, tint(P.thatchOld, -0.04), P.reed]);
     patch(b, 25.6, 15.6, mix(P.earth, P.grass, 0.25), [0, 0]);
-    patch(b, 25.6, 2.0, tint(P.earth, -0.05), [0, 7.0], 0.05); // the road
+    road(b, tint(P.earth, -0.05));
     patch(b, 2.0, 6.0, tint(P.earth, -0.02), [1.0, 3.6], 0.045);
 
     postHouse(b, -6.4, 1.4 + b.range(-0.3, 0.3), b.range(-0.06, 0.06), thatch);

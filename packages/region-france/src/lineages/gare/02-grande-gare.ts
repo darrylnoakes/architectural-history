@@ -1,5 +1,5 @@
 import { P, mix, tint, type Builder, type BuildingDef } from '@ah/kit';
-import { HX, PLAT, TRACKS, archPanel, clock, nineties, platform, quad, soup, track } from './shared';
+import { HX, PLAT, TRACKS, archPanel, clock, nineties, platform, quad, soup, track, forecourt } from './shared';
 
 const ZF = 5.2; // street front
 const ZB = -3.0; // platform side
@@ -73,7 +73,7 @@ export const grandeGare: BuildingDef = {
     const glass = mix(P.glass, P.white, 0.2);
 
     // forecourt
-    b.box(HX * 2, 0.05, 12 - ZF, mix(P.paving, P.gravel, 0.3), { at: [0, 0, (12 + ZF) / 2], jitter: false });
+    forecourt(b, mix(P.paving, P.gravel, 0.3));
 
     // ------------------------------------------------ the hall: the arched front, side walls, a glazed roof
     b.archWall(HW * 2, FH, 1.0, stone, { at: [0, 0, ZF - 0.5], facing: '+z', openings: 1, openW: AW, openH: AH, shape: 'round' });
@@ -151,7 +151,7 @@ export const grandeGare: BuildingDef = {
     });
 
     // ------------------------------------------------ platform, tracks, train
-    platform(b, ZB, PLAT.edge, -HX, HX);
+    platform(b, PLAT.back, PLAT.edge, -HX, HX);
     for (const z of TRACKS) track(b, z);
     nineties(b, [-19.0, 0, TRACKS[0]]);
     b.collider(38, 2.8, { at: [0, 0, TRACKS[0]] });

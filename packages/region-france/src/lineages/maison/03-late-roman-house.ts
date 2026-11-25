@@ -1,5 +1,5 @@
 import { P, tint, type BuildingDef } from '@ah/kit';
-import { hurdle, pitched, vegBed, woodpile } from './shared';
+import { hurdle, pitched, vegBed, well, woodpile } from './shared';
 
 export const lateRomanHouse: BuildingDef = {
   id: 'late-roman-house',
@@ -9,7 +9,7 @@ export const lateRomanHouse: BuildingDef = {
   summary:
     'After the raids of 275 the town shrank behind a new wall enclosing only a fraction of the old one, and houses were packed into the space inside. ' +
     'They were built from whatever lay about in the ruined quarters outside: rubble, squared blocks and broken carvings from temples and tombs for the ground floor, salvaged tiles for the roof, ' +
-    'and where tiles ran short, thatch. Upstairs the walls are timber and cob again. The old shop front has been walled up to a single door: trade was thinner, and safety mattered more.',
+    'and where tiles ran short, thatch. Upstairs the walls are timber and cob again; in the yard the old well is still in use. The old shop front has been walled up to a single door: trade was thinner, and safety mattered more.',
   materials: ['reused stone blocks and rubble', 'oak frame and cob', 'salvaged Roman tiles', 'straw thatch'],
   lookFor: [
     {
@@ -115,7 +115,9 @@ export const lateRomanHouse: BuildingDef = {
     hurdle(b, 3.1, 8.6, 6.7, 8.6);
     vegBed(b, -3.6, -5.2, 5.2, 3.6, { rows: 6 });
     vegBed(b, 3.8, -4.6, 3.6, 3.0, { rows: 4, color: P.leafDark });
-    b.box(1.8, 0.5, 1.4, tint(P.soil, 0.1), { at: [4.8, 0, 0.4] }); // dung heap
+    b.box(1.8, 0.5, 1.4, tint(P.soil, 0.1), { at: [4.9, 0, -1.6] }); // dung heap
+    // the well of the Roman yard came through the raids and is still in use
+    well(b, [4.3, 0, 0.6], P.limestone, { frame: 'wood' });
     b.tree(b.range(3.6, 4.4), { at: [-0.6, 0, -7.4], kind: 'round', color: P.leaf });
   },
 };

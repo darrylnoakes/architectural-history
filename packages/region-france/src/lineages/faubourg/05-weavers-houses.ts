@@ -1,5 +1,5 @@
 import { P, mix, tint, type Builder, type BuildingDef } from '@ah/kit';
-import { patch, tileRoof, well } from './shared';
+import { patch, road, tileRoof, well } from './shared';
 
 const ZF = 5.6; // street face of the ground storey
 const D = 8.4; // depth of each house
@@ -94,7 +94,7 @@ export const weaversHouses: BuildingDef = {
     const roof = b.pick([P.tuilePlate, tint(P.tuilePlate, -0.04), mix(P.tuilePlate, P.tileBrown, 0.4)]);
     const washes = [P.limewash, P.torchis, mix(P.torchis, P.ochreWash, 0.3), mix(P.limewash, P.pinkWash, 0.35)];
 
-    patch(b, 25.6, 2.0, P.cobble, [0, 7.0], 0.06); // the street
+    road(b, P.cobble); // the street, paved now
     patch(b, 25.6, 15.6 - 2.0 - D, mix(P.earth, P.gravel, 0.3), [0, (ZB - 7.8) / 2], 0.03);
 
     // three houses and an alley to the yard; where the alley falls changes from plot to plot

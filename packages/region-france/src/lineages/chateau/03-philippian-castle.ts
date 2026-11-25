@@ -1,25 +1,27 @@
 import { P, mix, tint, type BuildingDef, type Builder } from '@ah/kit';
-import { C, MOTTE, STONE, TILE, TOWERS, castleColliders, castleDitch, chemise, curtain, curtainLines, gatehouse, motte, range, roundKeep, roundTower, win } from './shared';
+import { C, GATE_LIFT, MOTTE, STONE, TOWERS, castleColliders, castleDitch, chemise, curtain, curtainLines, gatehouse, motte, roundKeep, roundTower } from './shared';
+import { moundStair, stoneHall } from './02-donjon';
+
+/** The court's well (the bailey's of 960, kept) and its gravel, shared with the castle of 1395. */
+export function courtYard(b: Builder, stone: number, ground: number) {
+  b.cyl(0.8, 0.8, stone, { at: [3, 0, 8], segs: 8 });
+  b.cyl(0.6, 0.04, P.water, { at: [3, 0.78, 8], segs: 8, mat: 'glass' });
+  b.box(C.x1 - C.x0 - 4, 0.03, C.z1 - C.z0 - 8, ground, { at: [(C.x0 + C.x1) / 2 + 1, 0, 4], jitter: false });
+}
 
 function build(b: Builder) {
   motte(b, mix(P.turf, P.grassDry, 0.3), false);
-  castleDitch(b, false);
+  castleDitch(b);
   chemise(b, tint(STONE, -0.03), 'crenel', 0.24);
   roundKeep(b, STONE, 'crenel');
-  for (const line of curtainLines()) curtain(b, line[0], line[1], 9, 2, STONE, { top: 'crenel', inside: C.inside });
-  for (const [x, z, r, out] of TOWERS) roundTower(b, x, z, r, 0, 12.5, STONE, { top: 'crenel', outward: out });
-  gatehouse(b, STONE, 'crenel', 9);
+  for (const line of curtainLines()) curtain(b, line[0], line[1], GATE_LIFT, 2, STONE, { top: 'crenel', inside: C.inside, lift: GATE_LIFT });
+  for (const [x, z, r, out] of TOWERS) roundTower(b, x, z, r, 0, 12.5, STONE, { top: 'crenel', outward: out, lift: 12.5 });
+  gatehouse(b, STONE, 'crenel', GATE_LIFT);
   castleColliders(b);
-  // the hall and lodgings against the back wall
-  range(b, 0.5, 13, -11, -5.2, 8, STONE, TILE, { ridge: 'x', rise: 3.9 });
-  for (const x of [2.5, 6, 9.5]) {
-    win(b, 'pointed', 0.4, 1.2, [x, 1.4, -5.2], '+z', { glass: P.black });
-    win(b, 'pointed', 1.0, 2.4, [x, 4.2, -5.2], '+z', { frame: tint(STONE, 0.06), bd: 0.12, mullion: true });
-  }
-  win(b, 'pointed', 1.3, 2.5, [12, 0, -5.2], '+z', { frame: tint(STONE, 0.06), glass: P.oakDark, bd: 0.14 });
-  b.cyl(0.8, 0.8, STONE, { at: [3, 0, 5], segs: 8 });
-  b.cyl(0.6, 0.04, P.water, { at: [3, 0.78, 5], segs: 8, mat: 'glass' });
-  b.box(C.x1 - C.x0 - 4, 0.03, C.z1 - C.z0 - 8, mix(P.gravel, P.earth, 0.4), { at: [(C.x0 + C.x1) / 2 + 1, 0, 4], jitter: false });
+  // the stair up the mound and the stone hall of 1100 are kept; the old ditches are filled
+  moundStair(b);
+  stoneHall(b);
+  courtYard(b, STONE, mix(P.gravel, P.earth, 0.4));
 }
 
 export const philippianCastle: BuildingDef = {
@@ -29,7 +31,8 @@ export const philippianCastle: BuildingDef = {
   date: 'c. 1220',
   summary:
     'Philip Augustus, who takes Normandy from the English king in 1204, gives his castles one efficient pattern. A regular four-sided enclosure of high curtain walls is flanked by round towers at the corners and along the sides, so archers can sweep every face of the wall; a round tower has no corners to undermine and turns aside stones from siege engines. ' +
-    'The gate sits between two towers. The great round keep, here raised on the old mound in one corner, can still hold out alone, and the old ring wall now makes its first line of defence.',
+    'The gate sits between two towers. The great round keep, here raised on the old mound in one corner, can still hold out alone, and the old ring wall now makes its first line of defence. ' +
+    'A new ditch is dug round the circuit and the old ones filled; the stair up the mound and the stone hall of the old bailey are kept.',
   materials: ['limestone ashlar', 'rubble core', 'flat clay tiles', 'oak'],
   lookFor: [
     { label: 'Great round keep', note: 'A cylindrical donjon, the king’s signature, here about ten metres across and twenty-five high on the old motte; the king’s own, such as the Louvre’s, were some fifteen across and thirty high.', at: [MOTTE.x + 3.6, 20, MOTTE.z + 3.6] },

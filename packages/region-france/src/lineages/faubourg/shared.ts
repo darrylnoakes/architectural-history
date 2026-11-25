@@ -17,6 +17,15 @@ export function patch(b: Builder, w: number, d: number, color: number, at: [numb
   b.box(w, y, d, color, { at: [at[0], 0, at[1]], jitter: false });
 }
 
+/**
+ * The road into town along the front of the plot. Its line outlasts every building beside it, from the
+ * Gaulish track to the paved street of the weavers, so each of those stages lays it with these numbers
+ * and only its surface changes colour.
+ */
+export function road(b: Builder, color: number): void {
+  patch(b, 25.8, 1.6, color, [0, 7.15], 0.06);
+}
+
 /** Add a triangle soup: `pos` is a flat [x, y, z, ...] list, three vertices per triangle. */
 export function soup(b: Builder, pos: number[], color: number, o?: { mat?: 'matte' | 'glass' }): void {
   if (!pos.length) return;

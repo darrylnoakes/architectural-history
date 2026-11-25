@@ -1,5 +1,5 @@
 import { P, mix, tint, type BuildingDef } from '@ah/kit';
-import { HX, PLAT, TRACKS, catenary, platform, quad, soup, tgv, track } from './shared';
+import { HX, PLAT, TRACKS, platform, quad, soup, tgv, track, forecourt, overheadLine } from './shared';
 
 // the station hall: a glass box
 const BX0 = -8.0;
@@ -47,7 +47,7 @@ export const gareTgv: BuildingDef = {
     const soffit = mix(P.larch, P.pine, 0.5);
 
     // forecourt of granite paving, a strip of planting, bollards, young trees
-    b.box(HX * 2, 0.06, 12 - BZ0, mix(P.paving, P.granite, 0.4), { at: [0, 0, (12 + BZ0) / 2], jitter: false });
+    forecourt(b, mix(P.paving, P.granite, 0.4));
     b.box(30, 0.3, 1.6, P.grass, { at: [0, 0, 10.6], jitter: false });
     for (const x of [-13, -6, 6, 13]) b.tree(4.6, { kind: 'round', at: [x, 0, 10.3], color: mix(P.leaf, P.leafDark, 0.3) });
     for (let x = -17; x <= 17; x += 2.0) if (Math.abs(x) > 3) b.cyl(0.1, 0.8, P.cladGrey, { at: [x, 0, 9.4], segs: 6 });
@@ -85,15 +85,13 @@ export const gareTgv: BuildingDef = {
     b.box(2.7, 0.9, 0.03, P.windowLit, { at: [6.0, 3.15, 1.08] });
 
     // ------------------------------------------------ platform, tracks, train, overhead line
-    platform(b, BZ0, PLAT.edge, -HX, HX, { top: mix(P.paving, P.granite, 0.5), edge: P.white });
+    platform(b, PLAT.back, PLAT.edge, -HX, HX, { top: mix(P.paving, P.granite, 0.5), edge: P.white });
     // the tactile strip of a modern platform
     b.box(HX * 2, 0.02, 0.4, P.cladYellow, { at: [0, PLAT.y, PLAT.edge + 1.0], jitter: false });
     for (const z of TRACKS) track(b, z, -HX, HX, { sleeper: P.concrete });
     tgv(b, [-19.6, 0, TRACKS[0]], 39);
     b.collider(39, 3.0, { at: [0, 0, TRACKS[0]] });
-    catenary(b, TRACKS[0], [-17, -5, 7, 18], -12.0 + 0.15, 6.4);
-    b.box(35, 0.03, 0.03, P.iron, { at: [0.5, 6.0, TRACKS[1]], jitter: false });
-    b.box(35, 0.03, 0.03, P.iron, { at: [0.5, 6.5, TRACKS[1]], jitter: false });
+    overheadLine(b);
 
     // ------------------------------------------------ the canopy: fritted glass on a steel grid, a timber band
     const zs: number[] = [];

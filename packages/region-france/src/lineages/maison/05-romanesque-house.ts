@@ -1,5 +1,5 @@
 import { P, tint, type BuildingDef } from '@ah/kit';
-import { pitched, privy, vegBed, well, yardWall, washing } from './shared';
+import { YARD_WELL, pitched, privy, vegBed, well, washing, yardBounds } from './shared';
 
 export const romanesqueHouse: BuildingDef = {
   id: 'romanesque-house',
@@ -137,14 +137,12 @@ export const romanesqueHouse: BuildingDef = {
     b.shed(6.8, 1.6, 0.5, tile, { at: [2.2, gy + 2.4, zB - 0.8], high: '+z' });
 
     // the yard
-    const wall = tint(P.rubble, 0.02);
-    yardWall(b, -6.75, zB, -6.75, -8.75, 2.2, wall, tile);
-    yardWall(b, 6.75, zB, 6.75, -8.75, 2.2, wall, tile);
-    yardWall(b, -6.75, -8.75, 6.75, -8.75, 2.2, wall, tile);
+    // the yard walls and the well outlast the house (see yardBounds)
+    yardBounds(b, zB, tint(P.rubble, 0.03), tile);
     b.box(13.2, 0.03, 3.0, tint(P.gravel, -0.04), { at: [0, 0, -1.6], jitter: false });
-    well(b, [4.2, 0, -4.2], P.pierreBlonde, { frame: 'wood' });
+    well(b, YARD_WELL, P.pierreBlonde, { frame: 'wood' });
     privy(b, [5.6, 0, -7.8], 0, tint(P.oak, 0.1), tile);
-    vegBed(b, -3.0, -6.2, 5.4, 4.2, { rows: 7 });
+    vegBed(b, -3.6, -6.2, 4.8, 4.2, { rows: 7 });
     washing(b, [-6.2, 1.9, -3.4], [-1.2, 1.9, -3.4], [P.white, P.cream, 0x8a6a4a, P.white, P.cream]);
     b.tree(b.range(3.8, 4.6), { at: [1.4, 0, -7.4], kind: 'round', color: P.leafDark });
   },

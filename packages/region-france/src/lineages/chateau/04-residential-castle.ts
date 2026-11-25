@@ -1,6 +1,7 @@
 import { P, mix, tint, type BuildingDef, type Builder, type Vec3 } from '@ah/kit';
 import {
   C,
+  GATE_LIFT,
   SLATE,
   STONE,
   STONE_NEW,
@@ -22,6 +23,7 @@ import {
   win,
   type TopStyle,
 } from './shared';
+import { courtYard } from './03-philippian-castle';
 
 /** The stair tower at the inner corner of the hall and the lodgings. */
 export const STAIR = { x: 6.4, z: -4.4, r: 1.6 };
@@ -48,12 +50,12 @@ export function residentialCastle(b: Builder, restored: boolean) {
   const top: TopStyle = restored ? 'restored' : 'mach';
   const fr = tint(stone, 0.06);
   motte(b, restored ? P.grass : mix(P.turf, P.grassDry, 0.3), false);
-  castleDitch(b, false, restored ? mix(P.grass, P.hedge, 0.3) : undefined);
+  castleDitch(b, restored ? mix(P.grass, P.hedge, 0.3) : undefined);
   chemise(b, tint(stone, -0.03), 'mach', 0.24);
   roundKeep(b, stone, top);
-  for (const line of curtainLines()) curtain(b, line[0], line[1], 11, 2, stone, { top, inside: C.inside });
+  for (const line of curtainLines()) curtain(b, line[0], line[1], 11, 2, stone, { top, inside: C.inside, lift: GATE_LIFT });
   for (const [x, z, r, out] of TOWERS) {
-    roundTower(b, x, z, r, 0, 16.5, stone, { top, outward: out, roofH: r * (restored ? 3.3 : 2.1), windows: 2 });
+    roundTower(b, x, z, r, 0, 16.5, stone, { top, outward: out, roofH: r * (restored ? 3.3 : 2.1), windows: 2, lift: 12.5 });
     if (restored) {
       const [sx, sz] = pol(x, z, r + 0.02, out);
       statue(b, [sx, 10.5, sz], out, stone);
@@ -116,13 +118,10 @@ export function residentialCastle(b: Builder, restored: boolean) {
   if (restored) b.sphere(0.18, P.gold, { at: [kx, K.h + 12, fz], segs: 6 });
   b.collider(4.4, 2.2, { at: [kx, 0, K.z0 - 1.1] });
 
-  // paving of the court and a well
-  b.box(16, 0.03, 16, mix(P.cobble, P.gravel, 0.5), { at: [-0.2, 0, 4.5], jitter: false });
-  b.cyl(0.85, 0.9, stone, { at: [1.5, 0, 6], segs: 8 });
-  b.cyl(0.65, 0.04, P.water, { at: [1.5, 0.88, 6], segs: 8, mat: 'glass' });
-  b.sym((s) => b.box(0.14, 2.2, 0.14, P.iron, { at: [1.5 + s * 0.7, 0.9, 6], jitter: false }));
-  b.box(1.6, 0.12, 0.14, P.iron, { at: [1.5, 3.05, 6], jitter: false });
-
+  // the court, now paved, and the old well given an iron frame for its pulley
+  courtYard(b, stone, mix(P.cobble, P.gravel, 0.5));
+  b.sym((s) => b.box(0.14, 2.2, 0.14, P.iron, { at: [3 + s * 0.7, 0.8, 8], jitter: false }));
+  b.box(1.6, 0.12, 0.14, P.iron, { at: [3, 2.95, 8], jitter: false });
 }
 
 function build(b: Builder) {
@@ -137,7 +136,7 @@ export const residentialCastleDef: BuildingDef = {
   summary:
     'In the Hundred Years’ War the great princes, the king’s brothers and uncles, rebuild their castles as palaces that are still fortresses. ' +
     'The old circuit is raised and crowned with machicolations, stone parapets standing out on corbels with openings in the floor to drop missiles on attackers, and every tower gets a tall cone of slate. ' +
-    'Inside the walls rise a great hall lit by tall windows, lodgings of three storeys with fireplaces and cross windows, a chapel and a spiral stair in its own tower: comfort and display behind high walls.',
+    'Inside the walls, in place of the old stone hall, rise a great hall lit by tall windows, lodgings of three storeys with fireplaces and cross windows, a chapel and a spiral stair in its own tower: comfort and display behind high walls.',
   materials: ['fine limestone ashlar', 'slate', 'lead', 'oak', 'glass in the upper lights'],
   lookFor: [
     { label: 'Machicolations', note: 'Parapets carried out on corbels, with holes in the floor between them to drop stones on anyone at the foot of the wall.', at: [C.x1 + 1.3, 11, 6] },

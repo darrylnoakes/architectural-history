@@ -1,5 +1,5 @@
 import { P, tint, type BuildingDef, type Builder } from '@ah/kit';
-import { BANK, boat, circlePts, heap, lin, rise, riverWall, ring, squareChimney } from './shared';
+import { BANK, boat, circlePts, heap, lin, manufactoryGate, rise, riverWall, ring, squareChimney, washingSteps } from './shared';
 
 /** A self-acting mule along X: the fixed headstock and creel, the carriage of spindles drawn out in front. */
 function mule(b: Builder, x: number, y: number, z: number, len: number) {
@@ -45,7 +45,8 @@ export const spinningMill: BuildingDef = {
     'After 1815 the textile towns of the north, Lille, Roubaix, Saint-Quentin and Amiens, rebuilt their trade on the English model: cotton and wool spun by machines in many-storeyed mills, driven by steam. ' +
     'The steam engine, often bought from Britain or copied from British designs, stands in its own tall engine house beside the mill, with a boiler house and a square brick chimney; coal comes up the river by barge. ' +
     'Inside, cast-iron columns carry the floors so that long rooms can hold rows of spinning mules, driven by belts from shafts that run the length of every floor. ' +
-    'Windows are as many and as large as the brick wall can bear, because the spinners, many of them children, worked by daylight. Select the mill to see inside.',
+    'Windows are as many and as large as the brick wall can bear, because the spinners, many of them children, worked by daylight. ' +
+    'The low ranges of the old royal manufactory could not take the weight of the machines and were pulled down, but the mill keeps its street gate and its washing steps on the river. Select the mill to see inside.',
   materials: ['red brick', 'cast iron', 'slate', 'stone sills'],
   lookFor: [
     { label: 'Square chimney', note: 'The tall brick stack drew the boiler fires; early chimneys in the north were square, later ones round.', at: [15.0, 30.0, 2.0] },
@@ -182,16 +183,14 @@ export const spinningMill: BuildingDef = {
     boat(b, [8.0, 0, -14.0], 14, 3.6, 0x4a3a2c, 0, 0x2b2b2d);
     for (const x of [4.0, 12.0]) b.cyl(0.25, 0.8, P.castIron, { at: [x, 0.3, BANK + 0.3], segs: 8 });
 
-    // ---- the yard and street front: the gatekeeper's lodge, railings and gate
+    // ---- the yard and street front: the gatekeeper's lodge by the old gate
     b.box(5.0, 3.2, 4.0, brick, { at: [-13.5, 0, 8.2] });
     b.hip(5.4, 4.4, 1.4, P.ardoise, { at: [-13.5, 3.2, 8.2] });
     b.window(1.1, 1.7, { at: [-13.5, 0.9, 10.2], facing: '+z', shape: 'segmental', frame: P.white, glass, bars: [2, 3] });
     b.panel(1.0, 2.2, P.doorGreen, { at: [-11.0, 0, 8.2], facing: '+x' });
-    b.box(20.0, 0.7, 0.5, brick, { at: [1.0, 0, 10.4] });
-    for (const x of lin(21, -9.0, 11.0)) b.box(0.05, 1.5, 0.05, P.castIron, { at: [x, 0.7, 10.4], jitter: false });
-    b.box(20.0, 0.08, 0.08, P.castIron, { at: [1.0, 2.1, 10.4] });
-    b.sym((s) => b.box(0.8, 2.8, 0.8, stone, { at: [-6.5 + s * 2.2, 0, 10.4] }));
-    b.box(3.0, 0.05, 0.05, P.castIron, { at: [-6.5, 2.4, 10.4] });
+    // the street wall and gate of the royal manufactory, and its washing steps on the river, kept
+    manufactoryGate(b, brick, stone);
+    washingSteps(b, -7.38, stone);
 
     b.collider(W, D, { at: [x0, 0, z0] });
     b.collider(4.0, 3.0, { at: [sx, 0, front + 1.5] });

@@ -1184,10 +1184,15 @@ export function houses(b: Builder) {
   b.collider(dep, 12.7, { at: [xm, 0, 6.05] });
 }
 
+/** The ground of the whole plot, the same from the Gaulish sanctuary on: only its colour changes. */
+export function holyGround(b: Builder, color: number) {
+  b.box(33.6, 0.03, 66, color, { at: [0, 0, 0], jitter: false });
+}
+
 /** The square in front of the cathedral (the parvis). */
 export function parvis(b: Builder) {
   b.box(33.6, 0.04, 33 - PZ, P.paving, { at: [0, 0, (33 + PZ) / 2], jitter: false });
-  b.box(33.6, 0.03, 66, mix(P.paving, P.grass, 0.45), { at: [0, 0, 0], jitter: false });
+  holyGround(b, mix(P.paving, P.grass, 0.45));
 }
 
 // ------------------------------------------------------------------ what history did to it

@@ -1,5 +1,5 @@
 import { P, spread, tint, type Builder, type BuildingDef } from '@ah/kit';
-import { cart, dormer, ground, horse, shutteredWindow, word } from './shared';
+import { cart, dormer, ground, horse, innPavement, innStables, innWell, shutteredWindow, word } from './shared';
 
 const XO = 10.2;
 const ZF = 9.6; // street face
@@ -48,14 +48,19 @@ export const relaisDePoste: BuildingDef = {
   summary:
     'The king’s posts, begun for royal messengers in the later fifteenth century, are by now open to anyone who can pay. Along each main road stands a relay every few leagues, run by a postmaster (maître de poste) holding the king’s commission, who must keep horses ready day and night for couriers and for travellers riding post; many, like this one, also keep an inn. ' +
     'The building is northern classical: red brick with stone quoins and bands, tall windows of small panes, a steep tiled roof with dormers, and a carriage gate wide enough for a coach. ' +
-    'Behind it the yard is a horse factory: stables for dozens of post horses, coach houses, a barn for hay and oats, a trough, a dung heap, and a dovecote, a right tied to lordship and land (the droit de colombier) that the Revolution abolished in August 1789.',
+    'It is the old inn of 1380 rebuilt rather than a new one: the jettied timber street range, out of fashion and long discouraged by town ordinances for fear of fire, is replaced by this brick front, but the medieval stone stables across the back of the yard and the well are kept. ' +
+    'Round the yard is a horse factory: a new range of stables for dozens of post horses, coach houses, the old stables and their loft for hay and oats, a trough, a dung heap, and a dovecote, a right tied to lordship and land (the droit de colombier) that the Revolution abolished in August 1789.',
   materials: ['red brick', 'limestone dressings', 'flat clay tiles', 'oak', 'wrought iron'],
   lookFor: [
     { label: 'Carriage gate', note: 'The porte charretière: a broad arch with a keystone, its oak leaves folded back by day so coaches could swing straight in off the road.', at: [0, AH + 0.4, ZF + 0.3] },
     { label: 'Brick and stone', note: 'Red brick walls dressed with pale stone at the corners, round the openings and in bands: the cheap, handsome manner of northern France under Henri IV and Louis XIII, still current here.', at: [-XO + 0.3, G + 1.6, ZF + 0.2] },
-    { label: 'Stables', note: 'A long range of stalls for the post horses, with hay pitched up through doors in the roof to the loft above.', at: [XW + 0.2, 2.0, -1.0] },
+    { label: 'Stables', note: 'A new long range of stalls for the post horses down the west side, besides the medieval stone stables kept across the back, with hay pitched up through doors in the roofs to the lofts.', at: [XW + 0.2, 2.0, -1.0] },
     { label: 'Coach houses', note: 'Remises with wide arched doors, where travellers’ carriages stood overnight and the postmaster kept his own chaises for hire.', at: [XE - 0.2, 2.4, 1.0] },
     { label: 'Dovecote', note: 'A square brick tower for pigeons, kept for meat and for their droppings as manure. Owning one was a mark of rank before 1789.', at: [-7.8, 6.4, -6.6] },
+  ],
+  revisions: [
+    { year: 1873, note: 'The railways had taken the traffic of the roads, and in 1873 the state ended the post-horse service. The house carried on as a hotel, and its sign was repainted HOTEL DE LA POSTE, the name of so many old posting inns in France today.' },
+    { year: 1930, note: 'The motor car brought travellers back to the road: the stables and coach houses became garages, the dung heap went, and a petrol pump was set up at the gate, as at many country hotels between the wars.' },
   ],
   build(b) {
     const brick = b.pick([P.briqueNord, tint(P.briqueNord, -0.04), P.brickRed]);
@@ -64,7 +69,7 @@ export const relaisDePoste: BuildingDef = {
     const shutter = b.pick([P.voletGris, P.voletVert, P.oak]);
     const wood = P.oakDark;
 
-    ground(b, 21.0, 1.2, P.cobble, [0, ZF + 0.6], 0.05);
+    innPavement(b);
     ground(b, XE - XW, ZFI - ZBI, tint(P.cobble, 0.06), [(XE + XW) / 2, (ZFI + ZBI) / 2], 0.04);
 
     // ---------------- the front range on the royal road
@@ -90,9 +95,6 @@ export const relaisDePoste: BuildingDef = {
     });
     // stone kerbs to guard the gate jambs from wheel hubs
     b.sym((s) => b.cyl(0.25, 0.8, stone, { at: [s * (AW / 2 + 0.4), 0, ZF + 0.35], segs: 6, rTop: 0.15 }));
-    // the sign
-    b.panel(5.6, 0.75, P.cream, { at: [0, TOP - 1.55, ZF], facing: '+z', depth: 0.04 });
-    word(b, 'POSTE AUX CHEVAUX', 0.075, P.doorBlue, { at: [0, TOP - 1.42, ZF + 0.05], facing: '+z', depth: 0.03 });
     // windows: tall casements of small panes with plank shutters, in stone surrounds
     const xs = [-8.2, -5.4, 5.4, 8.2];
     for (const x of xs) {
@@ -141,16 +143,10 @@ export const relaisDePoste: BuildingDef = {
     }
     b.gable(cw, cl, (cw / 2) * 1.1, tile, { at: [(XE + XO) / 2, SH + 0.4, cz], ridge: 'z', overhang: 0.35, wall: brick });
 
-    // ---------------- the barn across the back, and the dovecote tower in the corner
-    const bl = XO - XW;
-    const bz = (ZB + ZBI) / 2;
-    const bd = ZBI - ZB;
-    b.box(bl, SH + 0.6, bd, brick, { at: [(XW + XO) / 2, 0, bz] });
-    b.box(bl + 0.06, 0.5, bd + 0.06, stone, { at: [(XW + XO) / 2, 0, bz] });
-    b.panel(3.0, 3.4, wood, { at: [0.6, 0, ZBI], facing: '+z', shape: 'segmental' });
-    b.panel(3.4, 3.7, stone, { at: [0.6, 0, ZBI], facing: '+z', shape: 'segmental', depth: 0.04 });
-    for (const x of [-3.0, 4.6, 8.0]) b.panel(0.4, 1.0, P.windowDark, { at: [x, 1.8, ZB], facing: '-z' });
-    b.gable(bl, bd, (bd / 2) * 1.1, tile, { at: [(XW + XO) / 2, SH + 0.6, bz], overhang: 0.35, wall: brick });
+    // ---------------- the old inn's stone stables across the back, kept as stables and hayloft;
+    // the dovecote tower in the corner beside them
+    innStables(b, stone, wood, tile);
+    innWell(b, stone, wood);
     b.group({ at: [-7.8, 0, -7.8] }, () => {
       const dh = 7.6;
       b.box(3.4, dh, 3.4, brick);
@@ -172,22 +168,37 @@ export const relaisDePoste: BuildingDef = {
       b.cyl(0.03, 0.8, P.iron, { at: [0, dh + 4.0, 0], segs: 4 });
     });
 
-    // ---------------- in the yard: a trough, a dung heap, the coach and the post horses
+    // ---------------- in the yard: a trough, and until the motor age a dung heap, the coach and the post horses
     b.box(3.0, 0.75, 0.9, stone, { at: [-2.6, 0, ZBI + 1.2] });
     b.box(2.8, 0.04, 0.7, P.water, { at: [-2.6, 0.73, ZBI + 1.2], mat: 'glass', jitter: false });
     b.cyl(0.18, 1.4, P.iron, { at: [-4.2, 0, ZBI + 1.2], segs: 6 });
-    b.blob(1.3, 0x6a5a3c, { at: [3.4, 0, ZBI + 1.4], stretch: [1.3, 0.45, 1.0], detail: 0 });
-    coach(b, [1.4, 0, 0.4], 0.35);
-    horse(b, [-2.4, 0, 1.8], 1.6, 0x6b4a32);
-    horse(b, [-3.4, 0, -1.4], -1.3, 0x3d2c22);
-    horse(b, [-1.6, 0, -2.6], 2.8, 0x8a6a4a);
-    cart(b, [3.6, 0, 2.4], -1.4, P.oak);
 
     // ---------------- colliders: one per range; the gate passage and the yard stay open
     b.sym((s) => b.collider(fw, fd, { at: [s * (AW / 2 + fw / 2), 0, fz] }));
     b.collider(sw, sl, { at: [(XW - XO) / 2, 0, sz] });
     b.collider(cw, cl, { at: [(XE + XO) / 2, 0, cz] });
-    b.collider(bl, bd, { at: [(XW + XO) / 2, 0, bz] });
     b.collider(3.5, 3.5, { at: [-7.8, 0, -7.8] });
+
+    // ---------------- what the revisions change, built last
+    // the sign: the post-horse service until 1873, a hotel after it
+    b.panel(5.6, 0.75, P.cream, { at: [0, TOP - 1.55, ZF], facing: '+z', depth: 0.04, jitter: false });
+    word(b, b.since(1873) ? 'HOTEL DE LA POSTE' : 'POSTE AUX CHEVAUX', 0.075, P.doorBlue, { at: [0, TOP - 1.42, ZF + 0.05], facing: '+z', depth: 0.03 });
+    if (!b.since(1930)) {
+      b.blob(1.3, 0x6a5a3c, { at: [3.4, 0, ZBI + 1.4], stretch: [1.3, 0.45, 1.0], detail: 0, jitter: false });
+      coach(b, [1.4, 0, 0.4], 0.35);
+      horse(b, [-1.0, 0, 2.6], 1.6, 0x6b4a32);
+      horse(b, [-3.0, 0, -1.6], -1.3, 0x3d2c22);
+      horse(b, [-1.0, 0, -2.6], 2.8, 0x8a6a4a);
+      cart(b, [3.6, 0, 2.4], -1.4, P.oak);
+    } else {
+      // a petrol pump at the gate; the coach and the post horses are gone
+      b.group({ at: [3.4, 0.1, 10.5] }, () => {
+        b.box(0.5, 0.15, 0.5, P.concrete, { jitter: false });
+        b.cyl(0.2, 1.9, P.doorRed, { at: [0, 0.15, 0], segs: 8, jitter: false });
+        b.sphere(0.22, P.white, { at: [0, 2.3, 0], segs: 8, jitter: false });
+        b.beam([0.2, 1.4, 0], [0.35, 0.9, 0.1], 0.04, 0.04, P.timberBlack, { jitter: false });
+      });
+      b.collider(0.5, 0.5, { at: [3.4, 0, 10.5] });
+    }
   },
 };

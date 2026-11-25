@@ -1,5 +1,5 @@
 import { P, mix, tint, type BuildingDef, type Builder, type Vec3 } from '@ah/kit';
-import { lin, type Pt } from './shared';
+import { holyGround, lin, type Pt } from './shared';
 
 /** Half side of the square enclosure, and its centre. */
 const E = 13;
@@ -50,7 +50,7 @@ export const gaulishSanctuary: BuildingDef = {
     'The sanctuary of Gournay-sur-Aronde (Oise), excavated by Jean-Louis Brunaux from the late 1970s: the square ditched enclosure with its gate, the central pits under a timber building, the oxen and the thousands of broken weapons from the ditch. The size is reduced, and how the trophy and the gate were dressed is a reconstruction.',
   build(b) {
     const g = mix(P.earth, P.grassDry, 0.4);
-    b.box(32, 0.03, 50, P.grass, { at: [0, 0, 0], jitter: false });
+    holyGround(b, P.grass);
     b.box(2 * E, 0.05, 2 * E, g, { at: [0, 0, ZC], jitter: false });
     // the ditch just inside the palisade, with bones and broken iron in it
     const ditch = mix(P.soil, P.earth, 0.35);

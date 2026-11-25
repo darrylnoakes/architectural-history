@@ -307,3 +307,46 @@ export function fence(b: Builder, p0: [number, number], p1: [number, number], h:
   const yaw = Math.atan2(p1[0] - p0[0], p1[1] - p0[1]);
   b.box(0.07, h * 0.75, len, weave, { at: [(p0[0] + p1[0]) / 2, 0.1, (p0[1] + p1[1]) / 2], rotY: yaw });
 }
+
+// ---------------------------------------------------------------- the inn of 1380, kept in 1690
+// The posting inn of 1690 is the medieval inn with its street range rebuilt: these are the parts
+// of the hostellerie it keeps, built by the same code in both stages so they stay put in the town.
+
+/** The street pavement in front of the inn, its top 0.1 m above the town's ground. */
+export function innPavement(b: Builder): void {
+  ground(b, 21.0, 1.6, P.cobble, [0, 10.2], 0.1);
+}
+
+/** The stone stable range across the back of the yard, with its hayloft door (1380). */
+export const STABLE = { X0: -5.2, X1: 10.2, ZB: -10.2, ZS: -5.6, H: 3.2 };
+export function innStables(b: Builder, stone: number, timber: number, tile: number): void {
+  const { X0, X1, ZB, ZS, H } = STABLE;
+  const w = X1 - X0;
+  const x = (X0 + X1) / 2;
+  const sd = ZS - ZB;
+  const sz = (ZS + ZB) / 2;
+  b.box(w, H, sd, stone, { at: [x, 0, sz] });
+  for (const dx of [-3.6, -0.6, 2.4, 7.4]) {
+    b.panel(1.4, 2.3, timber, { at: [dx, 0, ZS], facing: '+z' });
+    b.panel(0.12, 2.3, tint(timber, -0.1), { at: [dx, 0, ZS], facing: '+z', depth: 0.08 });
+  }
+  for (const dx of spread(5, -4.0, 9.4)) b.panel(0.25, 0.7, P.windowDark, { at: [dx, 1.8, ZB], facing: '-z' });
+  b.gable(w, sd, (sd / 2) * 1.15, tile, { at: [x, H, sz], overhang: 0.4, wall: stone });
+  b.group({ at: [-2.1, H - 0.05, ZS + 0.05] }, () => {
+    b.box(1.6, 1.6, 1.4, stone, { at: [0, 0, -0.7] });
+    b.panel(1.1, 1.3, timber, { at: [0, 0.15, 0], facing: '+z' });
+    b.gable(1.6, 1.6, 1.2, tile, { at: [0, 1.6, -0.7], ridge: 'z', overhang: 0.15, wall: stone });
+    b.box(0.14, 0.14, 1.2, timber, { at: [0, 2.4, 0.3] });
+  });
+  b.collider(w, sd, { at: [x, 0, sz] });
+}
+
+/** The well in the yard: a stone kerb, two posts and a windlass. */
+export function innWell(b: Builder, stone: number, timber: number): void {
+  const [x, z] = [-3.8, 1.4];
+  b.cyl(0.75, 0.9, stone, { at: [x, 0, z], segs: 8 });
+  b.cyl(0.6, 0.05, P.windowDark, { at: [x, 0.88, z], segs: 8 });
+  b.sym((s) => b.box(0.14, 1.6, 0.14, timber, { at: [x + s * 0.7, 0.9, z] }));
+  b.log(0.12, 1.5, timber, { at: [x, 2.3, z], segs: 6 });
+  b.collider(1.5, 1.5, { at: [x, 0, z] });
+}

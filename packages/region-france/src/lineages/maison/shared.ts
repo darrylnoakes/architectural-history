@@ -231,6 +231,47 @@ export function yardWall(b: Builder, x0: number, z0: number, x1: number, z1: num
   });
 }
 
+/** Height of the yard walls behind the row houses, the same from the twelfth century to the twentieth. */
+export const YARD_H = 1.8;
+/** Where the long-lived stretch of the side walls begins: the back of the deepest house on the plot. */
+const YARD_Z = -2.4;
+/** The back wall of the plot. */
+const YARD_BACK = -8.75;
+/** The well in the middle of the yard, on the line between the two houses when the plot is divided. */
+export const YARD_WELL: Vec3 = [0, 0, -4.3];
+
+/**
+ * The walls of the yard behind the house. A town plot kept its bounds for centuries while the houses
+ * on it were rebuilt, so the side walls (from YARD_Z back), the back wall and the back half of the
+ * dividing wall are built here with the same numbers in every stage that has them, and stand still
+ * while the house changes. `zB` is the back of the house: the short stretch from there to YARD_Z
+ * is the stage's own. `divide` adds the wall down the middle between a pair of houses: 'well' leaves
+ * a gap at the shared well (YARD_WELL), 'full' runs it the whole way.
+ */
+export function yardBounds(b: Builder, zB: number, color: number, cope: number, divide?: 'well' | 'full'): void {
+  const xs = [-6.75, 6.75];
+  for (const x of xs) {
+    if (zB > YARD_Z + 0.01) yardWall(b, x, zB, x, YARD_Z, YARD_H, color, cope);
+    yardWall(b, x, YARD_Z, x, YARD_BACK, YARD_H, color, cope);
+  }
+  yardWall(b, -6.75, YARD_BACK, 6.75, YARD_BACK, YARD_H, color, cope);
+  if (!divide) return;
+  if (zB > YARD_Z + 0.01) yardWall(b, 0, zB, 0, YARD_Z, YARD_H, color, cope);
+  yardWall(b, 0, YARD_Z, 0, divide === 'well' ? -3.6 : -5.0, YARD_H, color, cope);
+  yardWall(b, 0, -5.0, 0, YARD_BACK, YARD_H, color, cope);
+}
+
+/**
+ * The foot of a terrace house front at z = zf: a base course of blue-grey stone over the cellar and a
+ * barred cellar vent (soupirail) under the ground-floor window. Shared by the house of 1900 and the one
+ * rebuilt on its cellars after 1918, so that it stands through the change.
+ */
+export function cellarFooting(b: Builder, cx: number, w: number, zf: number): void {
+  b.box(w, 0.7, 0.08, tint(P.granite, -0.05), { at: [cx, 0, zf + 0.02] });
+  b.panel(0.8, 0.32, P.windowDark, { at: [cx + 1.0, 0.2, zf + 0.06], facing: '+z', depth: 0.03 });
+  for (let i = 0; i < 4; i++) b.box(0.03, 0.32, 0.03, P.iron, { at: [cx + 0.7 + i * 0.2, 0.2, zf + 0.09], jitter: false });
+}
+
 /** A small timber privy with a lean-to roof; door faces `facing`. */
 export function privy(b: Builder, at: Vec3, rotY: number, wall: number, roof: number): void {
   b.group({ at, rotY }, () => {

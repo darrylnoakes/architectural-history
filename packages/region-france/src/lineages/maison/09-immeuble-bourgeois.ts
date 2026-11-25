@@ -1,5 +1,5 @@
 import { P, tint, type Builder, type BuildingDef } from '@ah/kit';
-import { dormer, mansard, onWall, yardWall } from './shared';
+import { dormer, mansard, onWall, yardBounds } from './shared';
 
 /** A wrought or cast iron railing along X: rails and bars, `at` the bottom centre. */
 function railing(b: Builder, len: number, h: number, at: [number, number, number], step: number, col: number): void {
@@ -135,9 +135,9 @@ export const immeubleBourgeois: BuildingDef = {
     for (const y of [5.9, 9.0, 12.2, 15.0]) b.window(0.9, 1.3, { at: [0, y, zB - 0.04], facing: '-z', frame: P.white, glass: P.glassDark, border: 0.07 });
     b.panel(2.0, 3.6, P.doorGreen, { at: [0, 0, zB - 0.02], facing: '-z', shape: 'segmental', depth: 0.08 });
     // the court: paving, a low workshop range at the back, a tree
+    // the old walls of the plot still bound the court
     const wall = tint(render, -0.04);
-    yardWall(b, -6.75, zB, -6.75, -8.75, 3.0, wall, P.zincParis);
-    yardWall(b, 6.75, zB, 6.75, -8.75, 3.0, wall, P.zincParis);
+    yardBounds(b, zB, tint(P.rubble, 0.03), P.zincParis);
     b.box(13.2, 0.04, 6.6, P.paving, { at: [0, 0, -5.4], jitter: false });
     b.box(13.5, 3.2, 2.4, wall, { at: [0, 0, -7.6] });
     b.shed(13.5, 2.6, 0.9, zinc, { at: [0, 3.2, -7.6], high: '-z' });

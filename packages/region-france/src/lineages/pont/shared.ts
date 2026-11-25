@@ -367,3 +367,49 @@ export function reeds(b: Builder, x: number, z: number, color: number, n = 5): v
     b.cone(0.05, b.range(0.9, 1.5), color, { at: [x + b.range(-0.5, 0.5), 0, z + b.range(-0.3, 0.3)], segs: 3 });
   }
 }
+
+// ------------------------------------------------------------------ the Roman piers
+
+/**
+ * The Roman bridge's piers and abutments, as they survive once its timber road has gone: the
+ * medieval bridge raises its arches on them, so the Roman bridge and its successors build this lower
+ * fabric with the same numbers. Arches spring from `ledge`, the offset in the pier.
+ */
+export const ROMAN = {
+  W: 6.0,
+  pierT: 1.7,
+  spans: [3.0, 3.2, 3.4, 3.2, 3.0],
+  /** The offset in the pier: struts stood on it, and later arches spring from it. */
+  ledge: -1.0,
+  /** The top of the Roman cutwaters. */
+  capY: -0.75,
+  /** The face of each abutment, where the first span begins. */
+  AB: 11.3,
+  /** The top of the abutments' lower courses. */
+  abTop: -0.35,
+};
+
+/** Pier centres of the Roman bridge (and of the medieval arches built on it). */
+export function romanPiers(): number[] {
+  return layout(ROMAN.spans, ROMAN.pierT, ROMAN.ledge, (s) => s / 2, 'round').piers;
+}
+
+/**
+ * The lower fabric of the Roman bridge: the abutments' lower courses, and each pier's footing, its
+ * shaft up to the ledge and its two cutwaters (pointed upstream, rounded downstream). `upHood` caps
+ * the upstream cutwaters, which a later bridge built higher. No random numbers are drawn here.
+ */
+export function romanStumps(b: Builder, o: { stone: number; core: number; ring: number; upHood: boolean }): number[] {
+  const { W, pierT, ledge, capY, AB, abTop } = ROMAN;
+  for (const s of [-1, 1]) b.box(W, abTop - FOOT, END - AB, o.core, { at: [0, FOOT, (s * (AB + END)) / 2] });
+  const piers = romanPiers();
+  for (const z of piers) {
+    b.box(W + 0.5, WATER - FOOT + 0.25, pierT + 0.5, o.core, { at: [0, FOOT, z] });
+    b.box(W, ledge - FOOT, pierT + 0.3, o.stone, { at: [0, FOOT, z] });
+    cutwater(b, { x: -W / 2, z, thick: pierT + 0.3, len: 1.3, y0: FOOT, h: capY - FOOT, color: o.stone, kind: 'point' });
+    if (o.upHood) cutwaterHood(b, { x: -W / 2, z, thick: pierT + 0.3, nose: 1.3, y: capY, h: 0.6, color: o.ring });
+    cutwater(b, { x: W / 2, z, thick: pierT + 0.3, len: 0.7, y0: FOOT, h: capY - FOOT, color: o.stone, kind: 'round' });
+    roundHood(b, { x: W / 2, z, r: (pierT + 0.3) / 2, y: capY, h: 0.4, color: o.ring });
+  }
+  return piers;
+}

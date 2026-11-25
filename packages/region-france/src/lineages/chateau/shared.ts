@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { P, mix, tint, facingAngle, type Builder, type Facing, type Vec3 } from '@ah/kit';
+import { CutField, P, mix, tint, facingAngle, type Builder, type Cut, type Facing, type Vec3 } from '@ah/kit';
 
 /*
  * The castle site, shared by the motte (960), the keep (1100), the castle of Philip Augustus (1220),
@@ -196,16 +196,113 @@ export function motteY(x: number, z: number): number {
   return MOTTE.h;
 }
 
-/** The mound, its walkable summit and the ditch round its outer foot. */
+/** The mound, its walkable summit and (960 and 1100) the ditch dug round its foot on the bailey side. */
 export function motte(b: Builder, color: number, ditch: boolean): void {
   b.lathe(PROFILE, color, { at: [MOTTE.x, 0, MOTTE.z], segs: 22 });
   b.deck(MOTTE.rTop * 1.4, MOTTE.rTop * 1.4, MOTTE.h, { at: [MOTTE.x, 0, MOTTE.z] });
   if (ditch) {
-    const pts: Pt[] = [];
-    // only the inner arc, between the mound and the bailey: the rest lies off the plot
-    for (let i = 0; i <= 12; i++) pts.push(pol(MOTTE.x, MOTTE.z, MOTTE.rBase + 1.1, -0.8 + (i / 12) * 3.05));
-    strip(b, pts, 2.2, 0.03, DITCH);
+    const c = MOTTE_CUTS[0];
+    b.dig(c.pts, c.depth, { slope: c.slope, color: c.color });
   }
+}
+
+// ------------------------------------------------------------------ the earthworks of 960 and 1220
+
+/** The bailey boundary, from the foot of the mound at the back round to the mound on the left. */
+export const BAILEY_A: Pt[] = [[-2.5, -19], [10, -20], [17.5, -12], [18, 6], [13, 17], [6.6, 18.2]];
+export const BAILEY_B: Pt[] = [[2.4, 18.2], [-8, 17], [-16.5, 9], [-18.5, -5]];
+export const GATE: Pt = [4.5, 18.2];
+
+/**
+ * Offset a polyline sideways by d along its right-hand normal (-dz, dx), mitring the corners. For the
+ * bailey line and the castle's circuit, as they run here, a positive d moves the line inwards.
+ */
+export function offsetLine(pts: Pt[], d: number): Pt[] {
+  const n = (i: number): Pt => {
+    const [x0, z0] = pts[i];
+    const [x1, z1] = pts[i + 1];
+    const L = Math.hypot(x1 - x0, z1 - z0) || 1;
+    return [-(z1 - z0) / L, (x1 - x0) / L];
+  };
+  return pts.map(([x, z], i) => {
+    if (i === 0 || i === pts.length - 1) {
+      const m = n(Math.min(i, pts.length - 2));
+      return [x + m[0] * d, z + m[1] * d] as Pt;
+    }
+    const a = n(i - 1);
+    const c = n(i);
+    let mx = a[0] + c[0];
+    let mz = a[1] + c[1];
+    const L = Math.hypot(mx, mz) || 1;
+    mx /= L;
+    mz /= L;
+    const k = d / (mx * a[0] + mz * a[1]);
+    return [x + mx * k, z + mz * k] as Pt;
+  });
+}
+
+/**
+ * The ditch of 960, kept in 1100: a V-shaped ring round the bailey side of the mound (the rest of
+ * its foot lies at the edge of the plot), and the bailey ditch outside the palisade, which runs out of
+ * the motte ditch at the back, round the bailey and across the gate, and back into it on the left.
+ */
+export const MOTTE_DITCH = { r0: MOTTE.rBase, r1: MOTTE.rBase + 3, a0: -0.8, a1: 2.45, depth: 1.6, slope: 1.5 };
+export const BAILEY_DITCH = { off: 2.4, half: 1.4, depth: 1.4, slope: 1.4 };
+/** The ditch of 1220 round the castle's circuit, kept until the end: from 3.6 to 7.6 m out from the curtain. */
+export const CASTLE_DITCH = { inner: 3.6, outer: 7.6, depth: 2.4, slope: 1.5 };
+
+function ringOutline(r0: number, r1: number, a0: number, a1: number, n: number): Pt[] {
+  const pts: Pt[] = [];
+  for (let i = 0; i <= n; i++) pts.push(pol(MOTTE.x, MOTTE.z, r0, a0 + ((a1 - a0) * i) / n));
+  for (let i = n; i >= 0; i--) pts.push(pol(MOTTE.x, MOTTE.z, r1, a0 + ((a1 - a0) * i) / n));
+  return pts;
+}
+
+/** Centre line of the bailey ditch: out of the motte ditch at the back, round, and into it on the left. */
+export const BAILEY_DITCH_PATH: Pt[] = (() => {
+  const mid = offsetLine([...BAILEY_A, ...BAILEY_B], -BAILEY_DITCH.off);
+  const rm = (MOTTE_DITCH.r0 + MOTTE_DITCH.r1) / 2;
+  return [...mid.slice(0, -1), pol(MOTTE.x, MOTTE.z, rm, MOTTE_DITCH.a0 + 0.12)];
+})();
+
+export const MOTTE_CUTS: Cut[] = (() => {
+  const { r0, r1, a0, a1, depth, slope } = MOTTE_DITCH;
+  const band = [...offsetLine(BAILEY_DITCH_PATH, -BAILEY_DITCH.half), ...offsetLine(BAILEY_DITCH_PATH, BAILEY_DITCH.half).reverse()];
+  return [
+    { pts: ringOutline(r0, r1, a0, a1, 18), depth, slope, color: DITCH },
+    { pts: band, depth: BAILEY_DITCH.depth, slope: BAILEY_DITCH.slope, color: DITCH },
+  ];
+})();
+
+/** The circuit of 1220 as one line, from the foot of the mound at the back round to it on the left. */
+const CIRCUIT_PATH: Pt[] = [[0, -12], [14, -12], [14, 15], [-10, 15], [-10, -1]];
+
+export const CASTLE_CUT: Cut = {
+  pts: [...offsetLine(CIRCUIT_PATH, -CASTLE_DITCH.inner), ...offsetLine(CIRCUIT_PATH, -CASTLE_DITCH.outer).reverse()],
+  depth: CASTLE_DITCH.depth,
+  slope: CASTLE_DITCH.slope,
+  color: DITCH,
+};
+
+let motteField: CutField | null = null;
+let castleField: CutField | null = null;
+
+/** The ground of 960 and 1100: the mound, less the ditches. */
+export function ground960(x: number, z: number): number {
+  motteField ??= new CutField(MOTTE_CUTS);
+  return motteY(x, z) - motteField.depth(x, z);
+}
+
+/** The ground from 1220: the mound, less the castle ditch. */
+export function ground1220(x: number, z: number): number {
+  castleField ??= new CutField([CASTLE_CUT]);
+  return motteY(x, z) - castleField.depth(x, z);
+}
+
+/** Dig the bailey ditch (the motte's own ring is dug by `motte`). */
+export function baileyDitch(b: Builder): void {
+  const c = MOTTE_CUTS[1];
+  b.dig(c.pts, c.depth, { slope: c.slope, color: c.color });
 }
 
 // ------------------------------------------------------------------ towers and walls
@@ -236,12 +333,15 @@ export function roundTower(
   y0: number,
   h: number,
   stone: number,
-  o: { top: TopStyle; roofH?: number; segs?: number; slitN?: number; outward?: number; windows?: number },
+  o: { top: TopStyle; roofH?: number; segs?: number; slitN?: number; outward?: number; windows?: number; lift?: number },
 ): void {
   const segs = o.segs ?? 12;
   const top = y0 + h;
   b.cyl(r + 0.7, 2.6, tint(stone, -0.04), { at: [x, y0 - 0.6, z], rTop: r, segs });
-  b.cyl(r, h, stone, { at: [x, y0, z], segs });
+  // a tower raised later is built in two lifts, the old shaft and the new top on it
+  const h1 = o.lift !== undefined ? Math.min(h, o.lift) : h;
+  b.cyl(r, h1, stone, { at: [x, y0, z], segs });
+  if (h > h1 + 1e-6) b.cyl(r, h - h1, stone, { at: [x, y0 + h1, z], segs });
   const sweep = o.outward !== undefined ? Math.PI * 1.3 : Math.PI * 2;
   const a0 = o.outward !== undefined ? o.outward - sweep / 2 : 0;
   const ys: number[] = [];
@@ -316,7 +416,7 @@ export function curtain(
   h: number,
   t: number,
   stone: number,
-  o: { top: TopStyle; inside: Pt; base?: (x: number, z: number) => number },
+  o: { top: TopStyle; inside: Pt; base?: (x: number, z: number) => number; lift?: number },
 ): void {
   const base = o.base ?? motteY;
   const dx = q[0] - p[0];
@@ -344,7 +444,10 @@ export function curtain(
     const lo = Math.min(base(ax, az), base(bx, bz)) - 0.6;
     const top = base(mx, mz) + h;
     const len = L / n + 0.5;
-    b.box(len, top - lo, t, stone, { at: [mx, lo, mz], rotY: ang });
+    // a wall raised later is built in two lifts: the old wall up to its wall-walk, then the new courses
+    const cut = o.lift !== undefined ? Math.min(top, base(mx, mz) + o.lift) : top;
+    b.box(len, cut - lo, t, stone, { at: [mx, lo, mz], rotY: ang });
+    if (top > cut + 1e-6) b.box(len, top - cut, t, stone, { at: [mx, cut, mz], rotY: ang });
     // a low parapet on the inner edge
     b.box(len, 0.6, 0.35, stone, { at: [mx - nx * (t / 2 - 0.17), top, mz - nz * (t / 2 - 0.17)], rotY: ang, jitter: false });
     const ox = mx + nx * (t / 2);
@@ -395,6 +498,8 @@ export function curtainColliders(b: Builder, pts: Pt[], t: number): void {
 
 export const C = { x0: -10, x1: 14, z0: -12, z1: 15, gateX: 2, gateHalf: 4.5, inside: [2, 2] as Pt };
 export const KEEP_R = 5.0;
+/** The height of the curtains of 1220, at which the walls of 1395 are raised in a second lift. */
+export const GATE_LIFT = 9;
 export const CHEMISE_R = 6.6;
 
 /** The ring wall on the summit of the mound, round the keep (from 1100). */
@@ -495,11 +600,9 @@ export function curtainLines(): Pt[][] {
   ];
 }
 
-/** The ditch outside the circuit, from the mound round to the mound. */
-export function castleDitch(b: Builder, wet: boolean, color?: number) {
-  const o = 5;
-  const pts: Pt[] = [[-2, C.z0 - o], [C.x1 + o, C.z0 - o], [C.x1 + o, C.z1 + o], [C.x0 - o, C.z1 + o], [C.x0 - o, -2]];
-  strip(b, pts, 3.6, 0.03, color ?? (wet ? P.water : DITCH), wet ? 'glass' : undefined);
+/** Dig the ditch of 1220 outside the circuit, from the mound round to the mound (dry; grassed by 1865). */
+export function castleDitch(b: Builder, color?: number) {
+  b.dig(CASTLE_CUT.pts, CASTLE_CUT.depth, { slope: CASTLE_CUT.slope, color: color ?? CASTLE_CUT.color });
 }
 
 /**
@@ -509,11 +612,14 @@ export function castleDitch(b: Builder, wet: boolean, color?: number) {
 export function gatehouse(b: Builder, stone: number, top: TopStyle, wallH: number) {
   const { gateX: x, gateHalf: hw, z1: z } = C;
   const th = wallH + 3;
-  b.sym((s) => roundTower(b, x + s * hw, z + 0.6, 2.4, 0, th, stone, { top, roofH: top === 'restored' ? 8 : 6.5, slitN: 3, outward: 0 }));
-  // the block between the towers, with the passage through it
+  b.sym((s) => roundTower(b, x + s * hw, z + 0.6, 2.4, 0, th, stone, { top, roofH: top === 'restored' ? 8 : 6.5, slitN: 3, outward: 0, lift: GATE_LIFT + 3 }));
+  // the block between the towers, with the passage through it; raised in two lifts like the curtains
+  const { inner, outer, depth } = CASTLE_DITCH;
   b.group({ at: [x, 0, z] }, () => {
     const w = hw * 2 - 2;
-    b.extrude([[-w / 2, 0], [-1.6, 0], ...archPts('pointed', 3.2, 4.6, 3).slice(2).reverse().map(([px, py]) => [px, py] as Pt), [1.6, 0], [w / 2, 0], [w / 2, wallH + 1], [-w / 2, wallH + 1]], 4.2, stone, { at: [0, 0, 0] });
+    const y1 = Math.min(wallH, GATE_LIFT) + 1;
+    b.extrude([[-w / 2, 0], [-1.6, 0], ...archPts('pointed', 3.2, 4.6, 3).slice(2).reverse().map(([px, py]) => [px, py] as Pt), [1.6, 0], [w / 2, 0], [w / 2, y1], [-w / 2, y1]], 4.2, stone, { at: [0, 0, 0] });
+    if (wallH + 1 > y1 + 1e-6) b.box(w, wallH + 1 - y1, 4.2, stone, { at: [0, y1, 0] });
     flat(b, rectPts(-1.5, 2.2, 1.5, 4.3), P.timberBlack, [0, 0, 2.1], '+z', 0.03);
     for (let i = -3; i <= 3; i++) flat(b, rectPts(i * 0.42 - 0.05, 2.2, i * 0.42 + 0.05, 4.3), P.iron, [0, 0, 2.1], '+z', 0.05);
     if (top === 'crenel') b.crenel(w, 4.2, stone, { at: [0, wallH + 1, 0], merlonW: 0.7, merlonH: 0.9, t: 0.4 });
@@ -522,15 +628,31 @@ export function gatehouse(b: Builder, stone: number, top: TopStyle, wallH: numbe
       b.box(w + 0.5, 0.5, 4.7, tint(stone, -0.35), { at: [0, wallH, 0], jitter: false });
       b.gable(w + 0.6, 4.8, 2.6, SLATE, { ridge: 'x', at: [0, wallH + 2, 0], overhang: 0.2, wall: stone });
     }
-    // the bridge over the ditch: fixed span and a drawbridge let down on to it
+    // the bridge over the ditch, from the gate passage to beyond the far lip, its pier on the bottom
+    const z0 = 2.1;
+    const z1 = outer + 0.6;
+    const zp = (inner + outer) / 2;
     if (top === 'restored') {
-      b.box(3.8, 0.6, 5.5, stone, { at: [0, -0.3, 4.85] });
-      b.sym((sx) => b.box(0.35, 0.9, 5.5, stone, { at: [sx * 1.75, 0.3, 4.85] }));
+      // 1865: a fixed stone bridge of one arch for carriages
+      const L = z1 - z0;
+      const a = 1.3;
+      const arch: Pt[] = [[-L / 2, -depth - 0.1], [zp - z0 - L / 2 - a, -depth - 0.1]];
+      for (let i = 0; i <= 6; i++) {
+        const t = Math.PI - (i * Math.PI) / 6;
+        arch.push([zp - z0 - L / 2 + a * Math.cos(t), -1.5 + a * Math.sin(t)]);
+      }
+      arch.push([zp - z0 - L / 2 + a, -depth - 0.1], [L / 2, -depth - 0.1], [L / 2, 0.55], [-L / 2, 0.55]);
+      b.extrude(arch, 3.8, stone, { at: [0, 0, (z0 + z1) / 2], rotY: -Math.PI / 2 });
+      b.sym((sx) => b.box(0.35, 0.9, L, stone, { at: [sx * 1.75, 0.55, (z0 + z1) / 2] }));
     } else {
-      b.box(3.2, 0.3, 5.5, P.oak, { at: [0, 0.25, 4.85] });
-      b.sym((sx) => b.box(0.14, 1, 5.5, P.oakDark, { at: [sx * 1.55, 0.55, 4.85] }));
+      // a drawbridge let down from the gate on to a fixed timber span, which rests on a stone pier
+      b.box(3.2, 0.3, zp - z0, P.oakDark, { at: [0, 0.25, (z0 + zp) / 2] });
+      b.box(3.2, 0.3, z1 - zp, P.oak, { at: [0, 0.25, (zp + z1) / 2] });
+      b.box(2.6, depth + 0.35, 1.2, tint(stone, -0.08), { at: [0, -depth - 0.1, zp] });
+      b.sym((sx) => b.box(0.14, 1, z1 - zp, P.oakDark, { at: [sx * 1.55, 0.55, (zp + z1) / 2] }));
     }
   });
+  b.deck(3.2, outer + 0.6 - 2.1, 0.55, { at: [x, 0, z + (2.1 + outer + 0.6) / 2] });
 }
 
 /** Colliders for the circuit: curtains, towers and the gate block (the passage left open). */

@@ -1,5 +1,5 @@
 import { P, tint, type Builder, type BuildingDef } from '@ah/kit';
-import { infillPick, onWall, pitched, privy, vegBed, well, yardWall } from './shared';
+import { YARD_WELL, infillPick, onWall, pitched, privy, vegBed, well, yardBounds } from './shared';
 
 const HW = 6.8;
 const ZF = 8.2; // the whole front is flush now
@@ -30,8 +30,11 @@ function cornerPost(b: Builder, x: number, y0: number, h: number, timber: number
   b.cyl(0.05, 0.45, tint(timber, 0.1), { at: [x, cy + 0.15, z + 0.12], rTop: 0.11, segs: 6 });
 }
 
-function house(b: Builder, cx: number, o: { infill: number; timber: number; stone: number; roof: number; slate: boolean; stair: boolean }): void {
-  const { infill, timber, stone, roof } = o;
+/** One house of the pair. `render` is the plaster that hides the front frame from the 1760 revision. */
+function house(b: Builder, cx: number, o: { infill: number; timber: number; stone: number; roof: number; slate: boolean; stair: boolean; render?: number }): void {
+  const { timber, stone, roof } = o;
+  const infill = o.render ?? o.infill;
+  const skin = o.render ?? timber; // the front timbers that plaster hides
   const D = ZF - ZB;
   const zc = (ZF + ZB) / 2;
   // stone ground storey
@@ -52,24 +55,24 @@ function house(b: Builder, cx: number, o: { infill: number; timber: number; ston
   b.box(HW, F1 + F2, D, infill, { at: [cx, G, zc] });
   for (const [y0, h] of [[G, F1], [G + F1, F2]] as [number, number][]) {
     onWall(b, [cx, y0, ZF], '+z', () => {
-      b.box(HW, 0.2, 0.08, timber, { at: [0, 0, 0.02] }); // sill beam
-      b.box(HW, 0.18, 0.08, timber, { at: [0, h - 0.18, 0.02] }); // wall plate
-      b.box(HW, 0.12, 0.07, timber, { at: [0, 0.95, 0.02] }); // window-sill rail
-      b.box(HW, 0.12, 0.07, timber, { at: [0, h - 0.6, 0.02] }); // lintel rail
+      b.box(HW, 0.2, 0.08, skin, { at: [0, 0, 0.02] }); // sill beam
+      b.box(HW, 0.18, 0.08, skin, { at: [0, h - 0.18, 0.02] }); // wall plate
+      b.box(HW, 0.12, 0.07, skin, { at: [0, 0.95, 0.02] }); // window-sill rail
+      b.box(HW, 0.12, 0.07, skin, { at: [0, h - 0.6, 0.02] }); // lintel rail
       // studs between the windows
-      for (const x of [-2.75, -1.0, -0.05, 1.6, 2.6]) b.box(0.14, h, 0.07, timber, { at: [x, 0, 0.02] });
+      for (const x of [-2.75, -1.0, -0.05, 1.6, 2.6]) b.box(0.14, h, 0.07, skin, { at: [x, 0, 0.02] });
     });
     // two croisées per floor, St Andrew's crosses beneath
     for (const x of [-1.9, 0.8]) {
       const ww = x < 0 ? 1.55 : 1.35;
       b.window(ww, h - 1.65, { at: [cx + x, y0 + 1.07, ZF + 0.03], facing: '+z', frame: tint(timber, 0.08), glass: P.glassDark, bars: [2, 2], mat: 'glass', border: 0.09 });
-      saltire(b, [cx + x, y0 + 0.2, ZF], ww, 0.75, timber);
+      saltire(b, [cx + x, y0 + 0.2, ZF], ww, 0.75, skin);
     }
-    saltire(b, [cx + 2.1, y0 + 0.2, ZF], 0.85, 0.75, timber);
-    saltire(b, [cx - 3.1, y0 + 0.2, ZF], 0.5, h - 0.4, timber);
+    saltire(b, [cx + 2.1, y0 + 0.2, ZF], 0.85, 0.75, skin);
+    saltire(b, [cx - 3.1, y0 + 0.2, ZF], 0.5, h - 0.4, skin);
   }
-  cornerPost(b, cx - HW / 2 + 0.2, G, F1 + F2, timber);
-  cornerPost(b, cx + HW / 2 - 0.2, G, F1 + F2, timber);
+  cornerPost(b, cx - HW / 2 + 0.2, G, F1 + F2, skin);
+  cornerPost(b, cx + HW / 2 - 0.2, G, F1 + F2, skin);
   // carved brackets carrying the eaves
   for (const x of [-2.75, -1.0, 1.6, 2.6]) {
     b.box(0.16, 0.5, 0.4, timber, { at: [cx + x, EAVES - 0.5, ZF + 0.2] });
@@ -125,6 +128,12 @@ export const renaissanceHouse: BuildingDef = {
   name: 'Renaissance timber-framed house',
   style: 'Renaissance',
   date: 'c. 1530',
+  revisions: [
+    {
+      year: 1760,
+      note: 'The timber storeys are plastered over, carved posts and crosses and all, to meet the fire rules and the new taste for fronts that look like stone.',
+    },
+  ],
   summary:
     'Houses were still framed in oak, but the fronts now rise flat from the street: from the sixteenth century town authorities discouraged and then forbade new jetties (Paris banned them in 1607), because they spread fire and darkened the streets. ' +
     'The ground floor is built of stone, and the new taste brought back from Italy shows in the carving: corner posts dressed as little pilasters with capitals, brackets under the eaves, a dormer (lucarne) with pinnacles. ' +
@@ -162,7 +171,9 @@ export const renaissanceHouse: BuildingDef = {
     const stone = tint(b.pick([P.pierreBlonde, P.craie]), b.range(-0.04, 0.0));
     const timber = b.pick([P.oak, P.oakDark, tint(P.oak, -0.04)]);
     const slateA = b.chance(0.5);
+    const plastered = b.since(1760);
     house(b, -HW / 2, {
+      render: plastered ? P.plaster : undefined,
       infill: infillPick(b),
       timber,
       stone,
@@ -172,6 +183,7 @@ export const renaissanceHouse: BuildingDef = {
     });
     const slateB = b.chance(0.4);
     house(b, HW / 2, {
+      render: plastered ? tint(P.limewash, -0.05) : undefined,
       infill: infillPick(b),
       timber: b.pick([P.oak, P.oakDark]),
       stone: tint(stone, b.range(-0.03, 0.03)),
@@ -180,14 +192,11 @@ export const renaissanceHouse: BuildingDef = {
       stair: false,
     });
     // the yards
-    const wall = tint(P.rubble, 0.03);
+    // the walls of the old yards and the shared well, given a new iron winding gear
     const cope = tint(P.tuilePlate, -0.03);
-    yardWall(b, 0, ZB, 0, -8.75, 1.7, wall, cope);
-    yardWall(b, -6.75, ZB, -6.75, -8.75, 1.7, wall, cope);
-    yardWall(b, 6.75, ZB, 6.75, -8.75, 1.7, wall, cope);
-    yardWall(b, -6.75, -8.75, 6.75, -8.75, 1.7, wall, cope);
+    yardBounds(b, ZB, tint(P.rubble, 0.03), cope, 'well');
     b.box(6.5, 0.03, 2.6, P.cobble, { at: [-3.4, 0, -2.8], jitter: false });
-    well(b, [-4.9, 0, -5.4], P.pierreBlonde, { frame: 'iron' });
+    well(b, YARD_WELL, P.pierreBlonde, { frame: 'iron' });
     privy(b, [-1.0, 0, -7.9], 0, tint(P.oak, 0.1), cope);
     vegBed(b, 3.4, -5.4, 5.2, 5.4, { rows: 7 });
     b.tree(b.range(3.4, 4.2), { at: [-3.4, 0, -7.6], kind: 'round', color: P.leaf });

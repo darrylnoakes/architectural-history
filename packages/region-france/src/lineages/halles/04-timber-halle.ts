@@ -90,6 +90,9 @@ export const timberHalle: BuildingDef = {
     { label: 'Grain measures', note: 'Stone blocks hollowed to the official measures of the market, so a buyer of grain could check what he was sold.', at: [9.3, 1.2, -1.2] },
   ],
   modelledOn: 'The halles of Milly-la-Forêt (1479) and Saint-Pierre-sur-Dives (medieval, burnt in 1944 and rebuilt as it was with the old methods), reduced in length; the form is common to the surviving halles of northern and central France',
+  revisions: [
+    { year: 1840, note: 'From 1840 only the metric measures were lawful, and the hollows of the stone grain measures were recut to hold the new décalitre and its fractions.' },
+  ],
   build(b) {
     const cut = b.cutaway;
     // cobbled floor running a little beyond the eaves
@@ -173,10 +176,11 @@ export const timberHalle: BuildingDef = {
     goods(b, 2.6, [3.0, 0.98, -0.8], 0, ['basket', 'fruit']);
     for (let i = 0; i < 9; i++) sack(b, [-8.8 + (i % 3) * 0.55, 0.1, -1.6 + Math.floor(i / 3) * 0.6]);
     for (let i = 0; i < 4; i++) sack(b, [-7.6 + (i % 2) * 0.55, 0.1, 1.4 + Math.floor(i / 2) * 0.6]);
-    // the grain measures: a stone table with three round hollows
+    // the grain measures: a stone table with three round hollows, recut to the metric measures in 1840
     b.group({ at: [9.3, 0.1, -1.2] }, () => {
-      b.box(0.9, 0.7, 2.2, P.pierreBlonde);
-      for (const [z, r] of [[-0.6, 0.34], [0.15, 0.27], [0.7, 0.18]] as [number, number][]) b.cyl(r, 0.02, P.windowDark, { at: [0, 0.7, z], segs: 10, jitter: false });
+      b.box(0.9, 0.7, 2.2, P.pierreBlonde, { jitter: false });
+      const cups: [number, number][] = b.since(1840) ? [[-0.55, 0.3], [0.2, 0.24], [0.72, 0.19]] : [[-0.6, 0.34], [0.15, 0.27], [0.7, 0.18]];
+      for (const [z, r] of cups) b.cyl(r, 0.02, P.windowDark, { at: [0, 0.7, z], segs: 10, jitter: false });
     });
     b.collider(0.9, 2.2, { at: [9.3, 0, -1.2] });
   },

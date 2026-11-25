@@ -115,7 +115,7 @@ export const philippianGate: BuildingDef = {
   style: 'Gothic military, the royal pattern of Philip Augustus',
   date: 'c. 1190 to 1230',
   summary:
-    'The town had long outgrown its late Roman wall: suburbs had spread round the abbey and the market. Around 1200, as King Philip Augustus was doing at Paris (from 1190), the town built a new and much longer wall round them, paid for by the commune. ' +
+    'The town had long outgrown its late Roman wall: suburbs had spread round the abbey and the market. Around 1200, as King Philip Augustus was doing at Paris (from 1190), the town built a new and much longer wall round them, paid for by the commune. Where it meets the main road it keeps to the line of the old one, but the Roman arch that served as the gate is pulled down and a gate of the new pattern built in its place. ' +
     'It follows the royal pattern: a crenellated curtain wall, round towers about every sixty metres, and gates set between two round towers that stand out from the wall. Round towers have no corners to be knocked off or undermined, and their arrow loops cover every approach. ' +
     'The gate passage is closed first by a portcullis of oak shod with iron, dropped in grooves, and then by heavy doors; in front is a dry ditch crossed by a timber bridge on trestles.',
   materials: ['limestone rubble faced with dressed stone', 'oak and iron for the portcullis and doors', 'timber bridge'],

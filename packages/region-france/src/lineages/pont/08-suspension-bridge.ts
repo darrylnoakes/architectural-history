@@ -1,5 +1,21 @@
-import { P, tint, mix, type BuildingDef, type Vec3 } from '@ah/kit';
+import { P, tint, mix, type Builder, type BuildingDef, type Vec3 } from '@ah/kit';
 import { BANK, END, FOOT, hump, band, bar, tube, steps } from './shared';
+
+/** The level to which the abutments were taken down when the bridge of 1947 was seated on them. */
+const CUT = -1.1;
+
+/**
+ * The lower courses of the abutments at the water's edge, which the bridge of 1947 kept (with
+ * `upper`, the courses above, which it did not). No random numbers are drawn here.
+ */
+export function suspensionAbutments(b: Builder, upper = false): void {
+  const W = 5.2;
+  const stone = tint(mix(P.pierreBlonde, P.enduitGris, 0.3), -0.05);
+  b.sym((s) => {
+    b.box(W + 2.8, CUT - FOOT, 1.8, stone, { at: [0, FOOT, s * (BANK + 0.6)] });
+    if (upper) b.box(W + 2.8, 0.25 - CUT, 1.8, stone, { at: [0, CUT, s * (BANK + 0.6)] });
+  });
+}
 
 export const suspensionBridge: BuildingDef = {
   id: 'suspension-bridge',
@@ -36,8 +52,8 @@ export const suspensionBridge: BuildingDef = {
     const cable = (z: number) => low + (saddle - low) * (z / zP) * (z / zP);
 
     // abutments at the water's edge and the stone portals standing on them
+    suspensionAbutments(b, true);
     b.sym((s) => {
-      b.box(W + 2.8, 0.25 - FOOT, 1.8, tint(stone, -0.05), { at: [0, FOOT, s * (BANK + 0.6)] });
       const base = f(zP) - 0.05;
       b.archWall(2 * cx + 1.1, saddle - 0.15 - base, 1.2, stone, { at: [0, base, s * zP], facing: '+z', openings: 1, openW: 2 * cx - 1.1, openH: 3.9, shape: 'segmental' });
       b.box(2 * cx + 1.4, 0.2, 1.5, dress, { at: [0, saddle - 0.15, s * zP] });

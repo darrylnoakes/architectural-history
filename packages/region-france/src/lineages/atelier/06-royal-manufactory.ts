@@ -1,5 +1,5 @@
 import { P, tint, type BuildingDef, type Builder } from '@ah/kit';
-import { BANK, WATER, lin, rise, riverWall, tenter } from './shared';
+import { lin, manufactoryGate, rise, riverWall, tenter, washingSteps } from './shared';
 
 /** Stone quoins up a brick corner: alternating long and short blocks on two faces. */
 function quoins(b: Builder, x: number, z: number, h: number, sx: 1 | -1, sz: 1 | -1, stone: number) {
@@ -140,30 +140,16 @@ export const royalManufactory: BuildingDef = {
     });
 
     // ---- the court wall and gate on the street
-    const gz = 10.6;
-    const gw = W - 2 * ww;
-    b.sym((s) => {
-      b.box(gw / 2 - 2.4, 2.6, 0.5, brick, { at: [s * (gw / 4 + 1.2), 0, gz] });
-      b.box(gw / 2 - 2.3, 0.2, 0.65, stone, { at: [s * (gw / 4 + 1.2), 2.6, gz] });
-      b.box(1.1, 4.0, 1.1, stone, { at: [s * 2.4, 0, gz] });
-      b.box(1.3, 0.3, 1.3, tint(stone, 0.04), { at: [s * 2.4, 4.0, gz] });
-      b.sphere(0.45, stone, { at: [s * 2.4, 4.75, gz], segs: 8 });
-      b.sym((t) => b.box(0.16, 1.4, 0.16, stone, { at: [s * (gw / 4 + 1.2) + t * 2, 2.8, gz] }));
-    });
-    for (const x of lin(12, -1.8, 1.8)) b.box(0.05, 2.9, 0.05, P.castIron, { at: [x, 0, gz], jitter: false });
-    b.box(3.8, 0.1, 0.1, P.castIron, { at: [0, 0.3, gz] });
-    b.box(3.8, 0.1, 0.1, P.castIron, { at: [0, 2.7, gz] });
+    manufactoryGate(b, brick, stone);
 
     // ---- the court: tenter frames and bales; behind, a washing place on the river
     for (const z of [2.0, 4.0, 6.0]) tenter(b, 6.0, z, 7, b.pick([P.doorBlue, P.cream, P.voletGris, 0x7a2e2a]));
     for (let i = 0; i < 4; i++) b.box(0.9, 0.7, 0.8, P.cream, { at: [-6.5 + (i % 2), Math.floor(i / 2) * 0.7, 3.0] });
-    b.stairs(3.0, -WATER + 0.3, 2.2, 7, stone, { at: [7.38, WATER - 0.3, BANK - 1.0], rotY: Math.PI });
-    
-    b.stairs(3.0, -WATER + 0.3, 2.2, 7, stone, { at: [-7.38, WATER - 0.3, BANK - 1.0], rotY: Math.PI });
+    washingSteps(b, 7.38, stone);
+    washingSteps(b, -7.38, stone);
 
     b.collider(W, D, { at: [0, 0, z0] });
     b.sym((s) => b.collider(ww, wd, { at: [s * (W / 2 - ww / 2), 0, front + wd / 2] }));
-    b.sym((s) => b.collider(gw / 2 - 1.4, 0.6, { at: [s * (gw / 4 + 1.6), 0, gz] }));
     for (const z of [2.0, 4.0, 6.0]) b.collider(7.2, 0.3, { at: [6.0, 0, z] });
   },
 };

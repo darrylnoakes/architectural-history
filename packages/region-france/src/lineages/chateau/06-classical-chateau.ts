@@ -1,6 +1,6 @@
 import { P, mix, tint, type BuildingDef, type Builder, type Facing, type Vec3 } from '@ah/kit';
 import { SLATE, archPts, flat, pol, rectPts, soup, wallSeg, win, type Pt } from './shared';
-import { moat } from './05-renaissance-chateau';
+import { moat, moatBridge } from './05-renaissance-chateau';
 
 const ASHLAR = mix(P.pierreBlonde, P.craie, 0.4);
 const TRIM = tint(ASHLAR, 0.05);
@@ -55,7 +55,7 @@ function scroll(b: Builder, cx: number, cz: number, r: number, a0: number, a1: n
 function build(b: Builder) {
   // ---------------------------------------------------------------- the moated platform
   b.box(ISLE.x1 - ISLE.x0, 0.03, ISLE.z1 - ISLE.z0, mix(P.gravel, P.sand, 0.4), { at: [0, 0, (ISLE.z0 + ISLE.z1) / 2], jitter: false });
-  moat(b, ISLE, MOAT, [-2.4, 2.4], TRIM, [-2, 2]);
+  moat(b, ISLE, MOAT, [-2.4, 2.4], TRIM, [-2, 2], mix(P.gravel, P.sand, 0.45));
 
   // ---------------------------------------------------------------- the main block and pavilions
   const mw = MAIN.x1 - MAIN.x0;
@@ -152,8 +152,8 @@ function build(b: Builder) {
   b.stairs(6, 0.9, 2.0, 4, TRIM, { at: [0, 0, ROT.z - ROT.r - 1.2], rotY: Math.PI });
 
   // ---------------------------------------------------------------- bridges, forecourt, gate, outbuildings
-  b.box(4.6, 0.4, MOAT + 0.8, TRIM, { at: [0, -0.15, ISLE.z1 + MOAT / 2] });
-  b.box(4.0, 0.4, MOAT + 0.8, TRIM, { at: [0, -0.15, ISLE.z0 - MOAT / 2] });
+  moatBridge(b, 0, ISLE.z1 - 0.4, ISLE.z1 + MOAT + 0.4, 4.6, 0.25, TRIM, { span: MOAT - 0.8, parapet: false });
+  moatBridge(b, 0, ISLE.z0 + 0.4, ISLE.z0 - MOAT - 0.4, 4.0, 0.25, TRIM, { span: MOAT - 0.8, parapet: false });
   b.box(30, 0.03, 9.6, mix(P.gravel, P.sand, 0.5), { at: [0, 0, 18.9], jitter: false });
   railing(b, [-14.5, 23.4], [-2, 23.4], 1.6);
   railing(b, [2, 23.4], [14.5, 23.4], 1.6);
@@ -165,7 +165,8 @@ function build(b: Builder) {
     b.collider(12.5, 0.5, { at: [s * 8.25, 0, 23.4] });
     // brick-and-stone outbuildings (the communs) flanking the forecourt
     const cx = s * 18.2;
-    b.box(6, 7.5, 8, BRICK, { at: [cx, 0, 18.6] });
+    // its front stands over the strip dug in behind the moat's outer wall, so its walls go down to the bottom
+    b.box(6, 7.5 + 2, 8, BRICK, { at: [cx, -2, 18.6] });
     for (const dx of [-1, 1]) for (const dz of [-1, 1]) b.box(0.55, 7.5, 0.55, TRIM, { at: [cx + dx * 2.8, 0, 18.6 + dz * 3.8], jitter: false });
     b.box(6.2, 0.3, 8.2, TRIM, { at: [cx, 3.6, 18.6], jitter: false });
     b.box(6.3, 0.4, 8.3, TRIM, { at: [cx, 7.3, 18.6], jitter: false });

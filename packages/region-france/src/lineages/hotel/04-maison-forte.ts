@@ -21,6 +21,51 @@ function corbels(b: Builder, x0: number, x1: number, y: number, stone: number): 
   b.box(x1 - x0 + 0.3, 0.16, 0.38, stone, { at: [(x0 + x1) / 2, y, 0.19], jitter: false });
 }
 
+/** Where the square tower stands: beside the hall in the Romanesque house, kept at the corner of the court by the Gothic hôtel. */
+export const TOWER = { x: 8.25, z: -6.5, size: 5.5, h: 15 };
+
+/**
+ * The square tower of the Romanesque house: rubble with flat ashlar buttresses, round-headed windows
+ * and battlements. The Gothic hôtel keeps it, so both build it here with the same numbers.
+ */
+export function keepTower(b: Builder, rub: number, ash: number, door: number): void {
+  const tx = TOWER.x;
+  const tz = TOWER.z;
+  const ts = TOWER.size;
+  const th = TOWER.h;
+  b.box(ts, th, ts, rub, { at: [tx, 0, tz] });
+  b.collider(ts + 0.6, ts + 0.6, { at: [tx, 0, tz] });
+  // flat Romanesque buttresses at the corners, set back in steps
+  for (const sx of [-1, 1]) for (const sz of [-1, 1]) {
+    b.box(0.9, th - 1.6, 0.3, ash, { at: [tx + sx * (ts / 2 - 0.45), 0, tz + sz * (ts / 2 + 0.15)] });
+    b.box(0.3, th - 1.6, 0.9, ash, { at: [tx + sx * (ts / 2 + 0.15), 0, tz + sz * (ts / 2 - 0.45)] });
+  }
+  // battlements on a string course
+  b.box(ts + 0.5, 0.3, ts + 0.5, ash, { at: [tx, th - 0.3, tz] });
+  b.crenel(ts + 0.5, ts + 0.5, ash, { at: [tx, th, tz], merlonW: 0.7, merlonH: 1.0, t: 0.45 });
+  b.box(ts - 0.4, 0.15, ts - 0.4, P.lead, { at: [tx, th - 0.1, tz] });
+  for (const f of ['+z', '-z', '+x'] as const) {
+    const at: [number, number, number] = f === '+z' ? [tx, 0, tz + ts / 2] : f === '-z' ? [tx, 0, tz - ts / 2] : [tx + ts / 2, 0, tz];
+    onFace(b, f, at, () => {
+      for (const y of [5.0, 9.0]) {
+        plate(b, archPts(0, y, 0.75, 1.5, 'round', 6), 0.08, ash);
+        plate(b, archPts(0, y + 0.1, 0.4, 1.2, 'round', 4), 0.1, P.windowDark);
+      }
+      twin(b, 0, 12.0, 1.2, 1.8, ash);
+    });
+  }
+  onFace(b, '+z', [tx, 0, tz + ts / 2], () => {
+    plate(b, archPts(0, 0, 1.5, 2.6, 'round', 6), 0.08, ash);
+    plate(b, archPts(0, 0, 1.0, 2.3, 'round', 6), 0.12, door);
+  });
+}
+
+/** The well of the court, a kerb of ashlar; the Gothic hôtel keeps it and gives it an iron frame. */
+export function courtWell(b: Builder, stone: number): void {
+  b.cyl(0.75, 0.9, stone, { at: [3.2, 0, 5.0], segs: 10 });
+  b.cyl(0.6, 0.92, 0x2a3036, { at: [3.2, 0, 5.0], segs: 10 });
+}
+
 export const maisonForte: BuildingDef = {
   id: 'maison-forte',
   name: 'Romanesque stone house with tower',
@@ -115,36 +160,10 @@ export const maisonForte: BuildingDef = {
       plate(b, archPts(0, H + 1.4, 0.4, 0.9, 'round', 4), 0.1, P.windowDark);
     });
 
-    // ---- the tower, on the +X end
-    const tx = mx + W / 2 + 2.75;
-    const tz = -6.5;
-    const ts = 5.5;
-    const th = 15;
-    b.box(ts, th, ts, rub, { at: [tx, 0, tz] });
-    b.collider(ts + 0.6, ts + 0.6, { at: [tx, 0, tz] });
-    // flat Romanesque buttresses at the corners, set back in steps
-    for (const sx of [-1, 1]) for (const sz of [-1, 1]) {
-      b.box(0.9, th - 1.6, 0.3, ash, { at: [tx + sx * (ts / 2 - 0.45), 0, tz + sz * (ts / 2 + 0.15)] });
-      b.box(0.3, th - 1.6, 0.9, ash, { at: [tx + sx * (ts / 2 + 0.15), 0, tz + sz * (ts / 2 - 0.45)] });
-    }
-    // battlements on a string course
-    b.box(ts + 0.5, 0.3, ts + 0.5, ash, { at: [tx, th - 0.3, tz] });
-    b.crenel(ts + 0.5, ts + 0.5, ash, { at: [tx, th, tz], merlonW: 0.7, merlonH: 1.0, t: 0.45 });
-    b.box(ts - 0.4, 0.15, ts - 0.4, P.lead, { at: [tx, th - 0.1, tz] });
-    for (const f of ['+z', '-z', '+x'] as const) {
-      const at: [number, number, number] = f === '+z' ? [tx, 0, tz + ts / 2] : f === '-z' ? [tx, 0, tz - ts / 2] : [tx + ts / 2, 0, tz];
-      onFace(b, f, at, () => {
-        for (const y of [5.0, 9.0]) {
-          plate(b, archPts(0, y, 0.75, 1.5, 'round', 6), 0.08, ash);
-          plate(b, archPts(0, y + 0.1, 0.4, 1.2, 'round', 4), 0.1, P.windowDark);
-        }
-        twin(b, 0, 12.0, 1.2, 1.8, ash);
-      });
-    }
-    onFace(b, '+z', [tx, 0, tz + ts / 2], () => {
-      plate(b, archPts(0, 0, 1.5, 2.6, 'round', 6), 0.08, ash);
-      plate(b, archPts(0, 0, 1.0, 2.3, 'round', 6), 0.12, door);
-    });
+    // ---- the tower, on the +X end (kept in the Gothic hôtel that follows)
+    keepTower(b, rub, ash, door);
+    const tz = TOWER.z;
+    const ts = TOWER.size;
 
     // ---- the court: walls, a gate arch, a kitchen apart, a well
     const cz = 11.6;
@@ -172,8 +191,7 @@ export const maisonForte: BuildingDef = {
     b.gable(5.0, 4.0, 2.4, tile, { at: [kx, 2.8, kz], overhang: 0.3, wall: P.torchis });
     b.box(1.0, 2.0, 0.1, door, { at: [kx + 0.8, 0, kz + 2.05] });
     b.collider(5.0, 4.0, { at: [kx, 0, kz] });
-    b.cyl(0.75, 0.9, ash, { at: [3.2, 0, 5.0], segs: 10 });
-    b.cyl(0.6, 0.92, 0x2a3036, { at: [3.2, 0, 5.0], segs: 10 });
+    courtWell(b, ash);
     b.box(3.0, 0.05, 2.0, P.cobble, { at: [3.0, 0, 5.0] });
   },
 };

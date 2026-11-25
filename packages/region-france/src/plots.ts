@@ -78,7 +78,10 @@ export const plots: Plot[] = [
   { id: 'porte-ouest', lineage: 'remparts', x: -150, z: 0, rotY: W, seed: 45 },
 
   // --- the railway
-  { id: 'gare', lineage: 'gare', x: 0, z: 184, rotY: N, seed: 46, hero: true, struck: greatWar },
+  // the town's station, rebuilt after 1918, stays in use; the high-speed station of 2007 is a new
+  // one further along the line, beyond the grand ensemble, as such stations usually were
+  { id: 'gare', lineage: 'gare', x: 0, z: 184, rotY: N, seed: 46, hero: true, struck: greatWar, keep: 'reconstruction-station' },
+  { id: 'gare-tgv', lineage: 'gare', x: 300, z: 184, rotY: N, seed: 49, since: 2007 },
 
   // --- the hôtel: each stops at a different century; the villas stand outside
   { id: 'hotel', lineage: 'hotel', x: 40, z: 19, rotY: N, seed: 51, hero: true, keep: 'hotel-particulier' },

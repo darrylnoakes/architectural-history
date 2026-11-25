@@ -1,9 +1,9 @@
 import { P, tint, type Builder, type BuildingDef } from '@ah/kit';
-import { bowWindow, digits, pitched, vegBed, washing, yardWall } from './shared';
+import { bowWindow, cellarFooting, digits, pitched, vegBed, washing, yardBounds } from './shared';
 
 const HW = 6.8;
 const ZF = 7.9;
-const ZB = -2.4;
+const ZB = -2.0; // rebuilt on the footprint and cellars of the house before
 const G = 3.2;
 const F1 = 3.0;
 const EAVES = G + F1 + 0.3;
@@ -47,8 +47,9 @@ function house(b: Builder, cx: number, o: { brick: number; concrete: number; roo
   const D = ZF - ZB;
   const zc = (ZF + ZB) / 2;
   b.box(HW, EAVES, D, brick, { at: [cx, 0, zc] });
-  // the concrete frame showing on the front: plinth, floor band, corner piers
-  b.box(HW + 0.04, 0.6, 0.1, tint(concrete, -0.08), { at: [cx, 0, ZF + 0.02] });
+  // the concrete frame showing on the front: floor band, eaves band, corner piers
+  // the stone base course and cellar vent of the house that stood here before the war, built on again
+  cellarFooting(b, cx, HW, ZF);
   b.box(HW, 0.3, 0.14, concrete, { at: [cx, G - 0.05, ZF + 0.05] });
   b.box(HW, 0.25, 0.14, concrete, { at: [cx, EAVES - 0.25, ZF + 0.05] });
   for (const s of [1, -1]) b.box(0.35, EAVES, 0.1, concrete, { at: [cx + s * (HW / 2 - 0.175), 0, ZF + 0.04] });
@@ -106,7 +107,7 @@ export const reconstructionHouse: BuildingDef = {
   date: 'c. 1924',
   summary:
     'The front ran a few kilometres away from 1914 to 1918, and towns such as Reims and Saint-Quentin came out of the war largely in ruins. ' +
-    'The war damages law of April 1919 paid owners to rebuild, and through the 1920s whole streets went up at once, designed by architects in the fashion of the day. ' +
+    'The war damages law of April 1919 paid owners to rebuild, and through the 1920s whole streets went up at once, designed by architects in the fashion of the day, mostly on the old plots: the new houses stand on the cellars and stone footings of the ones that were shelled, inside the old garden walls. ' +
     'Brick is laid round a frame of reinforced concrete, whose lintels, bands and piers are left showing; the gable to the street is cut into a stepped or curved Art Deco outline with the year of rebuilding set in it; a bow window, geometric ironwork and a strip of mosaic finish the front.',
   materials: ['brick on a reinforced-concrete frame', 'exposed concrete lintels and bands', 'wrought iron', 'mechanical clay tiles', 'mosaic'],
   modelledOn:
@@ -162,11 +163,8 @@ export const reconstructionHouse: BuildingDef = {
       year: b.pick(['1921', '1923', '1924', '1925', '1927']),
     });
     // gardens behind
-    const wall = tint(P.briqueNord, 0.05);
-    yardWall(b, 0, ZB, 0, -8.75, 1.8, wall, P.concreteWhite);
-    yardWall(b, -6.75, ZB, -6.75, -8.75, 1.8, wall, P.concreteWhite);
-    yardWall(b, 6.75, ZB, 6.75, -8.75, 1.8, wall, P.concreteWhite);
-    yardWall(b, -6.75, -8.75, 6.75, -8.75, 1.8, wall, P.concreteWhite);
+    // the garden walls of the plot came through the shelling and were kept
+    yardBounds(b, ZB, tint(P.rubble, 0.03), P.concreteWhite, 'full');
     for (const cx of [-HW / 2, HW / 2]) b.box(0.9, 0.04, 5.6, P.concrete, { at: [cx - 1.4, 0, -5.9], jitter: false });
     vegBed(b, -1.6, -6.8, 2.6, 3.4, { rows: 4 });
     vegBed(b, 5.2, -7.0, 2.4, 3.0, { rows: 3, color: P.leafDark });

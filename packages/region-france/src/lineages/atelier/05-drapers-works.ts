@@ -1,5 +1,5 @@
 import { P, tint, type BuildingDef, type Builder } from '@ah/kit';
-import { BANK, BED, WATER, lin, rise, stakeBank, tenter, vat, waterwheel } from './shared';
+import { BANK, BED, RACE_Z, WATER, WHEEL_X, lin, millRace, precinctWall, rise, riverWall, tenter, vat, waterwheel } from './shared';
 
 const WOAD = 0x3f5f8c;
 const MADDER = 0xa8402f;
@@ -36,13 +36,13 @@ export const drapersWorks: BuildingDef = {
     'By 1300 the towns of Picardy, Artois and Flanders are the cloth-makers of Europe, and the riverside is given over to the stages of the trade after weaving. ' +
     'In the fulling mill a waterwheel lifts heavy wooden stocks that pound the cloth in troughs of water and fuller’s earth until it shrinks and thickens; the great Flemish towns long forbade mills for their finest cloth and kept to fulling by foot, but for ordinary cloth the mill won. ' +
     'In the dye house the cloth is boiled in vats over furnaces: blue from woad (guède), the crop that made the merchants of Amiens rich, red from madder, yellow from weld. ' +
-    'The cloth is rinsed at a washing stage on the river and stretched on tenter frames to dry square and to width. The buildings are timber-framed with cob infill under steep roofs of flat tiles.',
+    'The cloth is rinsed at a washing stage on the river and stretched on tenter frames to dry square and to width. The new buildings are timber-framed with cob infill under steep roofs of flat tiles; the fulling wheel turns in the forge’s old stone pit on the same race, and the monks’ stone river wall, street wall and gate are kept.',
   materials: ['oak frame', 'cob infill (torchis)', 'chalk and flint footings', 'flat clay tiles', 'brick'],
   lookFor: [
-    { label: 'Fulling stocks', note: 'Cams on the wheel shaft lift the wooden hammers, which fall again and again on the wet cloth in the trough.', at: [-11.0, 2.4, -5.6] },
-    { label: 'Undershot wheel', note: 'The fulling mill’s wheel, its paddles dipping into the current at the back.', at: [-11.0, 2.4, -12.8] },
-    { label: 'Dye vats and furnace chimney', note: 'Round vats of blue woad, red madder and yellow weld, heated by fires whose smoke goes up the brick stack.', at: [3.0, 2.0, -4.0] },
-    { label: 'Washing stage', note: 'A timber platform out over the river where dyed cloth was rinsed in running water.', at: [6.5, 0.6, -13.0] },
+    { label: 'Fulling stocks', note: 'Cams on the wheel shaft lift the wooden hammers, which fall again and again on the wet cloth in the trough.', at: [WHEEL_X, 2.4, -5.6] },
+    { label: 'Undershot wheel', note: 'The fulling mill’s wheel, its paddles dipping into the current at the back.', at: [WHEEL_X, 2.4, -12.8] },
+    { label: 'Dye vats and furnace chimney', note: 'Round vats of blue woad, red madder and yellow weld, heated by fires whose smoke goes up the brick stack.', at: [-6.0, 2.0, -4.0] },
+    { label: 'Washing stage', note: 'A timber platform out over the river where dyed cloth was rinsed in running water.', at: [-8.0, 0.6, -13.0] },
     { label: 'Tenter frames', note: 'Wet cloth was hooked onto these frames (rames) to dry to the right length and width: the origin of being on tenterhooks.', at: [6.0, 2.2, 5.6] },
   ],
   influences: [],
@@ -53,11 +53,12 @@ export const drapersWorks: BuildingDef = {
     const sill = P.craie;
 
     b.box(35, 0.04, 21.6, tint(P.grassDry, -0.04), { at: [0, 0, 0], jitter: false });
-    stakeBank(b, -17.5, 17.5, P.oakDark);
-    b.box(35, -BED + 0.15, 0.6, tint(P.craie, -0.12), { at: [0, BED, BANK + 0.3] });
+    // the stone river wall, the race and the wheel pit of the forge before it, all kept
+    riverWall(b, -17.6, 17.6, tint(P.craie, -0.12), { coping: P.craie, top: 0.3 });
+    millRace(b, 'stone');
 
     // ---- the fulling mill: chalk footings, a timber-framed upper part, wheel at the back
-    const mx = -11;
+    const mx = WHEEL_X;
     const mz = -6.8;
     const MW = 9;
     const MD = 6.4;
@@ -102,15 +103,13 @@ export const drapersWorks: BuildingDef = {
     for (const x of [mx - 2.2, mx + 2.2]) fullingStocks(b, x, mz + 0.4, g);
     b.log(0.2, MW - 1.0, P.oakDark, { at: [mx, g + 1.35, mz - 1.3] });
     for (const x of [mx - 2.6, mx - 1.8, mx + 1.8, mx + 2.6]) b.box(0.18, 0.5, 0.18, P.oak, { at: [x, g + 1.45, mz - 1.1] });
-    // the wheel in the river behind, on a short race between piles
+    // the new wheel in the old pit, under a little roof on posts standing on the pit wall
     waterwheel(b, { at: [mx, 0.8, -12.8], r: 2.2, width: 1.2, paddles: 16, spokes: 8, spin: b.rand(), axle: 3.2, axleDir: 1 });
-    for (const z of [-11.4, -13.0, -14.6]) b.cyl(0.14, 3.2, P.oakDark, { at: [mx - 1.0, BED, z], segs: 6 });
-    b.box(0.12, 1.6, 3.6, tint(P.oakDark, 0.06), { at: [mx - 1.0, BED + 0.4, -13.0] });
     b.gable(3.2, 4.0, 1.4, tile, { at: [mx, 3.4, -12.6], ridge: 'z', overhang: 0.2 });
-    b.sym((s) => b.box(0.22, 3.4 - BED, 0.22, P.oakDark, { at: [mx + s * 1.4, BED, -14.4] }));
+    b.sym((s) => b.box(0.22, 2.8, 0.22, P.oakDark, { at: [mx + s * 1.4, 0.6, RACE_Z - 0.1] }));
 
     // ---- the dye house: an open-fronted timber hall with the vats, a brick furnace stack
-    const dx = 3;
+    const dx = -6;
     const dz = -6.2;
     const DW = 11;
     const DD = 6.6;
@@ -140,7 +139,7 @@ export const drapersWorks: BuildingDef = {
     lin(6, dx - 4, dx + 4).forEach((x, i) => b.box(0.5, 1.1, 0.06, [WOAD, MADDER, WELD][i % 3], { at: [x, 2.1, dz + 2.3], jitter: false }));
 
     // ---- the washing stage: a planked platform over the river, steps down to the water, rinsing poles
-    const wx = 6.5;
+    const wx = -8.0;
     b.box(6.0, 0.14, 3.8, P.oak, { at: [wx, 0.05, BANK - 1.5] });
     for (const x of lin(4, wx - 2.8, wx + 2.8)) for (const z of [BANK - 0.2, BANK - 3.2]) b.cyl(0.13, 0.25 - BED, P.oakDark, { at: [x, BED, z], segs: 6 });
     b.stairs(1.6, -WATER + 0.2, 1.4, 5, P.oak, { at: [wx + 1.6, WATER - 0.1, BANK - 4.1], rotY: Math.PI });
@@ -157,21 +156,15 @@ export const drapersWorks: BuildingDef = {
     tenter(b, 6.0, 8.2, 16, b.pick([P.cream, WELD]), timber);
     tenter(b, -11.0, 5.2, 10, P.cream, timber);
     // bales of wool and a cart of woad balls (coques de guède)
-    for (let i = 0; i < 4; i++) b.box(1.0, 0.7, 0.8, P.cream, { at: [-6.0 + (i % 2) * 1.1, Math.floor(i / 2) * 0.7, -1.6] });
+    for (let i = 0; i < 4; i++) b.box(1.0, 0.7, 0.8, P.cream, { at: [0.6 + (i % 2) * 1.1, Math.floor(i / 2) * 0.7, -1.6] });
     b.box(2.4, 0.2, 1.3, P.oak, { at: [-12.5, 0.9, 1.4] });
     for (const z of [0.75, 2.05]) b.log(0.5, 0.1, P.oakDark, { at: [-12.5, 0, z], axis: 'x', segs: 10 });
     for (let i = 0; i < 6; i++) b.sphere(0.25, 0x4c5a3c, { at: [-13.2 + (i % 3) * 0.55, 1.35, 1.1 + Math.floor(i / 3) * 0.55], segs: 5 });
-    // the street fence and gate
-    b.box(14, 2.0, 0.15, timber, { at: [-10.8, 0, 10.6] });
-    b.box(14, 2.0, 0.15, timber, { at: [10.8, 0, 10.6] });
-    b.sym((s) => b.box(0.3, 2.8, 0.3, timber, { at: [s * 3.9, 0, 10.6] }));
-    b.gable(8.6, 1.2, 0.8, tile, { at: [0, 2.8, 10.6] });
-    b.box(8.2, 0.25, 0.3, timber, { at: [0, 2.55, 10.6] });
+    // the street wall and gate of the monks' works, kept
+    precinctWall(b, tint(P.craie, -0.06), P.craie, tile);
 
     b.collider(MW, MD, { at: [mx, 0, mz] });
     b.collider(DW, DD, { at: [dx, 0, dz] });
     for (const z of [3.0, 5.6, 8.2]) b.collider(16.2, 0.3, { at: [6.0, 0, z] });
-    b.collider(14, 0.3, { at: [-10.8, 0, 10.6] });
-    b.collider(14, 0.3, { at: [10.8, 0, 10.6] });
   },
 };

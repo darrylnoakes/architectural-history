@@ -1,5 +1,5 @@
 import { P, mix, tint, type BuildingDef } from '@ah/kit';
-import { lin, opening } from './shared';
+import { holyGround, lin, opening } from './shared';
 
 const ZC = -3; // centre of the temple
 const G = 8.7; // half side of the gallery
@@ -34,7 +34,7 @@ export const fanum: BuildingDef = {
     // most fana faced east: the door, the altar and the precinct gate are on the east side, which in
     // this lineage (west front at +Z) is -Z; everything is laid out facing +Z and turned round
     b.group({ rotY: Math.PI }, () => {
-      b.box(32, 0.03, 50, P.grass, { at: [0, 0, 0], jitter: false });
+      holyGround(b, P.grass);
       b.box(29.4, 0.05, 37.4, mix(P.gravel, P.grassDry, 0.35), { at: [0, 0, -1], jitter: false });
       // precinct wall with a tile coping and a gate
       const coping = tint(ROOF, -0.05);

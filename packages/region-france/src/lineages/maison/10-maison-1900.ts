@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { P, tint, type Builder, type BuildingDef } from '@ah/kit';
-import { bowWindow, dormer, pitched, vegBed, yardWall } from './shared';
+import { bowWindow, cellarFooting, dormer, pitched, vegBed, yardBounds } from './shared';
 
 const HW = 6.8;
 const ZF = 7.9;
@@ -36,7 +36,7 @@ function house(b: Builder, cx: number, o: { brick: number; band: number; stone: 
   const zc = (ZF + ZB) / 2;
   b.box(HW, EAVES, D, brick, { at: [cx, 0, zc] });
   // plinth of blue-grey stone, and bands of light brick
-  b.box(HW, 0.7, 0.08, tint(P.granite, -0.05), { at: [cx, 0, ZF + 0.02] });
+  cellarFooting(b, cx, HW, ZF);
   for (const y of [1.6, 2.6, G + 1.0, G + 2.2]) b.box(HW, 0.16, 0.05, band, { at: [cx, y, ZF + 0.02], jitter: false });
   b.box(HW, 0.2, 0.14, stone, { at: [cx, G, ZF + 0.05] });
   // the ceramic frieze under the eaves
@@ -171,11 +171,7 @@ export const maison1900: BuildingDef = {
       ]),
     });
     // gardens behind, divided by a wall
-    const wall = tint(P.briqueNord, 0.05);
-    yardWall(b, 0, ZB, 0, -8.75, 1.9, wall, P.pierreBlonde);
-    yardWall(b, -6.75, ZB, -6.75, -8.75, 1.9, wall, P.pierreBlonde);
-    yardWall(b, 6.75, ZB, 6.75, -8.75, 1.9, wall, P.pierreBlonde);
-    yardWall(b, -6.75, -8.75, 6.75, -8.75, 1.9, wall, P.pierreBlonde);
+    yardBounds(b, ZB, tint(P.rubble, 0.03), P.pierreBlonde, 'full');
     for (const cx of [-HW / 2, HW / 2]) {
       b.box(1.0, 0.04, 5.6, P.gravel, { at: [cx - 1.6, 0, -5.8], jitter: false });
       vegBed(b, cx + 1.3, -7.2, 3.2, 2.4, { rows: 4 });

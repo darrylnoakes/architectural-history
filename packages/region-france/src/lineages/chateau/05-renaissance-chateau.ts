@@ -1,12 +1,12 @@
 import { P, mix, tint, type BuildingDef, type Builder, type Facing, type Vec3 } from '@ah/kit';
-import { DARK, SLATE, archPts, dormer, flat, rectPts, win } from './shared';
+import { DARK, SLATE, archPts, dormer, flat, rectPts, win, type Pt } from './shared';
 
 const TUFFEAU = mix(P.craie, P.pierreBlonde, 0.35);
 const TRIM = tint(TUFFEAU, 0.05);
 const PILASTER = mix(TUFFEAU, P.pierreBlonde, 0.6);
 /** The island the château stands on, inside its moat. */
 export const ISLE = { x0: -16, x1: 16, z0: -16.5, z1: 14.5 };
-const MOAT = 4.2;
+const MOAT = 3.6;
 const EAVES = 9.2;
 
 /** Main block (along X, at the back) and wing (along Z, on the left): an L round the court. */
@@ -14,41 +14,113 @@ const MAIN = { x0: -5, x1: 10, z0: -14, z1: -5 };
 const WING = { x0: -14, x1: -5, z0: -14, z1: 9 };
 const STAIR = { x: 2.5, w: 4.6, d: 1.6 };
 
+/** The moats of 1520 and 1660: dug 2 m deep between walled sides, the water 0.6 m below the ground. */
+export const MOAT_CUT = { depth: 2.0, water: -0.6, behind: 2.0 };
+
 /**
- * The moat as four strips of water with stone kerbs, open only where the bridge crosses at (bx, front).
- * Each strip gets a collider so walkers do not wade in.
+ * A wet moat round a rectangular island, dug out of the ground with walled sides. The hollow reaches
+ * `behind` metres in under the island and out under the bank, so that the ground is at full depth
+ * at the foot of each wall; the island's own surface and a paved walk round the outside cover that
+ * strip. Four cuts make the ring, joined along open edges. The walls stand on the bottom and rise to
+ * a stone coping, which stops where a bridge (`bridge`, and on the garden side `back`) crosses.
  */
-export function moat(b: Builder, isle: { x0: number; x1: number; z0: number; z1: number }, w: number, bridge: [number, number], kerb: number, back?: [number, number]) {
+export function moat(b: Builder, isle: { x0: number; x1: number; z0: number; z1: number }, w: number, bridge: [number, number], kerb: number, back?: [number, number], walk?: number) {
   const { x0, x1, z0, z1 } = isle;
+  const { depth: D, water: wy, behind: e } = MOAT_CUT;
   const water = mix(P.water, P.glassGreen, 0.25);
+  const bottom = mix(P.soil, P.water, 0.3);
+  // the ring as four cuts: back and front strips across the full width, sides between them
+  const X0 = x0 - w - e;
+  const X1 = x1 + w + e;
+  b.dig([[X0, z0 - w - e], [X1, z0 - w - e], [X1, z0 + e], [x1 - e, z0 + e], [x0 + e, z0 + e], [X0, z0 + e]], D, { slope: e, color: bottom, open: [2, 4] });
+  b.dig([[X0, z1 + w + e], [X0, z1 - e], [x0 + e, z1 - e], [x1 - e, z1 - e], [X1, z1 - e], [X1, z1 + w + e]], D, { slope: e, color: bottom, open: [1, 3] });
+  b.dig([[X0, z0 + e], [x0 + e, z0 + e], [x0 + e, z1 - e], [X0, z1 - e]], D, { slope: e, color: bottom, open: [0, 2] });
+  b.dig([[x1 - e, z0 + e], [X1, z0 + e], [X1, z1 - e], [x1 - e, z1 - e]], D, { slope: e, color: bottom, open: [0, 2] });
+  // the water: a flat sheet in the hollow
   const pieces: [number, number, number, number][] = [
     [x0 - w, x1 + w, z0 - w, z0],
     [x0 - w, x0, z0, z1],
     [x1, x1 + w, z0, z1],
+    [x0 - w, x1 + w, z1, z1 + w],
+  ];
+  for (const [a, c, d, f] of pieces) b.box(c - a, 0.05, f - d, water, { at: [(a + c) / 2, wy - 0.05, (d + f) / 2], mat: 'glass', jitter: false });
+  // walkers keep out of the water, except over the bridges
+  const cols: [number, number, number, number][] = [
+    [x0 - w, x0, z0, z1],
+    [x1, x1 + w, z0, z1],
     [x0 - w, bridge[0], z1, z1 + w],
     [bridge[1], x1 + w, z1, z1 + w],
+    ...(back ? [[x0 - w, back[0], z0 - w, z0], [back[1], x1 + w, z0 - w, z0]] as [number, number, number, number][] : [[x0 - w, x1 + w, z0 - w, z0]] as [number, number, number, number][]),
   ];
-  if (back) {
-    pieces.shift();
-    pieces.push([x0 - w, back[0], z0 - w, z0], [back[1], x1 + w, z0 - w, z0]);
-  }
-  for (const [a, c, d, e] of pieces) {
-    b.box(c - a, 0.05, e - d, water, { at: [(a + c) / 2, -0.02, (d + e) / 2], mat: 'glass', jitter: false });
-    b.collider(c - a, e - d, { at: [(a + c) / 2, 0, (d + e) / 2] });
-  }
-  // stone kerbs: the island's edge and the outer edge, as low copings
+  for (const [a, c, d, f] of cols) b.collider(c - a, f - d, { at: [(a + c) / 2, 0, (d + f) / 2] });
+  // the walled sides, from the bottom to the ground, all the way round both edges of the water
   const k = 0.35;
-  const edge = (a: number, c: number, d: number, e: number) => b.box(c - a, 0.35, e - d, kerb, { at: [(a + c) / 2, 0, (d + e) / 2], jitter: false });
-  edge(x0 - k, x1 + k, z0 - k, z0);
+  const wall = tint(kerb, -0.12);
+  const side = (a: number, c: number, d: number, f: number) => b.box(c - a, D, f - d, wall, { at: [(a + c) / 2, -D, (d + f) / 2] });
+  side(x0 - k, x1 + k, z0 - k, z0);
+  side(x0 - k, x0, z0, z1);
+  side(x1, x1 + k, z0, z1);
+  side(x0 - k, x1 + k, z1, z1 + k);
+  side(x0 - w - k, x1 + w + k, z0 - w - k, z0 - w);
+  side(x0 - w - k, x0 - w, z0 - w, z1 + w);
+  side(x1 + w, x1 + w + k, z0 - w, z1 + w);
+  side(x0 - w - k, x1 + w + k, z1 + w, z1 + w + k);
+  // stone copings, stopping at the bridges
+  const edge = (a: number, c: number, d: number, f: number) => b.box(c - a, 0.35, f - d, kerb, { at: [(a + c) / 2, 0, (d + f) / 2], jitter: false });
+  const runX = (a: number, c: number, d: number, f: number, gap?: [number, number]) => {
+    if (!gap) edge(a, c, d, f);
+    else {
+      edge(a, gap[0], d, f);
+      edge(gap[1], c, d, f);
+    }
+  };
+  runX(x0 - k, x1 + k, z0 - k, z0, back);
   edge(x0 - k, x0, z0, z1);
   edge(x1, x1 + k, z0, z1);
-  edge(x0 - k, bridge[0], z1, z1 + k);
-  edge(bridge[1], x1 + k, z1, z1 + k);
-  edge(x0 - w - k, x1 + w + k, z0 - w - k, z0 - w);
+  runX(x0 - k, x1 + k, z1, z1 + k, bridge);
+  runX(x0 - w - k, x1 + w + k, z0 - w - k, z0 - w, back);
   edge(x0 - w - k, x0 - w, z0 - w, z1 + w);
   edge(x1 + w, x1 + w + k, z0 - w, z1 + w);
-  edge(x0 - w - k, bridge[0], z1 + w, z1 + w + k);
-  edge(bridge[1], x1 + w + k, z1 + w, z1 + w + k);
+  runX(x0 - w - k, x1 + w + k, z1 + w, z1 + w + k, bridge);
+  // a gravel walk round the outside, over the strip dug in under the bank, and decks over both strips
+  const wc = walk ?? mix(P.gravel, P.sand, 0.4);
+  const o0 = x0 - w - k;
+  const o1 = x1 + w + k;
+  for (const [a, c, d, f] of [
+    [o0 - e, o1 + e, z0 - w - k - e, z0 - w - k],
+    [o0 - e, o1 + e, z1 + w + k, z1 + w + k + e],
+    [o0 - e, o0, z0 - w - k, z1 + w + k],
+    [o1, o1 + e, z0 - w - k, z1 + w + k],
+  ] as const) {
+    b.box(c - a, 0.02, f - d, wc, { at: [(a + c) / 2, 0, (d + f) / 2], jitter: false });
+    b.deck(c - a, f - d, 0.03, { at: [(a + c) / 2, 0, (d + f) / 2] });
+  }
+  for (const [a, c, d, f] of [
+    [x0, x1, z0, z0 + e],
+    [x0, x1, z1 - e, z1],
+    [x0, x0 + e, z0 + e, z1 - e],
+    [x1 - e, x1, z0 + e, z1 - e],
+  ] as const) b.deck(c - a, f - d, 0.03, { at: [(a + c) / 2, 0, (d + f) / 2] });
+}
+
+/**
+ * A stone bridge of one arch over a moat, from z0 to z1 along Z at x, `width` wide, its deck at `top`.
+ * The arch springs from the bottom of the moat; walkers cross on its deck.
+ */
+export function moatBridge(b: Builder, x: number, z0: number, z1: number, width: number, top: number, color: number, o?: { span?: number; parapet?: boolean }) {
+  const D = MOAT_CUT.depth;
+  const L = Math.abs(z1 - z0);
+  const a = (o?.span ?? L - 1.6) / 2;
+  const spring = top - 0.45 - a;
+  const pts: Pt[] = [[-L / 2, -D - 0.05], [-a, -D - 0.05]];
+  for (let i = 0; i <= 8; i++) {
+    const t = Math.PI - (i * Math.PI) / 8;
+    pts.push([a * Math.cos(t), spring + a * Math.sin(t)]);
+  }
+  pts.push([a, -D - 0.05], [L / 2, -D - 0.05], [L / 2, top], [-L / 2, top]);
+  b.extrude(pts, width, color, { at: [x, 0, (z0 + z1) / 2], rotY: -Math.PI / 2 });
+  if (o?.parapet !== false) b.sym((s) => b.box(0.3, 0.75, L, tint(color, 0.03), { at: [x + s * (width / 2 - 0.15), top, (z0 + z1) / 2] }));
+  b.deck(width, L, top, { at: [x, 0, (z0 + z1) / 2] });
 }
 
 /** A row of Renaissance bays on a wall face: cross windows framed by pilasters, two storeys. */
@@ -150,8 +222,7 @@ function build(b: Builder) {
   }
 
   // ---------------------------------------------------------------- bridge and garden
-  b.box(2.6, 0.5, MOAT + 1.2, TRIM, { at: [2.5, -0.2, ISLE.z1 + MOAT / 2] });
-  b.sym((s) => b.box(0.3, 0.9, MOAT + 1.2, TRIM, { at: [2.5 + s * 1.15, 0.3, ISLE.z1 + MOAT / 2] }));
+  moatBridge(b, 2.5, ISLE.z1 - 0.6, ISLE.z1 + MOAT + 0.6, 2.6, 0.3, TRIM, { span: MOAT - 1.2 });
   const gx = 9;
   const gz = 4.5;
   for (const sx of [-1, 1]) {

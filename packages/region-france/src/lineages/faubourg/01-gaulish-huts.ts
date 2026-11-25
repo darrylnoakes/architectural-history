@@ -1,5 +1,5 @@
 import { P, tint, type Builder, type BuildingDef } from '@ah/kit';
-import { granary, heap, hurdles, patch, storagePit, thatchRoof } from './shared';
+import { granary, heap, hurdles, patch, road, storagePit, thatchRoof } from './shared';
 
 /**
  * One small Gaulish house: a rectangle of earth-fast oak posts with wattle-and-daub walls between
@@ -65,7 +65,7 @@ export const gaulishHuts: BuildingDef = {
     const jx = () => b.range(-0.6, 0.6);
     patch(b, 25.6, 15.6, tint(P.earth, 0.05), [0, 0]);
     // the track along the front, rutted, and a trodden path into the yard
-    patch(b, 25.6, 2.2, tint(P.earth, -0.06), [0, 6.8], 0.05);
+    road(b, tint(P.earth, -0.06));
     patch(b, 2.2, 7, tint(P.earth, -0.03), [-1.8 + b.range(-0.5, 0.5), 2.0], 0.045);
 
     house(b, -8.0 + jx(), 1.0, 6.2, 4.6, b.range(-0.08, 0.08), thatch, { hip: true, porch: b.chance(0.6) });

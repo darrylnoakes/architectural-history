@@ -68,7 +68,7 @@ export const ironHalles: BuildingDef = {
     const YC1 = 9.4; // top of the clerestory
     const DADO = 2.2;
 
-    paving(b, 25.6, 21.6, P.cobble, 0.06, [0, 0, 0], 10);
+    paving(b, 25.8, 21.8, P.cobble, 0.1, [0, 0, 0], 10); // the cobbled square, relaid round the hall of 1929 too
     b.box(2 * X + 1.4, 0.12, 2 * Z + 1.4, tint(P.paving, -0.04), { at: [0, 0.06, 0] });
     const y0 = 0.18;
 

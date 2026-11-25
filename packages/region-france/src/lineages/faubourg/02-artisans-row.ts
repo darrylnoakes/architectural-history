@@ -1,5 +1,5 @@
 import { P, mix, tint, type Builder, type BuildingDef } from '@ah/kit';
-import { heap, patch, tileRoof } from './shared';
+import { heap, patch, road, tileRoof } from './shared';
 
 const ZF = 5.9; // gable front of the strip houses
 const ZB = -4.6; // back wall
@@ -73,7 +73,7 @@ export const artisansRow: BuildingDef = {
     const trades: Trade[] = ['potter', ...rest];
 
     // the gravel street with a gutter, the yards behind
-    patch(b, 25.8, 1.6, mix(P.gravel, P.earth, 0.3), [0, 7.15], 0.06);
+    road(b, mix(P.gravel, P.earth, 0.3));
     patch(b, 25.8, 0.3, tint(P.paving, -0.1), [0, 6.3], 0.08);
     patch(b, 25.8, 3.3, tint(P.earth, 0.03), [0, -6.3], 0.03);
 

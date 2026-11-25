@@ -1,29 +1,17 @@
 import { P, mix, type BuildingDef, type Builder } from '@ah/kit';
-import { DARK, DITCH, MOTTE, flat, motte, motteY, palisade, pol, rectPts, segCollider, strip, win, type Pt } from './shared';
+import { BAILEY_A, BAILEY_B, BAILEY_DITCH, DARK, GATE, MOTTE, baileyDitch, flat, ground960, motte, palisade, pol, rectPts, segCollider, win, type Pt } from './shared';
 
-/** The bailey boundary, from the foot of the mound at the back round to the mound on the left. */
-export const BAILEY_A: Pt[] = [[-2.5, -19], [10, -20], [17.5, -12], [18, 6], [13, 17], [6.6, 18.2]];
-export const BAILEY_B: Pt[] = [[2.4, 18.2], [-8, 17], [-16.5, 9], [-18.5, -5]];
-export const GATE: Pt = [4.5, 18.2];
-
-function pushOut(pts: Pt[], d: number): Pt[] {
-  return pts.map(([x, z]) => {
-    const dx = x - 2;
-    const dz = z;
-    const L = Math.hypot(dx, dz) || 1;
-    return [x + (dx / L) * d, z + (dz / L) * d] as Pt;
-  });
-}
+export { BAILEY_A, BAILEY_B, GATE };
 
 /** Palisade, ditch and timber gate tower of the bailey (960, kept in 1100). */
 export function baileyDefences(b: Builder) {
   const stake = mix(P.oak, P.oakSilver, 0.25);
-  palisade(b, BAILEY_A, 3.4, stake, motteY);
-  palisade(b, BAILEY_B, 3.4, stake, motteY);
+  // the stakes follow the ground down into the motte ditch where the palisade climbs the mound
+  palisade(b, BAILEY_A, 3.4, stake, ground960);
+  palisade(b, BAILEY_B, 3.4, stake, ground960);
   for (const line of [BAILEY_A, BAILEY_B]) for (let i = 0; i < line.length - 1; i++) segCollider(b, line[i], line[i + 1], 0.6);
-  // the ditch outside, and the bank thrown up from it on the inside
-  const ditch = pushOut([...BAILEY_A.slice(1), ...BAILEY_B.slice(0, -1)], 2.4);
-  strip(b, ditch, 2.6, 0.03, DITCH);
+  // the ditch outside, dug out of the ground
+  baileyDitch(b);
   // gate tower: four posts, a fighting platform and a little roof over the gate
   b.group({ at: [GATE[0], 0, GATE[1]] }, () => {
     for (const sx of [-1, 1]) for (const sz of [-1, 1]) b.box(0.4, 6.4, 0.4, P.oak, { at: [sx * 1.8, 0, sz * 1.3] });
@@ -31,14 +19,28 @@ export function baileyDefences(b: Builder) {
     b.box(4.4, 0.2, 3.4, P.oakDark, { at: [0, 3.3, 0] });
     for (const x of [-1.2, 0, 1.2]) flat(b, rectPts(-0.15, 0, 0.15, 0.9), DARK, [x, 4.3, 1.6], '+z', 0.03);
     b.pyramid(5, 4, 2.2, P.shingle, { at: [0, 5.6, 0] });
-    b.box(3.2, 0.25, 4, P.oak, { at: [0, 0.2, 3.4] });
   });
+  // the bridge over the ditch: planks on two trestles standing on its bottom
+  const { off, half } = BAILEY_DITCH;
+  const z0 = GATE[1] + 0.4;
+  const z1 = GATE[1] + off + half + 0.6;
+  b.box(3.2, 0.25, z1 - z0, P.oak, { at: [GATE[0], 0.2, (z0 + z1) / 2] });
+  for (const dz of [off - 0.6, off + 0.6]) {
+    const z = GATE[1] + dz;
+    const g = ground960(GATE[0], z);
+    for (const sx of [-1.3, 1.3]) b.box(0.22, 0.2 - g + 0.1, 0.22, P.oakDark, { at: [GATE[0] + sx, g - 0.1, z] });
+    b.box(3.0, 0.18, 0.24, P.oakDark, { at: [GATE[0], 0.02, z] });
+  }
+  b.deck(3.2, z1 - z0, 0.45, { at: [GATE[0], 0, (z0 + z1) / 2] });
   b.sym((s) => b.collider(0.6, 3, { at: [GATE[0] + s * 1.8, 0, GATE[1]] }));
 }
 
-/** A timber hall with walls of planks on a frame, a shingle roof and a smoke louvre. */
+/** Where the hall of the bailey stands, in timber (960) and in stone (1100, kept in 1220): along Z on the right. */
+export const HALL = { x: 8.2, z: -1, w: 6.4, d: 12 };
+
+/** A timber hall with walls of planks on a frame, a shingle roof and a smoke louvre, its door to the court (-X). */
 export function timberHall(b: Builder, x: number, z: number) {
-  b.group({ at: [x, 0, z] }, () => {
+  b.group({ at: [x, 0, z], rotY: -Math.PI / 2 }, () => {
     b.box(12, 3.4, 6.4, mix(P.oak, P.oakSilver, 0.35));
     for (const f of ['+z', '-z'] as const) b.frame(12, 3.4, P.oakDark, { at: [0, 0, f === '+z' ? 3.2 : -3.2], facing: f, studs: 7, rails: 0, beam: 0.22 });
     b.gable(12, 6.4, 3.8, P.shingle, { at: [0, 3.4, 0], overhang: 0.5, wall: mix(P.oak, P.oakSilver, 0.35) });
@@ -46,7 +48,7 @@ export function timberHall(b: Builder, x: number, z: number) {
     b.pyramid(1.4, 1.4, 0.6, P.shingle, { at: [1, 7.7, 0] });
     flat(b, rectPts(-0.7, 0, 0.7, 2.3), P.oakDark, [-3, 0, 3.2], '+z', 0.08);
   });
-  b.collider(12, 6.4, { at: [x, 0, z] });
+  b.collider(6.4, 12, { at: [x, 0, z] });
 }
 
 /** Stables, a well and a smithy's lean-to, the working life of the bailey. */
@@ -101,7 +103,7 @@ function build(b: Builder) {
     const px = bot[0] + (top[0] - bot[0]) * u;
     const pz = bot[1] + (top[1] - bot[1]) * u;
     const py = 0.3 + (h - 0.1) * u;
-    const g = motteY(px, pz);
+    const g = ground960(px, pz);
     const [nx, nz] = [Math.cos(bt) * 0.75, -Math.sin(bt) * 0.75];
     b.beam([px + nx, g - 0.3, pz + nz], [px + nx, py, pz + nz], 0.22, 0.22, P.oakDark);
     b.beam([px - nx, g - 0.3, pz - nz], [px - nx, py, pz - nz], 0.22, 0.22, P.oakDark);
@@ -113,7 +115,7 @@ function build(b: Builder) {
   b.collider(4.6, 4.6, { at: [x, 0, z] });
 
   baileyDefences(b);
-  timberHall(b, 6, -6);
+  timberHall(b, HALL.x, HALL.z);
   baileyYard(b);
 }
 
@@ -131,8 +133,8 @@ export const motteDef: BuildingDef = {
     { label: 'Motte', note: 'The earth mound, about six metres high, dug from the ditch round its foot.', at: [MOTTE.x + 8.5, 3, MOTTE.z + 5] },
     { label: 'Timber tower', note: 'The lord’s refuge and lookout, with a gallery round its top from which to shoot down.', at: [MOTTE.x, MOTTE.h + 8, MOTTE.z + 3] },
     { label: 'Flying bridge', note: 'A steep timber bridge on trestles from the bailey up to the summit, easily cut if the bailey was taken.', at: [-3, 3.4, -3.6] },
-    { label: 'Bailey', note: 'The lower enclosure, where the household lived and worked: here the hall, stables, a forge and a well.', at: [6, 5, -2.6] },
-    { label: 'Palisade and ditch', note: 'A fence of split oak stakes with a dry ditch outside it, the bailey’s only defence.', at: [18.5, 3.5, 0] },
+    { label: 'Bailey', note: 'The lower enclosure, where the household lived and worked: here the hall, stables, a forge and a well.', at: [HALL.x - HALL.w / 2 - 0.3, 5, HALL.z + 2] },
+    { label: 'Palisade and ditch', note: 'A fence of split oak stakes with a dry ditch dug outside it, the bailey’s only defence.', at: [18.5, 3.5, 0] },
   ],
   modelledOn: 'Generic. The earliest dated mottes are in the Loire valley and northern France, among them Doué-la-Fontaine (a stone hall of about 900, made into a tower about 950 and later heaped round with earth) and the mottes of the counts of Anjou and Blois.',
   build,

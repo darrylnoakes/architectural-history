@@ -1,5 +1,5 @@
 import { P, spread, tint, type Builder, type BuildingDef } from '@ah/kit';
-import { barrel, cart, ground, horse, pole } from './shared';
+import { barrel, cart, ground, horse, innPavement, innStables, innWell, pole } from './shared';
 
 const XO = 10.2;
 const ZF = 9.4; // street face of the stone ground storey
@@ -42,7 +42,7 @@ export const hostellerie: BuildingDef = {
     { label: 'Carriage arch', note: 'A pointed arch through the front range, wide and high enough for a loaded waggon, leading to the yard behind.', at: [AX, 3.0, ZF + 0.3] },
     { label: 'Jetties', note: 'Each timber storey oversails the one below (en encorbellement), gaining floor space over the street and throwing the rain clear of the wall beneath.', at: [6.0, G + F1 + 0.1, ZF + J * 2 + 0.2] },
     { label: 'Galleries', note: 'Open timber galleries on two floors along the yard, so that each chamber had its own door without passages inside.', at: [XG, EG + 1.2, -0.6] },
-    { label: 'Stables and hayloft', note: 'Stalls across the back of the yard, with hay pitched up through the loft door in the roof.', at: [-5.0, SH + 1.0, ZS + 0.3] },
+    { label: 'Stables and hayloft', note: 'Stalls across the back of the yard, with hay pitched up through the loft door in the roof.', at: [-2.1, SH + 1.0, ZS + 0.3] },
   ],
   build(b) {
     const stone = b.pick([P.pierreBlonde, tint(P.pierreBlonde, -0.05), P.limestone]);
@@ -51,7 +51,7 @@ export const hostellerie: BuildingDef = {
     const tile = b.pick([P.tuilePlate, tint(P.tuilePlate, -0.05)]);
     const shutter = b.pick([P.oak, P.voletVert, tint(P.oakDark, 0.06)]);
 
-    ground(b, 21.0, 1.6, P.cobble, [0, ZF + 0.8], 0.05);
+    innPavement(b);
     ground(b, XG + XO, ZFI - ZS, tint(P.cobble, 0.06), [(XG - XO) / 2, (ZFI + ZS) / 2], 0.04);
 
     // ---------------- front range: stone ground storey with the carriage arch
@@ -175,30 +175,17 @@ export const hostellerie: BuildingDef = {
     b.box(0.08, 0.9, 3.4, timber, { at: [XG - 1.1, EG * 0.5, ZS + 2.2] });
 
     // ---------------- stables across the back, with a loft door in the roof
-    const sd = ZS - ZB;
-    const sz = (ZS + ZB) / 2;
-    b.box(2 * XO, SH, sd, stone, { at: [0, 0, sz] });
-    for (const x of [-8.0, -5.0, -2.0, 1.0]) {
-      b.panel(1.4, 2.3, timber, { at: [x, 0, ZS], facing: '+z' });
-      b.panel(0.12, 2.3, tint(timber, -0.1), { at: [x, 0, ZS], facing: '+z', depth: 0.08 });
-    }
-    for (const x of spread(6, -9.0, 9.0)) b.panel(0.25, 0.7, P.windowDark, { at: [x, 1.8, ZB], facing: '-z' });
-    const sRise = (sd / 2) * 1.15;
-    b.gable(2 * XO, sd, sRise, tile, { at: [0, SH, sz], overhang: 0.4, wall: stone });
-    b.group({ at: [-5.0, SH - 0.05, ZS + 0.05] }, () => {
-      b.box(1.6, 1.6, 1.4, stone, { at: [0, 0, -0.7] });
-      b.panel(1.1, 1.3, timber, { at: [0, 0.15, 0], facing: '+z' });
-      b.gable(1.6, 1.6, 1.2, tile, { at: [0, 1.6, -0.7], ridge: 'z', overhang: 0.15, wall: stone });
-      b.box(0.14, 0.14, 1.2, timber, { at: [0, 2.4, 0.3] });
-    });
+    innStables(b, stone, timber, tile);
 
     // ---------------- the west side of the yard: a wall, the well, a trough
-    b.box(0.6, 3.4, ZFI - ZS, stone, { at: [-XO + 0.3, 0, (ZFI + ZS) / 2] });
-    b.box(0.8, 0.12, ZFI - ZS, tile, { at: [-XO + 0.3, 3.4, (ZFI + ZS) / 2] });
-    b.cyl(0.75, 0.9, stone, { at: [-6.6, 0, 0.6], segs: 8 });
-    b.cyl(0.6, 0.05, P.windowDark, { at: [-6.6, 0.88, 0.6], segs: 8 });
-    b.sym((s) => b.box(0.14, 1.6, 0.14, timber, { at: [-6.6 + s * 0.7, 0.9, 0.6] }));
-    b.log(0.12, 1.5, timber, { at: [-6.6, 2.3, 0.6], segs: 6 });
+    b.box(0.6, 3.4, ZFI - ZB, stone, { at: [-XO + 0.3, 0, (ZFI + ZB) / 2] });
+    b.box(0.8, 0.12, ZFI - ZB, tile, { at: [-XO + 0.3, 3.4, (ZFI + ZB) / 2] });
+    b.box(4.7, 2.6, 0.6, stone, { at: [-7.55, 0, ZB + 0.3] });
+    innWell(b, stone, timber);
+    // the back corner: the dung heap and a stack of firewood
+    ground(b, 4.7, ZS - ZB - 0.6, tint(P.earth, 0.02), [-7.55, (ZS + ZB + 0.6) / 2], 0.03);
+    b.blob(1.2, 0x6a5a3c, { at: [-7.8, 0, -8.0], stretch: [1.2, 0.45, 1.0], detail: 0 });
+    for (let i = 0; i < 6; i++) b.log(0.1, 1.4, P.bark, { at: [-6.2, i < 4 ? 0 : 0.2, -9.6 + (i % 4) * 0.22], segs: 5 });
     b.box(2.4, 0.6, 0.8, stone, { at: [-8.8, 0, -2.6], rotY: Math.PI / 2 });
     b.box(0.6, 0.04, 2.2, P.water, { at: [-8.8, 0.58, -2.6], mat: 'glass', jitter: false });
     cart(b, [-1.2, 0, -1.2], 2.4, P.oak);
@@ -211,7 +198,7 @@ export const hostellerie: BuildingDef = {
     b.collider(lw, fd + 2 * J, { at: [-XO + lw / 2, 0, fz + J] });
     b.collider(rw, fd + 2 * J, { at: [XO - rw / 2, 0, fz + J] });
     b.collider(XO - XR, el, { at: [ex, 0, ez] });
-    b.collider(2 * XO, sd, { at: [0, 0, sz] });
-    b.collider(0.6, ZFI - ZS, { at: [-XO + 0.3, 0, (ZFI + ZS) / 2] });
+    b.collider(0.6, ZFI - ZB, { at: [-XO + 0.3, 0, (ZFI + ZB) / 2] });
+    b.collider(4.7, 0.6, { at: [-7.55, 0, ZB + 0.3] });
   },
 };

@@ -9,7 +9,7 @@ export const concreteWorkshop: BuildingDef = {
   summary:
     'The war left the mills of the north burnt out or stripped of their machines, and the Reconstruction paid for new works in the new material, reinforced concrete, which used far less steel than a steel frame, could be poured by unskilled hands and would not burn. ' +
     'In Paris Auguste Perret had just shown what it could do in the clothing workshop he built for Esders in 1919: a single great hall spanned by thin concrete arches, flooded with light from glazed roofs between them, its structure left bare as the whole of its architecture. ' +
-    'This works follows that lead: a row of slender segmental arches springing from concrete posts, rooflights along the crown of every bay, walls that are only brick at the bottom and steel windows above, and a water tower at the corner. ' +
+    'This works follows that lead: a row of slender segmental arches springing from concrete posts, rooflights along the crown of every bay, walls that are only brick at the bottom and steel windows above, and a water tower at the corner. Of the shelled spinning mill only the old stone river wall was kept, with a concrete quay built out in front of it. ' +
     'There is no chimney: power now comes by cable, to electric motors that drive the machines in groups or, more and more, one by one.',
   materials: ['reinforced concrete', 'glass', 'steel windows', 'brick'],
   modelledOn: 'The Esders clothing workshop, Paris (Auguste Perret, 1919, demolished), and the concrete arched sheds of Eugène Freyssinet; the water tower and layout are generic',

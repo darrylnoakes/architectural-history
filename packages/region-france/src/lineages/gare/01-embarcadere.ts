@@ -1,5 +1,5 @@
 import { P, mix, tint, type Builder, type BuildingDef } from '@ah/kit';
-import { HX, PLAT, TRACKS, archPanel, clock, cramptonTrain, platform, track } from './shared';
+import { HX, PLAT, TRACKS, archPanel, clock, cramptonTrain, platform, track, forecourt } from './shared';
 
 const ZF = 4.0; // street front
 const ZB = -3.0; // platform side
@@ -68,7 +68,7 @@ export const embarcadere: BuildingDef = {
     const timber = P.oak;
 
     // forecourt of gravel with a kerb
-    b.box(HX * 2, 0.05, 12 - ZF, mix(P.gravel, P.paving, 0.3), { at: [0, 0, (12 + ZF) / 2], jitter: false });
+    forecourt(b, mix(P.gravel, P.paving, 0.3));
 
     // ------------------------------------------------ the central pavilion: an arcade through to the platform
     for (const [z, f] of [[ZF - 0.35, '+z'], [ZB + 0.35, '-z']] as const) {
@@ -118,7 +118,7 @@ export const embarcadere: BuildingDef = {
     });
 
     // ------------------------------------------------ platform, tracks, train
-    platform(b, ZB, PLAT.edge, -HX, HX);
+    platform(b, PLAT.back, PLAT.edge, -HX, HX);
     for (const z of TRACKS) track(b, z);
     cramptonTrain(b, [-17.5, 0, TRACKS[0]]);
     b.collider(26, 2.8, { at: [-4.5, 0, TRACKS[0]] });

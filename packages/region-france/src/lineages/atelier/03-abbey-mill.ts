@@ -1,5 +1,5 @@
 import { P, tint, type BuildingDef, type Builder, type Vec3 } from '@ah/kit';
-import { BANK, BED, WATER, barrel, bar, circlePts, lin, rise, stakeBank, thatchRoof, vat, water, waterwheel } from './shared';
+import { BANK, BED, RACE_C, WATER, WHEEL_X, barrel, bar, circlePts, lin, millRace, rise, stakeBank, thatchRoof, vat, waterwheel } from './shared';
 
 /**
  * The gearing of a Roman-type watermill: the wheel's horizontal shaft carries a cogged face wheel
@@ -57,11 +57,11 @@ export const abbeyMill: BuildingDef = {
   materials: ['oak frame and planks', 'shingles', 'thatch', 'wattle and daub', 'reused Roman stone', 'millstones'],
   modelledOn: 'Generic. The workings follow the Roman water mill described by Vitruvius; the bakers, brewers and mills of a Frankish abbey are set out in the statutes of Abbot Adalhard of Corbie, in Picardy (822)',
   lookFor: [
-    { label: 'Vertical waterwheel', note: 'An undershot wheel standing upright in the mill race, its paddles pushed round by the current.', at: [-7.0, 2.6, -12.6] },
-    { label: 'Face wheel and lantern pinion', note: 'Pegs on a big upright gear turn a small cage of staves, changing the drive from horizontal to vertical and speeding it up.', at: [-7.0, 1.8, -7.6] },
-    { label: 'Millstones', note: 'The upper stone, the runner, turns on the fixed bed stone; grain is fed in from the hopper above.', at: [-7.0, 2.8, -7.0] },
-    { label: 'Mill race and sluice', note: 'A plank wall in the river makes a channel to the wheel; a sluice gate lets the miller start and stop it.', at: [-13.5, 0.2, -13.6] },
-    { label: 'Bread oven', note: 'A dome of clay heated with a wood fire, raked out, then filled with loaves to bake in the stored heat.', at: [6.8, 2.2, -4.4] },
+    { label: 'Vertical waterwheel', note: 'An undershot wheel standing upright in the mill race, its paddles pushed round by the current.', at: [WHEEL_X, 2.6, -12.6] },
+    { label: 'Face wheel and lantern pinion', note: 'Pegs on a big upright gear turn a small cage of staves, changing the drive from horizontal to vertical and speeding it up.', at: [WHEEL_X, 1.8, -7.6] },
+    { label: 'Millstones', note: 'The upper stone, the runner, turns on the fixed bed stone; grain is fed in from the hopper above.', at: [WHEEL_X, 2.8, -7.0] },
+    { label: 'Mill race and sluice', note: 'A plank wall in the river makes a channel to the wheel; a sluice gate lets the miller start and stop it.', at: [16.6, 0.2, -13.6] },
+    { label: 'Bread oven', note: 'A dome of clay heated with a wood fire, raked out, then filled with loaves to bake in the stored heat.', at: [-1.6, 2.2, -4.0] },
   ],
   influences: [],
   build(b) {
@@ -71,25 +71,15 @@ export const abbeyMill: BuildingDef = {
     const timber = P.oak;
 
     b.box(35, 0.04, 21.6, tint(P.earth, 0.06), { at: [0, 0, 0], jitter: false });
-    stakeBank(b, -17.5, -14.5);
-    stakeBank(b, 0.5, 17.5);
+    stakeBank(b, -17.5, 0.5);
 
-    // ---- the race: a plank and pile wall built out into the river, with a sluice at its head
-    const cz = -13.8;
-    for (const x of lin(15, -14.5, 0.5)) b.cyl(0.12, 2.6, P.oakDark, { at: [x, BED, cz], segs: 5 });
-    b.box(15, 1.7, 0.14, tint(P.oakDark, 0.08), { at: [-7, BED + 0.6, cz] });
-    b.box(15, 0.2, 2.8, P.oakDark, { at: [-7, BED, (cz + BANK) / 2] });
-    water(b, 15, 2.6, [-7, WATER + 0.1, (cz + BANK) / 2]);
+    // ---- the race: a plank and pile wall built out into the river, with a sluice at its head upstream
+    millRace(b, 'timber');
     // plank walls lining the bank where the race runs
-    b.box(15, -BED + 0.1, 0.16, tint(P.oakDark, 0.04), { at: [-7, BED, BANK - 0.08] });
-    // the sluice: two posts, a gate and a windlass beam over the channel
-    b.sym((s) => b.box(0.3, 3.4, 0.3, timber, { at: [-13.6, BED, (cz + BANK) / 2 + s * 1.3] }));
-    b.box(0.3, 0.3, 3.0, timber, { at: [-13.6, 1.0, (cz + BANK) / 2] });
-    b.box(0.12, 1.4, 2.4, tint(timber, -0.06), { at: [-13.6, WATER - 0.2, (cz + BANK) / 2] });
-    b.box(0.1, 1.4, 0.1, timber, { at: [-13.6, -0.3, (cz + BANK) / 2] });
+    b.box(17, -BED + 0.1, 0.16, tint(P.oakDark, 0.04), { at: [9, BED, BANK - 0.08] });
 
     // ---- the mill house: a timber frame on stone footings, plank walls, shingled roof
-    const mx = -7;
+    const mx = WHEEL_X;
     const mz = -7.4;
     const MW = 7.2;
     const MD = 6.0;
@@ -120,7 +110,7 @@ export const abbeyMill: BuildingDef = {
     ]) b.blob(0.32, P.cream, { at: [x, 0.95, z], stretch: [1, 1.3, 1], detail: 0 });
 
     // the wheel in the race, its shaft into the mill
-    waterwheel(b, { at: [mx, WATER - 0.3 + 2.1, -12.6], r: 2.1, width: 1.0, paddles: 14, spokes: 6, spin: b.rand(), axle: 4.2, axleDir: 1 });
+    waterwheel(b, { at: [mx, WATER - 0.3 + 2.1, RACE_C - 0.2], r: 2.1, width: 1.0, paddles: 14, spokes: 6, spin: b.rand(), axle: 4.2, axleDir: 1 });
 
     // the front and east walls and the roof: left off when the mill is opened to show its gears
     if (b.cutaway) {
@@ -141,7 +131,7 @@ export const abbeyMill: BuildingDef = {
     }
 
     // ---- the bakehouse: cob on a stone sill, a thatched roof, the oven built against its end
-    const kx = 5.0;
+    const kx = -6.0;
     const kz = -3.0;
     b.box(6.4, 0.5, 4.6, stone, { at: [kx, 0, kz] });
     b.box(6.2, 2.3, 4.4, clay, { at: [kx, 0.5, kz] });
@@ -172,7 +162,7 @@ export const abbeyMill: BuildingDef = {
     ]) vat(b, 0.75, 1.0, [x, 0, z], 0xa47a3a);
     for (let i = 0; i < 3; i++) barrel(b, [rx + 3.0 + i * 0.75, 0, rz - 3.4], true);
     barrel(b, [rx + 3.7, 0.8, rz - 3.4], false);
-    for (const x of lin(3, -2.4, -0.4)) b.blob(0.32, P.cream, { at: [x, 0.3, -9.0], stretch: [1, 1.3, 1], detail: 0 });
+    for (const x of lin(3, 3.4, 5.4)) b.blob(0.32, P.cream, { at: [x, 0.3, -9.0], stretch: [1, 1.3, 1], detail: 0 });
 
     // ---- the abbey's fence and gate to the road, and a cart for the grain
     b.box(12, 1.6, 0.2, P.oakDark, { at: [-11.6, 0, 10.4] });

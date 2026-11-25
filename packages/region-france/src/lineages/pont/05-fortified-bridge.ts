@@ -1,5 +1,6 @@
 import { P, tint, mix, type Builder, type BuildingDef } from '@ah/kit';
-import { END, FOOT, hump, band, side, bar, bodyOutline, voussoirs, layout, cutwater, cutwaterHood, parapet } from './shared';
+import { ROMAN, band, bar, cutwater, cutwaterHood, parapet } from './shared';
+import { medievalBridge } from './04-inhabited-bridge';
 
 /**
  * A square gate tower straddling the road at z, its base following the deck, with a pointed
@@ -53,7 +54,7 @@ function gateTower(b: Builder, o: { z: number; base: number; tw: number; td: num
   const top = base + H;
   const ov = 0.42;
   const corb = (len: number, place: (p: number) => [number, number], rotY: number) => {
-    const n = Math.max(3, Math.round(len / 0.95));
+    const n = Math.max(3, Math.round(len / 1.25));
     for (let i = 0; i <= n; i++) {
       const p = -len / 2 + (i * len) / n;
       const [x, zz] = place(p);
@@ -85,67 +86,62 @@ export const fortifiedBridge: BuildingDef = {
   style: 'Gothic',
   date: 'c. 1320',
   summary:
-    'The town rebuilds its crossing as a fortress. A bridge was the weakest point in a town’s defences, so this one is closed by three tall square towers, one at each end and one in the middle, each with a gate that can be shut, arrow slits, and a battlemented top built out on corbels so that defenders can drop stones through the gaps (machicolations) onto anyone at the gate. ' +
-    'The arches are pointed and the piers have long cutwaters upstream, carried right up to the road to make triangular refuges where people on foot can step aside from carts. ' +
+    'The town makes its bridge a fortress. A bridge was the weakest point in a town’s defences, so the houses and mills are cleared off this one and it is closed by three tall square towers, one at each end and one on a pier in the middle, each with a gate that can be shut, arrow slits, and a battlemented top built out on corbels so that defenders can drop stones through the gaps (machicolations) onto anyone at the gate. ' +
+    'The pointed arches, the piers and the chapel of the old bridge are kept; two of the upstream cutwaters are carried right up to the road to make triangular refuges where people on foot can step aside from carts. ' +
     'In the Hundred Years’ War such bridges were fought over, as at Orléans in 1429. The model for it, the Pont Valentré at Cahors (begun in 1308 and finished about 1378), was never attacked; its tower tops were rebuilt in Paul Gout’s restoration from 1879.',
   materials: ['limestone', 'oak gates', 'flat clay tiles'],
-  modelledOn: 'The Pont Valentré, Cahors (1308 to about 1378): three square towers with gates, pointed arches and upstream cutwaters rising to refuges. Here shortened to four arches',
+  modelledOn: 'The towers and refuges from the Pont Valentré, Cahors (1308 to about 1378), which was built new with three square towers with gates and upstream cutwaters rising to refuges. Here they are added to an older bridge, as they were to many',
   lookFor: [
-    { label: 'Gate tower', note: 'The road passes under each tower through a pointed gateway with heavy oak gates; tolls were taken here too.', at: [1.9, 3.5, 2.3] },
-    { label: 'Machicolations', note: 'The parapet is carried out on stepped corbels, leaving slots in the floor between them to drop stones or shoot down through.', at: [2.75, 14.3, -0.95] },
-    { label: 'Battlements', note: 'Merlons (the solid parts) and crenels (the gaps) along the top: cover for defenders as they shoot.', at: [0, 15.9, -2.65] },
-    { label: 'Pointed arch', note: 'Tall pointed arches give boats headroom while pushing less sideways on the piers than half-circles.', at: [2.6, 0.9, -3.15] },
-    { label: 'Refuge', note: 'The upstream cutwater is carried up to the road and opens off it as a triangular bay where walkers can stand clear of carts.', at: [-3.7, 2.3, -6.3] },
+    { label: 'Gate tower', note: 'The road passes under each tower through a pointed gateway with heavy oak gates; tolls were taken here too.', at: [1.9, 3.5, 0.2] },
+    { label: 'Machicolations', note: 'The parapet is carried out on stepped corbels, leaving slots in the floor between them to drop stones or shoot down through.', at: [3.25, 14.4, 1.6] },
+    { label: 'Battlements', note: 'Merlons (the solid parts) and crenels (the gaps) along the top: cover for defenders as they shoot.', at: [0, 16.0, -0.2] },
+    { label: 'Pointed arch', note: 'Tall pointed arches give boats headroom while pushing less sideways on the piers than half-circles.', at: [3.1, 0.9, -5.0] },
+    { label: 'Refuge', note: 'The upstream cutwater is carried up to the road and opens off it as a triangular bay where walkers can stand clear of carts.', at: [-3.6, 2.2, 7.45] },
   ],
   build(b) {
     b.noCollide();
-    const crown = 2.0;
-    const f = hump(crown);
-    const W = 5.0;
-    b.deck(W - 1.0, 34, crown, { yEnds: 0 });
+    // the bridge of 1185, its arches, chapel and road kept; the houses and mills are cleared off it
+    const { f, W, roadHalf, piers, ring, chapelZ } = medievalBridge(b);
+    b.deck(roadHalf * 2 - 0.2, 34, 2.2, { yEnds: 0 });
     const stone = mix(P.pierreBlonde, P.limestoneWarm, 0.3);
     const dress = tint(stone, 0.06);
-    const pierT = 1.8;
-    const rises = [1.8, 2.35, 2.35, 1.8];
-    const { ops, piers } = layout([4.5, 4.5, 4.5, 4.5], pierT, -1.0, (_s, i) => rises[i], 'pointed');
-    const top = (z: number) => f(z) - 0.15;
+    const thick = ROMAN.pierT + 0.3;
+    const towerPier = piers[2];
+    const refuges = piers.filter((z) => z !== chapelZ && z !== towerPier);
 
-    side(b, bodyOutline({ za: -END, zb: END, top, openings: ops, n: 26 }), W, stone);
-    b.sym((k) => {
-      for (const op of ops) voussoirs(b, op, { d: 0.45, width: 0.08, x: k * (W / 2 + 0.02), color: dress, blocks: 7 });
-      band(b, k * (W / 2 + 0.05), 0.12, -END + 0.3, END - 0.3, (z) => f(z) - 0.42, (z) => f(z) - 0.2, dress, 20);
-    });
-    band(b, 0, W - 1.0, -END, END, (z) => f(z) - 0.16, (z) => f(z) + 0.01, mix(P.cobble, P.gravel, 0.4), 24);
-
-    // cutwaters: upstream noses rise to the road and open as refuges; downstream ones are capped low
-    for (const z of piers) {
-      const len = 2.0;
+    // under the middle tower the cutwater keeps its old cap; the others are carried up to the road as refuges
+    cutwaterHood(b, { x: -W / 2, z: towerPier, thick, nose: 1.3, y: 0.2, h: 1.0, color: ring });
+    for (const z of refuges) {
       const yT = f(z) - 0.15;
-      cutwater(b, { x: -W / 2, z, thick: pierT, len, y0: FOOT, h: yT - FOOT, color: stone });
-      // the refuge's own parapet, round the point
+      cutwater(b, { x: -W / 2, z, thick, len: 1.3, y0: 0.2, h: yT - 0.2, color: stone });
       for (const s of [-1, 1]) {
-        bar(b, [-W / 2 + 0.1, yT + 0.45, z + s * (pierT / 2 - 0.15)], [-W / 2 - len + 0.3, yT + 0.45, z], [0.35, 1.2], stone);
+        bar(b, [-W / 2 + 0.1, yT + 0.45, z + s * (thick / 2 - 0.15)], [-W / 2 - 1.0, yT + 0.45, z], [0.35, 1.2], stone);
       }
-      cutwater(b, { x: W / 2, z, thick: pierT, len: 1.0, y0: FOOT, h: -0.3 - FOOT, color: stone });
-      cutwaterHood(b, { x: W / 2, z, thick: pierT, nose: 1.0, y: -0.3, h: 0.8, color: dress });
     }
-    // parapets, broken at each refuge and at the towers
+
+    // the three towers; the end ones stand on the abutments, the middle one on a pier
     const td = 4.4;
-    const towersZ = [-13.4, 0, 13.4];
+    const towersZ = [-13.4, towerPier, 13.4];
+    b.sym((k) => band(b, k * (W / 2 + 0.05), 0.12, -13.4 + td / 2, 13.4 - td / 2, (z) => f(z) - 0.42, (z) => f(z) - 0.2, dress, 20));
+    // parapets, broken at the towers, the chapel and each refuge
     b.sym((k) => {
       const cuts: [number, number][] = towersZ.map((z) => [z - td / 2, z + td / 2]);
-      if (k < 0) for (const z of piers) if (z !== 0) cuts.push([z - pierT / 2 + 0.3, z + pierT / 2 - 0.3]);
+      if (k < 0) {
+        cuts.push([-4.25, -0.85]);
+        for (const z of refuges) cuts.push([z - thick / 2 + 0.3, z + thick / 2 - 0.3]);
+      }
       cuts.sort((p, q) => p[0] - q[0]);
-      let za = -END + 0.3;
-      for (const [a, c] of [...cuts, [END - 0.3, END] as [number, number]]) {
-        if (a - za > 0.4) parapet(b, { x: k * (W / 2 - 0.2), za, zb: a, f, lo: -0.15, h: 1.0, t: 0.4, color: stone, cap: dress, n: Math.max(2, Math.round((a - za) / 1.5)) });
+      let za = -13.4 + td / 2;
+      for (const [a, c] of cuts) {
+        if (a - za > 0.4) parapet(b, { x: k * (roadHalf + 0.2), za, zb: a, f, lo: -0.15, h: 1.0, t: 0.4, color: stone, cap: dress, n: Math.max(2, Math.round((a - za) / 1.5)) });
         za = Math.max(za, c);
       }
     });
-
-    // the three towers; the end ones stand on the abutments, the middle one on the central pier
     for (const z of towersZ) {
-      gateTower(b, { z, base: f(z) - 0.15, tw: W, td, H: 13.0 - Math.abs(z) * 0.08, stone, dress });
+      const base = f(z) - 0.15;
+      // the end towers stand on the abutments, built up to the road
+      if (Math.abs(z) > 12) b.box(W, base - ROMAN.abTop, td, stone, { at: [0, ROMAN.abTop, z] });
+      gateTower(b, { z, base, tw: W, td, H: 13.0 - Math.abs(z) * 0.08, stone, dress });
     }
   },
 };

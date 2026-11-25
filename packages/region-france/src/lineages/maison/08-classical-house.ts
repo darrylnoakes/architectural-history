@@ -1,11 +1,14 @@
 import { P, tint, type BuildingDef } from '@ah/kit';
-import { dormer, mansard, quoins, well, yardWall } from './shared';
+import { YARD_WELL, dormer, mansard, quoins, well, yardBounds } from './shared';
 
 export const classicalHouse: BuildingDef = {
   id: 'classical-house',
   name: 'Brick and stone town house',
   style: 'Classical (Louis XIV)',
   date: 'c. 1680',
+  revisions: [
+    { year: 1860, note: 'A shop is cut into the ground floor: a painted timber shopfront with big panes of plate glass is fixed across two bays of the brick.' },
+  ],
   summary:
     'After a century of fires, timber gave way in the towns of Picardy and the north to red brick, dressed with pale stone at the corners, round the openings and in bands across the front. ' +
     'The new house is a flat, ordered front of identical bays: tall windows with small panes (petits-bois) in strict rows, the same on every floor. ' +
@@ -75,7 +78,6 @@ export const classicalHouse: BuildingDef = {
       }
       b.window(1.3, h, { at: [x, y, z], facing, frame, glass: P.glassDark, bars: [2, 5], mat: 'glass', border: 0.08, shape: 'segmental' });
     };
-    for (const x of bays.slice(1)) win(x, 0.95, 2.45, zF + 0.02, '+z', true);
     for (const x of bays) win(x, G + 0.55, 2.6, zF + 0.02, '+z', true);
     // the carriage door
     const cx = bays[0];
@@ -110,24 +112,36 @@ export const classicalHouse: BuildingDef = {
     b.panel(2.6, 3.4, door, { at: [cx, 0, zB - 0.02], facing: '-z', depth: 0.08, shape: 'segmental' });
 
     // the yard: paving, a coach house at the back, a small garden of box-edged beds
-    const wall = tint(brick, 0.04);
-    yardWall(b, -6.75, zB, -6.75, -8.75, 2.4, wall, stone);
-    yardWall(b, 6.75, zB, 6.75, -8.75, 2.4, wall, stone);
-    b.box(5.0, 0.04, 7.0, P.cobble, { at: [-4.2, 0, -5.1], jitter: false });
+    // the old rubble walls of the plot and its well are kept; the yard is paved and a garden laid out
+    yardBounds(b, zB, tint(P.rubble, 0.03), stone);
+    b.box(6.6, 0.04, 7.0, P.cobble, { at: [-3.3, 0, -5.1], jitter: false });
     // coach house and stable
     b.box(5.4, 3.0, 3.0, brick, { at: [-4.05, 0, -7.25] });
     b.gable(5.4, 3.0, 1.6, slate, { at: [-4.05, 3.0, -7.25], overhang: 0.2, wall: brick });
     b.panel(2.4, 2.6, door, { at: [-4.6, 0, -5.75], facing: '+z', shape: 'segmental', depth: 0.08 });
     b.panel(0.8, 0.6, P.windowDark, { at: [-2.4, 1.8, -5.75], facing: '+z' });
-    b.box(13.5, 2.4, 0.3, wall, { at: [0, 0, -8.6] });
-    b.box(13.6, 0.1, 0.38, stone, { at: [0, 2.4, -8.6] });
     // garden: gravel walks, box-edged beds, a clipped yew
-    b.box(6.2, 0.04, 7.0, P.gravel, { at: [3.35, 0, -5.1], jitter: false });
-    for (const [x, z] of [[1.8, -3.4], [4.9, -3.4], [1.8, -6.8], [4.9, -6.8]]) {
+    b.box(6.4, 0.04, 7.0, P.gravel, { at: [3.4, 0, -5.1], jitter: false });
+    for (const [x, z] of [[2.0, -3.4], [5.0, -3.4], [2.0, -6.8], [5.0, -6.8]]) {
       b.box(2.4, 0.3, 2.6, P.hedge, { at: [x, 0, z] });
       b.box(2.0, 0.32, 2.2, b.pick([P.leaf, P.soil, tint(P.leaf, 0.08)]), { at: [x, 0, z], jitter: false });
     }
-    b.cone(0.55, 2.0, P.leafDark, { at: [3.35, 0, -5.1], segs: 7 });
-    well(b, [-1.0, 0, -4.4], stone, { frame: 'iron' });
+    b.cone(0.55, 2.0, P.leafDark, { at: [3.5, 0, -5.1], segs: 7 });
+    well(b, YARD_WELL, P.pierreBlonde, { frame: 'iron' });
+
+    // the ground-floor windows last, so that the shop cut into two of them in 1860 moves nothing else
+    const shop = b.since(1860);
+    for (const x of bays.slice(1)) if (!(shop && x > 1)) win(x, 0.95, 2.45, zF + 0.02, '+z', true);
+    if (shop) {
+      // a timber shopfront (devanture) applied to the brick across two bays: pilasters, plate glass, a fascia
+      const sx = 3.9;
+      const paint = b.pick([P.doorGreen, tint(P.doorRed, -0.1), P.doorBlack, tint(P.voletBleu, -0.15)]);
+      b.box(4.8, 3.5, 0.2, paint, { at: [sx, 0, zF + 0.1], jitter: false });
+      b.window(1.7, 2.1, { at: [sx - 1.25, 0.7, zF + 0.2], facing: '+z', frame: tint(paint, 0.1), glass: P.glass, bars: [1, 1], mat: 'glass', border: 0.06 });
+      b.window(1.7, 2.1, { at: [sx + 1.25, 0.7, zF + 0.2], facing: '+z', frame: tint(paint, 0.1), glass: P.glass, bars: [1, 1], mat: 'glass', border: 0.06 });
+      b.panel(0.9, 2.5, tint(paint, -0.08), { at: [sx, 0.3, zF + 0.2], facing: '+z', depth: 0.06 });
+      b.box(5.0, 0.6, 0.32, paint, { at: [sx, 2.95, zF + 0.16], jitter: false }); // fascia
+      b.box(3.6, 0.3, 0.34, P.cream, { at: [sx, 3.1, zF + 0.16], jitter: false }); // the name board
+    }
   },
 };

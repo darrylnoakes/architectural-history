@@ -21,25 +21,25 @@ export const marketToday: BuildingDef = {
   influences: ['reinforced-concrete'],
   build(b) {
     const open = b.cutaway;
-    paving(b, 25.8, 21.8, tint(P.paving, 0.05), 0.08, [0, 0, 0], 14);
-    b.box(2 * CM.XS + 1.4, 0.1, 2 * CM.Z + 3.4, tint(P.pierreBlonde, -0.04), { at: [0, 0.0, 0] });
+    paving(b, 25.8, 21.8, tint(P.paving, 0.05), 0.1, [0, 0, 0], 14);
+    b.box(2 * CM.XS + 1.4, 0.12, 2 * CM.Z + 3.4, tint(P.pierreBlonde, -0.04), { at: [0, 0.0, 0] });
     concreteMarket(b, true, open);
     nave(b, true);
 
     // ---- the square: trees in the corners, café tables, a few stalls outside, bicycles, new lamps
     for (const [x, z] of [[-11.2, -8.6], [11.2, -8.6], [-11.2, 6.0], [11.2, 6.0], [-11.2, -1.4], [11.2, -1.4]] as [number, number][]) {
-      b.cyl(0.6, 0.12, P.castIron, { at: [x, 0.08, z], segs: 8 });
+      b.cyl(0.6, 0.12, P.castIron, { at: [x, 0.1, z], segs: 8 });
       b.tree(4.4, { at: [x, 0.1, z], kind: 'round' });
     }
     for (const [x, z] of [[-11.0, 10.2], [-9.4, 10.4], [-11.2, 8.8]] as [number, number][]) {
       b.cyl(0.35, 0.04, P.white, { at: [x, 0.78, z], segs: 8 });
-      b.cyl(0.04, 0.7, P.timberBlack, { at: [x, 0.08, z], segs: 4 });
-      for (const dx of [-0.55, 0.55]) b.box(0.4, 0.45, 0.4, P.cladRed, { at: [x + dx, 0.08, z] });
+      b.cyl(0.04, 0.7, P.timberBlack, { at: [x, 0.1, z], segs: 4 });
+      for (const dx of [-0.55, 0.55]) b.box(0.4, 0.45, 0.4, P.cladRed, { at: [x + dx, 0.1, z] });
     }
-    b.cyl(0.04, 2.5, P.timberBlack, { at: [-10.3, 0.08, 9.5], segs: 4 });
+    b.cyl(0.04, 2.5, P.timberBlack, { at: [-10.3, 0.1, 9.5], segs: 4 });
     b.cone(1.3, 0.45, P.cream, { at: [-10.3, 2.2, 9.5], segs: 8 });
     // a weekend stall under a white awning by the side door
-    b.group({ at: [9.2, 0.08, 10.2], rotY: 0 }, () => {
+    b.group({ at: [9.2, 0.1, 10.2], rotY: 0 }, () => {
       b.box(2.4, 0.85, 0.9, P.cladWhite);
       for (const sx of [-1, 1]) for (const sz of [-1, 1]) b.box(0.05, 2.3, 0.05, P.steel, { at: [sx * 1.25, 0, sz * 0.6] });
       b.box(2.7, 0.05, 1.5, P.white, { at: [0, 2.3, 0] });
@@ -47,10 +47,10 @@ export const marketToday: BuildingDef = {
     });
     for (let i = 0; i < 4; i++) {
       const x = 4.0 + i * 0.9;
-      b.beam([x, 0.08, 10.6], [x, 0.8, 10.6], 0.05, 0.05, P.steel);
+      b.beam([x, 0.1, 10.6], [x, 0.8, 10.6], 0.05, 0.05, P.steel);
       b.beam([x, 0.8, 10.6], [x + 0.5, 0.8, 10.6], 0.05, 0.05, P.steel);
-      b.beam([x + 0.5, 0.8, 10.6], [x + 0.5, 0.08, 10.6], 0.05, 0.05, P.steel);
+      b.beam([x + 0.5, 0.8, 10.6], [x + 0.5, 0.1, 10.6], 0.05, 0.05, P.steel);
     }
-    for (const [x, z] of [[-6.8, 10.6], [6.8, -10.6]] as [number, number][]) lamp(b, 'modern', [x, 0.08, z], z > 0 ? Math.PI : 0);
+    for (const [x, z] of [[-6.8, 10.6], [6.8, -10.6]] as [number, number][]) lamp(b, 'modern', [x, 0.1, z], z > 0 ? Math.PI : 0);
   },
 };

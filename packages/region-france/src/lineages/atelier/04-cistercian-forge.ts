@@ -1,5 +1,5 @@
 import { P, tint, type BuildingDef } from '@ah/kit';
-import { BANK, BED, WATER, buttress, heap, lin, logPile, rise, riverWall, slit, tiltHammer, water, waterwheel } from './shared';
+import { WHEEL_X, buttress, heap, lin, logPile, millRace, precinctWall, rise, riverWall, slit, tiltHammer, waterwheel } from './shared';
 
 export const cistercianForge: BuildingDef = {
   id: 'cistercian-forge',
@@ -10,12 +10,13 @@ export const cistercianForge: BuildingDef = {
     'The white monks of Cîteaux lived by the work of their own hands and their lay brothers’, and they were the best water engineers of their age. ' +
     'Wherever their abbeys owned iron ore and woodland they built forges, and this one, on a stretch of river given to an abbey of the order, is a long, plain, beautifully built hall of squared stone with buttresses, round-headed windows and a steep roof of flat tiles. ' +
     'Inside, under vaults, a wheel driven by the river turns a shaft with cams that lift a heavy hammer, which falls again and again on blooms of iron to drive out the slag: muscle work done by water. ' +
+    'The wheel turns in the race of the old corn mill, which came with the gift of the river: the monks kept its timber wall and sluice and rebuilt the stretch beside the wheel as a stone pit. ' +
     'Water-powered hammers are recorded in France from about the late twelfth century; how many forges had them so early, and how far the monks led the way, is still debated. Select the forge to see inside.',
   materials: ['squared limestone', 'flat clay tiles', 'oak machinery', 'iron'],
   modelledOn: 'The forge of Fontenay Abbey (Côte-d’Or), built at the end of the twelfth century beside the stream that the monks diverted to drive it. Taken from it: the long buttressed stone range, the plain round-headed windows and the wheel-driven hammer. Shorter than the original (about 53 m), and the layout inside is generic',
   lookFor: [
     { label: 'Buttresses', note: 'Stone piers against the walls take the outward push of the vaults inside, one at each bay.', at: [-10.0, 3.2, -0.2] },
-    { label: 'Waterwheel', note: 'The wheel in its stone pit turns the long shaft that runs through the wall to the hammer.', at: [9.9, 3.2, -12.6] },
+    { label: 'Waterwheel', note: 'The wheel in its stone pit turns the long shaft that runs through the wall to the hammer. The water comes in from upstream through the sluice at the head of the race.', at: [9.9, 3.2, -12.6] },
     { label: 'Tilt hammer', note: 'Cams on the shaft press down the tail of the oak helve, lifting the iron head, which then drops onto the anvil.', at: [6.5, 2.4, -4.5] },
     { label: 'Pointed transverse arches', note: 'Stone arches across the hall carry the vaults: monks’ engineering built to last, and to keep fire from the roof.', at: [4.2, 5.2, -5.5] },
     { label: 'Hearth and bellows', note: 'Iron was reheated in a charcoal hearth blown by bellows, under a stone hood and flue.', at: [2.6, 2.4, -8.6] },
@@ -125,18 +126,16 @@ export const cistercianForge: BuildingDef = {
     b.beam([4.6, 1.2, back + 1.6], [5.4, 1.9, back + 1.6], 0.06, 0.06, P.oak);
 
     // the hammer, its cam shaft running out through the back wall to the wheel
-    const wx = 9.9;
+    const wx = WHEEL_X;
     tiltHammer(b, [6.5, 0, -4.5], 1, -11.8);
     b.panel(1.0, 1.0, P.timberBlack, { at: [wx, 0.1, back - 0.02], facing: '-z', shape: 'round' });
     // blooms and bars of iron by the anvil
     for (let i = 0; i < 5; i++) b.box(1.2, 0.08, 0.08, P.iron, { at: [5.2, 0.05 + i * 0.09, -2.4 + (i % 2) * 0.1], jitter: false });
     b.blob(0.22, 0x5a504a, { at: [5.4, 0.2, -6.0], detail: 0 });
 
-    // ---- the wheel pit: two stone walls built out into the river, the wheel between them
+    // ---- the abbey mill's race, its stretch by the wheel rebuilt as a stone wheel pit
     const wz = -12.6;
-    b.sym((s) => b.box(0.7, 1.0 - BED, 3.6, dress, { at: [wx + s * 1.15, BED, BANK - 1.6] }));
-    b.box(3.0, 0.2, 3.4, tint(stone, -0.1), { at: [wx, BED, BANK - 1.7] });
-    water(b, 1.6, 3.4, [wx, WATER + 0.15, BANK - 1.6]);
+    millRace(b, 'stone');
     waterwheel(b, { at: [wx, 0.6, wz], r: 2.4, width: 1.2, paddles: 16, spokes: 8, spin: b.rand(), axle: 1.6, axleDir: 1 });
     b.log(0.3, 2.2, P.oakDark, { at: [wx, 0.3, (wz + back) / 2 + 0.2], axis: 'z', segs: 8 });
 
@@ -150,17 +149,9 @@ export const cistercianForge: BuildingDef = {
     b.box(2.6, 0.2, 1.4, P.oak, { at: [11.5, 0.9, 4.5] });
     for (const z of [3.8, 5.2]) b.log(0.5, 0.1, P.oakDark, { at: [11.5, 0, z], axis: 'x', segs: 10 });
     b.box(1.2, 0.5, 0.9, 0x8a5a3c, { at: [11.5, 1.1, 4.5] });
-    b.box(13.5, 2.4, 0.6, stone, { at: [-10.6, 0, 10.4] });
-    b.box(13.5, 2.4, 0.6, stone, { at: [10.6, 0, 10.4] });
-    b.box(13.7, 0.2, 0.8, tile, { at: [-10.6, 2.4, 10.4] });
-    b.box(13.7, 0.2, 0.8, tile, { at: [10.6, 2.4, 10.4] });
-    b.sym((s) => b.box(1.0, 3.4, 1.0, dress, { at: [s * 3.6, 0, 10.4] }));
-    b.archWall(8.2, 4.2, 0.8, stone, { at: [0, 0, 10.4], facing: '+z', openings: 1, openW: 3.4, openH: 3.6 });
-    b.gable(8.6, 1.6, 1.4, tile, { at: [0, 4.2, 10.4], overhang: 0.2 });
+    precinctWall(b, stone, dress, tile);
     for (const x of lin(2, -15, 15)) b.tree(7, { at: [x, 0, 6.5], kind: 'round' });
 
     b.collider(W + 2, D + 2, { at: [x0, 0, z0] });
-    b.collider(13.5, 0.6, { at: [-10.6, 0, 10.4] });
-    b.collider(13.5, 0.6, { at: [10.6, 0, 10.4] });
   },
 };

@@ -13,7 +13,7 @@ export const HX = 20;
 export const TRACKS = [-8.5, -10.75];
 export const GAUGE = 1.435;
 /** Height of the platform top, and its edge. */
-export const PLAT = { y: 0.55, edge: -7.0 };
+export const PLAT = { y: 0.55, edge: -7.0, back: -3.0 };
 
 /** Add a triangle soup: `pos` is a flat [x, y, z, ...] list, three vertices per triangle. */
 export function soup(b: Builder, pos: number[], color: number, o?: { mat?: 'matte' | 'glass' }): void {
@@ -305,4 +305,22 @@ export function catenary(b: Builder, z: number, xs: number[], mastZ: number, top
   const L = xs[xs.length - 1] - xs[0];
   b.box(L, 0.03, 0.03, P.iron, { at: [xc, top - 0.4, z], jitter: false });
   b.box(L, 0.03, 0.03, P.iron, { at: [xc, top + 0.1, z], jitter: false });
+}
+
+/**
+ * The forecourt on the street side, from the platform's back edge to the street: every station on
+ * the plot has laid it with its own surface (the colour), but it is the same piece of ground.
+ */
+export function forecourt(b: Builder, color: number): void {
+  b.box(HX * 2, 0.05, 12 - PLAT.back, color, { at: [0, 0, (12 + PLAT.back) / 2], jitter: false });
+}
+
+/**
+ * The overhead line for 25,000 volts over both tracks, put up when the main line was electrified
+ * and kept by every station since. No random numbers are drawn here.
+ */
+export function overheadLine(b: Builder): void {
+  catenary(b, TRACKS[0], [-17, -5, 7, 18], -12.0 + 0.15, 6.4);
+  b.box(35, 0.03, 0.03, P.iron, { at: [0.5, 6.0, TRACKS[1]], jitter: false });
+  b.box(35, 0.03, 0.03, P.iron, { at: [0.5, 6.5, TRACKS[1]], jitter: false });
 }

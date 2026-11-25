@@ -1,5 +1,7 @@
 import { P, tint, type BuildingDef } from '@ah/kit';
 import { BANK, END, FOOT, hump, band, side, railing, steps, archY, type ZY, type Opening } from './shared';
+import { perronetAbutments } from './07-perronet-bridge';
+import { suspensionAbutments } from './08-suspension-bridge';
 
 export const prestressedBridge: BuildingDef = {
   id: 'prestressed-bridge',
@@ -7,7 +9,7 @@ export const prestressedBridge: BuildingDef = {
   style: 'Reconstruction engineering',
   date: '1947',
   summary:
-    'In June 1940 the bridge that stood here was blown up, with the town’s other crossings, to slow the German advance. After the war, in place of the makeshift crossing, it is replaced by one very flat span of prestressed concrete with nothing standing in the river. ' +
+    'In June 1940 the bridge that stood here was blown up, with the town’s other crossings, to slow the German advance. After the war the makeshift crossing gives way to one very flat span of prestressed concrete with nothing standing in the river; what was left in the water is cleared, but the old stone abutments on the banks are kept and the span is seated on new concrete shelves in front of them. ' +
     'Prestressing was Eugène Freyssinet’s invention, patented in 1928: steel wires threaded through the concrete are stretched hard and anchored at the ends, squeezing it so that it never goes into tension and cracks, which lets a beam be far thinner and longer than ordinary reinforced concrete allows. ' +
     'Freyssinet’s first bridge of this kind, over the Marne at Luzancy (1941 to 1946), was assembled from segments cast on the bank and tied together by the wires, and stands on hinges at each end; five more followed down the Marne between 1947 and 1951.',
   materials: ['prestressed concrete', 'high-tensile steel wire', 'asphalt', 'steel railings'],
@@ -52,16 +54,22 @@ export const prestressedBridge: BuildingDef = {
       }
     });
 
-    // abutments with the hinges: a concrete seat and a steel knuckle under each rib
+    // the span is seated on what was left of the bridge it replaced: Perronet's abutments on the main
+    // crossing, the lower courses of the suspension bridge's abutments on the other
+    const old = b.variant === 0 ? 'perronet' : b.variant === 1 ? 'suspension' : null;
+    if (old === 'perronet') perronetAbutments(b);
+    if (old === 'suspension') suspensionAbutments(b);
+    // concrete bearing shelves with the hinges: a steel knuckle under each rib
     b.sym((s) => {
-      b.box(W + 0.6, yh - 0.25 - FOOT, 1.8, concD, { at: [0, FOOT, s * (zh + 0.5)] });
+      if (old === 'suspension') b.box(W + 0.6, yh - 0.25 - FOOT, 0.45, concD, { at: [0, FOOT, s * (zh - 0.175)] });
+      else b.box(W + 0.6, yh - 0.25 - FOOT, 1.8, concD, { at: [0, FOOT, s * (zh + 0.5)] });
       b.box(W + 0.6, -yh + 0.25 - 0.3, 1.0, concD, { at: [0, yh - 0.25, s * (zh + 1.0)] });
       for (const x of ribs) {
         b.box(ribW - 0.3, 0.12, 0.6, P.steel, { at: [x, yh - 0.25, s * zh] });
         b.log(0.12, ribW - 0.4, P.castIron, { at: [x, yh - 0.13, s * zh], segs: 8 });
       }
-      // wing walls holding the bank either side
-      b.sym((k) => b.box(0.4, 0.3 - FOOT, 4.0, concD, { at: [k * (W / 2 + 0.1), FOOT, s * (BANK + 2.0)] }));
+      // wing walls holding the bank either side, where no old masonry does
+      if (old !== 'perronet') b.sym((k) => b.box(0.4, 0.3 - FOOT, 4.0, concD, { at: [k * (W / 2 + 0.1), FOOT, s * (BANK + 2.0)] }));
     });
 
     // plain steel railings and two lamp standards

@@ -1,5 +1,5 @@
 import { P, tint, mix, type BuildingDef } from '@ah/kit';
-import { END, FOOT, WATER, hump, band, side, bar, steps, tilt, layout, cutwater, cutwaterHood, roundHood, type ZY } from './shared';
+import { END, ROMAN, hump, band, side, bar, steps, tilt, romanStumps, type ZY } from './shared';
 
 export const romanBridge: BuildingDef = {
   id: 'roman-bridge',
@@ -14,7 +14,7 @@ export const romanBridge: BuildingDef = {
   materials: ['limestone in large blocks', 'rubble and mortar core', 'oak beams and planks', 'gravel road'],
   modelledOn: 'The Roman bridge over the Moselle at Trier (piers of about AD 150): stone piers with pointed cutwaters upstream and a timber road on strutted beams, as it is usually reconstructed. Reduced to four piers',
   lookFor: [
-    { label: 'Stone pier', note: 'Large squared blocks, laid in level courses and held with iron cramps, on a footing built inside a timber cofferdam pumped dry.', at: [3.1, -0.9, 0] },
+    { label: 'Stone pier', note: 'Large squared blocks, laid in level courses and held with iron cramps, on a footing built inside a timber cofferdam pumped dry.', at: [3.1, -0.9, 2.55] },
     { label: 'Cutwater', note: 'The pointed upstream end of each pier splits the current and stops branches and ice piling up against the masonry.', at: [-4.0, -0.9, -2.55] },
     { label: 'Strut frame', note: 'Raking oak struts stand on a ledge in the pier and prop the beams a third of the way across each opening, so that shorter timbers can span it.', at: [2.6, -0.1, 1.3] },
     { label: 'Timber road', note: 'Planks laid across the beams carry the road. The timber is the part that rots and burns, and it was renewed many times on the same piers.', at: [0, 1.25, 4.0] },
@@ -25,26 +25,26 @@ export const romanBridge: BuildingDef = {
     b.noCollide();
     const crown = 1.15;
     const f = hump(crown);
-    const W = 6.0;
+    const W = ROMAN.W;
     b.deck(W - 0.9, 34, crown, { yEnds: 0 });
     const stone = mix(P.pierreBlonde, P.limestone, 0.4);
     const ring = tint(stone, 0.07);
     const core = tint(stone, -0.05);
     const oak = P.oak;
     const oakD = P.oakDark;
-    const pierT = 1.7;
-    const AB = 11.4; // the face of each abutment
-    const { piers } = layout([3.0, 3.2, 3.4, 3.2, 3.0], pierT, -1.2, (s) => s / 2, 'round');
+    const { pierT, AB, ledge, abTop } = ROMAN;
     const plankT = 0.14;
     const beamH = 0.42;
     const beamTop = (z: number) => f(z) - plankT;
     const seat = (z: number) => beamTop(z) - beamH - 0.3; // top of the masonry
-    const ledge = -1.0; // the offset in the pier that the struts stand on
 
-    // the abutments: solid masonry carrying the road onto the bridge, with a ledge for the first struts
+    // the lower fabric (abutment courses, footings, pier shafts to the ledge, cutwaters), which outlasts the timber
+    const piers = romanStumps(b, { stone, core, ring, upHood: true });
+
+    // the abutments' upper courses carry the road onto the bridge, with a ledge for the first struts
     for (const s of [-1, 1]) {
       const zs = steps(6, AB, END);
-      const pts: ZY[] = [[s * END, FOOT], [s * AB, FOOT], ...zs.map((z): ZY => [s * z, f(s * z) - 0.16])];
+      const pts: ZY[] = [[s * END, abTop], [s * AB, abTop], ...zs.map((z): ZY => [s * z, f(s * z) - 0.16])];
       side(b, s > 0 ? pts : pts.reverse(), W, core);
       b.box(W + 0.2, 0.3, 0.5, ring, { at: [0, ledge - 0.3, s * (AB - 0.2)] });
       band(b, 0, W - 0.9, s > 0 ? AB : -END, s > 0 ? END : -AB, (z) => f(z) - 0.17, (z) => f(z) + 0.01, mix(P.gravel, P.chalk, 0.2), 4);
@@ -52,20 +52,11 @@ export const romanBridge: BuildingDef = {
       b.sym((k) => band(b, k * (W / 2 - 0.22), 0.44, s > 0 ? AB + 0.2 : -END + 0.4, s > 0 ? END - 0.4 : -AB - 0.2, (z) => f(z) - 0.17, (z) => f(z) + 0.55, stone, 4));
     }
 
-    // the piers: a footing, the shaft with its strut ledge, a capping course, cutwaters
+    // the piers above the ledge: the shaft, a capping course, and a timber sleeper under the beams
     for (const z of piers) {
-      b.box(W + 0.5, WATER - FOOT + 0.25, pierT + 0.5, core, { at: [0, FOOT, z] });
-      b.box(W, ledge - FOOT, pierT + 0.3, stone, { at: [0, FOOT, z] });
       b.box(W, seat(z) - ledge, pierT, stone, { at: [0, ledge, z] });
       b.box(W + 0.16, 0.2, pierT + 0.16, ring, { at: [0, seat(z) - 0.2, z] });
-      // courses
       for (const y of [-0.55, -0.1]) if (y < seat(z) - 0.3) b.box(W + 0.03, 0.03, pierT + 0.03, tint(stone, -0.12), { at: [0, y, z], jitter: false });
-      const capY = -0.75;
-      cutwater(b, { x: -W / 2, z, thick: pierT + 0.3, len: 1.3, y0: FOOT, h: capY - FOOT, color: stone, kind: 'point' });
-      cutwaterHood(b, { x: -W / 2, z, thick: pierT + 0.3, nose: 1.3, y: capY, h: 0.6, color: ring });
-      cutwater(b, { x: W / 2, z, thick: pierT + 0.3, len: 0.7, y0: FOOT, h: capY - FOOT, color: stone, kind: 'round' });
-      roundHood(b, { x: W / 2, z, r: (pierT + 0.3) / 2, y: capY, h: 0.4, color: ring });
-      // a timber sleeper across the head of the pier under the beams
       b.box(W + 0.3, 0.3, 0.55, oakD, { at: [0, seat(z), z] });
     }
 

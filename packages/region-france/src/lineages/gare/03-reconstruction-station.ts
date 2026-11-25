@@ -1,5 +1,5 @@
 import { P, mix, tint, type Builder, type BuildingDef } from '@ah/kit';
-import { HX, PLAT, TRACKS, clock, pacificTrain, platform, track, wallRects } from './shared';
+import { HX, PLAT, TRACKS, clock, pacificTrain, platform, track, wallRects, forecourt, overheadLine } from './shared';
 
 const ZF = 4.6; // street front of the hall
 const ZB = -3.0; // platform side
@@ -48,6 +48,12 @@ export const reconstructionStation: BuildingDef = {
   materials: ['reinforced concrete', 'red brick', 'glass mosaic', 'steel-framed windows'],
   modelledOn: 'The stations of Lens (Urbain Cassan, 1926 to 1927, its outline said to recall a locomotive, with mosaics of mining life) and Rouen Rive-Droite (Adolphe Dervaux, begun 1913, opened 1928, with its clock tower), in general terms',
   influences: ['art-deco', 'reinforced-concrete'],
+  revisions: [
+    {
+      year: 1959,
+      note: 'The main line was electrified at 25,000 volts, as the Nord’s lines from Paris were at the end of the 1950s: masts and wires now stand over both tracks, and within a few years the steam engines were gone.',
+    },
+  ],
   lookFor: [
     { label: 'Clock tower', note: 'A square tower of brick and concrete, stepped back at the top in the Art Deco way, with a clock on each face.', at: [TX, TH - 3.0, -1.0 + TW / 2 + 0.3] },
     { label: 'Concrete frame', note: 'The columns and beams of the reinforced-concrete frame show on the front as ribs, with brick panels between.', at: [-7.6, 6.0, ZF + 0.3] },
@@ -63,7 +69,7 @@ export const reconstructionStation: BuildingDef = {
     const zc = (ZF + ZB) / 2;
     const D = ZF - ZB;
 
-    b.box(HX * 2, 0.05, 12 - ZF, mix(P.paving, P.tarmac, 0.25), { at: [0, 0, (12 + ZF) / 2], jitter: false });
+    forecourt(b, mix(P.paving, P.tarmac, 0.25));
 
     // ------------------------------------------------ the hall: a walkable shell
     const L = HX1 - HX0;
@@ -159,7 +165,7 @@ export const reconstructionStation: BuildingDef = {
     wallRects(b, [[0, 0.9, 1.5, 2.0], [0, 4.3, 1.5, 2.0]], glass, [OX1, 0, zc], '+x', 0.05);
 
     // ------------------------------------------------ platform, umbrella canopy, tracks, train
-    platform(b, ZB, PLAT.edge, -HX, HX);
+    platform(b, PLAT.back, PLAT.edge, -HX, HX);
     for (const z of TRACKS) track(b, z);
     const cz = -5.0;
     const top = PLAT.y + 4.0;
@@ -179,5 +185,8 @@ export const reconstructionStation: BuildingDef = {
       b.cyl(0.1, 4.6, P.castIron, { at: [x, 0, 10.4], segs: 6 });
       b.cyl(0.25, 0.5, mix(P.glass, P.windowLit, 0.5), { at: [x, 4.6, 10.4], segs: 6 });
     }
+
+    // (built last: the revision adds it, so everything above stays the same)
+    if (b.since(1959)) overheadLine(b);
   },
 };

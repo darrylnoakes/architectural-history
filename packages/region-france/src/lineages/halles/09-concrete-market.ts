@@ -23,8 +23,8 @@ export const concreteMarket1929: BuildingDef = {
   influences: ['reinforced-concrete'],
   build(b) {
     const open = b.cutaway;
-    paving(b, 25.8, 21.8, P.cobble, 0.08, [0, 0, 0], 8);
-    b.box(2 * CM.XS + 1.4, 0.1, 2 * CM.Z + 3.4, P.paving, { at: [0, 0.0, 0] });
+    paving(b, 25.8, 21.8, P.cobble, 0.1, [0, 0, 0], 10); // the cobbled square of the iron hall, kept
+    b.box(2 * CM.XS + 1.4, 0.12, 2 * CM.Z + 3.4, P.paving, { at: [0, 0.0, 0] });
     concreteMarket(b, false, open);
     nave(b, false);
 

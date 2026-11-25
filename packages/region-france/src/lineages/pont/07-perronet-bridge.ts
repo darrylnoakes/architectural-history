@@ -1,5 +1,52 @@
-import { P, tint, mix, type BuildingDef } from '@ah/kit';
+import { P, tint, mix, type Builder, type BuildingDef } from '@ah/kit';
 import { END, FOOT, hump, band, side, bodyOutline, voussoirs, layout, cutwater, roundHood, balustrade, type Opening } from './shared';
+
+const W = 9.0;
+const f = hump(0.8);
+const pierT = 1.0;
+const yS = -0.55; // where the head arches spring on the faces
+const stoneOf = () => mix(P.pierreBlonde, P.craie, 0.35);
+const { ops, piers } = layout([7.0, 7.4, 7.0], pierT, -1.05, (_s, i) => (i === 1 ? 1.25 : 1.05), 'ellipse');
+/** The head arches on the faces: flat segments springing higher and wider than the vault behind. */
+function head(op: Opening, t: number): Opening {
+  const e = 0.3;
+  return {
+    z0: op.z0 - e * t,
+    z1: op.z1 + e * t,
+    spring: op.spring + (yS - op.spring) * t,
+    rise: op.spring + op.rise - (op.spring + (yS - op.spring) * t),
+    kind: t > 0.99 ? 'segmental' : 'ellipse',
+  };
+}
+const face = 0.35;
+const mid = 0.35;
+const core = W - 2 * (face + mid);
+/** Where the masonry over the river ends and the abutments on the banks begin. */
+const AB = 12.0;
+
+/**
+ * The masonry body in three layers (the core, and the splayed and face rings each side), in three
+ * lengths: the abutments on the banks beyond ±AB, and the arches between. The bridge of 1947 kept
+ * the abutments. No random numbers are drawn here.
+ */
+function masonry(b: Builder, which: 'abutments' | 'river'): void {
+  const stone = stoneOf();
+  const deep = tint(stone, -0.09);
+  const top = (z: number) => f(z) - 0.3;
+  const runs: [number, number, number][] = which === 'abutments' ? [[-END, -AB, 3], [AB, END, 3]] : [[-AB, AB, 12]];
+  for (const [za, zb, n] of runs) {
+    side(b, bodyOutline({ za, zb, top, openings: ops, n }), core, deep);
+    b.sym((k) => {
+      side(b, bodyOutline({ za, zb, top, openings: ops.map((op) => head(op, 0.5)), n }), mid, tint(stone, -0.04), k * (core / 2 + mid / 2));
+      side(b, bodyOutline({ za, zb, top, openings: ops.map((op) => head(op, 1)), n }), face, stone, k * (W / 2 - face / 2));
+    });
+  }
+}
+
+/** The abutments of Perronet's bridge, as the bridge of 1947 kept them. */
+export function perronetAbutments(b: Builder): void {
+  masonry(b, 'abutments');
+}
 
 export const perronetBridge: BuildingDef = {
   id: 'perronet-bridge',
@@ -23,34 +70,12 @@ export const perronetBridge: BuildingDef = {
   influences: ['neoclassicism'],
   build(b) {
     b.noCollide();
-    const crown = 0.8;
-    const f = hump(crown);
-    const W = 9.0;
-    b.deck(W - 1.2, 34, crown, { yEnds: 0 });
-    const stone = mix(P.pierreBlonde, P.craie, 0.35);
+    b.deck(W - 1.2, 34, 0.8, { yEnds: 0 });
+    const stone = stoneOf();
     const dress = tint(stone, 0.05);
-    const deep = tint(stone, -0.09);
-    const pierT = 1.0;
-    const spring = -1.05;
-    const { ops, piers } = layout([7.0, 7.4, 7.0], pierT, spring, (_s, i) => (i === 1 ? 1.25 : 1.05), 'ellipse');
-    const top = (z: number) => f(z) - 0.3;
-    // the head arches on the faces: flat segments springing higher and wider than the vault behind
-    const yS = -0.55;
-    const e = 0.3;
-    const head = (op: Opening, t: number): Opening => ({
-      z0: op.z0 - e * t,
-      z1: op.z1 + e * t,
-      spring: op.spring + (yS - op.spring) * t,
-      rise: op.spring + op.rise - (op.spring + (yS - op.spring) * t),
-      kind: t > 0.99 ? 'segmental' : 'ellipse',
-    });
-    const face = 0.35;
-    const mid = 0.35;
-    const core = W - 2 * (face + mid);
-    side(b, bodyOutline({ za: -END, zb: END, top, openings: ops, n: 18 }), core, deep);
+    masonry(b, 'abutments');
+    masonry(b, 'river');
     b.sym((k) => {
-      side(b, bodyOutline({ za: -END, zb: END, top, openings: ops.map((op) => head(op, 0.5)), n: 18 }), mid, tint(stone, -0.04), k * (core / 2 + mid / 2));
-      side(b, bodyOutline({ za: -END, zb: END, top, openings: ops.map((op) => head(op, 1)), n: 18 }), face, stone, k * (W / 2 - face / 2));
       // the pier faces below the head springing, full width
       for (const z of piers) b.box(face + mid, yS - FOOT, pierT, stone, { at: [k * (W / 2 - (face + mid) / 2), FOOT, z] });
       for (const op of ops) voussoirs(b, head(op, 1), { d: 0.28, width: 0.06, x: k * (W / 2 + 0.01), color: dress, blocks: 9 });

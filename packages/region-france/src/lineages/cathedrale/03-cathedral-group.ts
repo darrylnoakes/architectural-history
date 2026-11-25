@@ -1,5 +1,5 @@
 import { P, mix, tint, type BuildingDef, type Builder } from '@ah/kit';
-import { lin, opening, flat, archPts, circlePts, roofZ } from './shared';
+import { lin, opening, flat, archPts, circlePts, roofZ, holyGround } from './shared';
 
 const WALL = mix(P.pierreBlonde, P.rubble, 0.45);
 const RENDER = mix(P.plaster, P.pierreBlonde, 0.4);
@@ -25,6 +25,25 @@ function hall(b: Builder, x: number, w: number, z0: number, z1: number, h: numbe
   b.collider(w, z1 - z0 + ar, { at: [x, 0, zc - ar / 2] });
 }
 
+/**
+ * The late Roman town wall along the north side of the plot, with two round towers: small stone with
+ * bands of brick on a base of reused blocks. Built after 275 and still standing beside the Carolingian
+ * cathedral; the Romanesque transept is built across its line.
+ */
+export function lateRomanWall(b: Builder) {
+  const wx = -14.6;
+  b.box(3.0, 1.6, 66, tint(P.pierreBlonde, 0.03), { at: [wx, 0, 0] });
+  b.box(2.8, 8.0, 66, WALL, { at: [wx, 0, 0] });
+  for (const y of [2.6, 4.2, 5.8, 7.4]) b.box(2.86, 0.22, 66, BRICK, { at: [wx, y, 0], jitter: false });
+  for (const z of lin(34, -32.5, 32.5)) b.box(0.6, 0.9, 0.95, WALL, { at: [wx - 1.1, 8.0, z], jitter: false });
+  for (const tz of [-22, 22]) {
+    b.cyl(2.4, 10.5, WALL, { at: [wx, 0, tz], segs: 10 });
+    for (const y of [2.6, 4.2, 5.8, 7.4, 9.0]) b.cyl(2.43, 0.22, BRICK, { at: [wx, y, tz], segs: 10, jitter: false });
+    b.cone(2.8, 2.6, ROOF, { at: [wx, 10.5, tz], segs: 10 });
+  }
+  b.collider(3.0, 66, { at: [wx, 0, 0] });
+}
+
 export const cathedralGroup: BuildingDef = {
   id: 'cathedral-group',
   name: 'First cathedral group',
@@ -45,20 +64,9 @@ export const cathedralGroup: BuildingDef = {
     'The Baptistery of Saint-Jean at Poitiers (founded in the late fourth or the fifth century and much remodelled in the seventh, when its pediments were made) for the baptistery with its gables, pediments and polygonal apse; the double cathedrals of Geneva and Trier for the plan of two halls. Their size and details here are generic.',
   influences: ['christian-basilica'],
   build(b) {
-    b.box(32, 0.03, 66, mix(P.earth, P.grassDry, 0.45), { at: [0, 0, 0], jitter: false });
+    holyGround(b, mix(P.earth, P.grassDry, 0.45));
     b.box(24, 0.04, 34, mix(P.paving, P.earth, 0.3), { at: [2, 0, -1], jitter: false });
-    // the town wall along the north side, with a round tower
-    const wx = -14.6;
-    b.box(3.0, 1.6, 66, tint(P.pierreBlonde, 0.03), { at: [wx, 0, 0] });
-    b.box(2.8, 8.0, 66, WALL, { at: [wx, 0, 0] });
-    for (const y of [2.6, 4.2, 5.8, 7.4]) b.box(2.86, 0.22, 66, BRICK, { at: [wx, y, 0], jitter: false });
-    for (const z of lin(34, -32.5, 32.5)) b.box(0.6, 0.9, 0.95, WALL, { at: [wx - 1.1, 8.0, z], jitter: false });
-    for (const tz of [-22, 22]) {
-      b.cyl(2.4, 10.5, WALL, { at: [-14.6, 0, tz], segs: 10 });
-      for (const y of [2.6, 4.2, 5.8, 7.4, 9.0]) b.cyl(2.43, 0.22, BRICK, { at: [-14.6, y, tz], segs: 10, jitter: false });
-      b.cone(2.8, 2.6, ROOF, { at: [-14.6, 10.5, tz], segs: 10 });
-    }
-    b.collider(3.0, 66, { at: [wx, 0, 0] });
+    lateRomanWall(b);
     // the two halls
     hall(b, -8.5, 7, -11, 11, 7.2, 2.8, 5);
     hall(b, 8.5, 10, -15, 13, 9.4, 3.8, 7);

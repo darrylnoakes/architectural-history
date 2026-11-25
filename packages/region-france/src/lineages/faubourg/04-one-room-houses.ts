@@ -1,5 +1,5 @@
 import { P, mix, tint, type Builder, type BuildingDef } from '@ah/kit';
-import { hurdles, patch, thatchRoof, vegBed } from './shared';
+import { hurdles, patch, road, thatchRoof, vegBed } from './shared';
 
 const ZF = 5.4; // street wall of the houses
 const WALL = 2.1;
@@ -56,7 +56,7 @@ export const oneRoomHouses: BuildingDef = {
   build(b) {
     const thatch = b.pick([P.thatch, P.thatchOld, tint(P.thatch, -0.05)]);
     patch(b, 25.6, 15.6, mix(P.grass, P.earth, 0.3), [0, 0]);
-    patch(b, 25.6, 2.2, tint(P.earth, -0.04), [0, 6.8], 0.05); // the road
+    road(b, tint(P.earth, -0.04));
 
     // three or four cottages along the road, of slightly different widths
     const four = b.chance(0.55);

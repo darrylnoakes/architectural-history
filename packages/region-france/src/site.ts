@@ -16,6 +16,8 @@ import { wallClearings, wallDetail, wallProps } from './town-walls';
 export const RIVER_Z = 96;
 /** The two tracks run just behind the station building; these match the track the station plot lays. */
 const TRACKS = [192.5, 194.75];
+/** The high-speed station's plot along the line: from its year on it lays its own track and wires. */
+const TGV = { x: 300, since: 2007 };
 const RAIL_Z = 193.6;
 const CENTRE: [number, number] = [0, 20];
 /** The castle hill: a flat top big enough for the castle plot, then a slope down to the plain. */
@@ -91,6 +93,8 @@ const roads: Road[] = [
   // the edges of the twentieth-century town
   { id: 'route-nationale', kind: 'main', pts: [[-250, 136], [-150, 136]], since: 1955 },
   { id: 'avenue-de-la-zup', kind: 'main', pts: [[146, 136], [290, 136]], since: 1962 },
+  // the approach to the high-speed station, beyond the grand ensemble
+  { id: 'avenue-de-la-gare-tgv', kind: 'main', pts: [[290, 136], [300, 136], [300, 171]], since: 2007 },
   { id: 'rue-des-lilas', kind: 'lane', pts: [[-2, -210], [156, -210]], since: 1930 },
   { id: 'rue-du-centre-d-art', kind: 'lane', pts: [[128, 55], [150, 55]], since: 2010 },
 ];
@@ -186,32 +190,69 @@ const props: SiteProp[] = [
     id: 'railway',
     since: 1849,
     build(b) {
-      // the station plot lays its own track: the line runs up to it from either side and matches it
-      for (const side of [-1, 1]) {
-        const x0 = side * 20;
-        const x1 = side * 760;
+      // each station plot lays its own track: the line runs up to it from either side and matches it
+      const lay = (x0: number, x1: number) => {
         const mid = (x0 + x1) / 2;
         const len = Math.abs(x1 - x0);
         b.box(len, 0.12, 6.4, 0x8d8778, { at: [mid, -0.02, RAIL_Z], jitter: false });
         for (const z of TRACKS) {
           b.box(len, 0.18, 2.3, 0x8a8377, { at: [mid, 0, z], jitter: false });
           for (const s of [-1, 1]) b.box(len, 0.15, 0.08, P.steel, { at: [mid, 0.28, z + s * 0.7175], jitter: false });
-          for (let x = 21.2; x <= 330; x += 2.4) b.box(0.24, 0.1, 2.2, 0x5a4c40, { at: [side * x, 0.18, z], jitter: false });
         }
+      };
+      const sleepers = (x0: number, x1: number) => {
+        for (const z of TRACKS) for (let x = x0; x <= x1; x += 2.4) b.box(0.24, 0.1, 2.2, 0x5a4c40, { at: [x, 0.18, z], jitter: false });
+      };
+      lay(-760, -20);
+      sleepers(-330, -21.2);
+      lay(20, TGV.x - 20);
+      sleepers(21.2, TGV.x - 21.2);
+      lay(TGV.x + 20, 760);
+      sleepers(TGV.x + 21.2, 330);
+    },
+  },
+  {
+    // the stretch where the high-speed station of 2007 will lay its own track
+    id: 'railway-east',
+    since: 1849,
+    until: TGV.since,
+    build(b) {
+      const mid = TGV.x;
+      b.box(40, 0.12, 6.4, 0x8d8778, { at: [mid, -0.02, RAIL_Z], jitter: false });
+      for (const z of TRACKS) {
+        b.box(40, 0.18, 2.3, 0x8a8377, { at: [mid, 0, z], jitter: false });
+        for (const s of [-1, 1]) b.box(40, 0.15, 0.08, P.steel, { at: [mid, 0.28, z + s * 0.7175], jitter: false });
+        for (let x = TGV.x - 18.8; x <= TGV.x + 20; x += 2.4) b.box(0.24, 0.1, 2.2, 0x5a4c40, { at: [x, 0.18, z], jitter: false });
       }
     },
   },
   {
-    // electrified around 1960: masts and wires over the tracks
+    // electrified in 1959: masts and wires over the tracks (the stations carry their own)
     id: 'catenary',
-    since: 1961,
+    since: 1959,
     build(b) {
       for (let x = -330; x <= 330; x += 44) {
-        if (Math.abs(x) < 30) continue;
+        if (Math.abs(x) < 30 || Math.abs(x - TGV.x) < 24) continue;
         b.cyl(0.13, 7.2, P.steel, { at: [x, 0, RAIL_Z - 3.6], segs: 6 });
         b.box(0.12, 0.12, 6.4, P.steel, { at: [x, 6.6, RAIL_Z - 0.6] });
       }
-      for (const z of TRACKS) b.box(700, 0.04, 0.04, P.iron, { at: [0, 6.1, z], jitter: false });
+      for (const z of TRACKS) {
+        b.box(310, 0.04, 0.04, P.iron, { at: [-175, 6.1, z], jitter: false });
+        b.box(TGV.x - 40, 0.04, 0.04, P.iron, { at: [(TGV.x - 20 + 20) / 2, 6.1, z], jitter: false });
+        b.box(330 - TGV.x - 20, 0.04, 0.04, P.iron, { at: [(TGV.x + 20 + 330) / 2, 6.1, z], jitter: false });
+      }
+    },
+  },
+  {
+    // the mast and wires on the stretch the high-speed station takes over in 2007
+    id: 'catenary-east',
+    since: 1959,
+    until: TGV.since,
+    build(b) {
+      const x = -330 + 14 * 44;
+      b.cyl(0.13, 7.2, P.steel, { at: [x, 0, RAIL_Z - 3.6], segs: 6 });
+      b.box(0.12, 0.12, 6.4, P.steel, { at: [x, 6.6, RAIL_Z - 0.6] });
+      for (const z of TRACKS) b.box(40, 0.04, 0.04, P.iron, { at: [TGV.x, 6.1, z], jitter: false });
     },
   },
   {
