@@ -1,36 +1,9 @@
 import { P, mix, tint, type BuildingDef, type Builder, type Vec3 } from '@ah/kit';
-import { CX, DARK, DOOR, archPts, flat, pol, rectPts, soup, wallSeg, win, type Pt } from './shared';
+import { CRYPT, CRYPT_TOP, CX, DOOR, WELL, crypt, flat, garden, pol, rectPts, sarcophagus, wallSeg, well, win, type Pt } from './shared';
 
 const WALL = mix(P.limewash, P.rubble, 0.35);
 const BAND = mix(P.brickRed, P.romanTile, 0.5);
 const NAVE = { z0: -7, z1: 9, w: 8, h: 8.5 };
-const CRYPT = { z0: -18, z1: -11.2, w: 8, h: 2.6 };
-
-/** A trapezoidal stone coffin, wider at the head, with a ridged lid. */
-function sarcophagus(b: Builder, x: number, z: number, rotY: number, color: number, lid = true) {
-  const wh = 0.36;
-  const wf = 0.26;
-  const L = 1.0;
-  const h = 0.55;
-  const v = (sx: number, y: number, sz: number) => [sx, y, sz];
-  const c = [v(-wh, 0, -L), v(wh, 0, -L), v(wf, 0, L), v(-wf, 0, L)];
-  const t = [v(-wh, h, -L), v(wh, h, -L), v(wf, h, L), v(-wf, h, L)];
-  const pos: number[] = [];
-  const q = (a: number[], bb: number[], cc: number[], d: number[]) => pos.push(...a, ...bb, ...cc, ...a, ...cc, ...d);
-  for (let i = 0; i < 4; i++) q(c[i], c[(i + 1) % 4], t[(i + 1) % 4], t[i]);
-  q(t[0], t[1], t[2], t[3]);
-  b.group({ at: [x, 0, z], rotY }, () => {
-    soup(b, pos, color);
-    if (lid) {
-      const r = [v(0, h + 0.18, -L), v(0, h + 0.14, L)];
-      const lp: number[] = [];
-      lp.push(...t[0], ...r[0], ...r[1], ...t[0], ...r[1], ...t[3]);
-      lp.push(...t[1], ...t[2], ...r[1], ...t[1], ...r[1], ...r[0]);
-      lp.push(...t[0], ...t[1], ...r[0], ...t[3], ...r[1], ...t[2]);
-      soup(b, lp, tint(color, 0.05));
-    }
-  });
-}
 
 /** A monk's cell: a small house of posts, wattle and daub, under thatch. */
 function cell(b: Builder, x: number, z: number, rotY: number) {
@@ -75,42 +48,9 @@ function build(b: Builder) {
   // ---------------------------------------------------------------- the crypt (half sunk, east of the apse)
   const cz = (CRYPT.z0 + CRYPT.z1) / 2;
   const cl = CRYPT.z1 - CRYPT.z0;
-  const cw = CRYPT.w;
   const cut = b.cutaway;
-  for (const s of [-1, 1]) b.box(0.6, CRYPT.h, cl, WALL, { at: [CX + s * (cw / 2 - 0.3), 0, cz] });
-  b.box(cw, CRYPT.h, 0.6, WALL, { at: [CX, 0, CRYPT.z0 + 0.3] });
-  b.box(cw, CRYPT.h, 0.6, WALL, { at: [CX, 0, CRYPT.z1 - 0.3] });
-  b.sym((s) => {
-    b.box(0.66, 0.22, cl + 0.06, BAND, { at: [CX + s * (cw / 2 - 0.3), CRYPT.h - 0.5, cz], jitter: false });
-    b.box(cw + 0.06, 0.22, 0.66, BAND, { at: [CX, CRYPT.h - 0.5, s > 0 ? CRYPT.z1 - 0.3 : CRYPT.z0 + 0.3], jitter: false });
-  });
-  b.box(cw - 1.2, 0.04, cl - 1.2, mix(P.chalk, P.paving, 0.5), { at: [CX, 0.02, cz], jitter: false });
-  // low round-headed lights just above the ground
-  for (const z of [-16.2, -13.2]) {
-    win(b, 'round', 0.6, 0.9, [CX + cw / 2, 0.6, z], '+x', { frame: BAND, bd: 0.1 });
-    win(b, 'round', 0.6, 0.9, [CX - cw / 2, 0.6, z], '-x', { frame: BAND, bd: 0.1 });
-  }
-  win(b, 'round', 0.6, 0.9, [CX, 0.6, CRYPT.z0], '-z', { frame: BAND, bd: 0.1 });
-  // the stair down to the crypt door, along its +X side
-  const sx = CX + cw / 2 + 1.3;
-  b.box(1.6, 0.03, 4.2, P.timberBlack, { at: [sx, 0.01, cz + 0.6], jitter: false });
-  for (let i = 0; i < 5; i++) b.box(1.5, 0.05, 0.36, P.rubble, { at: [sx, 0.03, cz + 2.5 - i * 0.75], jitter: false });
-  b.sym((s) => b.box(0.35, 0.7, 4.4, WALL, { at: [sx + s * 0.95, 0, cz + 0.6] }));
-  flat(b, archPts('round', 1.0, 1.3, 2), DOOR, [CX + cw / 2, 0, cz - 1.6], '+x', 0.06);
-  // inside: marble columns, the saint's tomb and the founders' sarcophagi
-  for (const sx2 of [-1.5, 1.5]) for (const z of [-16.2, -14.6, -13]) {
-    b.cyl(0.17, 2.1, P.marble, { at: [CX + sx2, 0, z], segs: 6 });
-    b.box(0.45, 0.22, 0.45, P.craie, { at: [CX + sx2, 2.1, z], jitter: false });
-  }
-  b.box(1.3, 0.9, 2.2, P.marble, { at: [CX, 0, -14.6] });
-  b.box(1.5, 0.15, 2.4, P.marbleGreen, { at: [CX, 0.9, -14.6] });
-  sarcophagus(b, CX + 2.8, -15.6, 0, P.craie);
-  sarcophagus(b, CX - 2.8, -15.6, 0, P.craie);
-  sarcophagus(b, CX - 2.8, -12.9, Math.PI, P.craie);
-  if (!cut) {
-    b.box(cw + 0.2, 0.25, cl + 0.2, WALL, { at: [CX, CRYPT.h, cz] });
-    b.gable(cw, cl, 1.7, P.romanTile, { ridge: 'z', at: [CX, CRYPT.h + 0.25, cz], overhang: 0.35, wall: WALL });
-  }
+  crypt(b, WALL, BAND, { stair: true, vault: !cut });
+  if (!cut) b.gable(CRYPT.w, cl, 1.7, P.romanTile, { ridge: 'z', at: [CX, CRYPT_TOP, cz], overhang: 0.35, wall: WALL });
 
   // ---------------------------------------------------------------- the cemetery: burial near the saint
   const sarc: [number, number, number][] = [
@@ -135,11 +75,10 @@ function build(b: Builder) {
   });
   b.collider(13, 6, { at: [6.5, 0, -8.5] });
   // a well, a garden of beds and a fenced pen
-  b.cyl(0.8, 0.8, P.rubble, { at: [5.5, 0, 4], segs: 8 });
-  b.cyl(0.6, 0.04, P.water, { at: [5.5, 0.78, 4], segs: 8, mat: 'glass' });
-  b.sym((s) => b.box(0.15, 2, 0.15, P.oak, { at: [5.5 + s * 0.7, 0.8, 4] }));
-  b.box(1.6, 0.15, 0.15, P.oak, { at: [5.5, 2.7, 4] });
-  for (let i = 0; i < 5; i++) b.box(1.2, 0.18, 7, i % 2 ? P.soil : mix(P.soil, P.leaf, 0.35), { at: [-1.5 + i * 1.6, 0, -15.5] });
+  well(b, P.rubble);
+  b.sym((s) => b.box(0.15, 2, 0.15, P.oak, { at: [WELL.x + s * 0.7, 0.8, WELL.z] }));
+  b.box(1.6, 0.15, 0.15, P.oak, { at: [WELL.x, 2.7, WELL.z] });
+  garden(b);
   for (let i = 0; i < 3; i++) b.tree(5 + b.rand() * 1.5, { at: [10 + i * 3.6, 0, -17.5], kind: 'round' });
 
   // ---------------------------------------------------------------- the enclosure wall
@@ -165,7 +104,6 @@ function build(b: Builder) {
 
   b.collider(NAVE.w, len, { at: [CX, 0, zc] });
   b.collider(6.4, 3.2, { at: [CX, 0, NAVE.z0 - 1.6] });
-  b.collider(cw, cl, { at: [CX, 0, cz] });
 }
 
 const anchorTomb: Vec3 = [CX, 1.4, -14.6];

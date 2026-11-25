@@ -226,6 +226,99 @@ export function arcadeWall(
   b.group({ at: o.at, rotY: o.rotY ?? 0 }, () => b.extrude(pts, t, color, { holes, jitter: false }));
 }
 
+// ------------------------------------------------------------------ the saint's crypt (560 to the end)
+
+/** The half-sunk crypt over the saint's grave, built in 560 east of the first church's apse. */
+export const CRYPT = { z0: -18, z1: -11.2, w: 8, h: 2.6 };
+/** The top of its vault: the floor of every later choir built over it. */
+export const CRYPT_TOP = CRYPT.h + 0.25;
+
+/** A trapezoidal stone coffin, wider at the head, with a ridged lid. */
+export function sarcophagus(b: Builder, x: number, z: number, rotY: number, color: number, lid = true) {
+  const wh = 0.36;
+  const wf = 0.26;
+  const L = 1.0;
+  const h = 0.55;
+  const c = [[-wh, 0, -L], [wh, 0, -L], [wf, 0, L], [-wf, 0, L]];
+  const t = [[-wh, h, -L], [wh, h, -L], [wf, h, L], [-wf, h, L]];
+  const pos: number[] = [];
+  const q = (a: number[], bb: number[], cc: number[], d: number[]) => pos.push(...a, ...bb, ...cc, ...a, ...cc, ...d);
+  for (let i = 0; i < 4; i++) q(c[i], c[(i + 1) % 4], t[(i + 1) % 4], t[i]);
+  q(t[0], t[1], t[2], t[3]);
+  b.group({ at: [x, 0, z], rotY }, () => {
+    soup(b, pos, color);
+    if (lid) {
+      const r = [[0, h + 0.18, -L], [0, h + 0.14, L]];
+      const lp: number[] = [];
+      lp.push(...t[0], ...r[0], ...r[1], ...t[0], ...r[1], ...t[3]);
+      lp.push(...t[1], ...t[2], ...r[1], ...t[1], ...r[1], ...r[0]);
+      lp.push(...t[0], ...t[1], ...r[0], ...t[3], ...r[1], ...t[2]);
+      soup(b, lp, tint(color, 0.05));
+    }
+  });
+}
+
+/**
+ * The crypt: rubble walls banded with brick rising a man's height out of the ground, low round-headed
+ * lights, a vault (a slab, the floor of the choir above), and inside the saint's tomb among reused
+ * marble columns and the founders' sarcophagi. Built in 560 and never pulled down: the Carolingian
+ * apse is raised on it, the Romanesque and Gothic choirs cover it, and it outlives the church. With
+ * `stair` the open stair down to its door along the +X side (560 and 830, before the choirs grew
+ * over it); with `vault` false it is shown open to study (the first church's cut-away).
+ */
+export function crypt(b: Builder, wall: number, band: number, o: { stair: boolean; vault: boolean }) {
+  const { z0, z1, w: cw, h } = CRYPT;
+  const cz = (z0 + z1) / 2;
+  const cl = z1 - z0;
+  for (const s of [-1, 1]) b.box(0.6, h, cl, wall, { at: [CX + s * (cw / 2 - 0.3), 0, cz] });
+  b.box(cw, h, 0.6, wall, { at: [CX, 0, z0 + 0.3] });
+  b.box(cw, h, 0.6, wall, { at: [CX, 0, z1 - 0.3] });
+  b.sym((s) => {
+    b.box(0.66, 0.22, cl + 0.06, band, { at: [CX + s * (cw / 2 - 0.3), h - 0.5, cz], jitter: false });
+    b.box(cw + 0.06, 0.22, 0.66, band, { at: [CX, h - 0.5, s > 0 ? z1 - 0.3 : z0 + 0.3], jitter: false });
+  });
+  b.box(cw - 1.2, 0.04, cl - 1.2, mix(P.chalk, P.paving, 0.5), { at: [CX, 0.02, cz], jitter: false });
+  // low round-headed lights just above the ground, and the door on the +X side
+  for (const z of [-16.2, -13.2]) {
+    win(b, 'round', 0.6, 0.9, [CX + cw / 2, 0.6, z], '+x', { frame: band, bd: 0.1 });
+    win(b, 'round', 0.6, 0.9, [CX - cw / 2, 0.6, z], '-x', { frame: band, bd: 0.1 });
+  }
+  win(b, 'round', 0.6, 0.9, [CX, 0.6, z0], '-z', { frame: band, bd: 0.1 });
+  flat(b, archPts('round', 1.0, 1.3, 2), DOOR, [CX + cw / 2, 0, cz - 1.6], '+x', 0.06);
+  // inside: marble columns, the saint's tomb and the founders' sarcophagi
+  for (const sx2 of [-1.5, 1.5]) for (const z of [-16.2, -14.6, -13]) {
+    b.cyl(0.17, 2.1, P.marble, { at: [CX + sx2, 0, z], segs: 6 });
+    b.box(0.45, 0.22, 0.45, P.craie, { at: [CX + sx2, 2.1, z], jitter: false });
+  }
+  b.box(1.3, 0.9, 2.2, P.marble, { at: [CX, 0, -14.6] });
+  b.box(1.5, 0.15, 2.4, P.marbleGreen, { at: [CX, 0.9, -14.6] });
+  sarcophagus(b, CX + 2.8, -15.6, 0, P.craie);
+  sarcophagus(b, CX - 2.8, -15.6, 0, P.craie);
+  sarcophagus(b, CX - 2.8, -12.9, Math.PI, P.craie);
+  if (o.vault) b.box(cw + 0.2, 0.25, cl + 0.2, wall, { at: [CX, h, cz] });
+  if (o.stair) {
+    const sx = CX + cw / 2 + 1.3;
+    b.box(1.6, 0.03, 4.2, P.timberBlack, { at: [sx, 0.01, cz + 0.6], jitter: false });
+    for (let i = 0; i < 5; i++) b.box(1.5, 0.05, 0.36, P.rubble, { at: [sx, 0.03, cz + 2.5 - i * 0.75], jitter: false });
+    b.sym((s) => b.box(0.35, 0.7, 4.4, wall, { at: [sx + s * 0.95, 0, cz + 0.6] }));
+  }
+  b.collider(cw, cl, { at: [CX, 0, cz] });
+}
+
+/** The monks' well of 560, which the Carolingian cloister is laid out round: the middle of the garth. */
+export const WELL = { x: (GARTH.x0 + GARTH.x1) / 2, z: (GARTH.z0 + GARTH.z1) / 2 };
+
+/** The well's stone curb and water (560 to the end). */
+export function well(b: Builder, stone: number) {
+  b.cyl(0.9, 0.8, stone, { at: [WELL.x, 0, WELL.z], segs: 8 });
+  b.cyl(0.65, 0.05, P.water, { at: [WELL.x, 0.78, WELL.z], segs: 8, mat: 'glass' });
+}
+
+/** The monks' vegetable garden behind the east range (560, kept to 1090). */
+export function garden(b: Builder) {
+  for (let i = 0; i < 5; i++) b.box(1.2, 0.18, 7, i % 2 ? P.soil : mix(P.soil, P.leaf, 0.35), { at: [-1.5 + i * 1.6, 0, -15.5] });
+}
+
 // ------------------------------------------------------------------ the church
 
 function wallColor(ph: Phase) {
@@ -538,8 +631,10 @@ export function church(b: Builder, ph: Phase, cut: boolean) {
 
   // the east end
   if (ph === CAROL) {
+    // the apse raised on the vault of the old crypt, a lean-to over the crypt's east end
     const half = { start: Math.PI / 2, sweep: Math.PI, segs: 8 };
-    b.lathe([[NW, 0], [NW, 8]], wall, { ...half, at: [CX, 0, T1] });
+    b.lathe([[NW, CRYPT_TOP], [NW, 8]], wall, { ...half, at: [CX, 0, T1] });
+    b.hip(CRYPT.w + 0.6, T1 - NW - CRYPT.z0 + 0.6, 1.3, ROOF, { at: [CX, CRYPT_TOP, (T1 - NW + CRYPT.z0) / 2 - 0.1] });
     b.lathe([[NW + 0.3, 7.9], [0, 10.2]], ROOF, { ...half, at: [CX, 0, T1] });
     for (const t of [(3 * Math.PI) / 4, Math.PI, (5 * Math.PI) / 4]) {
       const [x, z] = pol(CX, T1, NW * 0.98, t);
@@ -547,6 +642,9 @@ export function church(b: Builder, ph: Phase, cut: boolean) {
     }
   } else if (ph === ROM) romanesqueChevet(b, wall, nH, aH);
   else gothicChoir(b, wall, nH, cut);
+
+  // the crypt of 560 under the east end, its stair given up once the Romanesque chevet covers it
+  crypt(b, wall, ph === CAROL ? mix(P.brickRed, P.romanTile, 0.5) : tint(wall, -0.05), { stair: ph === CAROL, vault: true });
 
   // a step and paving before the door
   b.box(12, 0.05, 4.5, PAVING, { at: [CX, 0, (rom ? NZ : 14.5) + 2.3], jitter: false });
@@ -744,8 +842,7 @@ export function cloister(b: Builder, ph: Phase) {
     for (const [w, d] of [[g.x1 - g.x0 - 1, 1.2], [1.2, g.z1 - g.z0 - 1]] as const) b.box(w, 0.06, d, P.gravel, { at: [gx, 0, gz], jitter: false });
     for (const sx of [-1, 1]) for (const sz of [-1, 1]) b.box(3.6, 0.5, 2.8, P.hedge, { at: [gx + sx * 3.3, 0, gz + sz * 2.8] });
   }
-  b.cyl(0.9, 0.8, STONE, { at: [gx, 0, gz], segs: 8 });
-  b.cyl(0.65, 0.05, P.water, { at: [gx, 0.78, gz], segs: 8, mat: 'glass' });
+  well(b, STONE);
   if (ph !== CAROL) {
     b.sym((s) => b.box(0.15, 2.0, 0.15, P.iron, { at: [gx + s * 0.75, 0.8, gz], jitter: false }));
     b.box(1.7, 0.12, 0.15, P.iron, { at: [gx, 2.75, gz], jitter: false });

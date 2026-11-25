@@ -105,7 +105,8 @@ export const plots: Plot[] = [
   { id: 'maison-10', lineage: 'maison', x: 36, z: -14, rotY: S, seed: 72, lag: 0.15, keep: 'renaissance-house' },
   { id: 'maison-11', lineage: 'maison', x: 100, z: -14, rotY: S, seed: 73, since: 30, lag: 0.35, skip: ['immeuble-bourgeois'], struck: greatWar, keep: 'reconstruction-house' },
   { id: 'maison-12', lineage: 'maison', x: 114, z: -14, rotY: S, seed: 74, since: 1140, lag: 0.5, keep: 'classical-house' },
-  { id: 'maison-13', lineage: 'maison', x: 118, z: 14.5, rotY: N, seed: 75, since: 1330, lag: 0.6, keep: 'maison-1900' },
+  // (no apartment block here first: nobody pulled down a six-storey block of the 1870s for two small houses)
+  { id: 'maison-13', lineage: 'maison', x: 118, z: 14.5, rotY: N, seed: 75, since: 1330, lag: 0.6, skip: ['immeuble-bourgeois'], keep: 'maison-1900' },
   // crowded against the south flank of the cathedral
   { id: 'maison-18', lineage: 'maison', x: 50, z: -14, rotY: S, seed: 85, since: 300, lag: 0.4, keep: 'gothic-timber-house' },
   { id: 'maison-19', lineage: 'maison', x: 64, z: -14, rotY: S, seed: 86, since: 1140, lag: 0.2, skip: ['immeuble-bourgeois'], struck: greatWar, keep: 'reconstruction-house' },
