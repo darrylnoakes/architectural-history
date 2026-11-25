@@ -45,7 +45,9 @@ export const workersRow: BuildingDef = {
       const x = -L / 2 + i * ROW.hw;
       b.box(0.35, 1.1, 8 + ROW.zb - 0.4, stone, { at: [x, 0, (ROW.zb - 8) / 2 - 0.2] });
     }
-    b.box(L, 1.1, 0.35, stone, { at: [0, 0, -7.75] });
+    // the back wall, in three lengths (the later row cuts a gate in the middle one and raises the others)
+    b.sym((s) => b.box(L * 0.42, 1.1, 0.35, stone, { at: [s * L * 0.29, 0, -7.75] }));
+    b.box(L * 0.16, 1.1, 0.35, stone, { at: [0, 0, -7.75] });
     tenter(b, 5.0, -5.6, 3.8, b.pick([P.doorBlue, P.cream, P.cladRed, P.intonacoSienna]));
     tenter(b, -9.8, -5.0, 3.4, b.pick([P.cream, P.white, P.doorGreen]));
     wellHead(b, rowX(2), -5.4, stone);

@@ -54,9 +54,8 @@ export const renaissanceHouse: BuildingDef = {
   build(b) {
     // the two medieval houses of the stage before, their ground storeys, shop arches, doors and yards
     // kept; the jettied upper floors cut back and rebuilt flush with the street front
-    const { W, uw, zf, zb, g, ld } = ROW;
-    const f1 = 3.4;
-    const f2 = ROW.up - f1;
+    const { uw, zf, zb, g, ld } = ROW;
+    const f1 = 3.4; // the first floor (the second takes the rest of the rebuilt front)
     const H = g + ROW.up;
     const serena = tint(P.pietraSerena, b.range(-0.03, 0.03));
     const tile = tint(P.coppi, b.range(-0.05, 0.02));

@@ -13,7 +13,7 @@ export const porticoShacks: BuildingDef = {
   date: 'c. 450 to 800',
   summary:
     'As the western empire failed, the town shrank to a fraction of its size. The insula, unrepaired, fell in on itself, and the poor moved into the shops of its ground floor and the shelter of its street portico, which nobody was keeping up any more. ' +
-    'Between its columns they built one-room shacks of timber posts, boards and brick pulled from the ruins, roofed with salvaged tiles leaning on the old back wall. ' +
+    'Between its columns they built one-room shacks of timber posts, boards and brick pulled from the ruins, roofed with salvaged tiles leaning on the broken front wall of the block, and used the shops behind as back rooms. ' +
     'Archaeologists find such huts in the forums and porticoes of Rome and many other towns from the fifth and sixth centuries on, often beside a kiln burning the marble for lime.',
   materials: ['reused brick and tufa', 'timber posts and boards', 'salvaged roof tiles', 'marble and granite columns'],
   lookFor: [

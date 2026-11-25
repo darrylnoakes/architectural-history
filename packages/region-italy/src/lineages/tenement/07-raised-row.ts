@@ -17,7 +17,7 @@ export const raisedRow: BuildingDef = {
     { label: 'Added storeys', note: 'Plastered brick storeys built on top of the medieval stone ones: you can see the line where the old wall stops.', at: [rowX(0), ROW.top + 0.15, ROW.zf + 0.2] },
     { label: 'Uneven roofline', note: 'Each house was raised separately, so the roofs step up and down and the side walls of the taller houses stand bare above their neighbours.', at: [rowX(1) - ROW.hw / 2 + 0.1, ROW.top + FH * 1.6, ROW.zf - 1.2] },
     { label: 'Washing lines', note: 'Lines strung across the front from window to window: in a crowded house there was nowhere else to dry clothes.', at: [rowX(3), ROW.top + FH + 1.2, ROW.zf + 0.5] },
-    { label: 'Shared well', note: 'The strips of yard behind have become one shared courtyard, with a well for all the families.', at: [rowX(2), 1.4, -5.2] },
+    { label: 'Shared well', note: 'The strips of yard behind have become one shared courtyard, round the old well, now drawn by all the families.', at: [rowX(2), 1.4, -5.4] },
     { label: 'Old profferlo', note: 'The medieval outside stair still serves the first floor; the floors above are reached from inside.', at: [rowX(1) + 0.4, 2.2, ROW.zf + 1.1] },
   ],
   influences: [],
@@ -33,7 +33,7 @@ export const raisedRow: BuildingDef = {
     const shutter = b.pick([P.oak, P.oakDark, tint(P.oak, 0.06)]);
 
     patch(b, PW, 8 - ROW.zf, mix(P.cobble, P.paving, 0.4), [0, (ROW.zf + 8) / 2], 0.05);
-    patch(b, PW, 8 + ROW.zb, mix(P.brickRed, P.paving, 0.55), [0, (ROW.zb - 8) / 2], 0.04);
+    patch(b, PW, 8 + ROW.zb, mix(P.brickRed, P.paving, 0.55), [0, (ROW.zb - 8) / 2], 0.03);
 
     const stairs = [true, true, b.chance(0.7), true, b.chance(0.5)];
     medievalRow(b, stone, { stairs, shield: b.pick([P.terracottaPainted, P.doorBlue]) });
@@ -78,7 +78,7 @@ export const raisedRow: BuildingDef = {
     }
 
     // the shared courtyard: a well, a long line of washing, a stone sink, pots of herbs
-    wellHead(b, rowX(2), -5.2, P.travertine);
+    wellHead(b, rowX(2), -5.4, P.travertine);
     b.box(0.12, 2.4, 0.12, P.oakSilver, { at: [rowX(0), 0, -6.6] });
     b.box(0.12, 2.4, 0.12, P.oakSilver, { at: [rowX(4), 0, -6.4] });
     washing(b, [rowX(0), 2.35, -6.6], [rowX(4), 2.35, -6.4], 9);
@@ -88,11 +88,17 @@ export const raisedRow: BuildingDef = {
       b.cyl(0.18, 0.3, P.terracotta, { at: [px, 0, ROW.zb - 0.4], rTop: 0.22, segs: 6 });
       b.blob(0.24, P.leaf, { at: [px, 0.45, ROW.zb - 0.4], detail: 0 });
     }
-    // a wall closing the courtyard at the back, with a gate
-    b.box(L * 0.42, 2.2, 0.35, stone, { at: [-L * 0.29, 0, -7.75] });
-    b.box(L * 0.42, 2.2, 0.35, stone, { at: [L * 0.29, 0, -7.75] });
+    // the old back wall of the yards, raised, with a gate cut in the middle; the old privy kept
+    b.sym((s) => {
+      b.box(L * 0.42, 1.1, 0.35, stone, { at: [s * L * 0.29, 0, -7.75] });
+      b.box(L * 0.42, 1.1, 0.35, stone, { at: [s * L * 0.29, 1.1, -7.75] });
+      b.box(L * 0.08 - 1.0, 2.2, 0.35, stone, { at: [s * (L * 0.04 + 0.5), 0, -7.75] });
+    });
     b.panel(2.0, 2.0, P.oakDark, { at: [0, 0.02, -7.6], facing: '-z', depth: 0.05 });
     b.box(2.6, 0.3, 0.4, stone, { at: [0, 2.2, -7.75] });
+    b.box(1.2, 2.0, 1.1, stone, { at: [rowX(4) + 1.4, 0, -6.9] });
+    b.shed(1.4, 1.3, 0.35, roof, { at: [rowX(4) + 1.4, 2.0, -6.9], high: '-z' });
+    b.panel(0.7, 1.6, P.oakDark, { at: [rowX(4) + 1.4, 0.02, -6.35], facing: '+z' });
 
     b.collider(L, D, { at: [0, 0, zc] });
     b.collider(L, 1.3, { at: [0, 0, ROW.zf + 0.62] });

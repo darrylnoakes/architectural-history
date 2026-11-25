@@ -55,7 +55,6 @@ export const casaASchiera: BuildingDef = {
       const brickUp = b.chance(0.5);
       const upper = brickUp ? tint(b.pick([P.brickOrange, P.cotto]), b.range(-0.04, 0.02)) : tint(stone, 0.03);
       const shut = b.pick([P.oak, P.oakDark, P.oakSilver]);
-      const zc = (zf + zb) / 2;
       // ground storey of squared stone
       rowGround(b, cx, ours, stone);
       for (const y of [0.7, 1.4, 2.1, 2.8, 3.5]) b.box(uw, 0.035, 0.02, tint(stone, -0.14), { at: [cx, y, zf + 0.005] });

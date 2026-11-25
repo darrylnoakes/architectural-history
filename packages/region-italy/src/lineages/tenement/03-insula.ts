@@ -28,7 +28,8 @@ export const insula: BuildingDef = {
     'Shops with mezzanines filled the street front, and between them narrow doorways opened straight onto stairs up to the flats, so tenants never passed through a shop. The best flats, on the first floor, opened onto the flat roof of a street portico, of the kind Nero ordered in front of the blocks after the fire of AD 64, and rents fell as you climbed, so the poorest lived under the roof in small rooms that were the last to escape a fire. ' +
     'There was no running water above the ground floor, and tenants carried it upstairs from the street fountain. Augustus limited the height of buildings on the street to 70 Roman feet, about 21 metres, and Trajan is said to have lowered it to 60.',
   materials: ['concrete faced with brick (opus testaceum)', 'travertine brackets and thresholds', 'timber floors and balconies', 'fired roof tiles'],
-  modelledOn: 'The insulae of Ostia (House of Diana, 2nd century AD) and the Insula dell’Ara Coeli, Rome',
+  modelledOn:
+    'The insulae of Ostia (2nd century AD) and the Insula dell’Ara Coeli, Rome, for the block of shops and flats; the street portico is the kind Nero ordered in front of blocks of flats after the fire of AD 64 (Tacitus, Annals 15.43; Suetonius, Nero 16), as along the main streets of Ostia',
   lookFor: [
     { label: 'Brick-faced concrete', note: 'A core of concrete faced with neat triangular bricks; string courses of brick mark each floor.', at: [-9.5, 9.4, ZF + 0.1] },
     { label: 'Street portico', note: 'After the great fire of AD 64 Nero had porticoes built in front of the blocks of flats, to shade the pavement and so that fires could be fought from their flat roofs; here the roof is a terrace for the first-floor flats.', at: [-5.4, 2.6, PORTICO.z + 0.4] },
