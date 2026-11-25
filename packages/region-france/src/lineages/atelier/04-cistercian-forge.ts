@@ -19,7 +19,7 @@ export const cistercianForge: BuildingDef = {
     { label: 'Waterwheel', note: 'The wheel in its stone pit turns the long shaft that runs through the wall to the hammer. The water comes in from upstream through the sluice at the head of the race.', at: [9.9, 3.2, -12.6] },
     { label: 'Tilt hammer', note: 'Cams on the shaft press down the tail of the oak helve, lifting the iron head, which then drops onto the anvil.', at: [6.5, 2.4, -4.5] },
     { label: 'Pointed transverse arches', note: 'Stone arches across the hall carry the vaults: monks’ engineering built to last, and to keep fire from the roof.', at: [4.2, 5.2, -5.5] },
-    { label: 'Hearth and bellows', note: 'Iron was reheated in a charcoal hearth blown by bellows, under a stone hood and flue.', at: [2.6, 2.4, -8.6] },
+    { label: 'Hearth and bellows', note: 'Iron was reheated in a charcoal hearth blown by bellows, under a stone hood and flue.', at: [5.8, 2.4, -8.6] },
   ],
   influences: ['cistercians'],
   build(b) {
@@ -115,15 +115,17 @@ export const cistercianForge: BuildingDef = {
       b.archWall(D - 1.8, H + 0.8, 0.6, dress, { at: [x, 0, z0], facing: '+x', openings: 1, openW: D - 3.0, openH: H + 0.3, shape: 'pointed' });
     }
 
-    // the forge: the hearth under its hood and flue against the back wall, with bellows
-    b.box(2.2, 0.9, 1.8, tint(stone, -0.08), { at: [2.6, 0, back + 1.8] });
-    b.box(0.9, 0.1, 0.9, P.timberBlack, { at: [2.6, 0.9, back + 1.9], jitter: false });
-    b.box(0.5, 0.06, 0.5, 0xd8762f, { at: [2.6, 0.97, back + 1.9], jitter: false });
-    b.cyl(1.3, 1.5, dress, { at: [2.6, 2.4, back + 1.6], rTop: 0.5, segs: 4, rotY: Math.PI / 4 });
-    b.box(0.9, H + rr / 2 - 2.6, 0.9, dress, { at: [2.6, 3.9, back + 1.6] });
-    b.box(1.1, 0.3, 1.1, tint(dress, -0.08), { at: [2.6, H + rr / 2 + 1.0, back + 1.6] });
-    b.blob(0.45, 0x6b4a32, { at: [4.0, 1.1, back + 1.6], stretch: [1.2, 0.5, 0.9], detail: 0 });
-    b.beam([4.6, 1.2, back + 1.6], [5.4, 1.9, back + 1.6], 0.06, 0.06, P.oak);
+    // the forge, in the opened bays: the hearth under its hood and flue against the back wall, its
+    // bellows beside it, a few steps from the anvil of the hammer that the wheel works
+    const hx = 5.8;
+    b.box(2.2, 0.9, 1.8, tint(stone, -0.08), { at: [hx, 0, back + 1.8] });
+    b.box(0.9, 0.1, 0.9, P.timberBlack, { at: [hx, 0.9, back + 1.9], jitter: false });
+    b.box(0.5, 0.06, 0.5, 0xd8762f, { at: [hx, 0.97, back + 1.9], jitter: false });
+    b.cyl(1.3, 1.5, dress, { at: [hx, 2.4, back + 1.6], rTop: 0.5, segs: 4, rotY: Math.PI / 4 });
+    b.box(0.9, H + rr / 2 - 2.6, 0.9, dress, { at: [hx, 3.9, back + 1.6] });
+    b.box(1.1, 0.3, 1.1, tint(dress, -0.08), { at: [hx, H + rr / 2 + 1.0, back + 1.6] });
+    b.blob(0.45, 0x6b4a32, { at: [hx + 1.3, 1.1, back + 1.8], stretch: [1.0, 0.5, 1.2], detail: 0 });
+    b.beam([hx + 1.4, 1.2, back + 2.4], [hx + 1.5, 1.9, back + 3.1], 0.06, 0.06, P.oak);
 
     // the hammer, its cam shaft running out through the back wall to the wheel
     const wx = WHEEL_X;
