@@ -14,6 +14,7 @@ export const casaASchiera: BuildingDef = {
     'the upper floors jut out over the street on timber brackets, the sporti that town governments later tried to clear from the main streets. Behind lies a yard ' +
     'with a well, a privy and a vegetable bed.',
   materials: ['squared stone ground floor', 'brick or stone upper walls', 'oak joists and brackets', 'clay pan-and-cover tiles'],
+  revisions: [{ year: 1880, note: 'The counters and night shutters have given way to glazed shop fronts in timber frames, set into the old arches.' }],
   lookFor: [
     {
       label: 'Shop arch',
@@ -79,12 +80,7 @@ export const casaASchiera: BuildingDef = {
       // the shop arch with its counter and a door to the stair
       const sx = cx - 0.8;
       rowOpenings(b, cx, tint(stone, 0.06), ours ? P.doorGreen : P.oakDark);
-      b.box(3.0, 0.95, 0.5, P.oak, { at: [sx, 0, zf + 0.25] }); // counter board on trestles
-      b.box(3.0, 0.12, 0.4, P.travertine, { at: [sx, 0, zf + 0.2] });
-      const wares = ours ? [P.cream, P.doorRed, 0x5a6f8a, P.cream, P.ochreWash] : [P.terracotta, P.bronze, P.terracotta, P.iron];
-      wares.forEach((c, i) => b.box(0.4, 0.22, 0.32, c, { at: [sx - 1.15 + i * (2.3 / (wares.length - 1)), 0.95, zf + 0.25] }));
-      // the night shutters, lifted up and hooked under the arch as an awning
-      b.group({ at: [sx, 3.15, zf + 0.06], rot: [-1.3, 0, 0] }, () => b.box(2.6, 0.06, 0.9, P.oak, { at: [0, 0, 0.45] }));
+      // (the counter and the shutters are built last, in shopFront: they were replaced in the nineteenth century)
 
       // upper windows: round-arched, with cut-stone voussoirs and board shutters
       const zw = zf + jet;
@@ -134,5 +130,23 @@ export const casaASchiera: BuildingDef = {
     b.box(0.14, g, zf - zb + 0.04, tint(P.rubble, -0.05), { at: [0, 0, (zf + zb) / 2] });
     b.box(0.14, f1 + f2 + 0.25, zf + jet - zb + 0.04, tint(P.rubble, -0.05), { at: [0, g, (zf + jet + zb) / 2] });
     rowYards(b, P.rubble, tint(P.travertine, -0.05), tile);
+
+    // the shop fittings: a counter on trestles and the night shutters hooked up as an awning; from the
+    // later nineteenth century, a glazed shop front in a timber frame set into the old arch
+    const glazed = b.since(1880);
+    for (const [cx, ours] of [[OURS, true], [THEIRS, false]] as [number, boolean][]) {
+      const sx = cx - 0.8;
+      if (!glazed) {
+        b.box(3.0, 0.95, 0.5, P.oak, { at: [sx, 0, zf + 0.25], jitter: false }); // counter board on trestles
+        b.box(3.0, 0.12, 0.4, P.travertine, { at: [sx, 0, zf + 0.2], jitter: false });
+        const wares = ours ? [P.cream, P.doorRed, 0x5a6f8a, P.cream, P.ochreWash] : [P.terracotta, P.bronze, P.terracotta, P.iron];
+        wares.forEach((c, i) => b.box(0.4, 0.22, 0.32, c, { at: [sx - 1.15 + i * (2.3 / (wares.length - 1)), 0.95, zf + 0.25], jitter: false }));
+        b.group({ at: [sx, 3.15, zf + 0.06], rot: [-1.3, 0, 0] }, () => b.box(2.6, 0.06, 0.9, P.oak, { at: [0, 0, 0.45], jitter: false }));
+      } else {
+        b.window(2.9, 2.6, { at: [sx, 0.35, zf + 0.04], facing: '+z', frame: P.oakDark, glass: 0x3e4f60, bars: [3, 2] });
+        b.box(3.0, 0.35, 0.1, P.oakDark, { at: [sx, 0, zf + 0.05], jitter: false });
+        b.box(2.4, 0.45, 0.08, ours ? P.doorGreen : 0x6b2a22, { at: [sx, 2.95, zf + 0.06], jitter: false }); // the sign board
+      }
+    }
   },
 };
