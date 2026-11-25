@@ -1,11 +1,14 @@
 import { P, mix, tint, type BuildingDef, type Builder } from '@ah/kit';
 import { lin, opening, flat, archPts, circlePts, roofZ, holyGround } from './shared';
+import { CASTRUM, curtain } from '../remparts/curtain';
 
 const WALL = mix(P.pierreBlonde, P.rubble, 0.45);
 const RENDER = mix(P.plaster, P.pierreBlonde, 0.4);
 const BRICK = P.brickRed;
 const ROOF = P.romanTile;
 const GLASS = mix(P.windowDark, P.plaster, 0.15);
+/** How far the group stands east (-Z) of the plot's middle, close in to the wall behind its apses. */
+const DZ = -7;
 
 /** A plain hall church: walls, a tiled roof, an apse to the east, windows high up. */
 function hall(b: Builder, x: number, w: number, z0: number, z1: number, h: number, ar: number, nWin: number) {
@@ -25,23 +28,26 @@ function hall(b: Builder, x: number, w: number, z0: number, z1: number, h: numbe
   b.collider(w, z1 - z0 + ar, { at: [x, 0, zc - ar / 2] });
 }
 
+/*
+ * The plot is centred at world (60, -40) facing west: plot +Z is world west, plot +X world north, so
+ * world x = 60 - z and world z = -40 + x. Behind its east end (z = WALL_Z, world x = 91) runs the east
+ * side of the late Roman circuit (town-walls.ts), which the town draws until 380 and the cathedral's
+ * models draw from then until 1050.
+ */
+export const WALL_Z = -31;
+
 /**
- * The late Roman town wall along the north side of the plot, with two round towers: small stone with
- * bands of brick on a base of reused blocks. Built after 275 and still standing beside the Carolingian
- * cathedral; the Romanesque transept is built across its line.
+ * The stretch of the late Roman town wall behind the apses, across the plot's full width: the town's
+ * own piece, in the town's own frame, so it runs on unbroken into the stretches either side. Small
+ * stone laced with brick on a footing of reused blocks, merlons on the field (east) side, and one
+ * half-round tower, behind the middle of the plot.
  */
 export function lateRomanWall(b: Builder) {
-  const wx = -14.6;
-  b.box(3.0, 1.6, 66, tint(P.pierreBlonde, 0.03), { at: [wx, 0, 0] });
-  b.box(2.8, 8.0, 66, WALL, { at: [wx, 0, 0] });
-  for (const y of [2.6, 4.2, 5.8, 7.4]) b.box(2.86, 0.22, 66, BRICK, { at: [wx, y, 0], jitter: false });
-  for (const z of lin(34, -32.5, 32.5)) b.box(0.6, 0.9, 0.95, WALL, { at: [wx - 1.1, 8.0, z], jitter: false });
-  for (const tz of [-22, 22]) {
-    b.cyl(2.4, 10.5, WALL, { at: [wx, 0, tz], segs: 10 });
-    for (const y of [2.6, 4.2, 5.8, 7.4, 9.0]) b.cyl(2.43, 0.22, BRICK, { at: [wx, y, tz], segs: 10, jitter: false });
-    b.cone(2.8, 2.6, ROOF, { at: [wx, 10.5, tz], segs: 10 });
-  }
-  b.collider(3.0, 66, { at: [wx, 0, 0] });
+  b.group({ at: [40, 0, 60], rotY: Math.PI / 2 }, () => {
+    b.group({ at: [91, 0, 0], rotY: Math.PI / 2 }, () => curtain(b, 'castrum', 23, 57));
+  });
+  b.collider(34, CASTRUM.t, { at: [0, 0, WALL_Z] });
+  b.collider(2 * CASTRUM.tower.r, 2 * CASTRUM.tower.r, { at: [0, 0, WALL_Z - CASTRUM.tower.z] });
 }
 
 export const cathedralGroup: BuildingDef = {
@@ -50,29 +56,29 @@ export const cathedralGroup: BuildingDef = {
   style: 'Late Antique (Early Christian)',
   date: 'c. 380',
   summary:
-    'After the raids of 275 the town shrank behind a wall built from its own ruined monuments, and the bishop, head of a Christian community whose faith was now the emperor’s, built in a corner against it. ' +
+    'After the raids of 275 the town shrank behind a wall built from its own ruined monuments, and the bishop, head of a Christian community whose faith was now the emperor’s, built just inside its east side, the apses of his churches towards the wall, as many of the first cathedrals of Gaul were. ' +
     'As at Geneva, Trier and Aquileia the cathedral is a pair of plain halls side by side: one perhaps for the full Eucharist, the other for teaching those preparing for baptism, though how the two were used is still debated. Between them stands the baptistery, a small room round a sunken pool where adults were baptised, at Easter, by the bishop himself. ' +
     'The walls are small stone and brick, plastered, under Roman tiles. Nothing of the temple survives: its stones may well be in the town wall.',
   materials: ['rubble and reused stone', 'brick bands', 'lime plaster', 'Roman roof tiles'],
   lookFor: [
-    { label: 'Town wall', note: 'The late Roman wall, of small stone with bands of brick on a base of reused blocks, with a round tower.', at: [-13.0, 5.0, 4.0] },
-    { label: 'Twin halls', note: 'Two churches side by side, the larger to the south: the “double cathedral” of the first Christian centuries.', at: [8.5, 10.5, 13.3] },
-    { label: 'Baptistery', note: 'The small building between the halls, with its own apse, where converts were baptised in a pool.', at: [-0.75, 7.2, 6.2] },
-    { label: 'Apses', note: 'Each hall ends in a half-round apse to the east, where the bishop’s chair and the altar stood.', at: [8.5, 6.0, -19.2] },
+    { label: 'Town wall', note: 'The east side of the late Roman wall, behind the apses: small stone with bands of brick on a footing of reused blocks, with a half-round tower.', at: [-12.0, 5.0, WALL_Z + CASTRUM.t / 2 + 0.2] },
+    { label: 'Twin halls', note: 'Two churches side by side, the larger to the south: the “double cathedral” of the first Christian centuries.', at: [8.5, 10.5, 13.3 + DZ] },
+    { label: 'Baptistery', note: 'The small building between the halls, with its own apse, where converts were baptised in a pool.', at: [-0.75, 7.2, 6.2 + DZ] },
+    { label: 'Apses', note: 'Each hall ends in a half-round apse to the east, where the bishop’s chair and the altar stood.', at: [8.5, 6.0, -19.2 + DZ] },
   ],
   modelledOn:
     'The Baptistery of Saint-Jean at Poitiers (founded in the late fourth or the fifth century and much remodelled in the seventh, when its pediments were made) for the baptistery with its gables, pediments and polygonal apse; the double cathedrals of Geneva and Trier for the plan of two halls. Their size and details here are generic.',
   influences: ['christian-basilica'],
   build(b) {
     holyGround(b, mix(P.earth, P.grassDry, 0.45));
-    b.box(24, 0.04, 34, mix(P.paving, P.earth, 0.3), { at: [2, 0, -1], jitter: false });
+    b.box(24, 0.04, 34, mix(P.paving, P.earth, 0.3), { at: [2, 0, -1 + DZ], jitter: false });
     lateRomanWall(b);
-    // the two halls
-    hall(b, -8.5, 7, -11, 11, 7.2, 2.8, 5);
-    hall(b, 8.5, 10, -15, 13, 9.4, 3.8, 7);
+    // the two halls, their apses towards the wall
+    hall(b, -8.5, 7, -11 + DZ, 11 + DZ, 7.2, 2.8, 5);
+    hall(b, 8.5, 10, -15 + DZ, 13 + DZ, 9.4, 3.8, 7);
     // the baptistery: a tall square room, a polygonal apse, a lower porch
     const bx = -0.75;
-    const bz = 3.0;
+    const bz = 3.0 + DZ;
     const bw = 6;
     const bh = 7.6;
     b.box(bw + 0.3, 0.4, bw + 0.3, tint(WALL, -0.05), { at: [bx, 0, bz] });
@@ -105,6 +111,6 @@ export const cathedralGroup: BuildingDef = {
     }
     b.collider(bw, bw + 5.6, { at: [bx, 0, bz + 1.4] });
     b.tree(7, { at: [3.0, 0, 20.0], kind: 'round' });
-    b.tree(6, { at: [-4.5, 0, -24.0], kind: 'round' });
+    b.tree(6, { at: [-13.0, 0, 21.0], kind: 'round' });
   },
 };

@@ -75,7 +75,7 @@ export const frankishPalace: BuildingDef = {
   date: 'c. 600',
   summary:
     'The forum was sacked in 275 and most of its stone built into the wall that the shrunken town threw up round its core. What could not be carted off is still there: the paved square, two plinths stripped of their bronzes, the vaulted cryptoporticus, now the count’s cellars, and the gateway arch, which serves as the gate of his yard. Under the Frankish kings the town is governed by a count (comes) appointed by the king to judge, raise troops and collect dues, while the bishop, often still a man of the old Gallo-Roman families, is the other great power within the walls. ' +
-    'The count lives in a corner of the Roman wall, using one of its round-fronted towers as his strongpoint, heightened in timber. His hall is a long timber building on a footing of reused stone, with a shingled roof and a smoke louvre, where he holds his court (mallus) and feasts his followers; beside it is a small stone chapel.',
+    'The count lives in the north-west corner of the Roman wall, using the round tower at the corner as his strongpoint, heightened in timber. His hall is a long timber building on a footing of reused stone, with a shingled roof and a smoke louvre, where he holds his court (mallus) and feasts his followers; beside it is a small stone chapel, and behind it, against the wall, a stable and the stair up to the wall-walk.',
   materials: ['oak', 'reused Roman stone and brick', 'oak shingles', 'rubble masonry'],
   lookFor: [
     { label: 'Roman wall with brick bands', note: 'The late Roman rampart of small squared stones laced with courses of red brick, still the town’s defence three centuries on.', at: [WX + WT / 2 + 0.2, 4.0, 2] },
