@@ -25,8 +25,8 @@ export const civicRestoration: BuildingDef = {
     palazzoPubblico(b, { stage: 2012 });
     lordsCourt(b, { restored: true });
     // the square repaved in travertine and grey stone, flush, with benches and young trees
-    pave(b, 43, 14.5, 0, 14.25, mix(P.travertine, P.paving, 0.3));
-    for (const z of spread(6, 8.5, 20.5)) b.box(43, 0.075, 0.25, P.pietraSerena, { at: [0, 0, z], jitter: false });
+    pave(b, 43, 14.5, 0, 14.25, mix(P.travertine, P.paving, 0.3), 0.04);
+    for (const z of spread(6, 8.5, 20.5)) b.box(43, 0.115, 0.25, P.pietraSerena, { at: [0, 0, z], jitter: false });
     kingMonument(b);
     squareWell(b); // the medieval well-head, kept in the new paving
     pave(b, 16.5, 28.5, 13.25, -7.25, mix(P.travertine, P.paving, 0.45));

@@ -1,5 +1,5 @@
 import { P, mix, type BuildingDef } from '@ah/kit';
-import { CENTRE_TOP, PAL, PORTAL_X, TWR, TWR_TOP, WING_TOP, brickSquare, palaceColliders, palazzoPubblico, pave, squareWell } from './shared';
+import { CENTRE_TOP, PAL, PORTAL_X, TWR, TWR_TOP, WING_TOP, brickSquare, earthSquare, palaceColliders, palazzoPubblico, pave, squareWell } from './shared';
 
 export const palazzoPubblicoDef: BuildingDef = {
   id: 'palazzo-pubblico',
@@ -21,10 +21,15 @@ export const palazzoPubblicoDef: BuildingDef = {
   ],
   modelledOn: 'The Palazzo Pubblico of Siena (1297 to 1310, tower 1325 to 1348) and the Palazzo Vecchio of Florence (from 1299), much reduced',
   influences: ['cistercian-gothic'],
+  revisions: [
+    {
+      year: 1340,
+      note: 'The square is paved in brick laid in panels between strips of travertine, as the Campo of Siena was between 1327 and 1349; until now it was beaten earth with a band of stone flags along the palace front.',
+    },
+  ],
   build(b) {
     palazzoPubblico(b, { stage: 1300 });
-    // the square in front, laid in brick between travertine strips, running round the right side
-    brickSquare(b, -21.5, 21.5, PAL.zf, 21.5);
+    // the yard round the right side
     pave(b, 14.5, 28, 14.25, -7, mix(P.cotto, P.paving, 0.45));
     // the old stone wellhead in the square, and a low wall closing the yard behind
     squareWell(b);
@@ -35,6 +40,9 @@ export const palazzoPubblicoDef: BuildingDef = {
     b.collider(0.6, 18, { at: [5.8, 0, -12] });
     b.collider(25.8, 0.6, { at: [-7.2, 0, -21] });
     b.collider(0.6, 18, { at: [-20, 0, -12] });
+    // the square in front: beaten earth and flags until it is laid in brick between travertine strips
+    if (b.since(1340)) brickSquare(b, -21.5, 21.5, PAL.zf, 21.5);
+    else earthSquare(b);
     void WING_TOP;
   },
 };

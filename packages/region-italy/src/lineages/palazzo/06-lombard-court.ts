@@ -1,5 +1,6 @@
 import { P, tint, type BuildingDef } from '@ah/kit';
-import { block, compoundWalls, onFace, wellHead, win } from './shared';
+import { APSE, lateApse } from './05-late-antique-domus';
+import { block, compoundWalls, onFace, WELL_AT, wellHead, win } from './shared';
 
 export const lombardCourt: BuildingDef = {
   id: 'lombard-court',
@@ -9,13 +10,13 @@ export const lombardCourt: BuildingDef = {
   summary:
     'Two centuries after the Gothic War the town is small and the leading family belongs to the Lombard nobility that rules it. ' +
     'Its hall stands among the ruins and is built from them: Roman brick, tufa blocks and the odd column drum or inscribed stone set in the walls, carrying a timber upper storey with an outside stair. ' +
-    'A wall closes the compound, with a stable, a bread oven, a well and a small private chapel with an apse, for the family’s own priest. ' +
+    'A wall closes the compound, with a stable, a bread oven, a well and a small private chapel for the family’s own priest, its nave built against the apse of the ruined Roman hall that once stood here. ' +
     'Nobody now builds in concrete or makes new roof tiles on the Roman scale: tiles are reused, and timber and shingle do the rest.',
   materials: ['reused Roman brick and tufa', 'spolia', 'timber frame and planking', 'wooden shingles', 'reused roof tiles'],
   lookFor: [
     { label: 'Reused Roman masonry (spolia)', note: 'Patches of Roman brick, tufa blocks and a marble column drum laid sideways in the wall: the ruins are the quarry.', at: [-3.0, 1.2, 4.6] },
     { label: 'Timber upper storey', note: 'The living rooms sit on a planked timber storey over the stone ground floor, reached by an outside stair.', at: [2.0, 5.2, 4.8] },
-    { label: 'Private chapel', note: 'A small single-cell chapel with a rounded apse, built by the family for its own use.', at: [7.6, 3.6, -9.6] },
+    { label: 'Private chapel', note: 'A small single-cell chapel built by the family for its own use; its sanctuary is the apse of a late Roman reception hall, still standing to its full height among the ruins.', at: [-1, 3.6, -12.4] },
     { label: 'Enclosing wall and gate', note: 'A rubble wall with a timber gate closes the compound off from the street.', at: [0, 3.6, 12.0] },
   ],
   build(b) {
@@ -60,24 +61,27 @@ export const lombardCourt: BuildingDef = {
     b.box(1.4, 0.25, 1.2, wood, { at: [0.6, G - 0.25, 5.1] });
     b.collider(4.2, 1.2, { at: [3.4, 0, 5.1] });
 
-    // ---- the chapel with its apse
-    const cz = -7.5;
-    block(b, 4.6, 4.4, 6.0, P.plaster, 7.6, cz);
-    b.gable(4.6, 6.0, 1.6, roof, { at: [7.6, 4.4, cz], ridge: 'z', overhang: 0.3, wall: P.plaster });
-    b.lathe([[1.8, 0], [1.8, 3.6]], P.plaster, { at: [7.6, 0, cz - 3], segs: 7, start: Math.PI / 2, sweep: Math.PI });
-    b.lathe([[1.95, 3.6], [0.01, 4.6]], roof, { at: [7.6, 0, cz - 3], segs: 7, start: Math.PI / 2, sweep: Math.PI });
-    b.panel(1.1, 2.3, wood, { at: [7.6, 0, cz + 3], facing: '+z', shape: 'round', depth: 0.08 });
-    b.panel(0.3, 0.8, P.windowDark, { at: [7.6, 3.0, cz + 3], facing: '+z', shape: 'round', depth: 0.05 });
-    b.box(0.2, 0.9, 0.08, wood, { at: [7.6, 6.0, cz + 2.9] });
-    b.box(0.6, 0.18, 0.08, wood, { at: [7.6, 6.55, cz + 2.9] });
-    for (const z of [cz - 1.5, cz + 1.5]) b.panel(0.3, 0.8, P.windowDark, { at: [9.9, 2.6, z], facing: '+x', shape: 'round', depth: 0.05 });
+    // ---- the chapel: a plain nave built against the apse of the ruined Roman hall, which stands
+    // to its old height and serves as the sanctuary
+    const { x: ax, z: az } = APSE;
+    const nz0 = WELL_AT[1] - 1.0; // the front of the nave, clear of the well
+    const nd = nz0 - az;
+    const cz = (nz0 + az) / 2;
+    lateApse(b, tint(P.brickRed, -0.05), P.tufa, roof);
+    block(b, 5.4, 4.6, nd, P.plaster, ax, cz);
+    b.gable(5.4, nd, 1.6, roof, { at: [ax, 4.6, cz], ridge: 'z', overhang: 0.3, wall: P.plaster });
+    b.panel(1.1, 2.3, wood, { at: [ax, 0, nz0], facing: '+z', shape: 'round', depth: 0.08 });
+    b.panel(0.3, 0.8, P.windowDark, { at: [ax, 3.0, nz0], facing: '+z', shape: 'round', depth: 0.05 });
+    b.box(0.2, 0.9, 0.08, wood, { at: [ax, 6.2, nz0 - 0.1] });
+    b.box(0.6, 0.18, 0.08, wood, { at: [ax, 6.75, nz0 - 0.1] });
+    for (const z of [cz - 1.2, cz + 1.2]) b.panel(0.3, 0.8, P.windowDark, { at: [ax + 2.7, 2.6, z], facing: '+x', shape: 'round', depth: 0.05 });
 
     // ---- stable with a thatched roof, oven, well, garden
     block(b, 5.5, 2.4, 4, wood, -7.6, -8.4);
     b.gable(5.5, 4, 1.8, P.thatch, { at: [-7.6, 2.4, -8.4], overhang: 0.4, thick: 0.35 });
     b.panel(1.6, 2.0, P.oakDark, { at: [-7.6, 0, -6.4], facing: '+z', depth: 0.05 });
-    b.box(1.8, 0.8, 1.8, rubble, { at: [-2.0, 0, -9.6] });
-    b.dome(0.9, P.daub, { at: [-2.0, 0.8, -9.6], segs: 8 });
+    b.box(1.8, 0.8, 1.8, rubble, { at: [6.5, 0, -9.6] });
+    b.dome(0.9, P.daub, { at: [6.5, 0.8, -9.6], segs: 8 });
     wellHead(b, rubble, 'wood', wood);
     b.box(6, 0.12, 4.5, P.soil, { at: [-6.5, 0, 7.8] });
     for (let i = 0; i < 4; i++) b.box(5.6, 0.25, 0.3, P.leaf, { at: [-6.5, 0.1, 6.2 + i * 1.0] });

@@ -367,10 +367,20 @@ export function pave(b: Builder, w: number, d: number, x: number, z: number, col
 
 /** A brick square laid in panels between travertine strips, like the Campo of Siena. */
 export function brickSquare(b: Builder, x0: number, x1: number, z0: number, z1: number, o?: { strips?: number }): void {
-  pave(b, x1 - x0, z1 - z0, (x0 + x1) / 2, (z0 + z1) / 2, mix(P.cotto, P.paving, 0.35));
+  // laid 0.1 m thick so that it shows over the town's own ground
+  b.box(x1 - x0, 0.1, z1 - z0, mix(P.cotto, P.paving, 0.35), { at: [(x0 + x1) / 2, 0, (z0 + z1) / 2], jitter: false });
   const n = o?.strips ?? 6;
-  for (const x of spread(n, x0 + 1, x1 - 1)) b.box(0.3, 0.075, z1 - z0, P.travertine, { at: [x, 0, (z0 + z1) / 2], jitter: false });
-  b.box(x1 - x0, 0.075, 0.3, P.travertine, { at: [(x0 + x1) / 2, 0, z0 + 0.3], jitter: false });
+  for (const x of spread(n, x0 + 1, x1 - 1)) b.box(0.3, 0.115, z1 - z0, P.travertine, { at: [x, 0, (z0 + z1) / 2], jitter: false });
+  b.box(x1 - x0, 0.115, 0.3, P.travertine, { at: [(x0 + x1) / 2, 0, z0 + 0.3], jitter: false });
+}
+
+/**
+ * The main square as the commune first had it, about 1210: beaten earth, with a band of stone flags
+ * along the front of the town hall. It is paved in brick in the 1340s (brickSquare).
+ */
+export function earthSquare(b: Builder): void {
+  b.box(43, 0.1, 14.5, mix(P.earth, P.gravel, 0.5), { at: [0, 0, 14.25], jitter: false });
+  b.box(28, 0.13, 2.6, tint(P.pietraForte, 0.04), { at: [-4.5, 0, 8.3], jitter: false });
 }
 
 /** A low-poly flag on a pole: `stripes` are colours hung vertically (tricolour) or one banner colour. */
@@ -450,6 +460,8 @@ export function sieneseArch(b: Builder, at: V3, facing: Facing, w: number, h: nu
 export interface PalaceOpts {
   /** 1300: as built. Later stages alter it. */
   stage: 1300 | 1480 | 1885 | 1934 | 1975 | 2012;
+  /** The clock's minute hand; by default from the stage after 1480 (the lord's palace gains it as a revision). */
+  minuteHand?: boolean;
 }
 
 /**
@@ -589,7 +601,7 @@ export function palazzoPubblico(b: Builder, o: PalaceOpts): void {
       b.panel(2.4, 2.4, P.white, { at: [0, shaft - 5.5, tw / 2], facing: '+z', shape: 'circle', depth: 0.08 });
       b.box(0.12, 0.95, 0.04, P.black, { at: [0, shaft - 4.3, tw / 2 + 0.14], jitter: false });
       // an early public clock has a single hour hand; the minute hand comes with later mechanisms
-      if (st > 1480) b.box(0.7, 0.12, 0.04, P.black, { at: [0.3, shaft - 4.3, tw / 2 + 0.14], jitter: false });
+      if (o.minuteHand ?? st > 1480) b.box(0.7, 0.12, 0.04, P.black, { at: [0.3, shaft - 4.3, tw / 2 + 0.14], jitter: false });
     }
   });
 

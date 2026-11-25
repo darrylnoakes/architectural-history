@@ -40,8 +40,8 @@ export const regionalOffices: BuildingDef = {
       lordsCourt(b);
       brickSquare(b, -21.5, 21.5, PAL.zf, 21.5);
       // tarmac laid over the brick for the car park
-      pave(b, 34, 11, -4.5, 15.6, mix(P.tarmac, P.cobble, 0.35), 0.03);
-      for (const x of spread(10, -20, 10)) b.box(0.1, 0.1, 4, P.white, { at: [x, 0.03, 18.5], jitter: false });
+      pave(b, 34, 11, -4.5, 15.6, mix(P.tarmac, P.cobble, 0.35), 0.07);
+      for (const x of spread(10, -20, 10)) b.box(0.1, 0.1, 4, P.white, { at: [x, 0.07, 18.5], jitter: false });
       kingMonument(b);
       spread(8, -18.6, 8.6).forEach((x, i) => {
         if (Math.abs(x - MON[0]) < 3.4) return;

@@ -1,5 +1,5 @@
 import { P, mix, spread, tint, type BuildingDef, type Builder } from '@ah/kit';
-import { arcade, archRing, brickSquare, corbels, flatArch, pave, squareWell } from './shared';
+import { arcade, archRing, earthSquare, corbels, flatArch, pave, squareWell } from './shared';
 
 /** A round-arched three-light window: a white stone arch round three lights on two colonnettes. */
 function roundTrifora(b: Builder, at: [number, number, number], rotY: number, w = 2.4, h = 2.9): void {
@@ -45,8 +45,8 @@ export const broletto: BuildingDef = {
     const XC = (X0 + X1) / 2;
     const ZC = (Z0 + Z1) / 2;
 
-    // the square, laid in brick, and the yard behind
-    brickSquare(b, -21.5, 21.5, Z1, 21.5);
+    // the square, still beaten earth with stone flags along the front, and the yard behind
+    earthSquare(b);
     pave(b, 43, Z1 + 21.5, 0, (Z1 - 21.5) / 2, mix(P.earth, P.gravel, 0.45));
     // the arcade floor, a step up
     b.box(W + 0.4, 0.2, D + 0.4, tint(grey, 0.1), { at: [XC, 0, ZC], jitter: false });

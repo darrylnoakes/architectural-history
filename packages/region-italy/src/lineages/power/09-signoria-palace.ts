@@ -6,6 +6,7 @@ import {
   TWR,
   WING,
   brickSquare,
+  kingMonument,
   lordsColliders,
   lordsCourt,
   palaceColliders,
@@ -34,8 +35,18 @@ export const signoriaPalace: BuildingDef = {
   ],
   modelledOn: 'The Ducal Palace of Urbino (courtyard by Luciano Laurana, c. 1468 to 1472; the Facciata dei Torricini), much reduced',
   influences: ['renaissance-birth'],
+  revisions: [
+    {
+      year: 1760,
+      note: 'The tower clock is given a pendulum movement and, with it, a minute hand beside the old single hour hand.',
+    },
+    {
+      year: 1885,
+      note: 'A bronze equestrian statue of King Victor Emmanuel II, on a granite pedestal inside a railing, is set up in the square, as in most Italian towns in the years after his death in 1878.',
+    },
+  ],
   build(b) {
-    palazzoPubblico(b, { stage: 1480 });
+    palazzoPubblico(b, { stage: 1480, minuteHand: b.since(1760) });
     lordsCourt(b);
     brickSquare(b, -21.5, 21.5, PAL.zf, 21.5);
     squareWell(b);
@@ -85,6 +96,8 @@ export const signoriaPalace: BuildingDef = {
 
     palaceColliders(b, true);
     lordsColliders(b);
+    // from the 1880s the monument to the king stands in the square, as it does on the prefecture's square
+    if (b.since(1885)) kingMonument(b);
     b.collider(0.6, gz1 - gz0, { at: [gx0, 0, (gz0 + gz1) / 2] });
     b.collider(0.6, gz1 - gz0, { at: [gx1 - 0.2, 0, (gz0 + gz1) / 2] });
     b.collider(gx1 - gx0, 0.6, { at: [(gx0 + gx1) / 2, 0, gz0 + 0.2] });

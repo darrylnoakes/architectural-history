@@ -31,9 +31,9 @@ export const highSpeedStation: BuildingDef = {
   modelledOn: 'Torino Porta Susa (AREP with Silvio d’Ascia and Agostino Magnaghi, opened 2013), much reduced',
   lookFor: [
     { label: 'Glass gallery', note: 'A single long vault of glass over the concourse, open along its length like a covered street.', at: [-12, VH + 0.6, ZC] },
-    { label: 'Steel arches', note: 'A row of identical curved steel ribs, repeated every few metres, carries the glazing.', at: [X1 + 0.3, 6, 4.6] },
+    { label: 'Steel arches', note: 'A row of identical curved steel ribs, repeated every few metres, carries the glazing.', at: [X1 + 0.3, 6.6, 5.6] },
     { label: 'Photovoltaic glazing', note: 'Darker panels in the upper part of the vault hold solar cells that generate electricity.', at: [6, VH - 0.8, ZC - 2.2] },
-    { label: 'Pavilions inside', note: 'Ticket office and shops are freestanding boxes inside the gallery, so the space flows round them.', at: [-6, 3.4, 1.2] },
+    { label: 'Pavilions inside', note: 'Ticket office and shops are freestanding boxes inside the gallery, so the space flows round them.', at: [-6, 3.9, 1.2] },
     { label: 'High-speed train', note: 'A streamlined electric train for speeds of up to 300 km/h, its pointed nose shaped to cut air resistance.', at: [-17.5, 4.2, TRACKS[0] + 1.6] },
   ],
   build(b) {
