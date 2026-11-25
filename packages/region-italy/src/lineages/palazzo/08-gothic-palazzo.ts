@@ -8,7 +8,7 @@ export const gothicPalazzo: BuildingDef = {
   date: 'c. 1340',
   summary:
     'The great families of the commune have come down from their towers into a broad, compact town palace that is at once house, counting-house and warehouse; ' +
-    'this family’s own tower, cut down to the height the commune allowed, is built into its back corner, its putlog holes and high door still showing in the court. ' +
+    'this family’s own tower, cut down to a stump, is built into its back corner, its putlog holes and high door still showing in the court. ' +
     'The ground floor opens to the street in wide arches for the family business, the household lives on the floors above, lit by two-light windows with pointed heads, and battlements on corbels still give a fortified look, more a sign of rank than a defence. ' +
     'Behind, a small courtyard holds the old well and an open stone stair with timber galleries leading to the upper rooms. Later generations often replaced the battlements with an open roof loggia (altana), as the Davanzati did at this palace in the sixteenth century.',
   materials: ['pietraforte ashlar', 'brick', 'timber floors and galleries', 'coppi roof tiles', 'wrought iron'],
@@ -20,7 +20,7 @@ export const gothicPalazzo: BuildingDef = {
     { label: 'Two-light windows (bifore)', note: 'Each window is split by a slender colonnette into two pointed lights under one pointed arch.', at: [4, 7.6, 12.4] },
     { label: 'Battlements on corbels', note: 'Square merlons crown a parapet carried forward on a row of stone corbels: a show of rank rather than a real defence.', at: [-9.5, 18.4, 12.6] },
     { label: 'Courtyard stair and gallery', note: 'An open stone stair climbs the side of the courtyard to a timber gallery (ballatoio) that gives onto the rooms of the main floor.', at: [4.2, 3.4, -2.0] },
-    { label: 'Cut-down tower', note: 'The family’s twelfth-century tower, lopped when the commune limited the height of towers, now rises only a little above the roof in the back corner; its putlog holes and the door high in its wall still show in the court.', at: [-7.2, 12.0, 2.5] },
+    { label: 'Cut-down tower', note: 'The family’s twelfth-century tower, cut down when the palace was built round it (the communes had begun to order towers lowered), now rises only a little above the roof in the back corner; its putlog holes and the door high in its wall still show in the court.', at: [-7.2, 12.0, 2.5] },
   ],
   build(b) {
     const stone = b.pick([P.pietraForte, tint(P.pietraForte, 0.04), tint(P.pietraForte, -0.03)]);
