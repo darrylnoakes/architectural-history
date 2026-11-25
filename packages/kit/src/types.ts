@@ -254,6 +254,11 @@ export interface Site {
    * to be dug into shape. Without it only the middle of the town is fine.
    */
   detail?: { x0: number; z0: number; x1: number; z1: number };
+  /**
+   * Smaller areas with earthworks that lie outside `detail` (a castle on its hill, a moated house in
+   * the plain): each gets a fine patch of ground of its own, let into the coarser land round it.
+   */
+  detailPatches?: { x0: number; z0: number; x1: number; z1: number }[];
   /** Places trees never grow (beyond roads, plots, squares and the river, which are kept clear anyway). */
   clearings?: { x: number; z: number; r: number }[];
   props: SiteProp[];

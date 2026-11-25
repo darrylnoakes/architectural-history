@@ -152,19 +152,225 @@ function meshFrom(data: { pos: number[]; idx: number[] }, mat: THREE.Material): 
   return m;
 }
 
-/** The land: relief, field patterns that change with the era, the river, and the streets. */
-export class Terrain {
-  readonly group = new THREE.Group();
-  private ground: THREE.Mesh;
-  private colFrom: Float32Array;
-  private colTo: Float32Array;
-  /** Height of the natural ground at each vertex, and the heights the surface is moving between. */
+interface Rect {
+  x0: number;
+  z0: number;
+  x1: number;
+  z1: number;
+}
+
+/**
+ * One gridded sheet of ground: its vertices, the colours it is fading between and, where the ground
+ * is being dug or filled, the heights it is moving between. The land is one big sheet, with small
+ * finer ones let into it wherever earthworks lie outside its own fine part.
+ */
+class Sheet {
+  readonly mesh: THREE.Mesh;
   private natY: Float32Array;
   private yFrom: Float32Array;
   private yTo: Float32Array;
+  private colFrom: Float32Array;
+  private colTo: Float32Array;
   private moving = false;
-  private nx = 0;
-  private nz = 0;
+  private nx: number;
+  private nz: number;
+  /** Cells left out of this sheet (as index ranges), where a finer sheet is let in. */
+  private holes: [number, number, number, number][] = [];
+  /** True for a vertex on the rim of a let-in sheet: it must stay on the edge of the land round it. */
+  private rim: Uint8Array;
+
+  constructor(
+    private land: Land,
+    readonly xs: Float32Array,
+    readonly zs: Float32Array,
+    material: THREE.Material,
+    /** For a let-in sheet: the height of the land round it along its rim. */
+    rimY?: (x: number, z: number) => number,
+  ) {
+    const NX = (this.nx = xs.length);
+    const NZ = (this.nz = zs.length);
+    const pos = new Float32Array(NX * NZ * 3);
+    this.natY = new Float32Array(NX * NZ);
+    this.rim = new Uint8Array(NX * NZ);
+    for (let j = 0; j < NZ; j++) {
+      for (let i = 0; i < NX; i++) {
+        const k = j * NX + i;
+        const edge = !!rimY && (i === 0 || j === 0 || i === NX - 1 || j === NZ - 1);
+        this.rim[k] = edge ? 1 : 0;
+        pos[k * 3] = xs[i];
+        pos[k * 3 + 1] = this.natY[k] = edge ? rimY!(xs[i], zs[j]) : land.natural(xs[i], zs[j]);
+        pos[k * 3 + 2] = zs[j];
+      }
+    }
+    this.yFrom = Float32Array.from(this.natY);
+    this.yTo = Float32Array.from(this.natY);
+    const g = new THREE.BufferGeometry();
+    g.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+    g.setIndex(new THREE.BufferAttribute(new Uint32Array((NX - 1) * (NZ - 1) * 6), 1));
+    this.colFrom = new Float32Array(pos.length);
+    this.colTo = new Float32Array(pos.length);
+    g.setAttribute('color', new THREE.BufferAttribute(new Float32Array(pos.length), 3));
+    this.mesh = new THREE.Mesh(g, material);
+    this.mesh.receiveShadow = true;
+    this.triangulate();
+  }
+
+  /** The rectangle of whole cells that covers `r`, and leave those cells out of this sheet from now on. */
+  open(r: Rect): Rect {
+    const lo = (a: Float32Array, v: number) => {
+      let i = 0;
+      while (i < a.length - 2 && a[i + 1] <= v) i++;
+      return i;
+    };
+    const hi = (a: Float32Array, v: number) => {
+      let i = a.length - 1;
+      while (i > 1 && a[i - 1] >= v) i--;
+      return i;
+    };
+    const i0 = lo(this.xs, r.x0);
+    const i1 = hi(this.xs, r.x1);
+    const j0 = lo(this.zs, r.z0);
+    const j1 = hi(this.zs, r.z1);
+    this.holes.push([i0, i1, j0, j1]);
+    this.triangulate();
+    return { x0: this.xs[i0], x1: this.xs[i1], z0: this.zs[j0], z1: this.zs[j1] };
+  }
+
+  /** Height of this sheet's own surface along one of its grid lines (between two of its vertices). */
+  edgeHeight(x: number, z: number): number {
+    const at = (a: Float32Array, v: number) => {
+      let i = 0;
+      while (i < a.length - 2 && a[i + 1] < v) i++;
+      return i;
+    };
+    const i = at(this.xs, x);
+    const j = at(this.zs, z);
+    const u = Math.min(1, Math.max(0, (x - this.xs[i]) / (this.xs[i + 1] - this.xs[i])));
+    const v = Math.min(1, Math.max(0, (z - this.zs[j]) / (this.zs[j + 1] - this.zs[j])));
+    const y = (ii: number, jj: number) => this.natY[jj * this.nx + ii];
+    // on a grid line one of u, v is 0 or 1, so this is the straight edge between two vertices
+    return (y(i, j) * (1 - u) + y(i + 1, j) * u) * (1 - v) + (y(i, j + 1) * (1 - u) + y(i + 1, j + 1) * u) * v;
+  }
+
+  /** Work out the colours for an era and, if the ground has been dug or filled, its new heights. */
+  repaint(era: Era, dug: boolean) {
+    const pos = this.mesh.geometry.attributes.position as THREE.BufferAttribute;
+    const col = this.mesh.geometry.attributes.color as THREE.BufferAttribute;
+    const arr = pos.array as Float32Array;
+    // start the change from whatever is on screen now
+    this.colFrom.set(col.array as Float32Array);
+    const c = new THREE.Color();
+    const cc = new THREE.Color();
+    const cuts = this.land.cuts;
+    const s: CutSample = { depth: 0, color: undefined, weight: 0 };
+    for (let i = 0; i < pos.count; i++) {
+      const x = arr[i * 3];
+      const z = arr[i * 3 + 2];
+      groundColour(this.land, x, z, this.natY[i], era, c);
+      if (dug) {
+        this.yFrom[i] = arr[i * 3 + 1];
+        this.yTo[i] = this.natY[i];
+      }
+      if (!cuts.empty && !this.rim[i] && cuts.sample(x, z, s).depth > 0) {
+        // the bottom of a ditch takes its own colour, or lies in shade
+        if (s.color !== undefined) c.lerp(cc.setHex(s.color, THREE.SRGBColorSpace), s.weight);
+        else c.multiplyScalar(1 - 0.22 * s.weight);
+        this.yTo[i] = this.natY[i] - s.depth;
+      }
+      this.colTo[i * 3] = c.r;
+      this.colTo[i * 3 + 1] = c.g;
+      this.colTo[i * 3 + 2] = c.b;
+    }
+    if (dug) {
+      this.moving = true;
+      this.triangulate();
+    }
+  }
+
+  /**
+   * Split each cell along whichever diagonal is the more level in the ground as it is going to be, so
+   * the lip of a ditch running across the grid comes out as a clean crease and not a row of steps.
+   */
+  private triangulate() {
+    const index = this.mesh.geometry.index!;
+    const idx = index.array as Uint32Array;
+    const y = this.yTo;
+    const NX = this.nx;
+    let k = 0;
+    for (let j = 0; j < this.nz - 1; j++) {
+      for (let i = 0; i < NX - 1; i++) {
+        if (this.holes.some(([i0, i1, j0, j1]) => i >= i0 && i < i1 && j >= j0 && j < j1)) continue;
+        const a = j * NX + i;
+        const b = a + 1;
+        const c = a + NX;
+        const d = c + 1;
+        if (Math.abs(y[a] - y[d]) < Math.abs(y[b] - y[c])) {
+          idx[k++] = a;
+          idx[k++] = c;
+          idx[k++] = d;
+          idx[k++] = a;
+          idx[k++] = d;
+          idx[k++] = b;
+        } else {
+          idx[k++] = a;
+          idx[k++] = c;
+          idx[k++] = b;
+          idx[k++] = b;
+          idx[k++] = c;
+          idx[k++] = d;
+        }
+      }
+    }
+    this.mesh.geometry.setDrawRange(0, k);
+    index.needsUpdate = true;
+  }
+
+  /** Put the colours, and the heights if the ground is being dug or filled, where they are going. */
+  settle() {
+    const g = this.mesh.geometry;
+    const col = g.attributes.color as THREE.BufferAttribute;
+    (col.array as Float32Array).set(this.colTo);
+    col.needsUpdate = true;
+    if (this.moving) {
+      const pos = g.attributes.position as THREE.BufferAttribute;
+      const arr = pos.array as Float32Array;
+      for (let i = 0; i < this.yTo.length; i++) arr[i * 3 + 1] = this.yTo[i];
+      pos.needsUpdate = true;
+      this.moving = false;
+    }
+  }
+
+  /** Part-way (k from 0 to 1) between the old colours and heights and the new. */
+  blend(k: number) {
+    const col = this.mesh.geometry.attributes.color as THREE.BufferAttribute;
+    const arr = col.array as Float32Array;
+    for (let i = 0; i < arr.length; i++) arr[i] = this.colFrom[i] + (this.colTo[i] - this.colFrom[i]) * k;
+    col.needsUpdate = true;
+    if (this.moving) {
+      const pos = this.mesh.geometry.attributes.position as THREE.BufferAttribute;
+      const p = pos.array as Float32Array;
+      for (let i = 0; i < this.yTo.length; i++) if (this.yFrom[i] !== this.yTo[i]) p[i * 3 + 1] = this.yFrom[i] + (this.yTo[i] - this.yFrom[i]) * k;
+      pos.needsUpdate = true;
+    }
+  }
+
+  get isMoving(): boolean {
+    return this.moving;
+  }
+}
+
+/** Evenly spaced lines from a to b, about `step` apart. */
+function evenLines(a: number, b: number, step: number): Float32Array {
+  const n = Math.max(1, Math.round((b - a) / step));
+  return Float32Array.from({ length: n + 1 }, (_, i) => a + ((b - a) * i) / n);
+}
+
+/** The land: relief, field patterns that change with the era, the river, and the streets. */
+export class Terrain {
+  readonly group = new THREE.Group();
+  /** The ground: the land as a whole, and any finer sheets let into it. */
+  private sheets: Sheet[] = [];
+  private groundMat = new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 1, metalness: 0, flatShading: true });
   private cutsVersion = 0;
   private blend = 1;
   private roadGroup = new THREE.Group();
@@ -181,36 +387,14 @@ export class Terrain {
     const d = land.site.detail;
     const xs = d ? gridLines(cx, d.x0, d.x1, 1.5, 1.05) : gridLines(cx, cx - 110, cx + 110, 2, 1.035);
     const zs = d ? gridLines(cz, d.z0, d.z1, 1.5, 1.05) : gridLines(cz, cz - 110, cz + 110, 2, 1.035);
-    const NX = xs.length;
-    const NZ = zs.length;
-    const pos = new Float32Array(NX * NZ * 3);
-    this.natY = new Float32Array(NX * NZ);
-    for (let j = 0; j < NZ; j++) {
-      for (let i = 0; i < NX; i++) {
-        const k = j * NX + i;
-        pos[k * 3] = xs[i];
-        pos[k * 3 + 1] = this.natY[k] = land.natural(xs[i], zs[j]);
-        pos[k * 3 + 2] = zs[j];
-      }
+    const main = new Sheet(land, xs, zs, this.groundMat);
+    this.sheets.push(main);
+    // earthworks beyond the fine part of the land get a fine sheet of their own, let into it
+    for (const want of land.site.detailPatches ?? []) {
+      const r = main.open(want);
+      this.sheets.push(new Sheet(land, evenLines(r.x0, r.x1, 1.5), evenLines(r.z0, r.z1, 1.5), this.groundMat, (x, z) => main.edgeHeight(x, z)));
     }
-    this.yFrom = Float32Array.from(this.natY);
-    this.yTo = Float32Array.from(this.natY);
-    this.nx = NX;
-    this.nz = NZ;
-    const idx = new Uint32Array((NX - 1) * (NZ - 1) * 6);
-    const g = new THREE.BufferGeometry();
-    g.setAttribute('position', new THREE.BufferAttribute(pos, 3));
-    g.setIndex(new THREE.BufferAttribute(idx, 1));
-    this.colFrom = new Float32Array(pos.length);
-    this.colTo = new Float32Array(pos.length);
-    g.setAttribute('color', new THREE.BufferAttribute(new Float32Array(pos.length), 3));
-    this.ground = new THREE.Mesh(
-      g,
-      new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 1, metalness: 0, flatShading: true }),
-    );
-    this.ground.receiveShadow = true;
-    this.group.add(this.ground);
-    this.triangulate();
+    for (const sh of this.sheets) this.group.add(sh.mesh);
 
     // river surface: a ribbon a little wider than the channel
     const w = { pos: [] as number[], idx: [] as number[] };
@@ -252,90 +436,9 @@ export class Terrain {
     if (era.id === this.eraId && !dug) return;
     this.eraId = era.id;
     this.cutsVersion = this.land.cutsVersion;
-    const pos = this.ground.geometry.attributes.position as THREE.BufferAttribute;
-    const col = this.ground.geometry.attributes.color as THREE.BufferAttribute;
-    const arr = pos.array as Float32Array;
-    // start the change from whatever is on screen now
-    this.colFrom.set(col.array as Float32Array);
-    const c = new THREE.Color();
-    const cc = new THREE.Color();
-    const cuts = this.land.cuts;
-    const s: CutSample = { depth: 0, color: undefined, weight: 0 };
-    for (let i = 0; i < pos.count; i++) {
-      const x = arr[i * 3];
-      const z = arr[i * 3 + 2];
-      groundColour(this.land, x, z, this.natY[i], era, c);
-      if (dug) {
-        this.yFrom[i] = arr[i * 3 + 1];
-        this.yTo[i] = this.natY[i];
-      }
-      if (!cuts.empty && cuts.sample(x, z, s).depth > 0) {
-        // the bottom of a ditch takes its own colour, or lies in shade
-        if (s.color !== undefined) c.lerp(cc.setHex(s.color, THREE.SRGBColorSpace), s.weight);
-        else c.multiplyScalar(1 - 0.22 * s.weight);
-        this.yTo[i] = this.natY[i] - s.depth;
-      }
-      this.colTo[i * 3] = c.r;
-      this.colTo[i * 3 + 1] = c.g;
-      this.colTo[i * 3 + 2] = c.b;
-    }
-    if (dug) {
-      this.moving = true;
-      this.triangulate();
-    }
+    for (const sh of this.sheets) sh.repaint(era, dug);
     this.blend = instant ? 1 : 0;
-    if (instant) this.settle();
-  }
-
-  /**
-   * Split each cell along whichever diagonal is the more level in the ground as it is going to be, so
-   * the lip of a ditch running across the grid comes out as a clean crease and not a row of steps.
-   */
-  private triangulate() {
-    const index = this.ground.geometry.index!;
-    const idx = index.array as Uint32Array;
-    const y = this.yTo;
-    const NX = this.nx;
-    let k = 0;
-    for (let j = 0; j < this.nz - 1; j++) {
-      for (let i = 0; i < NX - 1; i++) {
-        const a = j * NX + i;
-        const b = a + 1;
-        const c = a + NX;
-        const d = c + 1;
-        if (Math.abs(y[a] - y[d]) < Math.abs(y[b] - y[c])) {
-          idx[k++] = a;
-          idx[k++] = c;
-          idx[k++] = d;
-          idx[k++] = a;
-          idx[k++] = d;
-          idx[k++] = b;
-        } else {
-          idx[k++] = a;
-          idx[k++] = c;
-          idx[k++] = b;
-          idx[k++] = b;
-          idx[k++] = c;
-          idx[k++] = d;
-        }
-      }
-    }
-    index.needsUpdate = true;
-  }
-
-  /** Put the colours, and the heights if the ground is being dug or filled, where they are going. */
-  private settle() {
-    const g = this.ground.geometry;
-    const col = g.attributes.color as THREE.BufferAttribute;
-    (col.array as Float32Array).set(this.colTo);
-    col.needsUpdate = true;
-    if (this.moving) {
-      const pos = g.attributes.position as THREE.BufferAttribute;
-      const arr = pos.array as Float32Array;
-      for (let i = 0; i < this.yTo.length; i++) arr[i * 3 + 1] = this.yTo[i];
-      pos.needsUpdate = true;
-      this.moving = false;
-    }
+    if (instant) for (const sh of this.sheets) sh.settle();
   }
 
   private buildRoads(era: Era, year: number) {
@@ -404,23 +507,17 @@ export class Terrain {
 
   dispose() {
     this.group.traverse((o) => (o as THREE.Mesh).geometry?.dispose());
-    for (const m of [this.roadMat, this.paveMat, this.lineMat, this.ground.material, this.water.material]) (m as THREE.Material).dispose();
+    for (const m of [this.roadMat, this.paveMat, this.lineMat, this.groundMat, this.water.material]) (m as THREE.Material).dispose();
   }
 
   update(dt: number) {
     if (this.blend >= 1) return;
-    this.blend = Math.min(1, this.blend + dt / (this.moving ? 0.7 : 1.1));
-    if (this.blend >= 1) return this.settle();
-    const col = this.ground.geometry.attributes.color as THREE.BufferAttribute;
-    const arr = col.array as Float32Array;
-    const k = this.blend * this.blend * (3 - 2 * this.blend);
-    for (let i = 0; i < arr.length; i++) arr[i] = this.colFrom[i] + (this.colTo[i] - this.colFrom[i]) * k;
-    col.needsUpdate = true;
-    if (this.moving) {
-      const pos = this.ground.geometry.attributes.position as THREE.BufferAttribute;
-      const p = pos.array as Float32Array;
-      for (let i = 0; i < this.yTo.length; i++) if (this.yFrom[i] !== this.yTo[i]) p[i * 3 + 1] = this.yFrom[i] + (this.yTo[i] - this.yFrom[i]) * k;
-      pos.needsUpdate = true;
+    this.blend = Math.min(1, this.blend + dt / (this.sheets.some((sh) => sh.isMoving) ? 0.7 : 1.1));
+    if (this.blend >= 1) {
+      for (const sh of this.sheets) sh.settle();
+      return;
     }
+    const k = this.blend * this.blend * (3 - 2 * this.blend);
+    for (const sh of this.sheets) sh.blend(k);
   }
 }

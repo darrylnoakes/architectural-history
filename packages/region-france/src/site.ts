@@ -358,6 +358,11 @@ export const site: Site = {
   ],
   props: [...wallProps, ...props],
   detail: wallDetail,
+  // the castle on its hill and the château in the plain, for their ditches and moats
+  detailPatches: [
+    { x0: -277, z0: -96, x1: -213, z1: -28 },
+    { x0: -70, z0: -232, x1: -2, z1: -168 },
+  ],
   turbines: { since: 2008, at: [[360, -330], [420, -270], [330, -400], [450, -340]] },
   view: { target: [4, 4, 4], distance: 255, azimuth: 0.6, polar: 0.98 },
 };
