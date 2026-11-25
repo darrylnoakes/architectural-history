@@ -66,8 +66,8 @@ const outer: { x: number; z: number; r: number }[] = [];
 for (let z = WALL.north; z <= WALL.river; z += 14) outer.push({ x: WALL.west - 16, z, r: 10 }, { x: WALL.east + 16, z, r: 10 });
 for (let x = WALL.west; x <= WALL.east; x += 14) outer.push({ x, z: WALL.north - 16, r: 10 });
 const inner: { x: number; z: number; r: number }[] = [];
-for (let z = -98.5; z <= 33; z += 12) inner.push({ x: -50.2, z, r: 9 }, { x: 91, z, r: 9 });
-for (let x = -50.2; x <= 91; x += 12) inner.push({ x, z: -98.5, r: 9 }, { x, z: 33, r: 9 });
+for (let z = -98.5; z <= 33; z += 12) inner.push({ x: -58.5, z, r: 9 }, { x: 91, z, r: 9 });
+for (let x = -58.5; x <= 91; x += 12) inner.push({ x, z: -98.5, r: 9 }, { x, z: 33, r: 9 });
 export const wallClearings = [...circuit.clearings, ...outer, ...inner];
 export const wallDetail = circuit.detail;
 
@@ -83,7 +83,8 @@ export const wallDetail = circuit.detail;
  * themselves from then on: the north-west corner, where the count has his hall from 600, and the
  * stretch behind the cathedral from 380.
  */
-export const CASTRUM_BOX = { west: -50.2, east: 91, north: -98.5, south: 33 };
+// (the west wall passes just outside the forum and the square in front of it, which it takes in whole)
+export const CASTRUM_BOX = { west: -58.5, east: 91, north: -98.5, south: 33 };
 
 type Side = 'n' | 'e' | 's' | 'w';
 const C = CASTRUM_BOX;

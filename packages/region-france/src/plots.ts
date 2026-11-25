@@ -86,7 +86,7 @@ export const plots: Plot[] = [
   { id: 'porte-ouest', lineage: 'remparts', x: -150, z: 0, rotY: W, seed: 45, skip: ['monumental-arch', 'castrum-wall'] },
   // the town's one triumphal arch, on the main street at the edge of the forum quarter: the late
   // Roman wall was laid out through it and it became the west gate, until that wall came down
-  { id: 'porte-du-castrum', lineage: 'remparts', x: -50.2, z: 0, rotY: W, seed: 50, since: 200, until: 1200 },
+  { id: 'porte-du-castrum', lineage: 'remparts', x: -58.5, z: 0, rotY: W, seed: 50, since: 200, until: 1200 },
 
   // --- the railway
   // the town's station, rebuilt after 1918, stays in use; the high-speed station of 2007 is a new

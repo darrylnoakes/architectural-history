@@ -91,7 +91,7 @@ last two centuries across the river. Every stage of every lineage stands somewhe
   hall, the works, the covered market, the station and a third of the houses. The bridges are
   `struck` in 1940.
 - The wall is drawn by the site between the three gate plots (`town-walls.ts`), from the pieces in
-  `lineages/remparts/curtain.ts`. There is none before about 120 BC or between about 20 BC and 290.
+  `lineages/remparts/curtain.ts`. There is none before about 120 BC or between about 20 BC and 290. The late Roman wall of 290 to 1200 is not on this line: it is a much smaller circuit round the forum and the cathedral (`castrumProps` in `town-walls.ts`), with the triumphal arch as its west gate on a plot of its own (`porte-du-castrum`) and three plain gates; the outer gate plots are open ground until the wall of 1200. The count's hall and the first cathedrals draw the stretches of it they stand against.
   After 1885 the west and north-west sides go for boulevards; the stretch behind the cathedral stays.
 - Stages marked **(stands alone)** stand on plots of their own.
 

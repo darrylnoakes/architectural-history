@@ -10,10 +10,10 @@ import { NJ, WALL_COLOURS, archPanel, ring } from '../remparts/shared';
  * north wall along z = WZ (3.5 m beyond the plot's back edge), and the round tower at the corner. The
  * plot is centred at world (-32, -73) facing south, so plot = world - (-32, -73).
  */
-const WX = -18.2;
+const WX = -26.5;
 const WZ = -25.5;
 /** The circuit's west and north sides in world coordinates, and this plot's place in the world. */
-const WORLD = { west: -50.2, north: -98.5, x: -32, z: -73 };
+const WORLD = { west: -58.5, north: -98.5, x: -32, z: -73 };
 const WT = CASTRUM.t;
 const WH = CASTRUM.h;
 /** The round corner tower made into the count's tower (as the circuit's `corner` piece places it). */
