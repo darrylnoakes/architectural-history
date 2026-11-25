@@ -1,10 +1,10 @@
-import { P, mix, type BuildingDef } from '@ah/kit';
+import { P, mix, tint, type BuildingDef } from '@ah/kit';
 import { HX, PLAT, TRACKS, catenary, highSpeedTrain, platform, quad, soup, track } from './shared';
 
 const X0 = -19.2;
 const X1 = 19.2;
-const ZC = -0.2; // centre of the vault’s span
-const A = 6.5; // half-span (z)
+const ZC = 0.5; // centre of the vault’s span
+const A = 6.0; // half-span (z): the track-side arches land on the platform 1.5 m back from its edge
 const VH = 10.5; // height of the crown
 const N = 12; // facets round the profile
 const RIB = 2.4; // spacing of the steel arches
@@ -41,9 +41,25 @@ export const highSpeedStation: BuildingDef = {
     const glass = mix(P.glass, P.white, 0.15);
     const G = { mat: 'glass' as const };
 
-    // ---------------------------------------------------------------- the concourse floor and the forecourt
+    // ---------------------------------------------------------------- the forecourt, and the concourse at platform level
     b.box(HX * 2, 0.06, 24, mix(P.paving, P.travertine, 0.3), { at: [0, 0, 0], jitter: false });
-    b.box(X1 - X0, 0.12, A * 2 + 0.4, mix(P.pietraSerena, P.paving, 0.5), { at: [0, 0, ZC], jitter: false });
+    // the platform the earlier stations stood beside, re-laid, and the concourse floor raised level
+    // with it, so people walk from the street steps to the train doors without another step
+    const PY = PLAT.y;
+    const zFront = ZC + A + 0.4; // the street edge of the concourse floor
+    platform(b, PLAT.back, PLAT.edge, -HX, HX, { top: mix(P.pietraSerena, P.paving, 0.4), edge: P.cladYellow });
+    const cd = zFront - PLAT.back;
+    const cz = (zFront + PLAT.back) / 2;
+    b.box(X1 - X0, PY - 0.1, cd, tint(P.concrete, -0.05), { at: [0, 0, cz] });
+    b.box(X1 - X0, 0.1, cd, mix(P.pietraSerena, P.paving, 0.5), { at: [0, PY - 0.1, cz], jitter: false });
+    b.deck(X1 - X0, cd, PY, { at: [0, 0, cz] });
+    // three broad steps up from the forecourt, and a ramp at the east end for wheelchairs and luggage
+    const RAMP = 7.0; // 0.55 m over 7 m: a gradient of about 1 in 13
+    b.stairs(X1 - X0 - RAMP - 0.4, PY, 1.2, 3, P.pietraSerena, { at: [X0 + (X1 - X0 - RAMP - 0.4) / 2, 0, zFront + 0.6] });
+    b.group({ at: [X1 - RAMP / 2, 0, zFront + 0.6] }, () => {
+      b.extrude([[-RAMP / 2, 0], [RAMP / 2, 0], [RAMP / 2, 0.06], [-RAMP / 2, PY]], 1.2, mix(P.pietraSerena, P.paving, 0.5), { at: [0, 0, -0.6], jitter: false });
+      b.box(RAMP, 0.9, 0.05, glass, { at: [0, PY, 0.58], mat: 'glass', jitter: false });
+    });
 
     // ---------------------------------------------------------------- the vault: glazing, PV bands, arches
     const clear: number[] = [];
@@ -86,31 +102,33 @@ export const highSpeedStation: BuildingDef = {
     }
 
     // ---------------------------------------------------------------- inside: pavilions and a mezzanine
-    b.group({ at: [-6, 0, 1.2] }, () => {
+    b.group({ at: [-6, PY, 1.2] }, () => {
       b.box(6, 3.2, 3.2, P.cladWhite);
       b.box(5.4, 2.0, 0.05, P.glassDark, { at: [0, 0.4, 1.61], mat: 'glass' });
       b.box(4.0, 0.4, 0.06, P.cladRed, { at: [0, 2.6, 1.62] });
     });
-    b.group({ at: [7, 0, 1.6] }, () => {
+    b.group({ at: [7, PY, 1.6] }, () => {
       b.box(5, 3.0, 3.0, mix(P.cladGrey, P.white, 0.5));
       b.box(4.4, 2.0, 0.05, P.windowLit, { at: [0, 0.4, 1.51] });
     });
     // a mezzanine bridge with glass balustrades along the track side
     b.box(X1 - X0 - 3, 0.35, 2.2, P.concreteWhite, { at: [0, 4.6, -3.6] });
     b.box(X1 - X0 - 3, 1.1, 0.04, glass, { at: [0, 4.95, -2.5], ...G });
-    for (const x of [-14, -7, 0, 7, 14]) b.cyl(0.15, 4.6, steel, { at: [x, 0, -3.6], segs: 6 });
-    b.beam([12, 0, -1.6], [16.4, 4.6, -1.6], 1.1, 0.4, P.steel); // escalator up to it
+    for (const x of [-14, -7, 0, 7, 14]) b.cyl(0.15, 4.6 - PY, steel, { at: [x, PY, -3.6], segs: 6 });
+    b.beam([12, PY, -1.6], [16.4, 4.6, -1.6], 1.1, 0.4, P.steel); // escalator up to it
     // seats and the departures board
-    b.box(3, 0.45, 0.6, P.steel, { at: [-14, 0, 2.2] });
-    b.box(3.4, 1.4, 0.2, P.black, { at: [0, 2.4, 3.8] });
-    b.box(3.0, 1.0, 0.03, P.windowLit, { at: [0, 2.6, 3.92] });
-    b.cyl(0.08, 2.4, P.steel, { at: [0, 0, 3.8], segs: 5 });
+    b.box(3, 0.45, 0.6, P.steel, { at: [-14, PY, 2.2] });
+    b.box(3.4, 1.4, 0.2, P.black, { at: [0, PY + 2.4, 3.8] });
+    b.box(3.0, 1.0, 0.03, P.windowLit, { at: [0, PY + 2.6, 3.92] });
+    b.cyl(0.08, 2.4, P.steel, { at: [0, PY, 3.8], segs: 5 });
 
     // ---------------------------------------------------------------- platform, tracks, train
-    platform(b, -6.6, PLAT.edge, -HX, HX, { top: mix(P.pietraSerena, P.paving, 0.4), edge: P.cladYellow });
     for (const z of TRACKS) track(b, z, -HX, HX, { sleeper: P.concrete });
-    // a light steel canopy over the platform edge, hung from the arches
-    b.box(X1 - X0, 0.12, 1.6, steel, { at: [0, 4.6, -6.9] });
+    // a light steel canopy over the platform edge, cantilevered from the arches
+    {
+      const [zr, yr] = prof(N - 1);
+      b.box(X1 - X0, 0.12, zr - (PLAT.edge - 0.4), steel, { at: [0, yr, (zr + PLAT.edge - 0.4) / 2] });
+    }
     highSpeedTrain(b, [-19.5, 0, TRACKS[0]], 39);
     catenary(b, TRACKS[0], [-18, -6, 6, 18], -11.7, 6.4);
 
@@ -121,8 +139,8 @@ export const highSpeedStation: BuildingDef = {
     b.tree(6, { kind: 'round', at: [16.5, 0, 9.8] });
 
     // ---------------------------------------------------------------- walking: the gallery is open
-    b.collider(6, 3.2, { at: [-6, 0, 1.2] });
-    b.collider(5, 3.0, { at: [7, 0, 1.6] });
+    b.collider(6, 3.2, { at: [-6, PY, 1.2] });
+    b.collider(5, 3.0, { at: [7, PY, 1.6] });
     b.collider(39, 3.0, { at: [0, 0, TRACKS[0]] });
   },
 };

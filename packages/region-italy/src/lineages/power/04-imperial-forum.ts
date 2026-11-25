@@ -1,5 +1,5 @@
 import { P, mix, spread, tint, type BuildingDef, type Builder } from '@ah/kit';
-import { ARCH, ARCH_TOP, BAS, BAS_ZC, PORTICO_Z, archWindow, equestrianPedestal, forumBasilica, forumStatues, forumWell, pave, porticoColumn, triumphalArch } from './shared';
+import { ARCH, ARCH_TOP, BAS, BAS_ZC, CUR, PORTICO_Z, curia, archWindow, equestrianPedestal, forumBasilica, forumStatues, forumWell, pave, porticoColumn, triumphalArch } from './shared';
 
 /** A gilded bronze horseman on a marble pedestal, in the middle of the square. */
 function equestrian(b: Builder): void {
@@ -56,24 +56,30 @@ export const imperialForum: BuildingDef = {
     const aisle = (z1 - z0 - nave) / 2;
 
     // ---------------------------------------------------------- porticoes and shop ranges down both sides
-    const SZ0 = -8;
+    // on the left the range stops short of the curia, which keeps its place beside the basilica
     const SZ1 = 17.6;
-    const SL = SZ1 - SZ0;
-    const SZC = (SZ0 + SZ1) / 2;
+    const range = (s: number) => {
+      const SZ0 = s > 0 ? -8 : CUR.z + 5.5;
+      return { SZ0, SL: SZ1 - SZ0, SZC: (SZ0 + SZ1) / 2 };
+    };
     b.sym((s) => {
+      const { SZ0, SL, SZC } = range(s);
       const SX = s * 17.5;
       b.box(7, 6.4, SL, tint(brick, 0.06), { at: [SX, 0, SZC] });
       b.box(7.1, 0.4, SL + 0.1, tr, { at: [SX, 6.4, SZC], jitter: false });
       b.gable(7.4, SL + 0.4, 1.4, tile, { at: [SX, 6.8, SZC], ridge: 'z', overhang: 0.2, wall: tint(brick, 0.06) });
-      for (const z of spread(6, SZ0 + 2.2, SZ1 - 2.2)) {
+      for (const z of spread(s > 0 ? 6 : 3, SZ0 + 2.2, SZ1 - 2.2)) {
         b.panel(2.2, 3.0, P.oak, { at: [SX - s * 3.5, 0, z], facing: s > 0 ? '-x' : '+x' });
         archWindow(b, 0.9, 1.3, { at: [SX - s * 3.5, 4.2, z], facing: s > 0 ? '-x' : '+x', frame: tr, shape: 'segmental' });
         archWindow(b, 0.9, 1.3, { at: [SX + s * 3.5, 3.6, z], facing: s > 0 ? '+x' : '-x', frame: tr, shape: 'segmental' });
       }
-      for (let i = 0; i < PORTICO_Z.length; i++) porticoColumn(b, s, i);
+      for (let i = 0; i < PORTICO_Z.length; i++) if (PORTICO_Z[i] > SZ0) porticoColumn(b, s, i);
       b.box(0.8, 0.55, SL, marble, { at: [s * 12.6, 4.8, SZC] });
       b.shed(3.3, SL, 0.9, tile, { at: [s * 12.6 + s * 0.85, 5.35, SZC], high: s > 0 ? '+x' : '-x' });
     });
+
+    // ---------------------------------------------------------- the council house, the Republican hall refaced in marble
+    curia(b, 'empire');
 
     // ---------------------------------------------------------- the front: walls either side of the arch
     b.sym((s) => {
@@ -98,7 +104,7 @@ export const imperialForum: BuildingDef = {
     b.collider(apseR * 2, apseR * 2, { at: [x0 - apseR / 2, 0, BAS_ZC] });
     b.sym((s) => {
       b.collider(0.6, aisle, { at: [s > 0 ? x1 - 0.25 : x0 + 0.25, 0, z1 - aisle / 2] });
-      b.collider(7, SL, { at: [s * 17.5, 0, SZC] });
+      b.collider(7, range(s).SL, { at: [s * 17.5, 0, range(s).SZC] });
       b.collider(21 - ARCH.w / 2, 1.2, { at: [s * (21 + ARCH.w / 2) / 2, 0, ARCH.z] });
       b.collider((ARCH.w - ARCH.passW) / 2 + 0.4, ARCH.d + 1.2, { at: [s * (ARCH.passW / 2 + (ARCH.w - ARCH.passW) / 4), 0, ARCH.z] });
     });

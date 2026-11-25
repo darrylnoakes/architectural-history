@@ -536,7 +536,7 @@ export function wellHead(b: Builder, stone: number, frame: 'wood' | 'iron' | 'no
  */
 export const TOWER = { T: 6.4, x: -7.2, z: 5.8, H: 27, cut: 22 };
 
-export function towerShaft(b: Builder, stone: number, wood: number, part: 'lower' | 'upper'): void {
+export function towerShaft(b: Builder, stone: number, wood: number, part: 'lower' | 'upper', o: { buried?: number } = {}): void {
   const { T, x: tx, z: tz, H: TH, cut } = TOWER;
   const lower = part === 'lower';
   const inPart = (y: number) => (lower ? y < cut : y >= cut);
@@ -546,13 +546,15 @@ export function towerShaft(b: Builder, stone: number, wood: number, part: 'lower
   } else {
     b.box(T, TH - cut, T, stone, { at: [tx, cut, tz] });
   }
-  for (let y = 1.6; y < TH; y += 1.6) if (inPart(y)) b.box(T + 0.03, 0.04, T + 0.03, tint(stone, -0.08), { at: [tx, y, tz], jitter: false });
+  for (let y = 1.6; y < TH; y += 1.6) if (inPart(y) && !(o.buried && y < o.buried)) b.box(T + 0.03, 0.04, T + 0.03, tint(stone, -0.08), { at: [tx, y, tz], jitter: false });
   // putlog holes on every face and a few narrow slits
   for (const f of ['+z', '-z', '+x', '-x'] as const) {
     const at: Vec3 = f === '+z' ? [tx, 0, tz + T / 2] : f === '-z' ? [tx, 0, tz - T / 2] : f === '+x' ? [tx + T / 2, 0, tz] : [tx - T / 2, 0, tz];
+    // (`buried`: up to this height the front and right faces are inside a later building, and left bare)
+    const shown = (y: number) => !(o.buried && (f === '+z' || f === '+x') && y < o.buried);
     onFace(b, f, at, () => {
-      for (let y = 6; y < TH - 2; y += 3.2) if (inPart(y)) for (const x of [-2.2, 0, 2.2]) b.panel(0.25, 0.25, 0x2a2420, { at: [x, y, 0], depth: 0.03 });
-      if (lower) for (const y of [13, 19.5]) win(b, 0.9, y, 0.35, 1.3, tint(stone, 0.05), { shape: 'round', border: 0.1, n: 3 });
+      for (let y = 6; y < TH - 2; y += 3.2) if (inPart(y) && shown(y)) for (const x of [-2.2, 0, 2.2]) b.panel(0.25, 0.25, 0x2a2420, { at: [x, y, 0], depth: 0.03 });
+      if (lower) for (const y of [13, 19.5]) if (shown(y)) win(b, 0.9, y, 0.35, 1.3, tint(stone, 0.05), { shape: 'round', border: 0.1, n: 3 });
     });
   }
   // the raised door, on the back, high above the yard

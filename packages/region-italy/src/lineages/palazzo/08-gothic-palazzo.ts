@@ -45,7 +45,7 @@ export const gothicPalazzo: BuildingDef = {
     b.box(W, G, 0.8, stone, { at: [0, 0, 3.4] }); // back wall of the ground floor, on the court
     b.sym((s) => b.collider(8.3, 9, { at: [s * 5.85, 0, 7.5] }));
     // the family's old tower, cut down to a stump and taken into the back corner of the new block
-    towerShaft(b, stone, wood, 'lower');
+    towerShaft(b, stone, wood, 'lower', { buried: H });
     b.box(TOWER.T + 0.2, 0.3, TOWER.T + 0.2, trim, { at: [TOWER.x, TOWER.cut - 0.3, TOWER.z] });
     b.pyramid(TOWER.T + 0.6, TOWER.T + 0.6, 1.5, roof, { at: [TOWER.x, TOWER.cut, TOWER.z] });
     // street wall of the ground floor, pierced by three arches

@@ -973,6 +973,48 @@ export function forumBasilica(b: Builder, imperial: boolean): void {
   }
 }
 
+/** The council house (curia) on the left side of the forum, beside the basilica; its front faces +X. */
+export const CUR = { x: -15.5, z: -1 };
+
+/**
+ * The curia, where the town council (the decurions) met: a tall plain hall on a podium, its gable end
+ * to the square, a bronze door at the head of a flight of steps. Built in tufa and stucco about 150 BC;
+ * about AD 100 the same hall is faced in marble, with a pediment, half-columns and an inscription
+ * ('empire'); about 600 it is stripped, re-roofed and given a bell-cote as the lord's chapel ('chapel'),
+ * as the Senate house in Rome became the church of Sant'Adriano in the 630s.
+ */
+export function curia(b: Builder, phase: 'republic' | 'empire' | 'chapel'): void {
+  const { x: CX, z: CZ } = CUR;
+  const empire = phase === 'empire';
+  const wall = empire ? P.marble : phase === 'chapel' ? mix(P.romanTile, P.rubble, 0.5) : P.stucco;
+  const base = empire ? tint(P.marble, -0.04) : phase === 'chapel' ? tint(P.tufa, -0.08) : P.tufa;
+  const tr = P.travertine;
+  const fx = CX + 3; // the front wall
+  b.box(6.6, 1.4, 9, base, { at: [CX, 0, CZ] });
+  b.box(6, 7, 8.4, wall, { at: [CX, 1.4, CZ] });
+  b.gable(6.4, 8.8, 1.5, P.romanTile, { at: [CX, 8.4, CZ], overhang: 0.3, wall });
+  b.panel(2.2, 3.6, phase === 'chapel' ? P.oakDark : P.bronze, { at: [fx, 1.4, CZ], facing: '+x' });
+  for (const z of [CZ - 2.8, CZ + 2.8]) archWindow(b, 1.0, 1.6, { at: [fx, 5.6, z], facing: '+x', frame: tr });
+  for (const z of [CZ - 2, CZ + 2]) archWindow(b, 1.0, 1.6, { at: [CX - 3, 5, z], facing: '-x', frame: tr });
+  for (const x of [CX - 1.5, CX + 1.5]) for (const s of [1, -1]) archWindow(b, 1.0, 1.8, { at: [x, 5.4, CZ + s * 4.2], facing: s > 0 ? '+z' : '-z', frame: tr });
+  b.stairs(3, 1.4, 1.6, 4, base, { at: [CX + 4.1, 0, CZ], rotY: -Math.PI / 2 });
+  if (empire) {
+    // marble half-columns either side of the door, a cornice round the eaves, a pediment on the front
+    for (const z of [CZ - 1.9, CZ + 1.9, CZ - 4.0, CZ + 4.0]) column(b, [fx + 0.1, 1.4, z], 0.26, 7, P.marble, { order: 'corinthian' });
+    for (const s of [1, -1]) b.box(6.6, 0.4, 0.5, P.marble, { at: [CX, 8.1, CZ + s * 4.35], jitter: false });
+    for (const s of [1, -1]) b.beam([fx + 0.35, 8.4, CZ + s * 4.6], [fx + 0.35, 10.0, CZ], 0.35, 0.4, P.marble, { jitter: false });
+    b.box(0.5, 0.4, 9.2, P.marble, { at: [fx + 0.3, 8.1, CZ], jitter: false });
+    b.box(0.05, 0.35, 3.0, P.bronze, { at: [fx + 0.03, 5.4, CZ], jitter: false }); // bronze-lettered dedication
+  } else if (phase === 'chapel') {
+    // a bell-cote on the front gable and a cross
+    b.box(0.4, 1.4, 1.0, wall, { at: [fx + 0.1, 9.6, CZ] });
+    b.cyl(0.2, 0.35, P.bronze, { at: [fx + 0.35, 10.1, CZ], rTop: 0.1, segs: 6 });
+    b.box(0.08, 0.7, 0.08, P.iron, { at: [fx + 0.1, 11.0, CZ], jitter: false });
+    b.box(0.08, 0.08, 0.45, P.iron, { at: [fx + 0.1, 11.45, CZ], jitter: false });
+  }
+  b.collider(6.6, 9, { at: [CX, 0, CZ] });
+}
+
 /** Two honorific statues on travertine bases in the forum (150 BC); the bronze goes, the bases stay. */
 export function forumStatues(b: Builder, bronze = true): void {
   for (const [x, z] of [[-2, 9], [4, 9]] as const) {

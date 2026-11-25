@@ -1,5 +1,5 @@
 import { P, mix, spread, tint, type BuildingDef } from '@ah/kit';
-import { BAS, BAS_ZC, archWindow, column, forumBasilica, forumStatues, forumWell, pave } from './shared';
+import { BAS, BAS_ZC, CUR, column, curia, forumBasilica, forumStatues, forumWell, pave } from './shared';
 
 export const republicanForum: BuildingDef = {
   id: 'republican-forum',
@@ -14,9 +14,9 @@ export const republicanForum: BuildingDef = {
   materials: ['tufa', 'lime stucco', 'travertine', 'fired clay tiles', 'timber'],
   lookFor: [
     { label: 'Basilica', note: 'A tall central hall lit by a row of high clerestory windows, with lower aisles either side and a colonnade open to the forum.', at: [3, 11.2, BAS.z1 + 0.6] },
-    { label: 'Curia', note: 'The council house, a plain hall at the top of the steps where the town’s councillors (decurions) met.', at: [-15.2, 5.5, -1] },
-    { label: 'Comitium', note: 'A round, stepped open-air meeting place in front of the curia, where citizens assembled by voting groups.', at: [-9, 1.6, 3.4] },
-    { label: 'Speakers’ platform (rostra)', note: 'A raised platform for speeches, named after the bronze rams of captured warships fixed to the one in Rome.', at: [-4.6, 2.0, -1] },
+    { label: 'Curia', note: 'The council house, a plain hall at the top of the steps where the town’s councillors (decurions) met.', at: [CUR.x + 3.3, 5.5, CUR.z] },
+    { label: 'Comitium', note: 'A round, stepped open-air meeting place in front of the curia, where citizens assembled by voting groups.', at: [CUR.x + 8.5, 1.6, 3.4] },
+    { label: 'Speakers’ platform (rostra)', note: 'A raised platform for speeches, named after the bronze rams of captured warships fixed to the one in Rome.', at: [CUR.x + 10.9, 2.0, -1] },
     { label: 'Portico and shops (tabernae)', note: 'A covered colonnade along the square with single-room shops opening off it.', at: [12.2, 4.2, 8] },
   ],
   modelledOn: 'The forums of Cosa (comitium and curia, basilica of about 150 BC) and Pompeii (basilica, about 120 BC), much reduced',
@@ -39,17 +39,10 @@ export const republicanForum: BuildingDef = {
     const aisle = (z1 - z0 - nave) / 2;
 
     // ---------------------------------------------------------- the curia above the comitium, on the left
-    const CX = -17.5;
-    const CZ = -1;
-    b.box(6.6, 1.4, 9, tufa, { at: [CX, 0, CZ] });
-    b.box(6, 7, 8.4, stucco, { at: [CX, 1.4, CZ] });
-    b.gable(6.4, 8.8, 1.5, tile, { at: [CX, 8.4, CZ], ridge: 'z', overhang: 0.3, wall: stucco });
-    b.panel(2.2, 3.6, P.bronze, { at: [CX + 3, 1.4, CZ], facing: '+x' });
-    for (const z of [CZ - 2.8, CZ + 2.8]) archWindow(b, 1.0, 1.6, { at: [CX + 3, 5.6, z], facing: '+x', frame: tr });
-    for (const z of [CZ - 2, CZ + 2]) archWindow(b, 1.0, 1.6, { at: [CX - 3, 5, z], facing: '-x', frame: tr });
-    b.stairs(3, 1.4, 1.6, 4, tufa, { at: [CX + 4.1, 0, CZ], rotY: -Math.PI / 2 });
+    curia(b, 'republic');
+    const CZ = CUR.z;
     // the comitium: tiers of steps round a circular floor, open toward the forum
-    const KX = -9;
+    const KX = CUR.x + 8.5;
     b.lathe([[5.2, 0], [5.2, 1.2], [4.4, 1.2], [4.4, 0.8], [3.6, 0.8], [3.6, 0.4], [2.8, 0.4], [2.8, 0.02]], tufa, { at: [KX, 0, CZ], segs: 16, start: Math.PI * 0.25, sweep: Math.PI * 1.5 });
     b.cyl(2.8, 0.05, tint(tufa, 0.06), { at: [KX, 0, CZ], segs: 16 });
     // the speakers' platform at the open side, with bronze rams on its front
@@ -84,7 +77,6 @@ export const republicanForum: BuildingDef = {
     // ---------------------------------------------------------- colliders: halls solid, square and porticoes walkable
     b.collider(L, nave + aisle + 0.6, { at: [xc, 0, BAS_ZC - aisle / 2] });
     b.sym((s) => b.collider(0.6, aisle, { at: [s > 0 ? x1 - 0.25 : x0 + 0.25, 0, z1 - aisle / 2] }));
-    b.collider(6.6, 9, { at: [CX, 0, CZ] });
     b.collider(3.2, 5, { at: [KX + 4.2, 0, CZ] });
     b.collider(7, SL, { at: [SX, 0, SZC] });
     for (const [x, z] of [[-2, 9], [4, 9], [3, 1]] as const) b.collider(1.6, 1.6, { at: [x, 0, z] });

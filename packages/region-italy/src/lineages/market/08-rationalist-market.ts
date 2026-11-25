@@ -1,4 +1,4 @@
-import { P, type BuildingDef } from '@ah/kit';
+import type { BuildingDef } from '@ah/kit';
 import { COUNTERS, concreteMarket, forecourtLamp, goods, marketCounter } from './shared';
 
 export const rationalistMarket: BuildingDef = {
