@@ -1,5 +1,5 @@
 import { P, tint, type BuildingDef } from '@ah/kit';
-import { block, onFace, win } from './shared';
+import { block, compoundWalls, onFace, wellHead, win } from './shared';
 
 export const lombardCourt: BuildingDef = {
   id: 'lombard-court',
@@ -27,8 +27,7 @@ export const lombardCourt: BuildingDef = {
     // ---- the enclosing wall, with a gate
     const Hw = 3.0;
     b.sym((s) => block(b, 9.6, Hw, 0.6, rubble, s * 6.6, 11.7));
-    block(b, 23, Hw, 0.6, rubble, 0, -12.2);
-    b.sym((s) => block(b, 0.6, Hw, 23.3, rubble, s * 11.2, -0.25));
+    compoundWalls(b, rubble);
     b.sym((s) => b.box(0.8, 4.0, 0.9, rubble, { at: [s * 1.9, 0, 11.7] }));
     b.box(4.6, 0.4, 1.0, wood, { at: [0, 4.0, 11.7] });
     b.gable(4.8, 1.6, 0.6, shingle, { at: [0, 4.4, 11.7], overhang: 0.1 });
@@ -79,10 +78,7 @@ export const lombardCourt: BuildingDef = {
     b.panel(1.6, 2.0, P.oakDark, { at: [-7.6, 0, -6.4], facing: '+z', depth: 0.05 });
     b.box(1.8, 0.8, 1.8, rubble, { at: [-2.0, 0, -9.6] });
     b.dome(0.9, P.daub, { at: [-2.0, 0.8, -9.6], segs: 8 });
-    b.cyl(0.7, 0.8, rubble, { at: [3.2, 0, -2.2], segs: 8 });
-    b.cyl(0.55, 0.82, P.windowDark, { at: [3.2, 0, -2.2], segs: 8 });
-    b.beam([2.4, 2.0, -2.2], [4.0, 2.0, -2.2], 0.1, 0.1, wood);
-    b.sym((s) => b.box(0.12, 2.0, 0.12, wood, { at: [3.2 + s * 0.8, 0, -2.2] }));
+    wellHead(b, rubble, 'wood', wood);
     b.box(6, 0.12, 4.5, P.soil, { at: [-6.5, 0, 7.8] });
     for (let i = 0; i < 4; i++) b.box(5.6, 0.25, 0.3, P.leaf, { at: [-6.5, 0.1, 6.2 + i * 1.0] });
     b.box(21.8, 0.04, 23, P.earth, { at: [0, 0, -0.3] });

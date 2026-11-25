@@ -1,5 +1,5 @@
 import { P, tint, type BuildingDef } from '@ah/kit';
-import { bifora, block, brackets, coppiRibs, onFace, rustic, voussoirs, win } from './shared';
+import { bifora, block, brackets, coppiRibs, onFace, rustic, TOWER, towerShaft, voussoirs, wellHead, win } from './shared';
 
 export const gothicPalazzo: BuildingDef = {
   id: 'gothic-palazzo',
@@ -7,19 +7,20 @@ export const gothicPalazzo: BuildingDef = {
   style: 'Gothic',
   date: 'c. 1340',
   summary:
-    'The great families of the commune have come down from their towers into a broad, compact town palace that is at once house, counting-house and warehouse. ' +
-    'The ground floor opens to the street in wide arches for the family business, while the household lives on the floors above, lit by two-light windows with pointed heads. ' +
-    'Battlements on corbels still give a fortified look, but they are now more a sign of rank than a defence. ' +
-    'Behind, a small courtyard holds the well and an open stone stair with timber galleries leading to the upper rooms. Later generations often replaced the battlements with an open roof loggia (altana), as the Davanzati did at this palace in the sixteenth century.',
+    'The great families of the commune have come down from their towers into a broad, compact town palace that is at once house, counting-house and warehouse; ' +
+    'this family’s own tower, cut down to the height the commune allowed, is built into its back corner, its putlog holes and high door still showing in the court. ' +
+    'The ground floor opens to the street in wide arches for the family business, the household lives on the floors above, lit by two-light windows with pointed heads, and battlements on corbels still give a fortified look, more a sign of rank than a defence. ' +
+    'Behind, a small courtyard holds the old well and an open stone stair with timber galleries leading to the upper rooms. Later generations often replaced the battlements with an open roof loggia (altana), as the Davanzati did at this palace in the sixteenth century.',
   materials: ['pietraforte ashlar', 'brick', 'timber floors and galleries', 'coppi roof tiles', 'wrought iron'],
   modelledOn: 'Palazzo Davanzati, Florence (built for the Davizzi family in the mid-fourteenth century); the two-light windows follow Sienese palaces',
   influences: ['cistercian-gothic'],
+  revisions: [{ year: 1550, note: 'The battlements have been taken down and an open roof loggia (altana) built in their place, for air and a view over the roofs, as the Davanzati did at their palace.' }],
   lookFor: [
     { label: 'Warehouse arches', note: 'Three wide arches open the ground floor to the street: the family’s shop, store and counting-house, with the entrance passage in the middle.', at: [-6.7, 2.4, 12.6] },
     { label: 'Two-light windows (bifore)', note: 'Each window is split by a slender colonnette into two pointed lights under one pointed arch.', at: [4, 7.6, 12.4] },
     { label: 'Battlements on corbels', note: 'Square merlons crown a parapet carried forward on a row of stone corbels: a show of rank rather than a real defence.', at: [-9.5, 18.4, 12.6] },
     { label: 'Courtyard stair and gallery', note: 'An open stone stair climbs the side of the courtyard to a timber gallery (ballatoio) that gives onto the rooms of the main floor.', at: [4.2, 3.4, -2.0] },
-    { label: 'Courtyard well', note: 'A stone wellhead with an iron frame for the pulley: the household’s own water, drawn from a cistern or well under the court.', at: [-3.5, 1.2, -2.0] },
+    { label: 'Cut-down tower', note: 'The family’s twelfth-century tower, lopped when the commune limited the height of towers, now rises only a little above the roof in the back corner; its putlog holes and the door high in its wall still show in the court.', at: [-7.2, 12.0, 2.5] },
   ],
   build(b) {
     const stone = b.pick([P.pietraForte, tint(P.pietraForte, 0.04), tint(P.pietraForte, -0.03)]);
@@ -43,6 +44,10 @@ export const gothicPalazzo: BuildingDef = {
     b.box(W, H - G, zf - zb, upper, { at: [0, G, (zf + zb) / 2] });
     b.box(W, G, 0.8, stone, { at: [0, 0, 3.4] }); // back wall of the ground floor, on the court
     b.sym((s) => b.collider(8.3, 9, { at: [s * 5.85, 0, 7.5] }));
+    // the family's old tower, cut down to a stump and taken into the back corner of the new block
+    towerShaft(b, stone, wood, 'lower');
+    b.box(TOWER.T + 0.2, 0.3, TOWER.T + 0.2, trim, { at: [TOWER.x, TOWER.cut - 0.3, TOWER.z] });
+    b.pyramid(TOWER.T + 0.6, TOWER.T + 0.6, 1.5, roof, { at: [TOWER.x, TOWER.cut, TOWER.z] });
     // street wall of the ground floor, pierced by three arches
     const arches = [-6.7, 0, 6.7];
     const aw = 3.4;
@@ -93,10 +98,11 @@ export const gothicPalazzo: BuildingDef = {
     // ---- side and back walls of the front block: plainer windows
     for (const s of [-1, 1] as const) {
       onFace(b, s > 0 ? '+x' : '-x', [s * W / 2, 0, 7.5], () => {
+        // (on the left the back half of this wall is the old tower)
         for (const [y, w, h] of [[G + 0.8, 1.0, 2.2], [G + F1 + 0.8, 1.0, 2.0], [G + F1 + F2 + 0.7, 0.9, 1.9]] as const) {
-          for (const x of [-2.2, 2.2]) win(b, x, y, w, h, trim, { shape: 'pointed', border: 0.14, n: 2 });
+          for (const x of s > 0 ? [-2.2, 2.2] : [2.2]) win(b, x, y, w, h, trim, { shape: 'pointed', border: 0.14, n: 2 });
         }
-        win(b, 0, 2.2, 0.7, 0.9, trim, { border: 0.12 });
+        if (s > 0) win(b, 0, 2.2, 0.7, 0.9, trim, { border: 0.12 });
       });
     }
 
@@ -108,14 +114,7 @@ export const gothicPalazzo: BuildingDef = {
     for (const s of [-1, 1] as const) {
       onFace(b, s > 0 ? '+x' : '-x', [s * W / 2, 0, 7.5], () => brackets(b, -4.2, 4.2, H, 0.9, pz, 0.8, 0.3, trim));
     }
-    const pw = W + 2 * pz;
-    const pd = zf - zb + 2 * pz;
-    const pzc = (zf + zb) / 2;
-    b.box(pw, 0.9, 0.35, upper, { at: [0, H, zf + pz - 0.175] });
-    b.box(pw, 0.9, 0.35, upper, { at: [0, H, zb - pz + 0.175] });
-    b.sym((s) => b.box(0.35, 0.9, pd, upper, { at: [s * (W / 2 + pz - 0.175), H, pzc] }));
-    b.crenel(pw, pd, upper, { at: [0, H + 0.9, pzc], merlonW: 0.75, merlonH: 0.9, t: 0.35 });
-    b.hip(W - 0.6, zf - zb - 0.6, 1.5, roof, { at: [0, H, pzc] });
+    // (the parapet and roof over it are built last: they were replaced by an altana)
 
     // ---- right-hand range down the court, and the back range under deep timber eaves
     block(b, 5, Hr, 10, upper, 7.5, -2);
@@ -159,8 +158,8 @@ export const gothicPalazzo: BuildingDef = {
       b.panel(1.2, 2.4, wood, { at: [3.6, 0, 0], depth: 0.08 });
     });
     onFace(b, '-z', [0, 0, zb], () => {
-      for (const x of [6, -6]) win(b, x, G + F1 + 0.9, 1.0, 1.9, trim, { shape: 'pointed', n: 2 });
-      win(b, 6, G + F1 + F2 + 0.8, 0.9, 1.8, trim, { shape: 'pointed', n: 2 });
+      // (the left half of this face is the old tower: windows only on the right)
+      win(b, -6, G + F1 + 0.9, 1.0, 1.9, trim, { shape: 'pointed', n: 2 });
       win(b, -6, G + F1 + F2 + 0.8, 0.9, 1.8, trim, { shape: 'pointed', n: 2 });
       b.panel(1.2, 2.4, wood, { at: [-4.4, G + 0.05, 0], depth: 0.08 });
     });
@@ -169,25 +168,52 @@ export const gothicPalazzo: BuildingDef = {
     block(b, 0.6, 6.0, 10, stone, -9.7, -2);
     b.box(0.8, 0.3, 10.2, roof, { at: [-9.7, 6.0, -2] });
     b.box(14.4, 0.05, 10, P.paving, { at: [-2.2, 0, -2] });
-    b.cyl(0.75, 0.9, P.travertine, { at: [-3.5, 0, -2], segs: 10 });
-    b.cyl(0.6, 0.92, P.windowDark, { at: [-3.5, 0, -2], segs: 10 });
-    b.sym((s) => b.box(0.12, 1.6, 0.12, P.iron, { at: [-3.5 + s * 0.6, 0.9, -2] }));
-    b.box(1.3, 0.1, 0.1, P.iron, { at: [-3.5, 2.5, -2] });
+    wellHead(b, P.travertine, 'iron');
     // the stair: up the side of the court on stone brackets, to a landing at the main floor
     b.stairs(1.2, G, 6.6, 18, trim, { at: [4.4, 0, -2.9], rotY: Math.PI });
     b.box(1.2, 0.3, 2.6, trim, { at: [4.4, G - 0.3, 1.7] });
     b.beam([3.8, 1.0, -6.2], [3.8, G + 1.0, 0.4], 0.12, 0.12, P.iron);
     b.box(0.08, 1.0, 2.6, P.iron, { at: [3.8, G, 1.7] });
     b.collider(1.2, 6.6, { at: [4.4, 0, -2.9] });
-    // timber gallery (ballatoio) along the court face of the front block
-    b.box(13.5, 0.18, 1.2, wood, { at: [-3.15, G - 0.18, 2.4] });
-    for (let i = 0; i < 9; i++) {
-      const x = -9.2 + i * 1.6;
+    // timber gallery (ballatoio) along the court face of the front block, from the old tower to the stair
+    b.box(7.6, 0.18, 1.2, wood, { at: [-0.2, G - 0.18, 2.4] });
+    for (let i = 0; i < 5; i++) {
+      const x = -3.6 + i * 1.7;
       b.box(0.16, 0.24, 1.3, tint(wood, -0.1), { at: [x, G - 0.42, 2.4] });
       b.box(0.08, 1.0, 0.08, wood, { at: [x, G, 1.85] });
     }
-    b.box(13.5, 0.1, 0.1, wood, { at: [-3.15, G + 0.95, 1.85] });
-    b.shed(14, 1.4, 0.6, roof, { at: [-2.9, G + F1 - 0.6, 2.3], high: '+z' });
-    for (const x of [-7.5, -3]) b.panel(1.1, 2.3, wood, { at: [x, G, 3], facing: '-z', depth: 0.08 });
+    b.box(7.6, 0.1, 0.1, wood, { at: [-0.2, G + 0.95, 1.85] });
+    b.shed(8.0, 1.4, 0.6, roof, { at: [-0.2, G + F1 - 0.6, 2.3], high: '+z' });
+    for (const x of [-2.4, 1.2]) b.panel(1.1, 2.3, wood, { at: [x, G, 3], facing: '-z', depth: 0.08 });
+
+    // ---- the top of the front block: battlements on the parapet; from the sixteenth century, an
+    // open roof loggia (altana) under a broad roof in their place, beside the stump of the tower
+    const pw = W + 2 * pz;
+    const pd = zf - zb + 2 * pz;
+    const pzc = (zf + zb) / 2;
+    if (!b.since(1550)) {
+      b.box(pw, 0.9, 0.35, upper, { at: [0, H, zf + pz - 0.175], jitter: false });
+      b.box(pw, 0.9, 0.35, upper, { at: [0, H, zb - pz + 0.175], jitter: false });
+      b.sym((s) => b.box(0.35, 0.9, pd, upper, { at: [s * (W / 2 + pz - 0.175), H, pzc], jitter: false }));
+      b.crenel(pw, pd, upper, { at: [0, H + 0.9, pzc], merlonW: 0.75, merlonH: 0.9, t: 0.35, jitter: false });
+      b.hip(W - 0.6, zf - zb - 0.6, 1.5, roof, { at: [0, H, pzc], jitter: false });
+    } else {
+      const ax0 = TOWER.x + TOWER.T / 2; // the altana runs from the tower to the right-hand end
+      const aw = W / 2 + pz - ax0;
+      const axc = ax0 + aw / 2;
+      const ah = 2.9;
+      b.box(pw, 0.3, pd, trim, { at: [0, H, pzc], jitter: false }); // the floor of the loggia over the corbels
+      b.box(aw - 3.0, ah, pd - 3.4, upper, { at: [axc - 0.6, H + 0.3, pzc - 0.4], jitter: false }); // rooms at its back
+      const posts: [number, number][] = [];
+      for (let i = 0; i <= 5; i++) posts.push([ax0 + 0.3 + ((aw - 0.6) * i) / 5, zf + pz - 0.3]);
+      for (const z of [zf + pz - 2.6, zb - pz + 2.2, zb - pz + 0.3]) posts.push([W / 2 + pz - 0.3, z]);
+      for (const [x, z] of posts) {
+        b.cyl(0.14, ah, trim, { at: [x, H + 0.3, z], segs: 6, jitter: false });
+        b.box(0.4, 0.2, 0.4, trim, { at: [x, H + 0.3 + ah - 0.2, z], jitter: false });
+      }
+      b.box(W / 2 + pz - TOWER.x, 0.9, 0.35, upper, { at: [(W / 2 + pz + TOWER.x) / 2, H + 0.3, zf + pz - 0.175], jitter: false }); // a low wall before the tower
+      b.hip(aw + 1.6, pd + 1.6, 1.6, roof, { at: [axc, H + 0.3 + ah, pzc], jitter: false });
+      b.hip(ax0 + W / 2 + pz, pd - TOWER.T + 0.2, 1.1, roof, { at: [(ax0 - W / 2 - pz) / 2, H + 0.3, zf + pz - (pd - TOWER.T + 0.2) / 2], jitter: false });
+    }
   },
 };

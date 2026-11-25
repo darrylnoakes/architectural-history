@@ -1,5 +1,5 @@
 import { P, type BuildingDef } from '@ah/kit';
-import { concreteMarket, goods } from './shared';
+import { COUNTERS, concreteMarket, forecourtLamp, goods, marketCounter } from './shared';
 
 export const rationalistMarket: BuildingDef = {
   id: 'rationalist-market',
@@ -24,16 +24,11 @@ export const rationalistMarket: BuildingDef = {
     concreteMarket(b, false);
 
     // stalls in rows inside: concrete counters with white marble tops
-    for (const x of [-5.5, 5.5]) {
-      for (const z of [-5, 0, 5]) {
-        b.box(3.6, 0.85, 1.1, P.concrete, { at: [x, 0.28, z], rotY: Math.PI / 2 });
-        b.box(1.2, 0.05, 3.7, P.marble, { at: [x, 1.13, z] });
-        goods(b, 3.2, [x, 1.18, z], Math.PI / 2, b.pick([['fruit', 'basket'], ['fish'], ['cheese', 'pot']] as const).slice());
-        b.collider(1.1, 3.6, { at: [x, 0, z] });
-      }
+    for (const [x, z] of COUNTERS) {
+      marketCounter(b, x, z);
+      goods(b, 3.2, [x, 1.18, z], Math.PI / 2, b.pick([['fruit', 'basket'], ['fish'], ['cheese', 'pot']] as const).slice());
     }
     // a lamp standard in the forecourt
-    b.cyl(0.07, 4.2, P.castIron, { at: [-11.6, 0.08, 9.6], segs: 5 });
-    b.box(0.6, 0.12, 0.3, P.castIron, { at: [-11.4, 4.2, 9.6] });
+    forecourtLamp(b);
   },
 };

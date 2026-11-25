@@ -141,8 +141,8 @@ export const renaissanceHouse: BuildingDef = {
     if (b.since(1780)) {
       for (const cx of [OURS, THEIRS]) {
         for (const x of [-2.0, 0, 2.0]) {
-          persiane(b, 1.0, 1.75, [cx + x, g + 0.72, zf + 0.08], '+z', P.doorGreen, { closed: x !== 0 });
-          persiane(b, 0.95, 1.5, [cx + x, g + f1 + 0.68, zf + 0.08], '+z', P.doorGreen, { closed: true });
+          persiane(b, 1.0, 1.75, [cx + x, g + 0.72, zf + 0.08], '+z', P.doorGreen, { closed: x !== 0, slats: 3 });
+          persiane(b, 0.95, 1.5, [cx + x, g + f1 + 0.68, zf + 0.08], '+z', P.doorGreen, { closed: true, slats: 3 });
         }
       }
     }

@@ -1,5 +1,5 @@
 import { P, tint, type BuildingDef } from '@ah/kit';
-import { concreteMarket, goods } from './shared';
+import { COUNTERS, concreteMarket, forecourtLamp, goods, marketCounter } from './shared';
 
 export const foodHall: BuildingDef = {
   id: 'food-hall',
@@ -8,7 +8,7 @@ export const foodHall: BuildingDef = {
   date: '1936; reopened 2014',
   summary:
     'Supermarkets emptied the covered market, but the town kept the hall of 1936 instead of pulling it down: its parabolic concrete shell, ribs, glass-block ends and clock tower are repaired and cleaned, not replaced. ' +
-    'Butchers, greengrocers and cheesemongers still trade on the ground floor. Under the high middle of the vault a new mezzanine of steel and glass holds counters selling food to eat on the spot, and part of the glass block at the front has given way to clear glazing so the life inside can be seen from the square. ' +
+    'Butchers, greengrocers and cheesemongers still trade on the ground floor, at the concrete and marble counters of 1936. Under the high middle of the vault a new mezzanine of steel and glass holds counters selling food to eat on the spot, and part of the glass block at the front has given way to clear glazing so the life inside can be seen from the square. ' +
     'It is a typical recent Italian project: not a new building, but a new use inserted into an old one.',
   materials: ['reinforced concrete (repaired and cleaned)', 'glass block', 'travertine', 'steel and glass (new glazing and mezzanine)', 'oak flooring'],
   lookFor: [
@@ -65,16 +65,12 @@ export const foodHall: BuildingDef = {
       b.box(2.4, 0.5, 0.08, b.pick([P.cladYellow, P.cladRed, P.cladGreen, P.white]), { at: [x, yM + 2.1, z0 + 0.4] });
     }
 
-    // ---- the market below: stalls in the side aisles and under the deck
-    for (const x of [-6.8, 6.8]) {
-      for (const z of [-5, 0, 5]) {
-        if (x < 0 && z === 5) continue; // the foot of the stair
-        b.box(3.2, 0.85, 1.0, P.cladWhite, { at: [x, y0, z], rotY: Math.PI / 2 });
-        b.box(1.1, 0.05, 3.3, P.marble, { at: [x, y0 + 0.85, z] });
-        goods(b, 2.9, [x, y0 + 0.9, z], Math.PI / 2, b.pick([['fruit', 'basket'], ['fish'], ['cheese', 'pot'], ['basket', 'sack']] as const).slice());
-        b.collider(1.0, 3.2, { at: [x, 0, z] });
-      }
+    // ---- the market below: the old counters of 1936 in the side aisles, new ones under the deck
+    for (const [x, z] of COUNTERS) {
+      marketCounter(b, x, z);
+      goods(b, 3.2, [x, 1.18, z], Math.PI / 2, b.pick([['fruit', 'basket'], ['fish'], ['cheese', 'pot'], ['basket', 'sack']] as const).slice());
     }
+    forecourtLamp(b);
     for (const z of [-5.6, -2.0]) {
       b.box(3.6, 0.9, 1.0, P.cladWhite, { at: [0, y0, z] });
       b.box(3.7, 0.05, 1.1, P.marble, { at: [0, y0 + 0.9, z] });

@@ -499,3 +499,62 @@ export function col(b: Builder, x: number, z: number, r: number, h: number, colo
   }
   b.box(r * 2.9, ch * 0.28, r * 2.9, color, { at: [x, y + h - ch * 0.28, z], jitter: false });
 }
+
+// ---------------------------------------------------------------- what the medieval stages keep
+
+/**
+ * The rubble walls that closed the Lombard compound on its sides and back. The plot keeps them as the
+ * yard walls of the tower house that follows, so both build them here with the same numbers.
+ */
+export function compoundWalls(b: Builder, color: number): void {
+  const Hw = 3.0;
+  block(b, 23, Hw, 0.6, color, 0, -12.2);
+  b.sym((s) => block(b, 0.6, Hw, 23.3, color, s * 11.2, -0.25));
+}
+
+/** Where the well of the compound was sunk; the tower house and the Gothic palace keep it in their yard and court. */
+export const WELL_AT: Pt = [-3.5, -3.4];
+
+/** The stone well-head, with a timber frame for the rope, an iron one, or none. */
+export function wellHead(b: Builder, stone: number, frame: 'wood' | 'iron' | 'none', wood: number = P.oak): void {
+  const [x, z] = WELL_AT;
+  b.cyl(0.75, 0.9, stone, { at: [x, 0, z], segs: 10 });
+  b.cyl(0.6, 0.92, P.windowDark, { at: [x, 0, z], segs: 10 });
+  if (frame === 'iron') {
+    b.sym((s) => b.box(0.12, 1.6, 0.12, P.iron, { at: [x + s * 0.6, 0.9, z] }));
+    b.box(1.3, 0.1, 0.1, P.iron, { at: [x, 2.5, z] });
+  } else if (frame === 'wood') {
+    b.beam([x - 0.8, 2.0, z], [x + 0.8, 2.0, z], 0.1, 0.1, wood);
+    b.sym((s) => b.box(0.12, 2.0, 0.12, wood, { at: [x + s * 0.8, 0, z] }));
+  }
+}
+
+/**
+ * The family tower of stage 7, from the ground to `top`: plinth, shaft, coursing, putlog holes, slit
+ * windows and the raised door on the back. The Gothic palace keeps it cut down to `TOWER.cut` inside
+ * its back corner, so the pieces below the cut are built here, the same for both.
+ */
+export const TOWER = { T: 6.4, x: -7.2, z: 5.8, H: 27, cut: 22 };
+
+export function towerShaft(b: Builder, stone: number, wood: number, part: 'lower' | 'upper'): void {
+  const { T, x: tx, z: tz, H: TH, cut } = TOWER;
+  const lower = part === 'lower';
+  const inPart = (y: number) => (lower ? y < cut : y >= cut);
+  if (lower) {
+    block(b, T + 0.4, 2.0, T + 0.4, stone, tx, tz);
+    b.box(T, cut, T, stone, { at: [tx, 0, tz] });
+  } else {
+    b.box(T, TH - cut, T, stone, { at: [tx, cut, tz] });
+  }
+  for (let y = 1.6; y < TH; y += 1.6) if (inPart(y)) b.box(T + 0.03, 0.04, T + 0.03, tint(stone, -0.08), { at: [tx, y, tz], jitter: false });
+  // putlog holes on every face and a few narrow slits
+  for (const f of ['+z', '-z', '+x', '-x'] as const) {
+    const at: Vec3 = f === '+z' ? [tx, 0, tz + T / 2] : f === '-z' ? [tx, 0, tz - T / 2] : f === '+x' ? [tx + T / 2, 0, tz] : [tx - T / 2, 0, tz];
+    onFace(b, f, at, () => {
+      for (let y = 6; y < TH - 2; y += 3.2) if (inPart(y)) for (const x of [-2.2, 0, 2.2]) b.panel(0.25, 0.25, 0x2a2420, { at: [x, y, 0], depth: 0.03 });
+      if (lower) for (const y of [13, 19.5]) win(b, 0.9, y, 0.35, 1.3, tint(stone, 0.05), { shape: 'round', border: 0.1, n: 3 });
+    });
+  }
+  // the raised door, on the back, high above the yard
+  if (lower) onFace(b, '-z', [tx, 0, tz - T / 2], () => win(b, 1.6, 4.6, 0.9, 2.0, tint(stone, 0.06), { shape: 'round', border: 0.15, glass: wood, n: 4 }));
+}

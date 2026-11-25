@@ -1,5 +1,5 @@
 import { P, tint, type BuildingDef } from '@ah/kit';
-import { block, coppiRibs, onFace, win } from './shared';
+import { block, compoundWalls, coppiRibs, onFace, TOWER, towerShaft, wellHead, win } from './shared';
 
 export const towerHouse: BuildingDef = {
   id: 'tower-house',
@@ -8,17 +8,17 @@ export const towerHouse: BuildingDef = {
   date: 'c. 1150',
   summary:
     'In the age of the communes the great families compete by building upward. ' +
-    'Beside its house each clan raises a tall square tower of stone, with walls well over a metre thick at the base, few and small openings, and a door well above the street reached by a ladder or timber stair: a refuge in the feuds between families and a sign of rank on the skyline. ' +
+    'Beside its house each clan raises a tall square tower of stone, with walls well over a metre thick at the base, few and small openings, and a door well above the ground reached by a ladder or timber stair: a refuge in the feuds between families and a sign of rank on the skyline. ' +
     'Rows of holes left by the builders’ scaffolding (putlog holes) also take the beams of timber balconies and walkways that could link one tower to the next. ' +
-    'The house at its foot has a shop arch on the street and upper floors jettied out on timber brackets.',
+    'The house at its foot has a shop arch on the street and upper floors jettied out on timber brackets; behind, the yard is still closed by the walls of the old compound, round the same well.',
   materials: ['squared stone (pietraforte or travertine)', 'rubble core', 'timber balconies and jetties', 'coppi roof tiles'],
   modelledOn: 'The towers of San Gimignano and Bologna',
   influences: [],
   lookFor: [
-    { label: 'Family tower', note: 'A tall square tower with very thick walls and tiny openings, more refuge and status symbol than home.', at: [-6.5, 22.0, 6.4] },
-    { label: 'Putlog holes', note: 'Rows of square holes left by the scaffolding; beams slotted into them carried balconies and walkways.', at: [-6.5, 12.2, 6.3] },
-    { label: 'Timber balcony (ballatoio)', note: 'A wooden gallery on beams pushed into the putlog holes, roofed with a little pent of tiles.', at: [-11.0, 10.2, 3.0] },
-    { label: 'Raised doorway', note: 'The tower door is high above the street, reached by a timber stair that could be removed.', at: [-3.0, 5.6, 1.4] },
+    { label: 'Family tower', note: 'A tall square tower with very thick walls and tiny openings, more refuge and status symbol than home.', at: [-7.2, 22.0, 9.1] },
+    { label: 'Putlog holes', note: 'Rows of square holes left by the scaffolding; beams slotted into them carried balconies and walkways.', at: [-7.2, 12.2, 9.05] },
+    { label: 'Timber balcony (ballatoio)', note: 'A wooden gallery on beams pushed into the putlog holes, roofed with a little pent of tiles.', at: [-11.6, 10.2, 5.8] },
+    { label: 'Raised doorway', note: 'The tower door is high above the yard, reached by a timber stair that could be taken away.', at: [-8.8, 5.6, 2.45] },
     { label: 'Jettied upper floors (sporti)', note: 'The upper storeys of the house project over the street on timber brackets.', at: [4.0, 4.2, 12.2] },
   ],
   build(b) {
@@ -27,30 +27,17 @@ export const towerHouse: BuildingDef = {
     const roof = b.pick([P.coppi, tint(P.coppi, -0.05)]);
     const render = b.pick([P.intonacoCream, P.plaster, P.intonacoOchre]);
 
-    // ---- the tower
-    const T = 6.4;
-    const tx = -6.5;
-    const tz = 3.0;
-    const TH = 27;
-    block(b, T + 0.4, 2.0, T + 0.4, stone, tx, tz);
-    b.box(T, TH, T, stone, { at: [tx, 0, tz] });
-    for (let y = 1.6; y < TH; y += 1.6) b.box(T + 0.03, 0.04, T + 0.03, tint(stone, -0.08), { at: [tx, y, tz], jitter: false });
+    // ---- the tower (built in two parts: the Gothic palace keeps the lower one)
+    const { T, x: tx, z: tz, H: TH } = TOWER;
+    towerShaft(b, stone, wood, 'lower');
+    towerShaft(b, stone, wood, 'upper');
     b.crenel(T + 0.3, T + 0.3, stone, { at: [tx, TH, tz], merlonW: 0.8, merlonH: 0.9, t: 0.5 });
     b.box(T + 0.3, 0.3, T + 0.3, stone, { at: [tx, TH - 0.3, tz] });
-    // putlog holes on every face and a few narrow slits
-    for (const f of ['+z', '-z', '+x', '-x'] as const) {
-      const at: [number, number, number] =
-        f === '+z' ? [tx, 0, tz + T / 2] : f === '-z' ? [tx, 0, tz - T / 2] : f === '+x' ? [tx + T / 2, 0, tz] : [tx - T / 2, 0, tz];
-      onFace(b, f, at, () => {
-        for (let y = 6; y < TH - 2; y += 3.2) for (const x of [-2.2, 0, 2.2]) b.panel(0.25, 0.25, 0x2a2420, { at: [x, y, 0], depth: 0.03 });
-        for (const y of [13, 19.5]) win(b, 0.9, y, 0.35, 1.3, tint(stone, 0.05), { shape: 'round', border: 0.1, n: 3 });
-      });
-    }
-    // the raised door with its timber stair
-    onFace(b, '+x', [tx + T / 2, 0, tz], () => win(b, -1.6, 4.6, 0.9, 2.0, tint(stone, 0.06), { shape: 'round', border: 0.15, glass: wood, n: 4 }));
-    b.stairs(1.0, 4.5, 4.0, 10, wood, { at: [tx + T / 2 + 0.55, 0, tz - 2.6], rotY: Math.PI });
-    b.box(1.1, 0.15, 1.3, wood, { at: [tx + T / 2 + 0.55, 4.45, tz + 1.6] });
-    b.collider(1.0, 4.0, { at: [tx + T / 2 + 0.55, 0, tz - 2.6] });
+    // the timber stair up the back of the tower to the raised door, which could be taken away
+    const dx = tx - 1.6;
+    b.stairs(1.0, 4.5, 4.0, 10, wood, { at: [dx + 2.65, 0, tz - T / 2 - 0.55], rotY: Math.PI / 2 });
+    b.box(1.3, 0.15, 1.1, wood, { at: [dx, 4.45, tz - T / 2 - 0.55] });
+    b.collider(4.0, 1.0, { at: [dx + 2.65, 0, tz - T / 2 - 0.55] });
     // timber balcony on beams, under a lean-to of tiles, on the side street
     onFace(b, '-x', [tx - T / 2, 0, tz], () => {
       const by = 9.6;
@@ -64,8 +51,8 @@ export const towerHouse: BuildingDef = {
     });
 
     // ---- the house at its foot: stone ground floor with a shop arch, jettied plastered floors above
-    const hx = 3.6;
-    const hw = 14.6;
+    const hx = 3.3;
+    const hw = 14.0;
     const G = 3.6;
     block(b, hw, G, 7.6, stone, hx, 7.8);
     onFace(b, '+z', [hx, 0, 11.6], () => {
@@ -100,14 +87,12 @@ export const towerHouse: BuildingDef = {
       b.panel(1.2, 2.4, wood, { at: [-2, 0, 0], depth: 0.08 });
     });
 
-    // ---- the yard behind: wall, well, a lean-to store, a vegetable plot
-    b.sym((s) => block(b, 0.5, 3.0, 15.4, stone, s * 11.4, -4.7));
-    block(b, 23.3, 3.0, 0.5, stone, 0, -12.4);
+    // ---- the yard behind: the old walls of the Lombard compound, its well, a lean-to store, a vegetable plot
+    compoundWalls(b, tint(stone, -0.04));
+    wellHead(b, stone, 'wood', wood);
     block(b, 8, 4.0, 4, stone, 6.5, -9.0);
     b.shed(8.4, 4.4, 1.2, roof, { at: [6.5, 4.0, -9.0], high: '-z' });
     b.panel(2.4, 2.6, wood, { at: [6.5, 0, -7.0], facing: '+z', depth: 0.06 });
-    b.cyl(0.7, 0.9, stone, { at: [-1.5, 0, -2.0], segs: 8 });
-    b.cyl(0.55, 0.92, P.windowDark, { at: [-1.5, 0, -2.0], segs: 8 });
     b.box(7, 0.1, 5, P.soil, { at: [-6.5, 0, -8.0] });
     for (let i = 0; i < 4; i++) b.box(6.6, 0.25, 0.3, P.leaf, { at: [-6.5, 0.1, -9.8 + i * 1.2] });
     b.tree(6, { kind: 'olive', at: [-2.0, 0, -9.5] });

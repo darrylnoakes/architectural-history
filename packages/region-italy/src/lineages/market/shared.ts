@@ -492,3 +492,17 @@ export function concreteMarket(b: Builder, restored: boolean): void {
     b.collider(1.9, 1.9, { at: [11.6, 0, 8.2] });
 
 }
+
+/** The concrete stall counters of 1936 with their marble tops, in two rows down the side aisles (kept in the restoration). */
+export const COUNTERS: [number, number][] = [-5.5, 5.5].flatMap((x) => [-5, 0, 5].map((z) => [x, z] as [number, number]));
+export function marketCounter(b: Builder, x: number, z: number): void {
+  b.box(3.6, 0.85, 1.1, P.concrete, { at: [x, 0.28, z], rotY: Math.PI / 2 });
+  b.box(1.2, 0.05, 3.7, P.marble, { at: [x, 1.13, z] });
+  b.collider(1.1, 3.6, { at: [x, 0, z] });
+}
+
+/** The cast-iron lamp standard in the forecourt. */
+export function forecourtLamp(b: Builder): void {
+  b.cyl(0.07, 4.2, P.castIron, { at: [-11.6, 0.08, 9.6], segs: 5 });
+  b.box(0.6, 0.12, 0.3, P.castIron, { at: [-11.4, 4.2, 9.6] });
+}

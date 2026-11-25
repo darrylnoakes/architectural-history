@@ -78,9 +78,8 @@ export const casaASchiera: BuildingDef = {
       }
 
       // the shop arch with its counter and a door to the stair
-      const sx = cx - 0.8;
       rowOpenings(b, cx, tint(stone, 0.06), ours ? P.doorGreen : P.oakDark);
-      // (the counter and the shutters are built last, in shopFront: they were replaced in the nineteenth century)
+      // (its counter and night shutters are built last, after the yards: they were replaced in the nineteenth century)
 
       // upper windows: round-arched, with cut-stone voussoirs and board shutters
       const zw = zf + jet;
@@ -143,9 +142,9 @@ export const casaASchiera: BuildingDef = {
         wares.forEach((c, i) => b.box(0.4, 0.22, 0.32, c, { at: [sx - 1.15 + i * (2.3 / (wares.length - 1)), 0.95, zf + 0.25], jitter: false }));
         b.group({ at: [sx, 3.15, zf + 0.06], rot: [-1.3, 0, 0] }, () => b.box(2.6, 0.06, 0.9, P.oak, { at: [0, 0, 0.45], jitter: false }));
       } else {
-        b.window(2.9, 2.6, { at: [sx, 0.35, zf + 0.04], facing: '+z', frame: P.oakDark, glass: 0x3e4f60, bars: [3, 2] });
+        b.window(2.9, 1.35, { at: [sx, 0.35, zf + 0.04], facing: '+z', frame: P.oakDark, glass: 0x3e4f60, bars: [3, 1] });
         b.box(3.0, 0.35, 0.1, P.oakDark, { at: [sx, 0, zf + 0.05], jitter: false });
-        b.box(2.4, 0.45, 0.08, ours ? P.doorGreen : 0x6b2a22, { at: [sx, 2.95, zf + 0.06], jitter: false }); // the sign board
+        b.box(2.4, 0.45, 0.08, ours ? P.doorGreen : 0x6b2a22, { at: [sx, 1.75, zf + 0.06], jitter: false }); // the sign board
       }
     }
   },
