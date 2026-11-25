@@ -1,5 +1,5 @@
 import { P, tint, type BuildingDef } from '@ah/kit';
-import { PW, coppiRoof, patch, wellHead } from './shared';
+import { PW, coppiRoof, patch, streetKerb, wellHead } from './shared';
 
 const N = 5; // shops
 const BW = 4.8; // bay width
@@ -37,7 +37,7 @@ export const tabernaeRow: BuildingDef = {
 
     // street pavement of basalt polygons and a raised kerb (crepido) in front of the shops
     patch(b, PW, 8 - ZF, P.cobble, [0, (ZF + 8) / 2], 0.18);
-    b.box(PW, 0.22, 0.25, P.peperino, { at: [0, 0, 7.75] });
+    streetKerb(b, P.peperino);
 
     // floor inside and back yard
     patch(b, L, D, tint(P.earth, -0.05), [0, zc], 0.05);

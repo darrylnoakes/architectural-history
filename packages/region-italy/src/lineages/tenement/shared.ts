@@ -336,3 +336,38 @@ export function tenter(b: Builder, x: number, z: number, len: number, cloth: num
   b.box(len + 0.2, 0.08, 0.08, P.oak, { at: [x, 0.45, z] });
   b.box(len - 0.1, 1.0, 0.03, cloth, { at: [x, 0.52, z + 0.06] });
 }
+
+// ---------------------------------------------------------------- the Roman street front (tabernae-row, insula, portico-shacks)
+
+/** The kerb of the street in front of the plot (the crepido), laid with the first Roman row and never moved. */
+export function streetKerb(b: Builder, color: number): void {
+  b.box(PW, 0.22, 0.25, color, { at: [0, 0, 7.75] });
+}
+
+/**
+ * The street portico in front of the insula: a stylobate, seven columns on bases and an entablature
+ * bay by bay, carrying a terrace at the first floor (4.4 m). The shacks of the next stage are built in
+ * it once the block behind has fallen, so the columns and the bays of entablature still standing are
+ * the same pieces. `keep(i)` says which columns stand (the rest are left out; a fallen one is drawn by
+ * the caller) and `bays(i)` which bays of entablature (between columns i and i + 1) are still up.
+ */
+export const PORTICO = { n: 7, sp: 3.6, z: 7.0, base: 0.57, ch: 3.45, top: 4.4 };
+
+export function streetPortico(b: Builder, col: number, o: { keep?: (i: number) => boolean; bays?: (i: number) => boolean } = {}): void {
+  const { n, sp, z, base, ch, top } = PORTICO;
+  const x0 = -((n - 1) * sp) / 2;
+  b.box(n * sp + 0.6, 0.22, 1.1, P.travertine, { at: [0, 0, z] });
+  for (let i = 0; i < n; i++) {
+    const x = x0 + i * sp;
+    b.cyl(0.42, 0.35, P.travertine, { at: [x, 0.22, z], segs: 8 });
+    if (o.keep && !o.keep(i)) continue;
+    b.column(0.3, ch, col, { at: [x, base, z], order: 'ionic' });
+  }
+  const ey = base + ch;
+  for (let i = 0; i < n - 1; i++) {
+    if (o.bays && !o.bays(i)) continue;
+    const xa = x0 + i * sp - (i === 0 ? 0.45 : 0);
+    const xb = x0 + (i + 1) * sp + (i === n - 2 ? 0.45 : 0);
+    b.box(xb - xa, top - ey, 0.75, P.travertine, { at: [(xa + xb) / 2, ey, z] });
+  }
+}

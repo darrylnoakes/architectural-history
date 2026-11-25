@@ -1,9 +1,9 @@
 import { P, tint, type BuildingDef } from '@ah/kit';
-import { PW, patch, washing } from './shared';
+import { PORTICO, PW, patch, streetKerb, streetPortico, washing } from './shared';
 
 const W = 22; // block along the street
-const ZF = 5.2; // street front
-const ZB = -5.6; // back
+const ZF = 4.4; // street front, behind the portico
+const ZB = -6.4; // back
 const D = ZF - ZB;
 const ZC = (ZF + ZB) / 2;
 const BAYS = 7;
@@ -25,13 +25,13 @@ export const insula: BuildingDef = {
   date: 'c. AD 60 to 150',
   summary:
     'Under the empire most people in Rome, Ostia and the larger towns rented rooms in an insula, a block of flats of five storeys or so built in concrete faced with brick, which could be raised higher and burnt less than the timber-framed blocks before it. ' +
-    'Shops with mezzanines filled the street front, and between them narrow doorways opened straight onto stairs up to the flats, so tenants never passed through a shop. The best flats, on the first floor, had a balcony on stone brackets, and rents fell as you climbed, so the poorest lived under the roof in small rooms that were the last to escape a fire. ' +
+    'Shops with mezzanines filled the street front, and between them narrow doorways opened straight onto stairs up to the flats, so tenants never passed through a shop. The best flats, on the first floor, opened onto the flat roof of a street portico, of the kind Nero ordered in front of the blocks after the fire of AD 64, and rents fell as you climbed, so the poorest lived under the roof in small rooms that were the last to escape a fire. ' +
     'There was no running water above the ground floor, and tenants carried it upstairs from the street fountain. Augustus limited the height of buildings on the street to 70 Roman feet, about 21 metres, and Trajan is said to have lowered it to 60.',
   materials: ['concrete faced with brick (opus testaceum)', 'travertine brackets and thresholds', 'timber floors and balconies', 'fired roof tiles'],
   modelledOn: 'The insulae of Ostia (House of Diana, 2nd century AD) and the Insula dell’Ara Coeli, Rome',
   lookFor: [
     { label: 'Brick-faced concrete', note: 'A core of concrete faced with neat triangular bricks; string courses of brick mark each floor.', at: [-9.5, 9.4, ZF + 0.1] },
-    { label: 'Balcony on travertine brackets', note: 'A long balcony (maenianum) runs along the first floor on stone corbels, as on the House of Diana at Ostia.', at: [-4.8, 4.0, ZF + 1.2] },
+    { label: 'Street portico', note: 'After the great fire of AD 64 Nero had porticoes built in front of the blocks of flats, to shade the pavement and so that fires could be fought from their flat roofs; here the roof is a terrace for the first-floor flats.', at: [-5.4, 2.6, PORTICO.z + 0.4] },
     { label: 'Shops with mezzanines', note: 'Each shop has a wide doorway and a small window above it lighting the loft where its keeper lived.', at: [-3.1, 2.0, ZF + 0.2] },
     { label: 'Stair doorway', note: 'A narrow door on the street with a travertine threshold, the first steps of the stair to the upper flats rising just inside, as at Ostia.', at: [-W / 2 + 1.5 * BP, 1.6, ZF + 0.25] },
     { label: 'Garrets under the roof', note: 'The top storey has the smallest windows and the flimsiest timber balconies: the cheapest rooms, and the most dangerous in a fire.', at: [3.1, 15.2, ZF + 0.9] },
@@ -46,7 +46,7 @@ export const insula: BuildingDef = {
 
     // pavement in front, a cobbled lane behind
     patch(b, PW, 8 - ZF, P.paving, [0, (ZF + 8) / 2], 0.15);
-    b.box(PW, 0.18, 0.25, trav, { at: [0, 0, 7.75] });
+    streetKerb(b, trav);
     patch(b, PW, 8 + ZB, tint(P.cobble, 0.06), [0, (ZB - 8) / 2], 0.03);
 
     // the block
@@ -138,7 +138,7 @@ export const insula: BuildingDef = {
         [-W / 2, '-x'],
         [W / 2, '+x'],
       ] as const) {
-        for (const z of [-3.0, 0.2, 3.2]) {
+        for (const z of [-3.8, -0.6, 2.4]) {
           b.window(ww * 0.9, wh, { at: [sx, y0 + sill, z], facing, frame: tint(brick, -0.05), glass: P.windowDark, border: 0.06 });
           b.panel(ww * 0.9 + 0.35, 0.22, lintel, { at: [sx, y0 + sill + wh, z], facing, depth: 0.04 });
         }
@@ -148,35 +148,23 @@ export const insula: BuildingDef = {
     for (const [sx, facing] of [
       [-W / 2, '-x'],
       [W / 2, '+x'],
-    ] as const) b.window(0.7, 0.6, { at: [sx, 2.6, -2.0], facing, frame: lintel, glass: P.windowDark, border: 0.06 });
+    ] as const) b.window(0.7, 0.6, { at: [sx, 2.6, -2.8], facing, frame: lintel, glass: P.windowDark, border: 0.06 });
 
-    // the first-floor balcony on travertine corbels, with a brick parapet
+    // the street portico, of the kind Nero ordered in front of the blocks after the fire of AD 64, its
+    // flat roof a terrace for the first-floor flats, with a brick parapet
+    streetPortico(b, b.pick([P.granite, P.marble, P.peperino]));
     const by = FL[1][0];
-    const bd = 1.15;
-    for (let i = 0; i <= 14; i++) {
-      const x = -W / 2 + 0.4 + ((W - 0.8) * i) / 14;
-      b.extrude(
-        [
-          [0, 0],
-          [0, 0.55],
-          [bd, 0.55],
-          [bd, 0.38],
-          [0.3, 0],
-        ],
-        0.28,
-        trav,
-        { at: [x, by - 0.55, ZF], rotY: -Math.PI / 2 },
-      );
-    }
-    b.box(W - 0.2, 0.16, bd, trav, { at: [0, by, ZF + bd / 2] });
-    b.box(W - 0.2, 0.95, 0.22, brick, { at: [0, by + 0.16, ZF + bd - 0.11] });
-    b.box(W - 0.1, 0.07, 0.3, trav, { at: [0, by + 1.11, ZF + bd - 0.11] });
-    for (const s of [-1, 1]) b.box(0.22, 0.95, bd - 0.22, brick, { at: [s * (W / 2 - 0.21), by + 0.16, ZF + (bd - 0.22) / 2] });
+    const tz0 = ZF;
+    const tz1 = PORTICO.z + 0.4;
+    b.box(W - 0.2, 0.16, tz1 - tz0, trav, { at: [0, by, (tz0 + tz1) / 2] });
+    b.box(W - 0.2, 0.95, 0.22, brick, { at: [0, by + 0.16, tz1 - 0.11] });
+    b.box(W - 0.1, 0.07, 0.3, trav, { at: [0, by + 1.11, tz1 - 0.11] });
+    for (const s of [-1, 1]) b.box(0.22, 0.95, tz1 - tz0 - 0.22, brick, { at: [s * (W / 2 - 0.21), by + 0.16, (tz0 + tz1 - 0.22) / 2] });
     // pots of herbs on the parapet
     for (let i = 0; i < 5; i++) {
       const x = b.range(-W / 2 + 1, W / 2 - 1);
-      b.cyl(0.16, 0.25, P.terracotta, { at: [x, by + 1.18, ZF + bd - 0.11], rTop: 0.2, segs: 6 });
-      b.blob(0.22, P.leaf, { at: [x, by + 1.5, ZF + bd - 0.11], detail: 0 });
+      b.cyl(0.16, 0.25, P.terracotta, { at: [x, by + 1.18, tz1 - 0.11], rTop: 0.2, segs: 6 });
+      b.blob(0.22, P.leaf, { at: [x, by + 1.5, tz1 - 0.11], detail: 0 });
     }
 
     // timber balconies on the upper floors: beams through the wall, plank floors, rails
@@ -194,10 +182,10 @@ export const insula: BuildingDef = {
     }
     washing(b, [-8.0, FL[3][0] + 2.0, ZF + 0.9], [-4.6, FL[3][0] + 2.0, ZF + 0.9], 4);
 
-    // a street fountain basin at the corner, where everyone drew water
-    b.box(1.6, 0.7, 0.9, trav, { at: [-W / 2 - 0.9, 0.15, 6.9] });
-    b.box(1.4, 0.05, 0.7, P.water, { at: [-W / 2 - 0.9, 0.78, 6.9], mat: 'glass' });
-    b.box(0.35, 1.3, 0.3, trav, { at: [-W / 2 - 0.9, 0.15, 6.35] });
+    // a street fountain basin on the side street, where everyone drew water
+    b.box(0.9, 0.7, 1.6, trav, { at: [-W / 2 - 0.9, 0, 1.0] });
+    b.box(0.7, 0.05, 1.4, P.water, { at: [-W / 2 - 0.9, 0.63, 1.0], mat: 'glass' });
+    b.box(0.3, 1.3, 0.35, trav, { at: [-W / 2 - 0.25, 0, 1.0] });
 
     b.collider(W, D, { at: [0, 0, ZC] });
   },
