@@ -338,7 +338,7 @@ The stage with no wall (`monumental-arch`) has no curtain.
 | from | id | building |
 |---|---|---|
 | -120 | `murus-gallicus` | The Gaulish rampart: an earth bank faced in dry stone with the ends of its timber lacing showing in rows, a ditch, a timber gate tower set back in a funnel entrance. Cameo: the Porte du Rebout, Bibracte. Carries an `end`: abandoned and levelled after the conquest (about 20 BC) |
-| 200 | `monumental-arch` | No wall: the open Roman town marks its entrance with a triple arch covered in reliefs. Cameo: the Porte de Mars, Reims |
+| 200 | `monumental-arch` | No wall: the open Roman town has a triple arch covered in reliefs on its main street, at the edge of the forum quarter. It stands on a plot of its own (`porte-du-castrum`), inside the outer gate plots, which are open ground from the levelling of the Gaulish rampart until 1200. Cameo: the Porte de Mars, Reims |
 | 290 | `castrum-wall` | The late Roman wall: small squared stone with brick bands on a base of reused carved blocks, round-fronted towers, the old arch built into it as a gate. Cameo: Le Mans, Senlis; Reims |
 | 1200 | `philippian-gate` | A new wall for the grown town: a gate between two round towers with arrow loops, a portcullis, a curtain with round towers and a ditch. Cameo: the walls of Philip Augustus |
 | 1420 | `fortified-gate` | The Hundred Years' War: the gate raised with machicolations and steep roofs, a drawbridge, and an outwork (boulevard) for the first guns |

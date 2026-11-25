@@ -23,6 +23,12 @@ const blown1940 = {
  * And the plots marked `struck: greatWar` were shelled between 1914 and 1918: whatever stood on
  * them is a ruin from 1915 until the Reconstruction rebuilds it in the 1920s.
  */
+/**
+ * For house plots outside the late Roman wall: when the town shrank behind it after 275 they were
+ * left in ruin, and nobody built on them again until the Franks did.
+ */
+const OUTSIDE = ['late-roman-house'];
+
 export const plots: Plot[] = [
   // --- the cathedral, with its west front on the parvis and the bishop's palace on its north side
   { id: 'cathedrale', lineage: 'cathedrale', x: 60, z: -40, rotY: W, seed: 11, hero: true },
@@ -73,9 +79,14 @@ export const plots: Plot[] = [
   { id: 'relais-routier', lineage: 'auberge', x: -216, z: 152.5, rotY: N, seed: 42, since: 1955, keep: 'relais-routier' },
 
   // --- gates, changing together with the wall between them (`town-walls.ts`)
-  { id: 'porte-nord', lineage: 'remparts', x: 0, z: -128, rotY: N, seed: 43, hero: true },
-  { id: 'porte-est', lineage: 'remparts', x: 146, z: 0, rotY: E, seed: 44, keep: 'vauban-gate' },
-  { id: 'porte-ouest', lineage: 'remparts', x: -150, z: 0, rotY: W, seed: 45 },
+  // The outer line: the Gaulish rampart, then nothing until the wall of 1200. The Roman town was open,
+  // and the late Roman wall (290 to 1200) was a much smaller circuit inside it (`town-walls.ts`).
+  { id: 'porte-nord', lineage: 'remparts', x: 0, z: -128, rotY: N, seed: 43, hero: true, skip: ['monumental-arch', 'castrum-wall'] },
+  { id: 'porte-est', lineage: 'remparts', x: 146, z: 0, rotY: E, seed: 44, skip: ['monumental-arch', 'castrum-wall'], keep: 'vauban-gate' },
+  { id: 'porte-ouest', lineage: 'remparts', x: -150, z: 0, rotY: W, seed: 45, skip: ['monumental-arch', 'castrum-wall'] },
+  // the town's one triumphal arch, on the main street at the edge of the forum quarter: the late
+  // Roman wall was laid out through it and it became the west gate, until that wall came down
+  { id: 'porte-du-castrum', lineage: 'remparts', x: -50.2, z: 0, rotY: W, seed: 50, since: 200, until: 1200 },
 
   // --- the railway
   // the town's station, rebuilt after 1918, stays in use; the high-speed station of 2007 is a new
@@ -98,12 +109,12 @@ export const plots: Plot[] = [
   { id: 'maison-2', lineage: 'maison', x: 14.5, z: -14, rotY: W, seed: 62, lag: 0.2, skip: ['immeuble-bourgeois', 'maison-1900'], struck: greatWar, keep: 'reconstruction-house' },
   { id: 'maison-3', lineage: 'maison', x: 14.5, z: -65, rotY: W, seed: 63, lag: 0.3, keep: 'gothic-timber-house' },
   { id: 'maison-4', lineage: 'maison', x: 14.5, z: -107, rotY: W, seed: 65, since: 1140, lag: 0.5, keep: 'renaissance-house' },
-  { id: 'maison-5', lineage: 'maison', x: -14.5, z: -104, rotY: E, seed: 66, since: 30, lag: 0.4, keep: 'immeuble-bourgeois' },
-  { id: 'maison-6', lineage: 'maison', x: -14.5, z: 41, rotY: E, seed: 67, lag: 0.25, skip: ['maison-1900'], struck: greatWar, keep: 'reconstruction-house' },
-  { id: 'maison-7', lineage: 'maison', x: 14.5, z: 67, rotY: W, seed: 68, lag: 0.45, keep: 'gothic-timber-house' },
-  { id: 'maison-8', lineage: 'maison', x: -119, z: -14.5, rotY: S, seed: 70, since: 30, lag: 0.3, keep: 'classical-house' },
+  { id: 'maison-5', lineage: 'maison', x: -14.5, z: -108, rotY: E, seed: 66, since: 30, lag: 0.4, skip: OUTSIDE, keep: 'immeuble-bourgeois' },
+  { id: 'maison-6', lineage: 'maison', x: -14.5, z: 44, rotY: E, seed: 67, lag: 0.25, skip: [...OUTSIDE, 'maison-1900'], struck: greatWar, keep: 'reconstruction-house' },
+  { id: 'maison-7', lineage: 'maison', x: 14.5, z: 67, rotY: W, seed: 68, lag: 0.45, skip: OUTSIDE, keep: 'gothic-timber-house' },
+  { id: 'maison-8', lineage: 'maison', x: -119, z: -14.5, rotY: S, seed: 70, since: 30, lag: 0.3, skip: OUTSIDE, keep: 'classical-house' },
   { id: 'maison-10', lineage: 'maison', x: 36, z: -14, rotY: S, seed: 72, lag: 0.15, keep: 'renaissance-house' },
-  { id: 'maison-11', lineage: 'maison', x: 100, z: -14, rotY: S, seed: 73, since: 30, lag: 0.35, skip: ['immeuble-bourgeois'], struck: greatWar, keep: 'reconstruction-house' },
+  { id: 'maison-11', lineage: 'maison', x: 100, z: -14, rotY: S, seed: 73, since: 30, lag: 0.35, skip: [...OUTSIDE, 'immeuble-bourgeois'], struck: greatWar, keep: 'reconstruction-house' },
   { id: 'maison-12', lineage: 'maison', x: 114, z: -14, rotY: S, seed: 74, since: 1140, lag: 0.5, keep: 'classical-house' },
   // (no apartment block here first: nobody pulled down a six-storey block of the 1870s for two small houses)
   { id: 'maison-13', lineage: 'maison', x: 118, z: 14.5, rotY: N, seed: 75, since: 1330, lag: 0.6, skip: ['immeuble-bourgeois'], keep: 'maison-1900' },
@@ -112,8 +123,8 @@ export const plots: Plot[] = [
   { id: 'maison-19', lineage: 'maison', x: 64, z: -14, rotY: S, seed: 86, since: 1140, lag: 0.2, skip: ['immeuble-bourgeois'], struck: greatWar, keep: 'reconstruction-house' },
   { id: 'maison-20', lineage: 'maison', x: 78, z: -14, rotY: S, seed: 87, since: 30, lag: 0.55, keep: 'renaissance-house' },
   // the rue des Moulins, behind the hôtels
-  { id: 'maison-21', lineage: 'maison', x: 40, z: 41, rotY: S, seed: 88, since: 30, lag: 0.5, skip: ['maison-1900'], keep: 'immeuble-bourgeois' },
-  { id: 'maison-22', lineage: 'maison', x: 54, z: 41, rotY: S, seed: 89, since: 1140, lag: 0.35, keep: 'classical-house' },
+  { id: 'maison-21', lineage: 'maison', x: 40, z: 43, rotY: S, seed: 88, since: 30, lag: 0.5, skip: [...OUTSIDE, 'maison-1900'], keep: 'immeuble-bourgeois' },
+  { id: 'maison-22', lineage: 'maison', x: 54, z: 43, rotY: S, seed: 89, since: 1140, lag: 0.35, keep: 'classical-house' },
   { id: 'maison-23', lineage: 'maison', x: 68, z: 41, rotY: S, seed: 90, since: 1330, lag: 0.3, skip: ['immeuble-bourgeois', 'maison-1900'], struck: greatWar, keep: 'reconstruction-house' },
   { id: 'maison-24', lineage: 'maison', x: 82, z: 41, rotY: S, seed: 98, since: 1330, lag: 0.6, keep: 'gothic-timber-house' },
   // beyond the river: the station quarter

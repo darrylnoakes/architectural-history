@@ -1,24 +1,71 @@
 import { P, mix, spread, tint, type BuildingDef, type Builder } from '@ah/kit';
 import { type XZ, flatArch, lineColliders, pave, rectCollider, wallSeg } from './shared';
 import { GATEWAY_Z, POD, PW, SQ, cryptoporticus, forumGateway, forumSquare, plinth } from './02-forum';
+import { CASTRUM, curtain } from '../remparts/curtain';
+import { NJ, WALL_COLOURS, archPanel, ring } from '../remparts/shared';
 
-/** The late Roman town wall runs along the back (z = WZ) and the left side (x = WX) of the plot. */
+/*
+ * The plot holds the north-west corner of the late Roman circuit (town-walls.ts), which the town draws
+ * until 600 and this model draws from then on, exactly on its line: the west wall along x = WX, the
+ * north wall along z = WZ (3.5 m beyond the plot's back edge), and the round tower at the corner. The
+ * plot is centred at world (-32, -73) facing south, so plot = world - (-32, -73).
+ */
 const WX = -18.2;
-const WZ = -18.2;
-const WT = 3.2; // thickness
-const WH = 7.5; // height to the wall-walk
-/** The round-fronted bastion at the corner, made into the count's tower. */
-const TW: XZ = [WX, WZ];
-const TR = 3.6;
+const WZ = -25.5;
+/** The circuit's west and north sides in world coordinates, and this plot's place in the world. */
+const WORLD = { west: -50.2, north: -98.5, x: -32, z: -73 };
+const WT = CASTRUM.t;
+const WH = CASTRUM.h;
+/** The round corner tower made into the count's tower (as the circuit's `corner` piece places it). */
+const TW: XZ = [WX - 1.2, WZ - 1.2];
+const TR = 3.5;
+const TH = 12.6;
 /** The count's hall. */
 const HL = { x0: -8, x1: 14, z0: -14, z1: -5, wall: 3.4 };
 
 const roman = mix(P.limestone, P.rubble, 0.35);
 const romanDark = tint(roman, -0.1);
 
-/** Courses of brick laced through the small squared stone of the Roman wall, on a face of length L. */
-function bands(b: Builder, p: XZ, q: XZ, off: XZ, ys: number[]): void {
-  for (const y of ys) wallSeg(b, [p[0] + off[0], p[1] + off[1]], [q[0] + off[0], q[1] + off[1]], 0.06, 0.35, P.romanTile, y, { jitter: false });
+/**
+ * The two stretches of the late Roman wall, built with the town's own pieces in the town's own frames
+ * (so they run on unbroken into the stretches the town draws either side), and the corner tower: the
+ * town's, but carried up in timber instead of its tiled roof.
+ */
+function romanCorner(b: Builder) {
+  b.group({ at: [-WORLD.x, 0, -WORLD.z] }, () => {
+    // the north side, a stretch along its own X with the field to its +Z, as the town lays it out
+    b.group({ at: [0, 0, WORLD.north], rotY: Math.PI }, () => curtain(b, 'castrum', 10.2, -WORLD.west));
+    b.group({ at: [WORLD.west, 0, 0], rotY: -Math.PI / 2 }, () => curtain(b, 'castrum', WORLD.north, -51.2));
+  });
+  const { stone, brick, spolia } = WALL_COLOURS.castrum;
+  const segs = 14;
+  b.group({ at: [TW[0], 0, TW[1]] }, () => {
+    b.cyl(TR + 0.18, CASTRUM.base, spolia, { segs, ...NJ });
+    b.cyl(TR, TH - CASTRUM.base, stone, { at: [0, CASTRUM.base, 0], segs, ...NJ });
+    for (const y of CASTRUM.bands) if (y < TH - 3.5) ring(b, TR + 0.03, y, CASTRUM.band, brick, segs);
+    ring(b, TR + 0.03, TH - 0.95, CASTRUM.band, brick, segs);
+    b.cyl(TR + 0.22, 0.3, tint(stone, 0.04), { at: [0, TH, 0], segs, ...NJ });
+    // the Roman chamber's windows, now under the count's timber storey
+    for (const a of [Math.PI - 0.3, (5 * Math.PI) / 4, (3 * Math.PI) / 2 + 0.3]) {
+      const at = (y: number): [number, number, number] => [Math.sin(a) * (TR - 0.02), y, Math.cos(a) * (TR - 0.02)];
+      archPanel(b, 1.15, 1.95, brick, { at: at(TH - 3.05), facing: a, depth: 0.05 });
+      archPanel(b, 0.8, 1.75, P.windowDark, { at: at(TH - 3.0), facing: a, depth: 0.08 });
+    }
+    // the Frankish timber storey and its shingled roof
+    const ty = TH + 0.3;
+    b.cyl(TR - 0.3, 4.0, P.oak, { at: [0, ty, 0], segs: 8 });
+    for (let i = 0; i < 8; i++) {
+      const a = (i / 8) * Math.PI * 2 + Math.PI / 8;
+      b.box(0.3, 4.0, 0.3, P.oakDark, { at: [Math.cos(a) * (TR - 0.2), ty, Math.sin(a) * (TR - 0.2)], jitter: false });
+    }
+    for (const a of [Math.PI / 4, -Math.PI / 4 + Math.PI, -Math.PI / 4]) {
+      b.panel(0.7, 1.0, P.windowDark, { at: [Math.sin(a) * (TR - 0.25), ty + 1.6, Math.cos(a) * (TR - 0.25)], facing: a });
+    }
+    b.cone(TR + 0.5, 4.2, P.shingle, { at: [0, ty + 4.0, 0], segs: 8 });
+  });
+  rectCollider(b, TW[0] - TR, TW[0] + TR, TW[1] - TR, TW[1] + TR);
+  rectCollider(b, WX, 21.8, WZ - WT / 2, WZ + WT / 2);
+  rectCollider(b, WX - WT / 2, WX + WT / 2, WZ, 21.8);
 }
 
 export const frankishPalace: BuildingDef = {
@@ -32,7 +79,7 @@ export const frankishPalace: BuildingDef = {
   materials: ['oak', 'reused Roman stone and brick', 'oak shingles', 'rubble masonry'],
   lookFor: [
     { label: 'Roman wall with brick bands', note: 'The late Roman rampart of small squared stones laced with courses of red brick, still the town’s defence three centuries on.', at: [WX + WT / 2 + 0.2, 4.0, 2] },
-    { label: 'Roman tower heightened in timber', note: 'The round-fronted Roman tower at the corner, given a timber upper storey and a shingled roof as the count’s strongpoint.', at: [TW[0] + 1.5, WH + 3.5, TW[1] + TR + 0.3] },
+    { label: 'Roman tower heightened in timber', note: 'The round Roman tower at the corner of the town wall, given a timber upper storey and a shingled roof as the count’s strongpoint.', at: [TW[0] + 2.6, TH + 2.4, TW[1] + 2.6] },
     { label: 'Timber hall on stone footings', note: 'The count’s hall: oak posts and planks on a low wall of reused stone, under a steep roof of oak shingles.', at: [3, 1.0, HL.z1 + 0.3] },
     { label: 'Forum gateway', note: 'The Roman arch from the main street into the forum, left standing when the rest was quarried, now hung with timber gates as the entrance to the count’s yard.', at: [0, 7.2, GATEWAY_Z + PW / 2 + 0.5] },
     { label: 'Chapel', note: 'A small stone chapel with a rounded apse, built of rubble and Roman brick, for the count’s household.', at: [-8.5, 3.4, 9.2] },
@@ -51,39 +98,11 @@ export const frankishPalace: BuildingDef = {
     rectCollider(b, SQ.x1 + PW - 0.2, SQ.x1 + PW + 1.2, SQ.z0, SQ.z1);
     forumGateway(b);
     for (const s of [-1, 1]) rectCollider(b, s * 2.8 - 1.0, s * 2.8 + 1.0, GATEWAY_Z - PW / 2 - 0.4, GATEWAY_Z + PW / 2 + 0.4);
-    // ---- the Roman wall: back and left, with a wall-walk and a parapet
-    const back: XZ[] = [[TW[0] + TR - 0.5, WZ], [21.8, WZ]];
-    const side: XZ[] = [[WX, TW[1] + TR - 0.5], [WX, 21.8]];
-    for (const [p, q] of [back, side]) {
-      wallSeg(b, p, q, WT, WH, roman);
-      const alongX = p[1] === q[1];
-      const off: XZ = alongX ? [0, WT / 2 + 0.02] : [WT / 2 + 0.02, 0];
-      bands(b, p, q, off, [1.6, 3.4, 5.2]);
-      bands(b, p, q, [-off[0], -off[1]], [1.6, 3.4, 5.2]);
-      // the parapet on the outer edge, patched and broken in places
-      const pOff: XZ = alongX ? [0, -WT / 2 + 0.3] : [-WT / 2 + 0.3, 0];
-      wallSeg(b, [p[0] + pOff[0], p[1] + pOff[1]], [q[0] + pOff[0], q[1] + pOff[1]], 0.6, 1.3, romanDark, WH);
-    }
-    // ---- the corner bastion made into the count's tower
-    b.cyl(TR, WH + 1.5, roman, { at: [TW[0], 0, TW[1]], segs: 10 });
-    for (const y of [1.6, 3.4, 5.2, 7.0]) b.cyl(TR + 0.05, 0.35, P.romanTile, { at: [TW[0], y, TW[1]], segs: 10, jitter: false });
-    // the Frankish timber storey and roof
-    const ty = WH + 1.5;
-    b.cyl(TR - 0.3, 4.0, P.oak, { at: [TW[0], ty, TW[1]], segs: 8 });
-    for (let i = 0; i < 8; i++) {
-      const a = (i / 8) * Math.PI * 2 + Math.PI / 8;
-      b.box(0.3, 4.0, 0.3, P.oakDark, { at: [TW[0] + Math.cos(a) * (TR - 0.2), ty, TW[1] + Math.sin(a) * (TR - 0.2)], jitter: false });
-    }
-    for (const a of [Math.PI / 4, -Math.PI / 4 + Math.PI]) {
-      b.panel(0.7, 1.0, P.windowDark, { at: [TW[0] + Math.sin(a) * (TR - 0.25), ty + 1.6, TW[1] + Math.cos(a) * (TR - 0.25)], facing: a });
-    }
-    b.cone(TR + 0.5, 4.2, P.shingle, { at: [TW[0], ty + 4.0, TW[1]], segs: 8 });
-    rectCollider(b, TW[0] - TR, TW[0] + TR, TW[1] - TR, TW[1] + TR);
-    lineColliders(b, back, WT);
-    lineColliders(b, side, WT);
-    // a stair up to the wall-walk
+    // ---- the Roman wall: the north-west corner of the late circuit, the corner tower the count's
+    romanCorner(b);
+    // a stair up to the wall-walk from the yard behind the hall
     b.stairs(1.6, WH, 9, 18, romanDark, { at: [8, 0, WZ + WT / 2 + 4.5] });
-    b.deck(20, WT - 0.6, WH, { at: [10, 0, WZ] });
+    b.deck(38, WT - 1.1, WH, { at: [2.8, 0, WZ - 0.1] });
 
     // ---- the hall: a low footing of reused stone, oak posts and planks, shingle roof, smoke louvre
     const { x0, x1, z0, z1, wall } = HL;
@@ -124,7 +143,7 @@ export const frankishPalace: BuildingDef = {
     rectCollider(b, C.x0, C.x1 + 2.4, C.z0, C.z1);
 
     // ---- outbuildings: a kitchen and a stable, thatched
-    for (const [x, z, w, d] of [[9, 8, 7, 5], [9.5, -1, 5, 4]] as [number, number, number, number][]) {
+    for (const [x, z, w, d] of [[9, 8, 7, 5], [-3, -19.5, 7, 4]] as [number, number, number, number][]) {
       b.box(w, 2.4, d, P.daub, { at: [x, 0, z] });
       b.gable(w, d, 3.0, P.thatch, { at: [x, 2.4, z], overhang: 0.5, thick: 0.4 });
       b.panel(1.2, 1.9, P.oakDark, { at: [x - 1, 0, z + d / 2], facing: '+z' });

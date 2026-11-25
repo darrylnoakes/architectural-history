@@ -114,11 +114,11 @@ export function archColliders(b: Builder): void {
 
 export const monumentalArch: BuildingDef = {
   id: 'monumental-arch',
-  name: 'Triumphal arch at the town’s entrance',
+  name: 'Triumphal arch on the main street',
   style: 'Gallo-Roman',
   date: 'late 2nd or early 3rd century AD',
   summary:
-    'Under the Roman peace most towns of northern Gaul had no walls. Instead the main road into town passed under a monumental arch that marked where the town began, much as a city gate would, but built for show. ' +
+    'Under the Roman peace most towns of northern Gaul had no walls. Instead a main street passed under a monumental arch, set where the road from the country reached the forum quarter, much as a city gate would stand, but built for show. ' +
     'This one has three passages, a wide one for wheeled traffic and two narrow ones for people on foot, between piers dressed with Corinthian columns and niches, and the undersides of its arches are carved: the labours of the twelve months in the middle, Romulus and Remus with the she-wolf, and Leda and the swan, in the side arches. ' +
     'The Gaulish rampart had kept people out; the arch invites them in, and tells them that this is a Roman town.',
   materials: ['limestone ashlar', 'mortared rubble core'],

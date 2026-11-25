@@ -176,6 +176,11 @@ export interface Plot {
   /** The plot is empty before this year (used for suburbs that appear late). */
   since?: number;
   /**
+   * The plot is cleared for good in this year: whatever stands on it is pulled down and nothing is
+   * built there again (a gate of a town wall that is demolished and not replaced on that spot).
+   */
+  until?: number;
+  /**
    * How far this plot lags behind the fashion, 0..1: it adopts each new stage this fraction of the
    * way through the years that type was being built, so neighbours do not all rebuild in the same year.
    */

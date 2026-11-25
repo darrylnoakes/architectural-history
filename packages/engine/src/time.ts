@@ -83,8 +83,8 @@ export interface PlotStage {
  *    that type was actually being built (`from` to `builtUntil`), never after;
  *  - a type with an `end` does not outlive it: it is renewed as the next stage, falls into ruin, or
  *    is cleared, leaving a gap in the schedule;
- *  - a plot can pass over a type altogether (`skip`), appear late (`since`), or stop rebuilding at one durable type (`keep`), which is how
- *    old buildings come to survive in a modern town.
+ *  - a plot can pass over a type altogether (`skip`), appear late (`since`), be cleared for good (`until`), or stop rebuilding at one
+ *    durable type (`keep`), which is how old buildings come to survive in a modern town.
  */
 export function plotSchedule(plot: Plot, lineage: Lineage, regionEnd: number): PlotStage[] {
   const stages = lineage.stages;
@@ -133,7 +133,10 @@ export function plotSchedule(plot: Plot, lineage: Lineage, regionEnd: number): P
       out.push({ index: a.index, from: a.from, to: next, state: 'standing' });
     }
   });
-  return out;
+  // a plot cleared for good holds nothing from that year on
+  const until = plot.until;
+  if (until === undefined) return out;
+  return out.filter((e) => e.from < until).map((e) => (e.to > until ? { ...e, to: until } : e));
 }
 
 /** Which entry of a schedule covers `year`, or -1 if the plot is open ground then. */

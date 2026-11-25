@@ -224,6 +224,49 @@ function castrumStretch(b: Builder, x0: number, x1: number, towers: boolean, det
   for (const x of xs) castrumTower(b, x, CASTRUM.tower.z, CASTRUM.tower.r, CASTRUM.tower.h);
 }
 
+/** Half the length of wall a plain gate of the late Roman wall takes up, and half the width of its passage. */
+export const CASTRUM_GATE = { half: 7, way: 1.9, spring: 2.7 };
+
+/**
+ * A plain gate of the late Roman wall, centred on the origin, the wall running along X and the field
+ * to +Z: one arched passage through the thickness of the wall, between two towers that stand out from
+ * its face. (The wall's fourth gate is grander: the old triumphal arch, built into it.)
+ */
+export function castrumGate(b: Builder): void {
+  const { stone, brick } = WALL_COLOURS.castrum;
+  const { t, h, bands, band } = CASTRUM;
+  const { half, way, spring } = CASTRUM_GATE;
+  const WF = t / 2;
+  castrumStretch(b, -half, -way, false, false);
+  castrumStretch(b, way, half, false, false);
+  // the wall over the passage, with its round arch cut through
+  const head: XY[] = [[-way, spring]];
+  for (let i = 1; i < 8; i++) {
+    const a = Math.PI - (Math.PI * i) / 8;
+    head.push([Math.cos(a) * way, spring + Math.sin(a) * way]);
+  }
+  head.push([way, spring], [way, h], [-way, h]);
+  b.extrude(head, t, stone, NJ);
+  for (const y of bands) if (y > spring + way + 0.2) b.box(2 * way, band, t + 0.06, brick, { at: [0, y, 0], ...NJ });
+  // the arch turned in brick on both faces
+  for (const f of [1, -1]) {
+    const ring: XY[] = [];
+    for (let i = 0; i <= 8; i++) {
+      const a = Math.PI - (Math.PI * i) / 8;
+      ring.push([Math.cos(a) * (way + 0.45), spring + Math.sin(a) * (way + 0.45)]);
+    }
+    for (let i = 8; i >= 0; i--) {
+      const a = Math.PI - (Math.PI * i) / 8;
+      ring.push([Math.cos(a) * way, spring + Math.sin(a) * way]);
+    }
+    b.extrude(ring, 0.08, brick, { at: [0, 0, f * (WF + 0.04)], ...NJ });
+  }
+  merlonsX(b, -way, way, h, WF - 0.3, stone, { w: 1.0, h: 1.6, t: 0.6, gap: 0.85 });
+  b.box(2 * way, 0.9, 0.45, stone, { at: [0, h, -WF + 0.22], ...NJ });
+  b.box(2 * way, 0.05, t - 1.1, tint(stone, -0.12), { at: [0, h, -0.1], ...NJ });
+  for (const s of [-1, 1]) castrumTower(b, s * (way + 3.2), CASTRUM.tower.z, 2.6, 12.6, { windows: [0, s * 1.1] });
+}
+
 /**
  * A half-round tower of the late Roman wall, centred on the outer face of the wall so that half of it
  * stands proud: solid below, a chamber at the top with arched windows, a tiled conical roof.
