@@ -1,16 +1,12 @@
-import { P, mix, tint, type BuildingDef } from '@ah/kit';
-import { HALF, archPanel, gateMass, road, voussoirs } from './shared';
+import { tint, type BuildingDef } from '@ah/kit';
+import { HALF } from './shared';
 import { AURELIAN, WALL_COLOURS, aurelianTower, curtain } from './curtain';
+import { FOOT, FT, FW, FZ, TH, TR, TX, TZ, romanArches, romanGallery, romanGateColliders, romanPaving, romanTomb, romanTowers } from './03-roman-gate';
 
 const WALL_T = AURELIAN.t;
 const WALL_H = AURELIAN.h;
 const WF = WALL_T / 2; // outer face of the curtain
-const OW = 3.8; // gate opening
-const OH = 6.0;
-const GX = 3.6; // half-width of the gate block
-const GH = 11.2;
-const GF = WF + 0.5; // the gate front stands a little forward
-const RT = { x: 5.9, r: 2.8, h: 14.2, z: WF + 0.6 }; // round-fronted gate towers
+const SX = FW / 2 - 0.3; // the new curtain runs from the flanks of the old gate front
 const ST = { x: 13.2, ...AURELIAN.tower }; // the square interval towers nearest the gate
 
 export const aurelianGate: BuildingDef = {
@@ -20,97 +16,54 @@ export const aurelianGate: BuildingDef = {
   date: 'late 3rd century AD',
   summary:
     'For three centuries Italy had needed no walls, and many towns had built over theirs. Then in 270 and 271 Germanic raiders broke into northern Italy, and the emperor Aurelian began a new wall round Rome itself; other towns followed. ' +
-    'Speed mattered more than show: the wall is concrete faced in brick, often with old tombs and houses swallowed into it, and square towers project every thirty metres or so, each with a chamber whose arched windows took bolt-throwing ballistas. ' +
-    'The gate is a single arch faced in stone between two towers with rounded fronts, and a chamber with a row of windows above the passage. Where the Augustan gate was a show front, this one is made to be fought from.',
-  materials: ['concrete faced with brick', 'travertine blocks round the arch', 'clay roof tiles', 'oak doors'],
-  modelledOn: 'The Aurelian Walls of Rome (AD 271 to 275) and their gates: the Porta Latina, and the Porta San Sebastiano (the old Porta Appia, built with two arches and given its single arch when Honorius rebuilt the gates about 401 to 403)',
+    'Speed mattered more than show: the new wall is concrete faced in brick, often with old tombs and houses swallowed into it, and square towers project every thirty metres or so, each with a chamber whose arched windows took bolt-throwing ballistas. ' +
+    'The Augustan gate is kept and taken into the new wall, as Verona kept its early imperial gates in the wall of 265. Its arches, gallery and towers still stand, but the footways are walled up in brick and the tiled roofs give way to battlements: the show front is made to be fought from.',
+  materials: ['concrete faced with brick', 'the white limestone of the Augustan gate', 'oak doors'],
+  modelledOn: 'The Aurelian Walls of Rome (AD 271 to 275) and their square towers; Verona, whose wall of AD 265 under Gallienus took in the early imperial gates, the Porta Borsari carrying the inscription of that year',
   influences: ['roman-concrete'],
   lookFor: [
-    { label: 'Brick-faced concrete', note: 'A core of concrete poured between two skins of brick: quick to build with gangs of unskilled labour.', at: [-10, 4, WF + 0.2] },
-    { label: 'Round-fronted towers', note: 'Their rounded fronts give no corner for a battering ram and let defenders shoot along the wall face.', at: [RT.x, 10, RT.z + RT.r + 0.3] },
+    { label: 'Brick-faced concrete', note: 'A core of concrete poured between two skins of brick: quick to build with gangs of unskilled labour.', at: [-12.4, 4, WF + 0.2] },
     { label: 'Square interval tower', note: 'Towers stand out from the wall at regular intervals so no stretch of it is out of bowshot.', at: [-ST.x, ST.h - 1.5, WF + ST.out + 0.2] },
     { label: 'Ballista windows', note: 'Arched openings in the tower chambers, where bolt-throwing ballistas stood behind shutters.', at: [ST.x, ST.h - 3.6, WF + ST.out + 0.25] },
-    { label: 'Gate chamber', note: 'A room over the arch, lit by a row of windows, from which the guard watched the road and defended the gate.', at: [0, 9.2, GF + 0.3] },
+    { label: 'Walled-up footway', note: 'The side arches of the old gate are blocked with brick, leaving only the two carriage arches to defend.', at: [FOOT.x, 2.2, FZ + FT / 2 + 0.3] },
+    { label: 'Battlements on the old gate', note: 'The roofs of the Augustan towers and gallery are replaced by brick merlons, so the guard can fight from the top.', at: [-TX, TH + 1.0, TZ + TR + 0.2] },
   ],
   build(b) {
     const brick = WALL_COLOURS.aurelian.brick;
-    const band = tint(brick, -0.08);
-    const stone = P.travertine;
-    const roof = P.coppi;
 
-    road(b, 5.2, mix(P.peperino, P.cobble, 0.4));
-    for (let z = -7.5; z < 8; z += 1.1) b.box(5.2, 0.01, 0.05, tint(P.peperino, -0.12), { at: [0, 0.04, z], jitter: false });
+    // the road and the tomb outside it are the Augustan ones
+    romanPaving(b);
+    romanTomb(b);
 
-    // ---------------------------------------------------------------- the curtain wall and its square towers
+    // ---------------------------------------------------------------- the new curtain wall and its square towers
     b.sym((s) => {
-      curtain(b, 'aurelian', s > 0 ? GX : -HALF, s > 0 ? HALF : -GX, { towers: false, detail: true });
+      curtain(b, 'aurelian', s > 0 ? SX : -HALF, s > 0 ? HALF : -SX, { towers: false, detail: true });
       aurelianTower(b, s * ST.x, s);
     });
 
-    // ---------------------------------------------------------------- the gate block
-    const gd = GF + WF; // depth from the inner face of the wall to the gate front
-    const gz = (GF - WF) / 2;
-    gateMass(b, GX * 2, GH, gd, brick, { at: [0, 0, gz], xs: [0], openW: OW, openH: OH });
-    for (const y of [1.9, 3.9]) b.sym((s) => b.box(GX - OW / 2, 0.08, gd + 0.04, band, { at: [s * (GX + OW / 2) / 2, y, gz], jitter: false }));
-    // travertine facing round the arch on the field side: jambs, voussoirs, a cornice
-    b.sym((s) => b.box(0.7, OH - OW / 2, 0.3, stone, { at: [s * (OW / 2 + 0.35), 0, GF + 0.1] }));
-    voussoirs(b, OW, OH - OW / 2, 0.7, stone, { at: [0, 0, GF], n: 9, proud: 0.2, vary: 0.03 });
-    b.box(GX * 2 + 0.2, 0.3, 0.5, stone, { at: [0, 7.6, GF + 0.1] });
-    // the gate chamber: a row of arched windows
-    for (const x of [-2.4, -1.2, 0, 1.2, 2.4]) {
-      archPanel(b, 0.8, 1.6, stone, { at: [x, 8.3, GF], depth: 0.04 });
-      archPanel(b, 0.62, 1.48, P.windowDark, { at: [x, 8.35, GF], depth: 0.07 });
-      archPanel(b, 0.62, 1.48, P.windowDark, { at: [x, 8.35, -WF], facing: '-z', depth: 0.07 });
+    // ---------------------------------------------------------------- the Augustan gate, taken into it
+    romanArches(b);
+    romanGallery(b, false);
+    romanTowers(b, false);
+    // the footways walled up in brick, flush with both faces
+    for (const [z, f] of [[FZ + FT / 2 - 0.1, '+z'], [FZ - FT / 2 + 0.1, '-z']] as const) {
+      b.sym((s) => b.panel(FOOT.w + 0.02, FOOT.h + 0.02, tint(brick, -0.04), { at: [s * FOOT.x, 0, z], facing: f, shape: 'round', depth: 0.25 }));
     }
-    // brick relieving arch on the town side and the doors folded back in the passage
-    voussoirs(b, OW, OH - OW / 2, 0.5, band, { at: [0, 0, -WF], facing: '-z', n: 11, proud: 0.06, vary: 0.02 });
-    b.vault(OW, gd - 0.05, tint(brick, -0.2), { at: [0, OH - OW / 2, gz], segs: 8 });
-    b.sym((s) => b.box(0.14, OH - OW / 2 + 0.6, OW / 2, P.oakDark, { at: [s * (OW / 2 - 0.1), 0, -WF + OW / 4 + 0.3] }));
-    // a tiled roof over the chamber, behind a parapet
-    b.box(GX * 2, 0.6, 0.4, brick, { at: [0, GH, GF - 0.2] });
-    b.gable(GX * 2 - 0.2, gd - 0.6, 1.2, roof, { at: [0, GH, gz - 0.2], overhang: 0.2, wall: brick });
-
-    // ---------------------------------------------------------------- round-fronted gate towers
-    b.sym((s) => {
-      b.group({ at: [s * RT.x, 0, 0] }, () => {
-        const back = -WF;
-        const d = RT.z - back;
-        b.box(RT.r * 2, RT.h, d, brick, { at: [0, 0, back + d / 2] });
-        b.cyl(RT.r, RT.h, brick, { at: [0, 0, RT.z], segs: 16 });
-        b.cyl(RT.r + 0.25, 1.2, tint(stone, -0.05), { at: [0, 0, RT.z], segs: 16, rTop: RT.r + 0.05 }); // stone plinth
-        for (const y of [1.9, 3.9, 5.9, 7.9]) b.cyl(RT.r + 0.03, 0.08, band, { at: [0, y, RT.z], segs: 16, jitter: false });
-        // top: merlons round the drum and along the back
-        b.cyl(RT.r + 0.15, 0.3, tint(brick, 0.03), { at: [0, RT.h - 0.3, RT.z], segs: 16 });
-        for (let i = 0; i < 9; i++) {
-          const a = -Math.PI / 2 + (i / 8) * Math.PI;
-          b.box(0.8, 1.1, 0.5, brick, { at: [Math.sin(a) * (RT.r - 0.2), RT.h, RT.z + Math.cos(a) * (RT.r - 0.2)], rotY: a, jitter: false });
-        }
-        b.box(RT.r * 2, 1.1, 0.5, brick, { at: [0, RT.h, back + 0.25] });
-        // two tiers of arched windows round the front, slits low down
-        for (const a of [-1.0, 0, 1.0]) {
-          const at = (r: number, y: number): [number, number, number] => [Math.sin(a) * r, y, RT.z + Math.cos(a) * r];
-          archPanel(b, 0.95, 1.7, stone, { at: at(RT.r - 0.03, RT.h - 4.2), facing: a, depth: 0.04 });
-          archPanel(b, 0.78, 1.6, P.windowDark, { at: at(RT.r - 0.02, RT.h - 4.15), facing: a, depth: 0.08 });
-          archPanel(b, 0.6, 1.3, P.windowDark, { at: at(RT.r - 0.02, 8.5), facing: a, depth: 0.08 });
-          b.panel(0.18, 1.1, P.black, { at: at(RT.r - 0.02, 4.0), facing: a, depth: 0.06 });
-        }
-      });
-    });
 
     // ---------------------------------------------------------------- the town side: a ramp-stair to the wall-walk
     b.stairs(1.3, WALL_H, 6.5, 15, tint(brick, -0.04), { at: [-6.6, 0, -WF - 0.7], rotY: Math.PI / 2 });
 
     // ---------------------------------------------------------------- around it
-    b.tree(6.5, { kind: 'pine', at: [-9.8, 0, 5.4] });
-    b.tree(6.5, { kind: 'cypress', at: [9.6, 0, 6.8] });
+    b.tree(6.5, { kind: 'cypress', at: [-10.6, 0, 6.0] });
+    b.tree(6.5, { kind: 'cypress', at: [12.6, 0, 6.8] });
 
     // ---------------------------------------------------------------- walking
     b.sym((s) => {
-      b.collider(HALF - GX, WALL_T, { at: [s * (HALF + GX) / 2, 0, 0] });
-      b.collider(GX - OW / 2 + 0.2, gd, { at: [s * (GX + OW / 2) / 2, 0, gz] });
-      b.collider(RT.r * 2, RT.z + RT.r + WF, { at: [s * RT.x, 0, (RT.z + RT.r - WF) / 2] });
+      b.collider(HALF - SX, WALL_T, { at: [s * (HALF + SX) / 2, 0, 0] });
       b.collider(ST.w, WALL_T + ST.out, { at: [s * ST.x, 0, -WF + (WALL_T + ST.out) / 2] });
+      b.collider(FOOT.w, FT, { at: [s * FOOT.x, 0, FZ] });
     });
+    romanGateColliders(b);
     b.collider(6.5, 1.3, { at: [-6.6, 0, -WF - 0.7] });
   },
 };

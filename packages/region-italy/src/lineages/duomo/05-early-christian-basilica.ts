@@ -1,5 +1,5 @@
 import { P, tint, mix, type BuildingDef } from '@ah/kit';
-import { baptistery, framed, BRICK, SELENITE, ROOF, DOORWOOD, FZ, NW, AW, NAVE_RISE, BAPT, BASILICA } from './shared';
+import { baptistery, framed, precinctPaving, BRICK, SELENITE, ROOF, DOORWOOD, FZ, NW, AW, NAVE_RISE, BAPT, BASILICA } from './shared';
 
 const Z1 = -14; // the apse wall; the nave and aisles run from FZ to here
 const NAVE_H = 13;
@@ -20,7 +20,7 @@ export const earlyChristianBasilica: BuildingDef = {
   style: 'Late Antique (Early Christian)',
   date: 'c. 400',
   summary:
-    'After the emperor Theodosius banned pagan sacrifice in 391 and 392 the temple was closed, and within a generation the bishop built his church on the site, using its marble columns and those of other buildings. ' +
+    'After the emperor Theodosius banned pagan sacrifice in 391 and 392 the temple was closed, and within a generation the bishop built his church on the site, on the paving of the temple precinct, using its marble columns and those of other buildings. ' +
     'The plan is the Roman basilica, the hall of law courts and markets: a tall nave lit by big clerestory windows above lower side aisles, and a semicircular apse at the far end for the bishop’s throne and the altar. ' +
     'The outside is plain brick and the roofs are timber and tile; the richness (marble, mosaic, hangings) was all inside. ' +
     'In front lies a colonnaded forecourt (atrium) with a fountain for washing, and beside it an eight-sided baptistery, eight being the number of the Resurrection.',
@@ -87,7 +87,6 @@ export const earlyChristianBasilica: BuildingDef = {
     // the atrium: brick walls, colonnades on three sides with lean-to roofs, a fountain in the middle
     const az0 = NZ;
     const alen = AZ - az0;
-    b.box(AX * 2, 0.05, alen, P.paving, { at: [0, 0, az0 + alen / 2], jitter: false });
     b.sym((s) => {
       b.box(0.6, 4.4, alen + 0.3, BRICK, { at: [s * AX, 0, az0 + alen / 2] });
       b.shed(3.6, alen - 0.2, 1.0, ROOF, { at: [s * (AX - 1.6), 4.4, az0 + alen / 2 - 0.1], high: s > 0 ? '+x' : '-x' });
@@ -111,7 +110,8 @@ export const earlyChristianBasilica: BuildingDef = {
 
     baptistery(b, BASILICA);
 
-    // around it, the town is quieter: open ground, a few cypresses
+    // it all stands on the paving of the old temple precinct; around it, a few cypresses
+    precinctPaving(b);
     b.tree(9, { at: [13.0, 0, -6], kind: 'cypress' });
     b.tree(8.5, { at: [13.0, 0, -11], kind: 'cypress' });
     b.tree(6, { at: [-13.5, 0, -20], kind: 'olive' });

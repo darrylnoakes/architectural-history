@@ -8,6 +8,11 @@ export function ground(b: Builder, w: number, d: number, color: number, at: [num
   b.box(w, h, d, color, { at: [at[0], 0, at[1]], jitter: false });
 }
 
+/** The raised Roman pavement of basalt-like stone along the street, laid once and used by every Roman building on the plot. */
+export function romanPavement(b: Builder): void {
+  ground(b, 21.6, 2.0, P.peperino, [0, 9.65], 0.22);
+}
+
 /** A straight round pole between two points. */
 export function pole(b: Builder, a: Vec3, c: Vec3, r: number, color: number, segs = 6): void {
   const dx = c[0] - a[0];

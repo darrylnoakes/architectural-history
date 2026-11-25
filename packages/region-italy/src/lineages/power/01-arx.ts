@@ -2,11 +2,28 @@ import { P, mix, tint, type BuildingDef, type Builder } from '@ah/kit';
 import { lineColliders, quad, soup, type V3, type XZ } from './shared';
 
 /** The rampart line, clockwise from the right of the gate round to its left. */
+const RX = 17.2;
+const RZ = 16.6;
 const RING: XZ[] = [];
 for (let i = 0; i <= 22; i++) {
   // an oval round the hilltop, the gap for the gate at the front (+Z, angle PI/2)
   const a = Math.PI / 2 + 0.2 + (i / 22) * (Math.PI * 2 - 0.4);
-  RING.push([Math.cos(a) * 18.2, Math.sin(a) * 17.6]);
+  RING.push([Math.cos(a) * RX, Math.sin(a) * RZ]);
+}
+
+/** The ditch outside the bank: an oval band from the bank's outer foot outwards, broken by the causeway to the gate. */
+const DITCH: XZ[] = [];
+{
+  const g = 0.24;
+  const n = 26;
+  for (let i = 0; i <= n; i++) {
+    const a = Math.PI / 2 + g + (i / n) * (Math.PI * 2 - 2 * g);
+    DITCH.push([Math.cos(a) * (RX + 1.9), Math.sin(a) * (RZ + 1.9)]);
+  }
+  for (let i = n; i >= 0; i--) {
+    const a = Math.PI / 2 + g + (i / n) * (Math.PI * 2 - 2 * g);
+    DITCH.push([Math.cos(a) * (RX + 4.8), Math.sin(a) * (RZ + 4.8)]);
+  }
 }
 
 /** An earth bank of triangular section along a polyline. */
@@ -101,8 +118,8 @@ export const arx: BuildingDef = {
     'Power here belongs to a person, not an office: the chief leads in war, keeps the grain and makes the sacrifices for the community.',
   materials: ['earth', 'oak stakes', 'wattle and daub', 'thatch'],
   lookFor: [
-    { label: 'Rampart and stockade', note: 'A bank of rammed earth from the ditch in front, crowned with a fence of pointed oak stakes.', at: [16, 3.2, 6] },
-    { label: 'Gate tower', note: 'The only way in: a timber tower over the gateway where the bank is cut through.', at: [3.4, 5.5, 18.5] },
+    { label: 'Rampart and stockade', note: 'A bank of rammed earth from the ditch in front, crowned with a fence of pointed oak stakes.', at: [RX - 2.2, 3.2, 6] },
+    { label: 'Gate tower', note: 'The only way in: a timber tower over the gateway where the bank is cut through.', at: [3.4, 5.5, RZ + 0.8] },
     { label: 'Chief’s hut', note: 'The largest hut, with a deep porch on posts facing the open ground where people gathered.', at: [-2.6, 2.6, -3.2] },
     { label: 'Crossed ridge timbers', note: 'Pairs of crossed poles pin the thatch along the ridge, as the clay hut-urns of Latium and Etruria show.', at: [0, 6.8, -8.5] },
     { label: 'Raised granary', note: 'The community’s grain kept on posts off the damp and away from rats, under the chief’s eye.', at: [9.5, 3.5, -7] },
@@ -110,16 +127,9 @@ export const arx: BuildingDef = {
   modelledOn: 'The post-built huts of the Palatine in Rome and the hut-urns of Latium and Etruria',
   build(b) {
     // the hilltop: a low rise of trodden earth with grass round its foot
-    b.lathe([[21.8, 0], [20, 0.3], [15, 0.55], [0, 0.6]], mix(P.earth, P.grassDry, 0.35), { segs: 20 });
-    // the ditch outside the rampart
-    const ditch: XZ[] = RING.map(([x, z]) => [x * 1.12, z * 1.12]);
-    const dout: number[] = [];
-    for (let i = 0; i < ditch.length - 1; i++) {
-      const [x0, z0] = ditch[i];
-      const [x1, z1] = ditch[i + 1];
-      quad(dout, [x0 * 0.96, 0.08, z0 * 0.96], [x1 * 0.96, 0.08, z1 * 0.96], [x1 * 1.04, 0.08, z1 * 1.04], [x0 * 1.04, 0.08, z0 * 1.04]);
-    }
-    soup(b, dout, tint(P.soil, -0.05), { jitter: false });
+    b.lathe([[18.4, 0], [15, 0.5], [0, 0.6]], mix(P.earth, P.grassDry, 0.35), { segs: 20 });
+    // the ditch outside the rampart, dug out of the hillside, with a causeway left to the gate
+    b.dig(DITCH, 1.5, { slope: 1.3, color: tint(P.soil, -0.05) });
     // rampart and stockade
     bank(b, RING, 4.2, 2.0, mix(P.earth, P.turf, 0.45));
     stockade(b, RING.map(([x, z]) => [x * 1.01, z * 1.01] as XZ), 2.0, 2.4, P.oakSilver);
@@ -153,7 +163,7 @@ export const arx: BuildingDef = {
       b.pyramid(3.2, 3.2, 1.8, P.thatch, { at: [0, 3.2, 0], overhang: 0.2 });
     });
     // a wattle pen for the animals, and a few sheep
-    const pen: XZ[] = [[4, 11], [11, 11], [12, 2.5], [4.5, 2]];
+    const pen: XZ[] = [[4, 10.2], [10.2, 10], [11.2, 2.5], [4.5, 2]];
     for (let i = 0; i < pen.length; i++) {
       const [x0, z0] = pen[i];
       const [x1, z1] = pen[(i + 1) % pen.length];

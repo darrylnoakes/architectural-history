@@ -1,5 +1,5 @@
 import { P, tint, type BuildingDef } from '@ah/kit';
-import { BANK, WATER, lin, riverWall, roofRise } from './shared';
+import { BANK, WATER, lin, millRace, quayWall, roofRise } from './shared';
 
 export const filanda: BuildingDef = {
   id: 'filanda',
@@ -9,7 +9,7 @@ export const filanda: BuildingDef = {
   summary:
     'In the nineteenth century silk was Italy’s leading export, and reeling the silk off the cocoons moved from farmhouse kitchens into long mills called filande. ' +
     'Inside, rows of women and girls sat at basins of hot water, now heated by steam piped from a coal-fired boiler, picking up the ends of the filaments from several cocoons at once and reeling them together into a single thread. ' +
-    'The work needed all the daylight it could get, so the building is a long block of big, evenly spaced windows, the cocoons stored and dried on the floors above, with a tall brick chimney for the boiler. ' +
+    'The work needed all the daylight it could get, so the building is a long block of big, evenly spaced windows, the cocoons stored and dried on the floors above, with a tall brick chimney for the boiler: the old weir and mill channel still hold back the river, but the power now comes from coal. ' +
     'The dress is plain Neoclassical: pilasters, a pediment over the centre and a clock to keep the long shifts.',
   materials: ['brick', 'lime plaster', 'coppi roof tiles', 'cast iron', 'glass'],
   lookFor: [
@@ -34,7 +34,10 @@ export const filanda: BuildingDef = {
     const front = z0 + D / 2;
     const back = z0 - D / 2;
 
-    riverWall(b, -17.6, 17.6, tint(brick, -0.05), { coping: trim });
+    // the Roman quay wall, given a new coping; the old weir and mill channel still hold the river
+    quayWall(b, tint(brick, -0.05));
+    b.box(36.1, 0.18, 1.1, trim, { at: [0, 0.15, BANK + 0.3] });
+    millRace(b, tint(P.pietraForte, -0.1));
     b.box(34, 0.04, 20, tint(P.gravel, -0.02), { at: [0, 0, 0], jitter: false });
 
     // ---- the long block

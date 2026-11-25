@@ -1,5 +1,5 @@
 import { P, type BuildingDef } from '@ah/kit';
-import { trinitaBridge } from './shared';
+import { SPRING_HEAD, trinitaBridge } from './shared';
 
 export const rebuiltBridge: BuildingDef = {
   id: 'rebuilt-bridge',
@@ -13,6 +13,7 @@ export const rebuiltBridge: BuildingDef = {
     'The bridge looks almost exactly as before; only the asphalt, the pavements and the lamps give away the date.',
   materials: ['pietra forte, old and new', 'marble statues', 'asphalt'],
   modelledOn: 'The Ponte Santa Trinita, Florence, as rebuilt 1955 to 1958',
+  revisions: [{ year: SPRING_HEAD, note: 'The missing head of Spring was found in the river in 1961 and put back on the statue.' }],
   lookFor: [
     { label: 'Recovered stones', note: 'Weathered blocks dredged from the river sit among the new ones, a shade darker.', at: [3.9, 0.0, -10.4] },
     { label: 'Flattened arch', note: 'Ammannati’s curve, recovered from photographs and measurements, recut stone by stone.', at: [3.9, -0.4, 0] },

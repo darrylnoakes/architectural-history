@@ -1,9 +1,10 @@
 import { P, tint, mix, type BuildingDef } from '@ah/kit';
+import { REP_PODIUM, honorificStatue, oldAltar, republicanPodiumCore } from './shared';
 
-const TZ = -3.5;
-const W = 10.6;
-const D = 19.6;
-const PH = 2.4;
+const TZ = REP_PODIUM.z;
+const W = REP_PODIUM.w;
+const D = REP_PODIUM.d;
+const PH = REP_PODIUM.h;
 const CH = 8.2; // column height
 const STUCCO = P.stucco;
 const TUFA = P.tufa;
@@ -15,7 +16,7 @@ export const republicanTemple: BuildingDef = {
   style: 'Late Republican, Hellenised Italic',
   date: 'c. 120 BC',
   summary:
-    'Rome now rules Italy, and the old timber-and-terracotta temple has been rebuilt in stone in the Hellenised fashion of the capital. ' +
+    'Rome now rules Italy, and the old timber-and-terracotta temple has been rebuilt in stone in the Hellenised fashion of the capital; only the ancient altar in front is kept. ' +
     'It keeps the Italian plan, a high podium with a single front stair and a deep porch, but the columns are now slender and Ionic, and along the sides and back of the cella they become half-columns engaged in the wall, so the building looks surrounded by columns without the cost (a "pseudo-peripteral" temple). ' +
     'It is built of local tufa with harder travertine where the load is greatest, and the whole is coated in white stucco to look like the marble of Greek temples. The roof is now a closed, steeper pediment.',
   materials: ['tufa', 'travertine', 'white stucco', 'clay roof tiles'],
@@ -32,7 +33,7 @@ export const republicanTemple: BuildingDef = {
     const back = TZ - D / 2;
     // podium of tufa with a travertine base and crown
     b.box(W + 0.6, 0.4, D + 0.6, TRAV, { at: [0, 0, TZ] });
-    b.box(W, PH, D, mix(TUFA, TRAV, 0.35), { at: [0, 0, TZ] });
+    republicanPodiumCore(b, mix(TUFA, TRAV, 0.35));
     b.box(W + 0.4, 0.3, D + 0.4, TRAV, { at: [0, PH - 0.3, TZ] });
     b.stairs(8.4, PH, 3.6, 11, TRAV, { at: [0, 0, front + 1.8] });
     b.sym((s) => b.box(1.0, PH * 0.55, 3.6, mix(TUFA, TRAV, 0.35), { at: [s * 4.7, 0, front + 1.8] }));
@@ -72,13 +73,10 @@ export const republicanTemple: BuildingDef = {
     b.sym((s) => b.beam([s * 5.35, ry - 0.05, front + 0.05], [0, ry + 2.65, front + 0.05], 0.35, 0.35, STUCCO));
     b.box(10.6, 0.2, 0.5, STUCCO, { at: [0, ry - 0.15, front - 0.05] });
 
-    // the paved forum, an altar before the stair and a statue on a base
+    // the paved forum, the old altar kept before the stair, and a bronze statue on a base
     b.box(26, 0.04, 40, P.paving, { at: [0, 0, 1], jitter: false });
-    b.box(3.0, 1.1, 1.8, TRAV, { at: [0, 0, front + 6.5] });
-    b.box(3.3, 0.2, 2.1, tint(TRAV, 0.04), { at: [0, 1.1, front + 6.5] });
-    b.box(1.2, 1.6, 1.2, TRAV, { at: [-8.5, 0, front + 3] });
-    b.cyl(0.35, 1.9, P.bronze, { at: [-8.5, 1.6, front + 3], rTop: 0.25, segs: 6 });
-    b.sphere(0.24, P.bronze, { at: [-8.5, 3.65, front + 3], segs: 6 });
+    oldAltar(b, TRAV);
+    honorificStatue(b);
     b.tree(9, { at: [10.5, 0, -12], kind: 'cypress' });
     b.tree(8.5, { at: [-10.5, 0, -14], kind: 'cypress' });
     b.tree(9.5, { at: [10.5, 0, -17], kind: 'cypress' });

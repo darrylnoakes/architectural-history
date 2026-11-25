@@ -290,21 +290,29 @@ export function romanLayout(): RomanBridge {
   return { f: hump(1.15), ops, piers, pierT, W: 6.2 };
 }
 
+/** The arch of the Roman bridge that is cut in the Gothic War and rebuilt in the Middle Ages. */
+export const ROMAN_GAP = 3;
+
 /**
  * The Roman stone bridge: a tufa core faced in travertine, five round arches on piers with
  * cutwaters, a small flood arch through each pier, low parapets.
- *  - broken: index of an arch cut away (the Gothic War), leaving stubs at each pier;
- *  - repaired: index of an arch rebuilt in rubble and brick (the medieval repair);
- *  - aged: weathering and patching for the later stages.
+ *  - state 'broken': arch ROMAN_GAP cut away (the Gothic War), leaving stubs at each pier;
+ *  - state 'repaired': that arch rebuilt in rubble and brick (the medieval repair);
+ *  - aged: weathering for the later stages (colour only).
+ * The body, road, parapets and cornices are always built in three lifts along the road, split
+ * either side of arch ROMAN_GAP, so the stages that keep the Roman fabric share every piece of it
+ * outside the cut and the change happens in place.
  */
-export function romanBridge(b: Builder, o: { broken?: number; repaired?: number; aged?: number } = {}): RomanBridge {
+export function romanBridge(b: Builder, o: { state?: 'whole' | 'broken' | 'repaired'; aged?: number } = {}): RomanBridge {
   const L = romanLayout();
   const { f, ops, piers, pierT, W } = L;
+  const state = o.state ?? 'whole';
   const aged = o.aged ?? 0;
   const trav = mix(P.travertine, P.rubble, aged * 0.35);
   const tufa = mix(P.tufa, P.rubble, aged * 0.2);
   const ring = tint(trav, 0.04);
   const top = (z: number) => f(z) - 0.16;
+  const gap = ops[ROMAN_GAP];
 
   // flood openings through the pier spandrels
   const flood = (z: number): ZY[] => {
@@ -319,28 +327,24 @@ export function romanBridge(b: Builder, o: { broken?: number; repaired?: number;
     return pts;
   };
 
-  // segments of the body (split where an arch is cut)
-  type Seg = { za: number; zb: number; holes: ZY[][]; facing: number };
-  const segs: Seg[] = [];
+  // the body in lifts: the Roman work either side, and the stretch over the gap arch, which is
+  // whole, cut back to two stubs, or rebuilt in rubble
+  const A = gap.z0 - 0.35;
+  const B = gap.z1 + 0.35;
+  type Seg = { za: number; zb: number; holes: ZY[][]; facing: number; n: number };
   const holesIn = (za: number, zb: number) => piers.filter((z) => z > za && z < zb).map(flood);
-  if (o.broken !== undefined) {
-    const op = ops[o.broken];
-    const ca = op.z0 + 0.7;
-    const cb = op.z1 - 0.7;
-    segs.push({ za: -END, zb: ca, holes: holesIn(-END, ca), facing: trav });
-    segs.push({ za: cb, zb: END, holes: holesIn(cb, END), facing: trav });
-  } else if (o.repaired !== undefined) {
-    const op = ops[o.repaired];
-    const ca = op.z0 - 0.35;
-    const cb = op.z1 + 0.35;
-    segs.push({ za: -END, zb: ca, holes: holesIn(-END, ca), facing: trav });
-    segs.push({ za: ca, zb: cb, holes: [], facing: mix(P.rubble, P.tufa, 0.3) });
-    segs.push({ za: cb, zb: END, holes: holesIn(cb, END), facing: trav });
+  const segs: Seg[] = [
+    { za: -END, zb: A, holes: holesIn(-END, A), facing: trav, n: 20 },
+    { za: B, zb: END, holes: holesIn(B, END), facing: trav, n: 10 },
+  ];
+  if (state === 'broken') {
+    segs.push({ za: A, zb: gap.z0 + 0.7, holes: [], facing: trav, n: 1 });
+    segs.push({ za: gap.z1 - 0.7, zb: B, holes: [], facing: trav, n: 1 });
   } else {
-    segs.push({ za: -END, zb: END, holes: piers.map(flood), facing: trav });
+    segs.push({ za: A, zb: B, holes: [], facing: state === 'repaired' ? mix(P.rubble, P.tufa, 0.3) : trav, n: 4 });
   }
   for (const s of segs) {
-    const pts = bodyOutline({ za: s.za, zb: s.zb, top, openings: ops });
+    const pts = bodyOutline({ za: s.za, zb: s.zb, top, openings: ops, n: s.n });
     side(b, pts, W - 0.1, tufa, 0, s.holes);
     // travertine facing on both faces
     b.sym((k) => side(b, pts, 0.06, s.facing, k * (W / 2 - 0.02), s.holes));
@@ -351,10 +355,10 @@ export function romanBridge(b: Builder, o: { broken?: number; repaired?: number;
     ops.forEach((op, i) => {
       const x = k * (W / 2 + 0.03);
       const d = Math.min(0.5, f((op.z0 + op.z1) / 2) - 0.2 - (op.spring + op.rise));
-      if (i === o.broken) {
+      if (i === ROMAN_GAP && state === 'broken') {
         voussoirs(b, op, { d, width: 0.1, x, color: ring, to: 0.18 });
         voussoirs(b, op, { d, width: 0.1, x, color: ring, from: 0.82 });
-      } else if (i === o.repaired) {
+      } else if (i === ROMAN_GAP && state === 'repaired') {
         voussoirs(b, op, { d: d * 0.8, width: 0.1, x, color: P.brickRed, blocks: 15 });
       } else {
         voussoirs(b, op, { d, width: 0.1, x, color: ring });
@@ -372,24 +376,27 @@ export function romanBridge(b: Builder, o: { broken?: number; repaired?: number;
     cutwaterPier(b, { z, len: W, thick: pierT, nose: 1.1, y0: FOOT, h: -0.75 - FOOT, color: trav, cap: 0.08, capColor: ring });
   }
 
-  // cornice, road and parapets
-  if (o.broken === undefined) {
-    band(b, 0, W - 0.9, -END, END, (z) => f(z) - 0.17, (z) => f(z) + 0.01, mix(P.peperino, P.gravel, 0.35 + aged * 0.3), 34);
-  }
+  // road, parapets and cornices in three runs: up to the gap, over it, and beyond it
+  const road = mix(P.peperino, P.gravel, 0.35 + aged * 0.3);
+  const roadRuns: [number, number, number][] = [
+    [-END, gap.z0 + 0.7, 20],
+    [gap.z0 + 0.7, gap.z1 - 0.7, 4],
+    [gap.z1 - 0.7, END, 8],
+  ];
+  const railRuns: [number, number, number][] = [
+    [-END + 0.4, gap.z0 + 0.6, 16],
+    [gap.z0 + 0.6, gap.z1 - 0.6, 4],
+    [gap.z1 - 0.6, END - 0.4, 8],
+  ];
+  const keep = <T,>(runs: T[]): T[] => (state === 'broken' ? [runs[0], runs[2]] : runs);
+  for (const [za, zb, n] of keep(roadRuns)) band(b, 0, W - 0.9, za, zb, (z) => f(z) - 0.17, (z) => f(z) + 0.01, road, n);
   b.sym((k) => {
     const x = k * (W / 2 - 0.22);
-    const runs: [number, number][] =
-      o.broken !== undefined
-        ? [
-            [-END + 0.4, ops[o.broken].z0 + 0.6],
-            [ops[o.broken].z1 - 0.6, END - 0.4],
-          ]
-        : [[-END + 0.4, END - 0.4]];
-    for (const [za, zb] of runs) {
-      band(b, x, 0.44, za, zb, (z) => f(z) - 0.17, (z) => f(z) + 0.85 - aged * 0.15, trav, 24);
-      band(b, x, 0.54, za, zb, (z) => f(z) + 0.85 - aged * 0.15, (z) => f(z) + 0.95 - aged * 0.15, ring, 24);
+    for (const [za, zb, n] of keep(railRuns)) {
+      band(b, x, 0.44, za, zb, (z) => f(z) - 0.17, (z) => f(z) + 0.85, trav, n);
+      band(b, x, 0.54, za, zb, (z) => f(z) + 0.85, (z) => f(z) + 0.95, ring, n);
       // cornice under the parapet
-      band(b, k * (W / 2 + 0.05), 0.14, za, zb, (z) => f(z) - 0.32, (z) => f(z) - 0.16, ring, 24);
+      band(b, k * (W / 2 + 0.05), 0.14, za, zb, (z) => f(z) - 0.32, (z) => f(z) - 0.16, ring, n);
     }
   });
   return L;
@@ -423,6 +430,21 @@ export function trinitaLayout(): TrinitaBridge {
   return { f: hump(1.15), ops, piers, pierT, W: 7.6 };
 }
 
+/** Where the Renaissance piers and abutments were broken off in 1944, just above the water. */
+export const TRINITA_STUMP = -0.55;
+
+/**
+ * The lower lifts of Ammannati's bridge: each pier with its cutwaters, and the foot of each
+ * abutment, from the foundations up to TRINITA_STUMP. The whole bridge stands on them; the Bailey
+ * bridge of 1944 stands on what was left of them, and the 1958 rebuilding rises from them again.
+ */
+export function trinitaStumps(b: Builder, L: TrinitaBridge, color: number): void {
+  for (const z of L.piers) {
+    cutwaterPier(b, { z, len: L.W, thick: L.pierT, nose: 1.5, y0: FOOT, h: TRINITA_STUMP - FOOT, color });
+  }
+  b.sym((s) => b.box(L.W, TRINITA_STUMP - FOOT, 1.0, color, { at: [0, FOOT, s * (Math.abs(L.ops[0].z0) + 0.5)] }));
+}
+
 /** A standing statue on a pedestal (the Four Seasons at Santa Trinita). */
 export function statue(b: Builder, at: Vec3, color: number, rotY = 0, head = true): void {
   b.group({ at, rotY }, () => {
@@ -444,6 +466,9 @@ export function statue(b: Builder, at: Vec3, color: number, rotY = 0, head = tru
  * a parapet and statues on the four corners.
  *  - fresh: the 1958 rebuilding (cleaner stone, some darker blocks dredged from the river, modern lamps).
  */
+/** The year the head of Spring was found in the river and put back (a revision of the rebuilt bridge). */
+export const SPRING_HEAD = 1961;
+
 export function trinitaBridge(b: Builder, o: { rebuilt?: boolean } = {}): TrinitaBridge {
   const L = trinitaLayout();
   const { f, ops, piers, pierT, W } = L;
@@ -452,7 +477,9 @@ export function trinitaBridge(b: Builder, o: { rebuilt?: boolean } = {}): Trinit
   const marble = P.marble;
   const top = (z: number) => f(z) - 0.12;
 
-  const pts = bodyOutline({ za: -END, zb: END, top, openings: ops });
+  // the lower lifts of the piers and abutments, then the arches and spandrels standing on them
+  trinitaStumps(b, L, stone);
+  const pts = bodyOutline({ za: -END, zb: END, top, openings: ops, foot: TRINITA_STUMP });
   side(b, pts, W, stone);
   // fine-jointed arch rings, flush but a shade lighter, with a carved cartouche at each crown
   b.sym((k) => {
@@ -494,7 +521,7 @@ export function trinitaBridge(b: Builder, o: { rebuilt?: boolean } = {}): Trinit
   // pointed cutwaters both sides, carried up nearly to the cornice and capped
   const capY = -0.05;
   for (const z of piers) {
-    cutwaterPier(b, { z, len: W, thick: pierT, nose: 1.5, y0: FOOT, h: capY - FOOT, color: stone, cap: 0.08, capColor: dress });
+    cutwaterPier(b, { z, len: W, thick: pierT, nose: 1.5, y0: TRINITA_STUMP, h: capY - TRINITA_STUMP, color: stone, cap: 0.08, capColor: dress });
     // a sloping stone hood over each cutwater
     b.sym((k) => cutwaterHood(b, { x: k * (W / 2), z, thick: pierT + 0.16, nose: 1.58, y: capY + 0.22, h: f(z) - 0.42 - capY - 0.22, color: dress }));
   }
@@ -508,7 +535,8 @@ export function trinitaBridge(b: Builder, o: { rebuilt?: boolean } = {}): Trinit
     // the four statues of the Seasons on the corners, facing the roadway
     b.sym((t) => {
       const z = t * (END - 0.7);
-      statue(b, [x, f(z) - 0.12, z], marble, k > 0 ? -Math.PI / 2 : Math.PI / 2);
+      // Spring (the corner by its lookFor anchor) stood headless on the rebuilt bridge until 1961
+      statue(b, [x, f(z) - 0.12, z], marble, k > 0 ? -Math.PI / 2 : Math.PI / 2, !(o.rebuilt && k > 0 && t > 0));
     });
   });
   const road = o.rebuilt ? P.asphalt : mix(P.pietraForte, P.gravel, 0.5);
@@ -516,6 +544,10 @@ export function trinitaBridge(b: Builder, o: { rebuilt?: boolean } = {}): Trinit
   if (o.rebuilt) {
     // kerbed pavements each side
     b.sym((k) => band(b, k * (W / 2 - 0.85), 0.7, -END + 1.4, END - 1.4, (z) => f(z), (z) => f(z) + 0.14, P.pietraSerena, 30));
+  }
+  if (o.rebuilt && b.since(SPRING_HEAD)) {
+    const z = END - 0.7;
+    b.group({ at: [W / 2 - 0.25, f(z) - 0.12, z], rotY: -Math.PI / 2 }, () => b.sphere(0.14, marble, { at: [0.03, 2.95, 0], segs: 7, jitter: false }));
   }
   void pierT;
   return L;

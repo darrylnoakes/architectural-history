@@ -1,5 +1,37 @@
-import { P, tint, mix, type BuildingDef } from '@ah/kit';
+import { P, tint, mix, type Builder, type BuildingDef } from '@ah/kit';
 import { BANK, END, FOOT, hump, band, bar, steps, cutwaterPier } from './shared';
+
+const IRON_CROWN = 0.9;
+const IRON_W = 9.0;
+const IRON_DEPTH = 1.15;
+/** Where the iron bridge's two river piers stand. */
+export const IRON_PIERS = [-4.2, 4.2];
+
+/** Underside of the girders. */
+function ironGBot(z: number): number {
+  return hump(IRON_CROWN)(z) - 0.16 - IRON_DEPTH;
+}
+
+/**
+ * The masonry of the iron bridge: two stone piers with cutwaters and bands of rustication, and an
+ * abutment on each bank. When the girders were blown into the river in 1944 this is what was left,
+ * and the Bailey bridge on this plot stands on it.
+ */
+export function ironSubstructure(b: Builder, stone: number, rust: number): void {
+  for (const z of IRON_PIERS) {
+    const top = ironGBot(z) - 0.05;
+    cutwaterPier(b, { z, len: IRON_W - 1.4, thick: 1.4, nose: 1.1, y0: FOOT, h: top - FOOT, color: stone, cap: 0.08, capColor: rust });
+    for (const y of [-1.0, -0.6]) b.box(IRON_W - 1.3, 0.12, 1.46, rust, { at: [0, y, z] });
+  }
+  b.sym((s) => {
+    const z0 = s * (BANK - 0.6);
+    const z1 = s * END;
+    const pts: [number, number][] = [];
+    for (const z of steps(6, BANK - 0.6, END)) pts.push([s * z, ironGBot(z) - 0.05]);
+    pts.push([z1, -0.6], [s * BANK, -0.6], [s * BANK, FOOT], [z0, FOOT]);
+    b.extrude((s > 0 ? pts : pts.reverse()).map(([z, y]) => [-z, y] as [number, number]), IRON_W - 0.6, stone, { rotY: Math.PI / 2 });
+  });
+}
 
 export const ironBridge: BuildingDef = {
   id: 'iron-bridge',
@@ -22,36 +54,27 @@ export const ironBridge: BuildingDef = {
   influences: ['iron-and-glass'],
   build(b) {
     b.noCollide();
-    const crown = 0.9;
+    const crown = IRON_CROWN;
     const f = hump(crown);
-    const W = 9.0;
+    const W = IRON_W;
     const roadW = 6.0;
     b.deck(W - 0.4, 34, crown, { yEnds: 0 });
     const iron = mix(P.iron, P.slateBlue, 0.25);
     const ironL = tint(iron, 0.1);
     const stone = b.pick([P.travertine, tint(P.peperino, 0.12)]);
     const rust = tint(stone, -0.05);
-    const piers = [-4.2, 4.2];
-    const depth = 1.15;
+    const piers = IRON_PIERS;
+    const depth = IRON_DEPTH;
     const gTop = (z: number) => f(z) - 0.16;
     const gBot = (z: number) => gTop(z) - depth;
     const girders = [-3.9, -1.3, 1.3, 3.9];
 
-    // stone piers with cutwaters, banded rustication, and bed stones under the girders
-    for (const z of piers) {
-      const top = gBot(z) - 0.05;
-      cutwaterPier(b, { z, len: W - 1.4, thick: 1.4, nose: 1.1, y0: FOOT, h: top - FOOT, color: stone, cap: 0.08, capColor: rust });
-      for (const y of [-1.0, -0.6]) b.box(W - 1.3, 0.12, 1.46, rust, { at: [0, y, z] });
-      for (const x of girders) b.box(0.5, 0.06, 0.6, P.castIron, { at: [x, top + 0.2, z] });
+    // stone piers and abutments, then bed stones under the girders and a pedestal at each corner
+    ironSubstructure(b, stone, rust);
+    for (const z of IRON_PIERS) {
+      for (const x of girders) b.box(0.5, 0.06, 0.6, P.castIron, { at: [x, gBot(z) + 0.15, z] });
     }
-    // abutments on each bank, with a pedestal at each corner
     b.sym((s) => {
-      const z0 = s * (BANK - 0.6);
-      const z1 = s * END;
-      const pts: [number, number][] = [];
-      for (const z of steps(6, BANK - 0.6, END)) pts.push([s * z, gBot(z) - 0.05]);
-      pts.push([z1, -0.6], [s * BANK, -0.6], [s * BANK, FOOT], [z0, FOOT]);
-      b.extrude((s > 0 ? pts : pts.reverse()).map(([z, y]) => [-z, y] as [number, number]), W - 0.6, stone, { rotY: Math.PI / 2 });
       b.sym((k) => {
         const z = s * (BANK + 0.4);
         b.box(0.9, f(z) + 1.4, 0.9, stone, { at: [k * (W / 2 - 0.2), -0.3, z] });

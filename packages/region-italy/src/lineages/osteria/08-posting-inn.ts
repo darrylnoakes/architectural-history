@@ -53,7 +53,7 @@ export const postingInn: BuildingDef = {
     const trav = P.travertine;
     const fz = (ZF + ZFI) / 2;
 
-    ground(b, 21.6, 1.4, P.cobble, [0, ZF + 0.8], 0.06);
+    ground(b, 21.6, 1.4, P.cobble, [0, ZF + 0.8], 0.1);
     ground(b, 2 * XS, ZFI - ZS, tint(P.cobble, 0.08), [0, (ZFI + ZS) / 2], 0.04);
 
     // ---------------- front range

@@ -1,5 +1,5 @@
 import { P, mix, spread, tint, type BuildingDef, type Builder } from '@ah/kit';
-import { arcade, archRing, brickSquare, corbels, flatArch, pave } from './shared';
+import { arcade, archRing, brickSquare, corbels, flatArch, pave, squareWell } from './shared';
 
 /** A round-arched three-light window: a white stone arch round three lights on two colonnettes. */
 function roundTrifora(b: Builder, at: [number, number, number], rotY: number, w = 2.4, h = 2.9): void {
@@ -46,7 +46,7 @@ export const broletto: BuildingDef = {
     const ZC = (Z0 + Z1) / 2;
 
     // the square, laid in brick, and the yard behind
-    brickSquare(b, -21.5, 21.5, Z1, 21.5, { strips: 5 });
+    brickSquare(b, -21.5, 21.5, Z1, 21.5);
     pave(b, 43, Z1 + 21.5, 0, (Z1 - 21.5) / 2, mix(P.earth, P.gravel, 0.45));
     // the arcade floor, a step up
     b.box(W + 0.4, 0.2, D + 0.4, tint(grey, 0.1), { at: [XC, 0, ZC], jitter: false });
@@ -131,7 +131,7 @@ export const broletto: BuildingDef = {
     }
 
     // ---------------------------------------------------------- the square: a well and a stone bench
-    b.cyl(1.0, 1.0, P.travertine, { at: [12, 0, 15], segs: 8 });
+    squareWell(b);
     b.box(W - 4, 0.5, 0.6, P.travertine, { at: [XC, 0, Z0 - 0.8] });
 
     // ---------------------------------------------------------- colliders: the piers only, the arcade walkable
@@ -139,7 +139,6 @@ export const broletto: BuildingDef = {
     for (const x of spread(4, X0 + 4.4, X1 - 4.4)) b.collider(1.0, 1.0, { at: [x, 0, ZC] });
     b.sym((s) => b.collider(1.0, 1.2, { at: [s * (X1 - 0.5), 0, ZC] }));
     b.collider(1.9, Math.abs(runZ1 - runZ0) + 3.2, { at: [SX, 0, (runZ1 + runZ0) / 2 - 1.6] });
-    b.collider(2, 2, { at: [12, 0, 15] });
     b.collider(W - 4, 0.6, { at: [XC, 0, Z0 - 0.8] });
     b.collider(5, 5, { at: [-15.5, 0, -15.5] });
     b.collider(21, 7, { at: [-1, 0, -17.5] });

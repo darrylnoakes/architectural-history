@@ -1,5 +1,45 @@
 import { P, tint, type BuildingDef, type Builder } from '@ah/kit';
-import { BANK, WATER, amphora, boat, flatRing, lin, roofRise } from './shared';
+import { BANK, WATER, amphora, boat, flatRing, lin, quayWall, roofRise } from './shared';
+
+// the warehouse's plan, shared with the boat mills that use its ruin
+export const POD = 0.9; // raised floor
+export const HW = 28; // width along the river
+export const HZ0 = -7; // river face
+export const HZ1 = 8; // street face
+export const DW = 4.2; // depth of the ranges of rooms
+const ARC_H = 3.8; // courtyard arcade
+const GAL = 1.6; // gallery depth
+const STOREY = 4.0; // ground storey of the ranges
+const CW = HW - 2 * DW; // courtyard width
+
+/** One bay of the ground storey of a range of storerooms (the ranges are built of such bays). */
+export function storeBay(b: Builder, color: number, x: number, z: number, w: number, d: number): void {
+  b.box(w, STOREY, d, color, { at: [x, POD, z] });
+}
+
+/** A third of the arcade along the street side of the courtyard: k = -1, 0 or 1 from left to right. */
+export function courtArcade(b: Builder, color: number, k: number): void {
+  const len = CW / 3;
+  b.archWall(len, ARC_H, 0.5, color, { at: [k * len, POD, HZ1 - DW - GAL], facing: '-z', openings: 2, openW: len / 2 - 0.8, openH: ARC_H - 0.5, shape: 'round' });
+}
+
+/** The x of the buttresses along the river face. */
+export const BUTTRESS_X = lin(8, -HW / 2 + 1.5, HW / 2 - 1.5);
+/** One brick buttress on the river face, at full height. */
+export function buttress(b: Builder, color: number, x: number): void {
+  b.box(0.8, 7.2, 0.6, color, { at: [x, POD, HZ0 - 0.3] });
+}
+
+/** The street door's two engaged brick columns on travertine bases, with their capitals and the beam over them. */
+export function gateColumns(b: Builder, brick: number, trav: number): void {
+  const front = HZ1;
+  b.sym((s) => {
+    b.cyl(0.3, 0.35, trav, { at: [s * 1.9, POD, front + 0.25], segs: 10 });
+    b.cyl(0.25, 3.5, brick, { at: [s * 1.9, POD + 0.35, front + 0.25], segs: 10 });
+    b.box(0.7, 0.3, 0.7, trav, { at: [s * 1.9, POD + 3.85, front + 0.25] });
+  });
+  b.box(4.6, 0.45, 0.6, brick, { at: [0, POD + 4.15, front + 0.25] });
+}
 
 /** A travertine mooring stone set in the quay face: a projecting block pierced by a hole for the rope. */
 export function mooringStone(b: Builder, x: number, y: number, color: number) {
@@ -31,19 +71,19 @@ export const horrea: BuildingDef = {
     const brick = b.pick([P.brickOrange, P.cotto, tint(P.brickOrange, 0.04)]);
     const trav = P.travertine;
     const tile = P.romanTile;
-    const pod = 0.9; // raised floor
+    const pod = POD;
     const H = 8.2; // two storeys above the podium
-    const W = 28;
-    const z0 = -7;
-    const z1 = 8;
-    const dw = 4.2; // depth of the ranges of rooms
+    const W = HW;
+    const z0 = HZ0;
+    const z1 = HZ1;
+    const dw = DW;
     const cx0 = -W / 2 + dw;
     const cx1 = W / 2 - dw;
     const cz0 = z0 + dw;
     const cz1 = z1 - dw;
 
     // ---- the quay: travertine-faced river wall, paving, mooring stones
-    b.box(36, 0.15 - WATER + 0.6, 1.0, tint(trav, -0.04), { at: [0, WATER - 0.6, BANK + 0.3] });
+    quayWall(b, tint(trav, -0.04));
     b.box(36.1, 0.2, 1.1, trav, { at: [0, 0.1, BANK + 0.3] });
     b.box(36, 0.06, z0 - BANK, P.paving, { at: [0, 0, (z0 + BANK) / 2], jitter: false });
     for (const x of [-14, -6, 2, 10]) mooringStone(b, x, -0.4, trav);
@@ -53,7 +93,15 @@ export const horrea: BuildingDef = {
     // ---- raised base and the four ranges of rooms round the courtyard
     b.box(W + 0.6, pod, z1 - z0 + 0.6, tint(trav, -0.05), { at: [0, 0, (z0 + z1) / 2] });
     const range = (x: number, z: number, w: number, d: number, ridge: 'x' | 'z') => {
-      b.box(w, H, d, brick, { at: [x, pod, z] });
+      // the ground storey in bays of about seven metres, the upper storey over it
+      const along = ridge === 'x' ? w : d;
+      const n = Math.max(1, Math.round(along / 7));
+      for (let i = 0; i < n; i++) {
+        const c = -along / 2 + (i + 0.5) * (along / n);
+        if (ridge === 'x') storeBay(b, brick, x + c, z, w / n, d);
+        else storeBay(b, brick, x, z + c, w, d / n);
+      }
+      b.box(w, H - STOREY, d, brick, { at: [x, pod + STOREY, z] });
       const span = ridge === 'x' ? d : w;
       b.gable(w, d, roofRise(span, 20), tile, { at: [x, pod + H, z], ridge, overhang: 0.4, wall: brick });
       // a travertine string course at the first floor
@@ -65,7 +113,7 @@ export const horrea: BuildingDef = {
     range(W / 2 - dw / 2, (cz0 + cz1) / 2, dw, cz1 - cz0, 'z');
 
     // ---- buttresses (brick piers) along the back and the sides, string course over them
-    for (const x of lin(8, -W / 2 + 1.5, W / 2 - 1.5)) b.box(0.8, H - 1.0, 0.6, tint(brick, -0.04), { at: [x, pod, z0 - 0.3] });
+    for (const x of BUTTRESS_X) buttress(b, tint(brick, -0.04), x);
     b.sym((s) => {
       for (const z of lin(5, z0 + 1.5, z1 - 1.5)) b.box(0.6, H - 1.0, 0.8, tint(brick, -0.04), { at: [s * (W / 2 + 0.3), pod, z] });
     });
@@ -97,13 +145,7 @@ export const horrea: BuildingDef = {
     const front = z1;
     b.stairs(5.0, pod, 1.6, 4, trav, { at: [0, 0, front + 0.8] });
     b.panel(2.4, 3.6, P.timberBlack, { at: [0, pod, front], facing: '+z', shape: 'round' });
-    b.sym((s) => {
-      // engaged brick columns on travertine bases
-      b.cyl(0.3, 0.35, trav, { at: [s * 1.9, pod, front + 0.25], segs: 10 });
-      b.cyl(0.25, 3.5, tint(brick, 0.05), { at: [s * 1.9, pod + 0.35, front + 0.25], segs: 10 });
-      b.box(0.7, 0.3, 0.7, trav, { at: [s * 1.9, pod + 3.85, front + 0.25] });
-    });
-    b.box(4.6, 0.45, 0.6, tint(brick, 0.05), { at: [0, pod + 4.15, front + 0.25] });
+    gateColumns(b, tint(brick, 0.05), trav); // engaged brick columns on travertine bases
     b.extrude(
       [
         [-2.5, 0],
@@ -132,7 +174,7 @@ export const horrea: BuildingDef = {
     const ah = 3.8;
     const arcade = (len: number, at: [number, number, number], facing: '+z' | '-z' | '+x' | '-x', n: number) =>
       b.archWall(len, ah, 0.5, brick, { at, facing, openings: n, openW: len / n - 0.8, openH: ah - 0.5, shape: 'round' });
-    arcade(cw, [0, pod, cz1 - gal], '-z', 6);
+    for (const k of [-1, 0, 1]) courtArcade(b, brick, k);
     arcade(cw, [0, pod, cz0 + gal], '+z', 6);
     arcade(cd - gal * 2, [cx0 + gal, pod, (cz0 + cz1) / 2], '+x', 1);
     arcade(cd - gal * 2, [cx1 - gal, pod, (cz0 + cz1) / 2], '-x', 1);

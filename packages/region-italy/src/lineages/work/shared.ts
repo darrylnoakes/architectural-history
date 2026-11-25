@@ -220,3 +220,44 @@ export function lin(n: number, a: number, c: number): number[] {
   if (n === 1) return [(a + c) / 2];
   return Array.from({ length: n }, (_, i) => a + ((c - a) * i) / (n - 1));
 }
+
+// ---------------------------------------------------------------- the river works the plot keeps
+
+/**
+ * The Roman quay wall, faced in travertine, built with the warehouse in the second century. Every
+ * later building on the plot stands behind it: the boat mills tie up to it, the medieval mills build
+ * their channel off it, the power station lets its tailrace out through it.
+ */
+export function quayWall(b: Builder, color: number): void {
+  b.box(36, 0.15 - WATER + 0.6, 1.0, color, { at: [0, WATER - 0.6, BANK + 0.3] });
+}
+
+/** Line of the stone wall built out in the riverbed to make the mill channel. */
+export const RACE_Z = -13.6;
+/** Middle of the mill channel, where the wheels hang. */
+export const RACE_MID = (RACE_Z + BANK) / 2;
+
+/**
+ * The medieval weir (pescaia) and mill channel, first built for the fulling mill of about 1150:
+ * a stone wall out in the river making a channel along the bank, the fast water in it, and a low dam
+ * of stone and stakes slanting upstream across the river to turn the water in. Weirs like this were
+ * kept and repaired for centuries by one mill after another, and many on Italian rivers still stand.
+ */
+export function millRace(b: Builder, stone: number): void {
+  const cz = RACE_Z;
+  b.box(26, 0.7 - WATER + 0.6, 0.9, stone, { at: [-1, WATER - 0.6, cz] });
+  b.box(26, 0.12, 1.0, stone, { at: [-1, 0.7, cz] });
+  water(b, 26, 2.1, [-1, WATER + 0.12, (cz + BANK) / 2 - 0.15]); // the fast water in the channel, a little higher
+  const wx0 = -14;
+  const wz0 = cz;
+  const wx1 = -18;
+  const wz1 = -25;
+  const wy = WATER + 0.22;
+  b.beam([wx0, wy - 0.25, wz0], [wx1, wy - 0.25, wz1], 1.2, 0.5, stone); // crest
+  b.beam([wx0 + 1.0, WATER - 0.12, wz0], [wx1 + 1.0, WATER - 0.12, wz1], 1.0, 0.3, stone); // apron below
+  b.beam([wx0 + 0.75, WATER + 0.06, wz0], [wx1 + 0.75, WATER + 0.06, wz1], 0.5, 0.06, 0xeef3f4); // white water spilling over
+  for (let i = 0; i < 12; i++) {
+    const f = i / 11;
+    b.cyl(0.08, 0.9, P.oakDark, { at: [wx0 + (wx1 - wx0) * f - 0.55, WATER - 0.4, wz0 + (wz1 - wz0) * f], segs: 5, jitter: false });
+  }
+}

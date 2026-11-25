@@ -1,5 +1,5 @@
 import { P, tint, type BuildingDef, type Builder } from '@ah/kit';
-import { BANK, WATER, lin, water } from './shared';
+import { BANK, WATER, lin, millRace, quayWall, water } from './shared';
 
 /** A simple steel lattice pylon of height h on `at`, with cross-arms and insulators. */
 function pylon(b: Builder, x: number, z: number, h: number) {
@@ -43,7 +43,7 @@ export const hydroPlant: BuildingDef = {
     { label: 'Forebay', note: 'A basin at the end of the canal where the water settles, with screens and sluice gates to control the flow.', at: [13.0, 7.8, -6.0] },
     { label: 'Turbine hall', note: 'Tall arched windows light the hall where the turbines turn the generators.', at: [-6, 7.0, 0.4] },
     { label: 'Battlements and towers', note: 'Castle dress for a machine: at Trezzo the architect echoed the ruined Visconti castle on the cliff above the plant.', at: [-15.5, 15.4, 1.8] },
-    { label: 'Tailrace arches', note: 'The spent water leaves the turbines through arches in the river wall and rejoins the river.', at: [-6, -0.6, -11.4] },
+    { label: 'Tailrace arches', note: 'The spent water leaves the turbines through arches in the river wall into the old mill channel, and so back to the river.', at: [-6, -0.6, -11.4] },
   ],
   influences: [],
   build(b) {
@@ -52,13 +52,14 @@ export const hydroPlant: BuildingDef = {
     const brick = b.pick([P.brickRed, P.cotto]);
     const glass = P.glassDark;
 
-    // ---- the river wall with the tailrace outlets
-    b.box(36, 0.3 - WATER + 0.6, 1.0, stone, { at: [0, WATER - 0.6, BANK + 0.3] });
-    b.box(36.1, 0.2, 1.1, ashlar, { at: [0, 0.3, BANK + 0.3] });
+    // ---- the old river wall, newly coped, with the tailrace outlets letting into the old mill channel
+    quayWall(b, stone);
+    b.box(36.1, 0.2, 1.1, ashlar, { at: [0, 0.15, BANK + 0.3] });
+    millRace(b, tint(stone, -0.1));
     for (const x of [-11, -6, -1]) {
       b.panel(2.8, 1.3, P.timberBlack, { at: [x, WATER - 0.2, BANK - 0.2], facing: '-z', shape: 'segmental' });
       b.panel(3.2, 1.5, ashlar, { at: [x, WATER - 0.25, BANK - 0.21], facing: '-z', shape: 'segmental', depth: 0.03 });
-      b.beam([x, WATER + 0.03, BANK - 0.5], [x, WATER + 0.01, BANK - 2.6], 2.2, 0.03, 0xdcecf0, { mat: 'glass' }); // the outflow
+      b.beam([x, WATER + 0.2, BANK - 0.4], [x, WATER + 0.19, BANK - 2.0], 2.2, 0.03, 0xdcecf0, { mat: 'glass' }); // the outflow
     }
     b.box(34, 0.04, 20, tint(P.gravel, 0.02), { at: [0, 0, 0], jitter: false });
 

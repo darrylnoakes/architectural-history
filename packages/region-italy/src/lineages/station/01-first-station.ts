@@ -1,5 +1,5 @@
 import { P, mix, tint, type Builder, type BuildingDef } from '@ah/kit';
-import { HX, PLAT, TRACKS, arcadeWall, archPanel, clock, platform, steamTrain, track } from './shared';
+import { HX, PLAT, TRACKS, arcadeWall, archPanel, clock, forecourt, platform, steamTrain, track } from './shared';
 
 const ZF = 4.6; // street front of the building
 const ZB = -3.2; // track side
@@ -68,7 +68,7 @@ export const firstStation: BuildingDef = {
     const roof = P.coppi;
 
     // ---------------------------------------------------------------- forecourt
-    b.box(HX * 2, 0.05, 12 - ZF, mix(P.gravel, P.paving, 0.4), { at: [0, 0, (12 + ZF) / 2], jitter: false });
+    forecourt(b, mix(P.gravel, P.paving, 0.4));
     b.box(HX * 2, 0.12, 0.3, P.travertine, { at: [0, 0, 11.6], jitter: false });
 
     // ---------------------------------------------------------------- the central block
@@ -140,7 +140,7 @@ export const firstStation: BuildingDef = {
     });
 
     // ---------------------------------------------------------------- platform, tracks, train
-    platform(b, ZB, PLAT.edge, -HX, HX);
+    platform(b, PLAT.back, PLAT.edge, -HX, HX); // its back runs just under the track face
     for (const z of [...TRACKS]) track(b, z);
     steamTrain(b, [-15.0, 0, TRACKS[0]]);
 

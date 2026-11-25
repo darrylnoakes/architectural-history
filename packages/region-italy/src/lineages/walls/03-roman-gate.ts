@@ -1,21 +1,168 @@
-import { P, mix, tint, type BuildingDef } from '@ah/kit';
+import { P, mix, tint, type Builder, type BuildingDef } from '@ah/kit';
 import { HALF, archPanel, gateMass, road, voussoirs } from './shared';
 import { ROMAN, WALL_COLOURS, curtain } from './curtain';
 
-const FW = 12.4; // width of the gate front between the towers
-const FT = 3.2; // its thickness
-const FZ = 0.4; // its centre line
+export const FW = 12.4; // width of the gate front between the towers
+export const FT = 3.2; // its thickness
+export const FZ = 0.4; // its centre line
 const H1 = 7.0; // top of the arched storey
 const H2 = 10.6; // top of the gallery
-const TX = 8.5; // tower centres
-const TR = 3.0; // tower radius
-const TH = 14.0; // tower height to the eaves
-const TZ = 1.6; // towers stand forward of the wall
+export const TX = 8.5; // tower centres
+export const TR = 3.0; // tower radius
+export const TH = 14.0; // tower height to the eaves
+export const TZ = 1.6; // towers stand forward of the wall
 const WALL_H = ROMAN.h;
 const WALL_T = ROMAN.t;
 
-const CARRIAGE = { x: 2.15, w: 3.2, h: 5.7 };
-const FOOT = { x: 4.85, w: 1.3, h: 3.1 };
+export const CARRIAGE = { x: 2.15, w: 3.2, h: 5.7 };
+export const FOOT = { x: 4.85, w: 1.3, h: 3.1 };
+
+/*
+ * The Augustan gate in parts, so that the late Roman wall of the next stage can take it in: the
+ * paved road and the tomb outside, the arched storey, the gallery and the two towers are built by
+ * the same code in both stages, and only their roofs and the footway arches change.
+ */
+
+/** The basalt-paved road through the gate, with its joint lines. */
+export function romanPaving(b: Builder): void {
+  road(b, 7.0, mix(P.peperino, P.cobble, 0.4));
+  for (let z = -7.5; z < 8; z += 1.1) b.box(7.0, 0.01, 0.05, tint(P.peperino, -0.12), { at: [0, 0.04, z], jitter: false });
+}
+
+/** The arched storey: two carriage arches and two footways between pilasters, under a cornice. */
+export function romanArches(b: Builder): void {
+  const stone = WALL_COLOURS.roman.stone;
+  const shade = tint(stone, -0.07);
+  const front = FZ + FT / 2;
+  const back = FZ - FT / 2;
+
+  // ---------------------------------------------------------------- the front: arched storey
+  gateMass(b, FW, H1, FT, stone, {
+    at: [0, 0, FZ],
+    xs: [-FOOT.x, -CARRIAGE.x, CARRIAGE.x, FOOT.x],
+    openW: [FOOT.w, CARRIAGE.w, CARRIAGE.w, FOOT.w],
+    openH: [FOOT.h, CARRIAGE.h, CARRIAGE.h, FOOT.h],
+  });
+  // course lines on both faces
+  for (const [z, f] of [[front + 0.01, '+z'], [back - 0.01, '-z']] as const) {
+    for (const y of [0.9, 1.8, 2.7]) {
+      for (const x of [0, 3.5, -3.5, 5.85, -5.85]) {
+        const w = x === 0 ? 1.0 : Math.abs(x) > 5 ? 0.6 : 0.5;
+        b.panel(w, 0.04, shade, { at: [x, y, z], facing: f, depth: 0.01 });
+      }
+    }
+    // voussoirs round each arch
+    for (const o of [CARRIAGE, FOOT]) {
+      b.sym((s) => voussoirs(b, o.w, o.h - o.w / 2, o === CARRIAGE ? 0.6 : 0.4, stone, { at: [s * o.x, 0, z], facing: f, n: o === CARRIAGE ? 11 : 7, proud: 0.08, vary: 0.035 }));
+    }
+    // pilasters with plain capitals between the openings, carrying an entablature
+    for (const x of [0, -3.5, 3.5, -FW / 2 + 0.3, FW / 2 - 0.3]) {
+      const w = x === 0 ? 0.7 : 0.5;
+      b.panel(w, H1 - 1.4, tint(stone, 0.03), { at: [x, 0.4, z], facing: f, depth: 0.18 });
+      b.panel(w + 0.2, 0.25, tint(stone, 0.05), { at: [x, H1 - 1.25, z], facing: f, depth: 0.24 });
+    }
+    b.panel(FW, 0.5, tint(stone, 0.02), { at: [0, H1 - 1.0, z], facing: f, depth: 0.2 }); // architrave and frieze
+  }
+  // cornice and plinth all round the front block
+  b.box(FW + 0.6, 0.35, FT + 0.6, tint(stone, 0.04), { at: [0, H1 - 0.35, FZ] });
+  // the plinth runs between the openings and stops at the jambs, so the passages are level with the road
+  {
+    const edges = [-FW / 2 - 0.15, ...[-FOOT.x, -CARRIAGE.x, CARRIAGE.x, FOOT.x].flatMap((x) => {
+      const w = Math.abs(x) === FOOT.x ? FOOT.w : CARRIAGE.w;
+      return [x - w / 2, x + w / 2];
+    }), FW / 2 + 0.15];
+    for (let i = 0; i < edges.length; i += 2) b.box(edges[i + 1] - edges[i], 0.4, FT + 0.3, shade, { at: [(edges[i] + edges[i + 1]) / 2, 0, FZ] });
+  }
+  // the passages: soffits, and the doors folded back
+  for (const o of [CARRIAGE, FOOT]) b.sym((s) => b.vault(o.w, FT - 0.05, tint(stone, -0.22), { at: [s * o.x, o.h - o.w / 2, FZ], segs: 8 }));
+  b.sym((s) => {
+    for (const side of [1, -1]) {
+      const x = s * CARRIAGE.x + side * (CARRIAGE.w / 2 - 0.12);
+      b.box(0.12, CARRIAGE.h - CARRIAGE.w / 2, 1.5, P.oakDark, { at: [x, 0, back + 0.9] });
+    }
+  });
+}
+
+/** The gallery over the arches, under a tiled roof (`roofed`) or, later, behind battlements. */
+export function romanGallery(b: Builder, roofed: boolean): void {
+  const stone = WALL_COLOURS.roman.stone;
+  // ---------------------------------------------------------------- the gallery storey
+  const GW2 = FW - 0.6;
+  const GT = FT - 0.4;
+  b.box(GW2, H2 - H1, GT, stone, { at: [0, H1, FZ] });
+  const nWin = 8;
+  for (const [z, f] of [[FZ + GT / 2, '+z'], [FZ - GT / 2, '-z']] as const) {
+    for (let i = 0; i < nWin; i++) {
+      const x = -GW2 / 2 + (i + 0.5) * (GW2 / nWin);
+      archPanel(b, 0.95, 2.1, tint(stone, 0.04), { at: [x, H1 + 0.7, z], facing: f, depth: 0.06 });
+      archPanel(b, 0.75, 1.95, P.windowDark, { at: [x, H1 + 0.75, z], facing: f, depth: 0.09 });
+      // little pilasters between the windows
+      if (i > 0) b.panel(0.22, 2.4, tint(stone, 0.02), { at: [x - GW2 / nWin / 2, H1 + 0.4, z], facing: f, depth: 0.12 });
+    }
+    b.panel(GW2, 0.2, tint(stone, 0.03), { at: [0, H1 + 0.4, z], facing: f, depth: 0.1 }); // sill course
+  }
+  b.box(GW2 + 0.4, 0.3, GT + 0.4, tint(stone, 0.04), { at: [0, H2, FZ] });
+  if (roofed) b.hip(GW2 + 0.2, GT + 0.2, 1.1, P.coppi, { at: [0, H2 + 0.3, FZ], overhang: 0.35 });
+  else b.crenel(GW2 + 0.2, GT + 0.2, WALL_COLOURS.aurelian.brick, { at: [0, H2 + 0.3, FZ], merlonW: 0.7, merlonH: 1.0, t: 0.4 });
+}
+
+/** The two many-sided towers, under conical tiled roofs (`roofed`) or, later, with merlons round the top. */
+export function romanTowers(b: Builder, roofed: boolean): void {
+  const stone = WALL_COLOURS.roman.stone;
+  const shade = tint(stone, -0.07);
+  // ---------------------------------------------------------------- the two towers
+  const segs = 16;
+  b.sym((s) => {
+    b.group({ at: [s * TX, 0, TZ] }, () => {
+      b.cyl(TR + 0.25, 0.6, shade, { segs });
+      b.cyl(TR, TH, stone, { segs });
+      for (const y of [2.6, 5.4, H1 - 0.35, 10.4]) b.cyl(TR + 0.03, 0.06, shade, { at: [0, y, 0], segs, jitter: false });
+      b.cyl(TR + 0.22, 0.35, tint(stone, 0.04), { at: [0, TH - 0.35, 0], segs });
+      if (roofed) {
+        // a tiled conical roof
+        b.cone(TR + 0.55, 2.0, P.coppi, { at: [0, TH, 0], segs });
+        b.cyl(0.18, 0.4, tint(P.coppi, -0.1), { at: [0, TH + 1.85, 0], segs: 6 });
+      } else {
+        // a fighting platform: brick merlons round the top
+        for (let i = 0; i < 12; i++) {
+          const a = (i / 12) * Math.PI * 2;
+          b.box(0.85, 1.1, 0.45, WALL_COLOURS.aurelian.brick, { at: [Math.sin(a) * (TR - 0.05), TH, Math.cos(a) * (TR - 0.05)], rotY: a, jitter: false });
+        }
+      }
+      // arched windows on the outward faces, at two levels; slits low down
+      for (const a of [0, 0.85, -0.85, s * 1.7, s * 2.5]) {
+        const at = (r: number, y: number): [number, number, number] => [Math.sin(a) * r, y, Math.cos(a) * r];
+        archPanel(b, 0.8, 1.7, P.windowDark, { at: at(TR - 0.02, 11.1), facing: a, depth: 0.08 });
+        archPanel(b, 1.0, 1.85, tint(stone, 0.04), { at: at(TR - 0.04, 11.0), facing: a, depth: 0.05 });
+        if (Math.abs(a) < 1.6) archPanel(b, 0.6, 1.3, P.windowDark, { at: at(TR - 0.02, 7.9), facing: a, depth: 0.08 });
+        b.panel(0.16, 1.1, P.black, { at: at(TR - 0.02, 3.4), facing: a, depth: 0.06 });
+      }
+    });
+  });
+}
+
+/** A tomb by the road outside: the Romans buried their dead along the roads beyond the gates. */
+export function romanTomb(b: Builder): void {
+  const stone = WALL_COLOURS.roman.stone;
+  b.group({ at: [-6.4, 0, 6.6] }, () => {
+    b.box(2.4, 0.5, 2.4, tint(stone, -0.07));
+    b.box(2.0, 1.8, 2.0, stone, { at: [0, 0.5, 0] });
+    b.box(2.3, 0.3, 2.3, tint(stone, 0.04), { at: [0, 2.3, 0] });
+    b.panel(1.2, 0.8, tint(stone, 0.06), { at: [0, 1.0, 1.0], depth: 0.04 });
+    b.cyl(0.5, 0.9, stone, { at: [0, 2.6, 0], segs: 10 });
+  });
+}
+
+/** Walk collisions of the Augustan gate front and its towers. */
+export function romanGateColliders(b: Builder): void {
+  b.sym((s) => {
+    b.collider(TR * 2, TR * 2 + 0.4, { at: [s * TX, 0, TZ] });
+    b.collider(FW / 2 - (FOOT.x + FOOT.w / 2) + 0.2, FT, { at: [s * (FW / 2 + FOOT.x + FOOT.w / 2) / 2, 0, FZ] });
+    b.collider(FOOT.x - FOOT.w / 2 - (CARRIAGE.x + CARRIAGE.w / 2), FT, { at: [s * (FOOT.x - FOOT.w / 2 + CARRIAGE.x + CARRIAGE.w / 2) / 2, 0, FZ] });
+  });
+  b.collider(CARRIAGE.x * 2 - CARRIAGE.w, FT, { at: [0, 0, FZ] }); // the central pier
+  b.collider(2.4, 2.4, { at: [-6.4, 0, 6.6] }); // the tomb
+}
 
 export const romanGate: BuildingDef = {
   id: 'roman-gate',
@@ -36,105 +183,16 @@ export const romanGate: BuildingDef = {
     { label: 'Pilasters and cornice', note: 'Flat classical pilasters framing the arches and a moulded cornice: architecture borrowed from temples to dignify a gate.', at: [3.5, H1 + 0.2, FZ + FT / 2 + 0.4] },
   ],
   build(b) {
-    const stone = WALL_COLOURS.roman.stone;
-    const shade = tint(stone, -0.07);
-    const wallFace = mix(P.rubble, P.tufa, 0.35);
-    const roof = P.coppi;
-    const front = FZ + FT / 2;
-    const back = FZ - FT / 2;
+    const shade = tint(WALL_COLOURS.roman.stone, -0.07);
 
-    road(b, 7.0, mix(P.peperino, P.cobble, 0.4));
-    // basalt paving: a few joint lines
-    for (let z = -7.5; z < 8; z += 1.1) b.box(7.0, 0.01, 0.05, tint(P.peperino, -0.12), { at: [0, 0.04, z], jitter: false });
+    romanPaving(b);
 
     // ---------------------------------------------------------------- the wall either side
     b.sym((s) => curtain(b, 'roman', s > 0 ? TX + TR - 0.6 : -HALF, s > 0 ? HALF : -(TX + TR - 0.6), { towers: false }));
 
-    // ---------------------------------------------------------------- the front: arched storey
-    gateMass(b, FW, H1, FT, stone, {
-      at: [0, 0, FZ],
-      xs: [-FOOT.x, -CARRIAGE.x, CARRIAGE.x, FOOT.x],
-      openW: [FOOT.w, CARRIAGE.w, CARRIAGE.w, FOOT.w],
-      openH: [FOOT.h, CARRIAGE.h, CARRIAGE.h, FOOT.h],
-    });
-    // course lines on both faces
-    for (const [z, f] of [[front + 0.01, '+z'], [back - 0.01, '-z']] as const) {
-      for (const y of [0.9, 1.8, 2.7]) {
-        for (const x of [0, 3.5, -3.5, 5.85, -5.85]) {
-          const w = x === 0 ? 1.0 : Math.abs(x) > 5 ? 0.6 : 0.5;
-          b.panel(w, 0.04, shade, { at: [x, y, z], facing: f, depth: 0.01 });
-        }
-      }
-      // voussoirs round each arch
-      for (const o of [CARRIAGE, FOOT]) {
-        b.sym((s) => voussoirs(b, o.w, o.h - o.w / 2, o === CARRIAGE ? 0.6 : 0.4, stone, { at: [s * o.x, 0, z], facing: f, n: o === CARRIAGE ? 11 : 7, proud: 0.08, vary: 0.035 }));
-      }
-      // pilasters with plain capitals between the openings, carrying an entablature
-      for (const x of [0, -3.5, 3.5, -FW / 2 + 0.3, FW / 2 - 0.3]) {
-        const w = x === 0 ? 0.7 : 0.5;
-        b.panel(w, H1 - 1.4, tint(stone, 0.03), { at: [x, 0.4, z], facing: f, depth: 0.18 });
-        b.panel(w + 0.2, 0.25, tint(stone, 0.05), { at: [x, H1 - 1.25, z], facing: f, depth: 0.24 });
-      }
-      b.panel(FW, 0.5, tint(stone, 0.02), { at: [0, H1 - 1.0, z], facing: f, depth: 0.2 }); // architrave and frieze
-    }
-    // cornice and plinth all round the front block
-    b.box(FW + 0.6, 0.35, FT + 0.6, tint(stone, 0.04), { at: [0, H1 - 0.35, FZ] });
-    // the plinth runs between the openings and stops at the jambs, so the passages are level with the road
-    {
-      const edges = [-FW / 2 - 0.15, ...[-FOOT.x, -CARRIAGE.x, CARRIAGE.x, FOOT.x].flatMap((x) => {
-        const w = Math.abs(x) === FOOT.x ? FOOT.w : CARRIAGE.w;
-        return [x - w / 2, x + w / 2];
-      }), FW / 2 + 0.15];
-      for (let i = 0; i < edges.length; i += 2) b.box(edges[i + 1] - edges[i], 0.4, FT + 0.3, shade, { at: [(edges[i] + edges[i + 1]) / 2, 0, FZ] });
-    }
-    // the passages: soffits, and the doors folded back
-    for (const o of [CARRIAGE, FOOT]) b.sym((s) => b.vault(o.w, FT - 0.05, tint(stone, -0.22), { at: [s * o.x, o.h - o.w / 2, FZ], segs: 8 }));
-    b.sym((s) => {
-      for (const side of [1, -1]) {
-        const x = s * CARRIAGE.x + side * (CARRIAGE.w / 2 - 0.12);
-        b.box(0.12, CARRIAGE.h - CARRIAGE.w / 2, 1.5, P.oakDark, { at: [x, 0, back + 0.9] });
-      }
-    });
-
-    // ---------------------------------------------------------------- the gallery storey
-    const GW2 = FW - 0.6;
-    const GT = FT - 0.4;
-    b.box(GW2, H2 - H1, GT, stone, { at: [0, H1, FZ] });
-    const nWin = 8;
-    for (const [z, f] of [[FZ + GT / 2, '+z'], [FZ - GT / 2, '-z']] as const) {
-      for (let i = 0; i < nWin; i++) {
-        const x = -GW2 / 2 + (i + 0.5) * (GW2 / nWin);
-        archPanel(b, 0.95, 2.1, tint(stone, 0.04), { at: [x, H1 + 0.7, z], facing: f, depth: 0.06 });
-        archPanel(b, 0.75, 1.95, P.windowDark, { at: [x, H1 + 0.75, z], facing: f, depth: 0.09 });
-        // little pilasters between the windows
-        if (i > 0) b.panel(0.22, 2.4, tint(stone, 0.02), { at: [x - GW2 / nWin / 2, H1 + 0.4, z], facing: f, depth: 0.12 });
-      }
-      b.panel(GW2, 0.2, tint(stone, 0.03), { at: [0, H1 + 0.4, z], facing: f, depth: 0.1 }); // sill course
-    }
-    b.box(GW2 + 0.4, 0.3, GT + 0.4, tint(stone, 0.04), { at: [0, H2, FZ] });
-    b.hip(GW2 + 0.2, GT + 0.2, 1.1, roof, { at: [0, H2 + 0.3, FZ], overhang: 0.35 });
-
-    // ---------------------------------------------------------------- the two towers
-    const segs = 16;
-    b.sym((s) => {
-      b.group({ at: [s * TX, 0, TZ] }, () => {
-        b.cyl(TR + 0.25, 0.6, shade, { segs });
-        b.cyl(TR, TH, stone, { segs });
-        for (const y of [2.6, 5.4, H1 - 0.35, 10.4]) b.cyl(TR + 0.03, 0.06, shade, { at: [0, y, 0], segs, jitter: false });
-        b.cyl(TR + 0.22, 0.35, tint(stone, 0.04), { at: [0, TH - 0.35, 0], segs });
-        // a tiled conical roof
-        b.cone(TR + 0.55, 2.0, roof, { at: [0, TH, 0], segs });
-        b.cyl(0.18, 0.4, tint(roof, -0.1), { at: [0, TH + 1.85, 0], segs: 6 });
-        // arched windows on the outward faces, at two levels; slits low down
-        for (const a of [0, 0.85, -0.85, s * 1.7, s * 2.5]) {
-          const at = (r: number, y: number): [number, number, number] => [Math.sin(a) * r, y, Math.cos(a) * r];
-          archPanel(b, 0.8, 1.7, P.windowDark, { at: at(TR - 0.02, 11.1), facing: a, depth: 0.08 });
-          archPanel(b, 1.0, 1.85, tint(stone, 0.04), { at: at(TR - 0.04, 11.0), facing: a, depth: 0.05 });
-          if (Math.abs(a) < 1.6) archPanel(b, 0.6, 1.3, P.windowDark, { at: at(TR - 0.02, 7.9), facing: a, depth: 0.08 });
-          b.panel(0.16, 1.1, P.black, { at: at(TR - 0.02, 3.4), facing: a, depth: 0.06 });
-        }
-      });
-    });
+    romanArches(b);
+    romanGallery(b, true);
+    romanTowers(b, true);
 
     // ---------------------------------------------------------------- the town side: stairs up to the wall-walk
     b.stairs(1.2, WALL_H, 8, 14, shade, { at: [11.0, 0, -WALL_T / 2 - 0.75], rotY: -Math.PI / 2 });
@@ -142,24 +200,11 @@ export const romanGate: BuildingDef = {
     // ---------------------------------------------------------------- around it
     b.tree(8, { kind: 'cypress', at: [-13.6, 0, 6.2] });
     b.tree(7.2, { kind: 'cypress', at: [13.4, 0, 6.6] });
-    // a tomb by the road outside: the Romans buried their dead along the roads beyond the gates
-    b.group({ at: [-6.4, 0, 6.6] }, () => {
-      b.box(2.4, 0.5, 2.4, shade);
-      b.box(2.0, 1.8, 2.0, stone, { at: [0, 0.5, 0] });
-      b.box(2.3, 0.3, 2.3, tint(stone, 0.04), { at: [0, 2.3, 0] });
-      b.panel(1.2, 0.8, tint(stone, 0.06), { at: [0, 1.0, 1.0], depth: 0.04 });
-      b.cyl(0.5, 0.9, stone, { at: [0, 2.6, 0], segs: 10 });
-    });
+    romanTomb(b);
 
     // ---------------------------------------------------------------- walking
-    b.sym((s) => {
-      b.collider(HALF - (TX + TR - 0.6), WALL_T + 0.4, { at: [s * (HALF + TX + TR - 0.6) / 2, 0, 0] });
-      b.collider(TR * 2, TR * 2 + 0.4, { at: [s * TX, 0, TZ] });
-      b.collider(FW / 2 - (FOOT.x + FOOT.w / 2) + 0.2, FT, { at: [s * (FW / 2 + FOOT.x + FOOT.w / 2) / 2, 0, FZ] });
-      b.collider(FOOT.x - FOOT.w / 2 - (CARRIAGE.x + CARRIAGE.w / 2), FT, { at: [s * (FOOT.x - FOOT.w / 2 + CARRIAGE.x + CARRIAGE.w / 2) / 2, 0, FZ] });
-    });
-    b.collider(CARRIAGE.x * 2 - CARRIAGE.w, FT, { at: [0, 0, FZ] }); // the central pier
+    b.sym((s) => b.collider(HALF - (TX + TR - 0.6), WALL_T + 0.4, { at: [s * (HALF + TX + TR - 0.6) / 2, 0, 0] }));
+    romanGateColliders(b);
     b.collider(8, 1.3, { at: [11.0, 0, -WALL_T / 2 - 0.75] });
-    b.collider(2.4, 2.4, { at: [-6.4, 0, 6.6] });
   },
 };

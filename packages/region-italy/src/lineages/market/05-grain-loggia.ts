@@ -1,5 +1,5 @@
 import { P, tint, type BuildingDef, type Builder, type Facing } from '@ah/kit';
-import { archPanel, archivolt, faceAngle, goods, hipRibs, paving, sack } from './shared';
+import { archPanel, archivolt, faceAngle, goods, hipRibs, sack, squarePaving } from './shared';
 
 /**
  * A two-light Gothic window (bifora): two pointed lights divided by a colonnette, under one
@@ -55,6 +55,8 @@ export const grainLoggia: BuildingDef = {
   modelledOn: 'Orsanmichele, Florence (loggia rebuilt from 1337, granary above, arches later walled in); reduced and shown with its loggia still open',
   influences: ['cistercian-gothic'],
   build(b) {
+    // the commune paves the market square; the paving outlasts the loggia
+    squarePaving(b);
     const W = 20;
     const D = 15;
     const T = 1.4; // depth of the arcade walls (the piers)
@@ -63,7 +65,6 @@ export const grainLoggia: BuildingDef = {
     const stone = b.pick([P.pietraForte, tint(P.pietraForte, 0.04)]);
     const dark = tint(stone, -0.08);
 
-    paving(b, 25.6, 21.6, tint(P.pietraForte, -0.04), 0.08, [0, 0, 0], 12);
     b.box(W + 0.8, 0.2, D + 0.8, tint(stone, -0.05), { at: [0, 0.08, 0] });
     const y0 = 0.28;
 

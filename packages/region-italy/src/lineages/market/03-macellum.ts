@@ -1,11 +1,104 @@
-import { P, linspace, tint, type BuildingDef, type Builder } from '@ah/kit';
-import { amphora, goods, paving, ringRoof, tileRibs } from './shared';
+import { P, linspace, tint, type BuildingDef, type Builder, type Facing } from '@ah/kit';
+import { amphora, forumPaving, goods, ringRoof, tileRibs } from './shared';
+
+// ---------------------------------------------------------------- the fabric the ruin keeps
+/* The market among the ruins of about 950 stands in what is left of this building, so the pieces of
+   it that survive are drawn here, by the same code with the same numbers in both stages. */
+const OW = 25;
+const OD = 19.4;
+const T = 0.6; // outer wall
+const YOUT = 6.4;
+const YIN = 4.6;
+/** Floor level of the market court. */
+export const MF = 0.3;
+const CX = 6.2;
+const CZ = 4.6;
+/** Height to which the outer walls are built in a first lift (the ruin keeps some of these). */
+export const WL = 2.6;
+/** Back shop fronts and the shrine. */
+export const MSZB = -6.7;
+
+/** The stretches of the outer wall: id, centre x, centre z, length along x, along z. */
+export const MAC_WALLS: [string, number, number, number, number][] = (() => {
+  const w: [string, number, number, number, number][] = [];
+  const sl = OD / 5;
+  for (let i = 0; i < 5; i++) {
+    const z = -OD / 2 + (i + 0.5) * sl;
+    w.push([`W${i}`, -(OW / 2 - T / 2), z, T, sl], [`E${i}`, OW / 2 - T / 2, z, T, sl]);
+  }
+  const inner = OW - 2 * T;
+  for (let i = 0; i < 6; i++) w.push([`B${i}`, -inner / 2 + (i + 0.5) * (inner / 6), -(OD / 2 - T / 2), inner / 6, T]);
+  for (const [k, x] of [-9.4, -4.4, 4.4, 9.4].entries()) w.push([`F${k}`, x, OD / 2 - T / 2, 5.0, T]);
+  return w;
+})();
+
+/** The lower lift (to WL) of one stretch of the outer wall, or the rest of it above. */
+export function macellumWall(b: Builder, brick: number, id: string, part: 'lower' | 'upper'): void {
+  const [, x, z, w, d] = MAC_WALLS.find((m) => m[0] === id)!;
+  if (part === 'lower') b.box(w, WL, d, brick, { at: [x, 0, z] });
+  else b.box(w, YOUT - 0.05 - WL, d, brick, { at: [x, WL, z] });
+}
+
+/** The floor of the court and the raised marble paving under the colonnade, the travertine plinth of the outer walls, and the paved way in. */
+export function macellumFloor(b: Builder): void {
+  b.box(2 * CX + 1.2, MF - 0.12, 2 * CZ + 1.2, P.marble, { at: [0, 0.12, 0] });
+  b.box(OW - 2 * T, MF - 0.12 + 0.01, OD - 2 * T, tint(P.travertine, -0.04), { at: [0, 0.12, 0] });
+  for (const s of [1, -1] as const) {
+    b.box(T + 0.12, 0.6, OD + 0.12, P.travertine, { at: [s * (OW / 2 - T / 2), 0, 0] });
+    if (s < 0) b.box(OW + 0.12, 0.6, T + 0.12, P.travertine, { at: [0, 0, s * (OD / 2 - T / 2)] });
+    else for (const sx of [-1, 1]) b.box(OW / 2 - 1.9 + 0.06, 0.6, T + 0.12, P.travertine, { at: [sx * (OW / 4 + 0.95 + 0.03), 0, OD / 2 - T / 2] });
+  }
+  const fz = OD / 2;
+  b.box(3.8, 0.1, fz + 1.2 - 6.7, P.marble, { at: [0, MF - 0.1, (6.7 + fz) / 2 + 0.6] });
+  b.box(4.6, 0.3, 1.5, P.travertine, { at: [0, 0, fz + 0.55] });
+}
+
+/** One marble column of the colonnade round the court. */
+export function colonnadeColumn(b: Builder, x: number, z: number): void {
+  b.column(0.22, YIN - MF, P.marble, { at: [x, MF, z], order: 'corinthian', segs: 6 });
+}
+
+/** A fish counter: a sloping marble slab on a masonry base with a gutter in front, at a shop front facing `facing`. */
+export function fishSlab(b: Builder, x: number, z: number, w: number, facing: Facing, base: number): void {
+  const ax = facing === '+x' ? 1 : facing === '-x' ? -1 : 0;
+  const az = facing === '+z' ? 1 : facing === '-z' ? -1 : 0;
+  const cx = x + ax * 0.35;
+  const cz = z + az * 0.35;
+  const along = ax !== 0 ? 'z' : 'x';
+  const cw = w - 0.3;
+  b.box(along === 'x' ? cw : 0.7, 0.8, along === 'x' ? 0.7 : cw, base, { at: [cx, MF, cz] });
+  b.box(along === 'x' ? cw + 0.1 : 0.85, 0.07, along === 'x' ? 0.85 : cw + 0.1, P.marble, {
+    at: [cx + ax * 0.05, MF + 0.86, cz + az * 0.05],
+    rot: along === 'x' ? [az * 0.28, 0, 0] : [0, 0, -ax * 0.28],
+  });
+  b.box(along === 'x' ? cw : 0.16, 0.04, along === 'x' ? 0.16 : cw, P.windowDark, { at: [x + ax * 0.85, MF, z + az * 0.85] });
+}
+/** Where the fish counters stand, on the west side of the court. */
+export const FISH_Z = [-4.2, 0, 4.2];
+export const FISH_X = -8.4;
+
+/** The podium, steps and two columns of the shrine porch at the back of the court (inside a group at the shrine). */
+export function shrinePorch(b: Builder): void {
+  b.box(3.8, 1.0, 1.5, P.marble, { at: [0, 0, 0.75] });
+  b.stairs(2.4, 1.0, 0.8, 3, P.marble, { at: [0, 0, 1.9] });
+  for (const sx of [-1, 1]) b.column(0.24, 5.2, P.marble, { at: [sx * 1.4, 1.0, 1.15], order: 'corinthian', segs: 6 });
+}
+
+/** The two travertine steps of the tholos and the fountain basin in the middle (inside a group at the court floor). */
+export function tholosBase(b: Builder, R: number): void {
+  const n = 12;
+  b.cyl(R + 0.5, 0.2, P.travertine, { segs: n, rotY: Math.PI / n });
+  b.cyl(R + 0.2, 0.25, tint(P.travertine, 0.04), { at: [0, 0.2, 0], segs: n, rotY: Math.PI / n });
+  const y0 = 0.45;
+  b.cyl(1.05, 0.65, P.marble, { at: [0, y0, 0], segs: 12 });
+  b.cyl(0.92, 0.02, P.water, { at: [0, y0 + 0.62, 0], segs: 12, jitter: false });
+  b.cyl(0.14, 0.95, P.marble, { at: [0, y0, 0], segs: 6 });
+}
 
 /** The round kiosk (tholos) in the middle of the court: twelve columns round a fountain, under a conical tiled roof. */
 function tholos(b: Builder, R: number): void {
   const n = 12;
-  b.cyl(R + 0.5, 0.2, P.travertine, { segs: n, rotY: Math.PI / n });
-  b.cyl(R + 0.2, 0.25, tint(P.travertine, 0.04), { at: [0, 0.2, 0], segs: n, rotY: Math.PI / n });
+  tholosBase(b, R);
   const y0 = 0.45;
   const colH = 3.3;
   const rc = R - 0.25;
@@ -29,10 +122,7 @@ function tholos(b: Builder, R: number): void {
   );
   b.cone(R + 0.45, 1.15, P.romanTile, { at: [0, y0 + colH + 0.5, 0], segs: n, rotY: Math.PI / n });
   b.cone(0.2, 0.45, P.bronze, { at: [0, y0 + colH + 1.55, 0], segs: 6 });
-  // the fountain basin in the middle, where fish were kept and cleaned
-  b.cyl(1.05, 0.65, P.marble, { at: [0, y0, 0], segs: 12 });
-  b.cyl(0.92, 0.02, P.water, { at: [0, y0 + 0.62, 0], segs: 12, jitter: false });
-  b.cyl(0.14, 0.95, P.marble, { at: [0, y0, 0], segs: 6 });
+  // the fountain in the basin, where fish were kept and cleaned
   b.cyl(0.35, 0.12, P.marble, { at: [0, y0 + 0.95, 0], segs: 8 });
   b.collider(2.1, 2.1);
 }
@@ -58,40 +148,31 @@ export const macellum: BuildingDef = {
   modelledOn: 'The macellum at Pompeii (rebuilt after the earthquake of AD 62) and the macellum at Pozzuoli, both simplified',
   influences: ['roman-concrete', 'hellenistic-luxury'],
   build(b) {
-    const OW = 25;
-    const OD = 19.4;
-    const T = 0.6; // outer wall
-    const yOut = 6.4;
-    const yIn = 4.6;
-    const F = 0.3; // floor level
+    // the forum paving, laid with the old shops and kept
+    forumPaving(b);
+    const yOut = YOUT;
+    const yIn = YIN;
+    const F = MF; // floor level
     const brick = b.pick([P.cotto, P.brickOrange, tint(P.cotto, 0.04)]);
     const plaster = b.pick([P.intonacoCream, P.stucco]);
     const red = P.intonacoRed;
     const tile = P.romanTile;
-    // inner colonnade line and shop-front lines
-    const CX = 6.2;
-    const CZ = 4.6;
-    const SX = 8.4; // side shop fronts
-    const SZb = -6.7; // back shop fronts
+    // shop-front lines
+    const SX = -FISH_X; // side shop fronts
+    const SZb = MSZB; // back shop fronts
     const SZf = 6.7; // courtyard face of the front range
 
-    paving(b, OW + 0.6, OD + 0.6, P.travertine, 0.12, [0, 0, 0], 8);
-    b.box(2 * CX + 1.2, F - 0.12, 2 * CZ + 1.2, P.marble, { at: [0, 0.12, 0] }); // court paving, raised
-    b.box(OW - 2 * T, F - 0.12 + 0.01, OD - 2 * T, tint(P.travertine, -0.04), { at: [0, 0.12, 0] });
+    macellumFloor(b); // court paving, raised; the plinth of the outer walls; the way in
 
-    // ---- outer walls: brick-faced, a travertine plinth and cornice, pilaster strips
-    for (const s of [1, -1] as const) {
-      b.box(T, yOut - 0.05, OD, brick, { at: [s * (OW / 2 - T / 2), 0, 0] });
-      if (s < 0) b.box(OW, yOut - 0.05, T, brick, { at: [0, 0, s * (OD / 2 - T / 2)] });
+    // ---- outer walls: brick-faced, built in stretches, a travertine plinth and cornice, pilaster strips
+    for (const [id] of MAC_WALLS) {
+      macellumWall(b, brick, id, 'lower');
+      macellumWall(b, brick, id, 'upper');
     }
     // the front wall is pierced by the entrance passage
-    for (const sx of [-1, 1]) b.box(OW / 2 - 1.9, yOut - 0.05, T, brick, { at: [sx * (OW / 4 + 0.95), 0, OD / 2 - T / 2] });
     b.box(3.8, yOut - 4.75, T, brick, { at: [0, 4.7, OD / 2 - T / 2] });
     for (const s of [1, -1] as const) {
-      // travertine plinth and cornice
-      b.box(T + 0.12, 0.6, OD + 0.12, P.travertine, { at: [s * (OW / 2 - T / 2), 0, 0] });
-      if (s < 0) b.box(OW + 0.12, 0.6, T + 0.12, P.travertine, { at: [0, 0, s * (OD / 2 - T / 2)] });
-      else for (const sx of [-1, 1]) b.box(OW / 2 - 1.9 + 0.06, 0.6, T + 0.12, P.travertine, { at: [sx * (OW / 4 + 0.95 + 0.03), 0, OD / 2 - T / 2] });
+      // travertine cornice
       b.box(T + 0.3, 0.25, OD + 0.3, P.travertine, { at: [s * (OW / 2 - T / 2), yOut - 0.55, 0] });
       b.box(OW + 0.3, 0.25, T + 0.3, P.travertine, { at: [0, yOut - 0.55, s * (OD / 2 - T / 2)] });
     }
@@ -124,7 +205,7 @@ export const macellum: BuildingDef = {
     }
     for (const z of linspace(4, -CZ, CZ).slice(1, -1)) cols.push([CX, z], [-CX, z]);
     for (const [x, z] of cols) {
-      b.column(0.22, yIn - F, P.marble, { at: [x, F, z], order: 'corinthian', segs: 6 });
+      colonnadeColumn(b, x, z);
       b.collider(0.5, 0.5, { at: [x, 0, z] });
     }
     for (const s of [1, -1]) {
@@ -145,12 +226,7 @@ export const macellum: BuildingDef = {
       const cw = w - 0.3;
       if (kind === 'fish') {
         // a sloping marble slab on a masonry base, a gutter in front
-        b.box(along === 'x' ? cw : 0.7, 0.8, along === 'x' ? 0.7 : cw, plaster, { at: [cx, F, cz] });
-        b.box(along === 'x' ? cw + 0.1 : 0.85, 0.07, along === 'x' ? 0.85 : cw + 0.1, P.marble, {
-          at: [cx + ax * 0.05, F + 0.86, cz + az * 0.05],
-          rot: along === 'x' ? [az * 0.28, 0, 0] : [0, 0, -ax * 0.28],
-        });
-        b.box(along === 'x' ? cw : 0.16, 0.04, along === 'x' ? 0.16 : cw, P.windowDark, { at: [x + ax * 0.85, F, z + az * 0.85] });
+        fishSlab(b, x, z, w, facing, plaster);
         goods(b, cw - 0.4, [cx, F + 0.95, cz], along === 'x' ? 0 : Math.PI / 2, ['fish']);
       } else {
         b.box(along === 'x' ? cw : 0.6, 0.95, along === 'x' ? 0.6 : cw, plaster, { at: [cx, F, cz] });
@@ -166,7 +242,7 @@ export const macellum: BuildingDef = {
       b.box(0.04, 1.0, 2 * 6.6, red, { at: [s * SX, F, 0] });
       b.collider(OW / 2 - SX, OD, { at: [s * (SX + (OW / 2 - SX) / 2), 0, 0] });
       void xr;
-      for (const z of [-4.2, 0, 4.2]) shopFront(s * SX, z, 3.6, s > 0 ? '-x' : '+x', s < 0 ? 'fish' : 'meat');
+      for (const z of FISH_Z) shopFront(s * SX, z, 3.6, s > 0 ? '-x' : '+x', s < 0 ? 'fish' : 'meat');
     }
     // back range with the shrine in the middle
     b.box(2 * SX, 5.2 - F, OD / 2 - T + SZb, plaster, { at: [0, F, (SZb - (OD / 2 - T)) / 2] });
@@ -174,9 +250,7 @@ export const macellum: BuildingDef = {
     for (const x of [-6.2, -3.2, 3.2, 6.2]) shopFront(x, SZb, 2.4, '+z', x < 0 ? 'veg' : 'meat');
     // the shrine: a raised room with steps, two columns and a gable above the roof
     b.group({ at: [0, F, SZb] }, () => {
-      b.box(3.8, 1.0, 1.5, P.marble, { at: [0, 0, 0.75] });
-      b.stairs(2.4, 1.0, 0.8, 3, P.marble, { at: [0, 0, 1.9] });
-      for (const sx of [-1, 1]) b.column(0.24, 5.2, P.marble, { at: [sx * 1.4, 1.0, 1.15], order: 'corinthian', segs: 6 });
+      shrinePorch(b);
       // the cella, rising above the market roof
       b.box(3.6, 7.0, 2.4, plaster, { at: [0, 0, -1.2] });
       b.panel(2.0, 3.4, P.windowDark, { at: [0, 1.0, 0.0], facing: '+z', depth: 0.03 });
@@ -208,9 +282,7 @@ export const macellum: BuildingDef = {
     for (let i = 0; i < 4; i++) amphora(b, [5.0 + (i % 2) * 0.4, F, -3.6 + Math.floor(i / 2) * 0.4], P.terracotta, 0.12);
 
     // ---- the entrance: a vestibule through the front range and a gabled porch on the street
-    b.box(3.8, 0.1, fz - SZf + 1.2, P.marble, { at: [0, F - 0.1, (SZf + fz) / 2 + 0.6] });
     b.group({ at: [0, 0, fz + 0.55] }, () => {
-      b.box(4.6, 0.3, 1.5, P.travertine);
       for (const sx of [-1, 1]) {
         b.column(0.26, 4.4, P.marble, { at: [sx * 1.6, 0.3, 0.3], order: 'corinthian', segs: 6 });
         b.collider(0.6, 0.6, { at: [sx * 1.6, 0, 0.3] });

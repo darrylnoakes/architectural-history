@@ -1,5 +1,5 @@
 import { P, mix, spread, tint, type BuildingDef } from '@ah/kit';
-import { BAS, BAS_ZC, archWindow, column, pave } from './shared';
+import { BAS, BAS_ZC, archWindow, column, forumBasilica, forumStatues, forumWell, pave } from './shared';
 
 export const republicanForum: BuildingDef = {
   id: 'republican-forum',
@@ -32,34 +32,11 @@ export const republicanForum: BuildingDef = {
     b.box(0.6, 0.08, 29, tr, { at: [11.6, 0, 6], jitter: false });
 
     // ---------------------------------------------------------- the basilica across the back
+    forumBasilica(b, false);
     const { x0, x1, z0, z1, nave } = BAS;
     const L = x1 - x0;
     const xc = (x0 + x1) / 2;
     const aisle = (z1 - z0 - nave) / 2;
-    const NH = 10.2;
-    const AH = 6.2;
-    b.box(L + 0.6, 0.5, z1 - z0 + 0.6, tr, { at: [xc, 0, BAS_ZC] }); // podium
-    b.box(L, NH, nave, stucco, { at: [xc, 0.5, BAS_ZC] });
-    b.gable(L + 0.4, nave + 0.4, 1.7, tile, { at: [xc, NH + 0.5, BAS_ZC], overhang: 0.3, wall: stucco });
-    // back aisle: walled; front aisle: an open colonnade onto the forum
-    b.box(L, AH, aisle, tint(stucco, -0.03), { at: [xc, 0.5, z0 + aisle / 2] });
-    b.shed(L + 0.4, aisle + 0.5, 1.3, tile, { at: [xc, AH + 0.5, z0 + aisle / 2 - 0.2], high: '+z' });
-    b.shed(L + 0.4, aisle + 0.5, 1.3, tile, { at: [xc, AH + 0.5, z1 - aisle / 2 + 0.2], high: '-z' });
-    for (const x of spread(10, x0 + 0.5, x1 - 0.5)) column(b, [x, 0.5, z1 - 0.4], 0.32, AH - 0.5, stucco, { order: 'ionic' });
-    b.box(L, 0.5, 0.8, stucco, { at: [xc, AH, z1 - 0.4] });
-    b.sym((s) => b.box(0.5, AH, aisle, stucco, { at: [s > 0 ? x1 - 0.25 : x0 + 0.25, 0.5, z1 - aisle / 2] }));
-    // clerestory windows on both sides of the nave, small windows in the back aisle
-    for (const x of spread(9, x0 + 1.5, x1 - 1.5)) {
-      for (const s of [1, -1]) archWindow(b, 1.0, 1.7, { at: [x, AH + 1.8, BAS_ZC + (s * nave) / 2], facing: s > 0 ? '+z' : '-z', frame: tr });
-      archWindow(b, 0.8, 1.2, { at: [x, 2.6, z0], facing: '-z', frame: tr });
-    }
-    // doors into the hall behind the colonnade, the end walls with doors and a gable window
-    for (const x of spread(3, x0 + 6, x1 - 6)) b.panel(1.8, 3.4, P.oakDark, { at: [x, 0.5, BAS_ZC + nave / 2], facing: '+z' });
-    b.sym((s) => {
-      const ex = s > 0 ? x1 : x0;
-      b.panel(2, 3.6, P.oakDark, { at: [ex, 0.5, BAS_ZC], facing: s > 0 ? '+x' : '-x' });
-      archWindow(b, 1.1, 1.8, { at: [ex, NH - 1.6, BAS_ZC], facing: s > 0 ? '+x' : '-x', frame: tr });
-    });
 
     // ---------------------------------------------------------- the curia above the comitium, on the left
     const CX = -17.5;
@@ -101,12 +78,8 @@ export const republicanForum: BuildingDef = {
     b.shed(2.9, SL, 0.7, tile, { at: [12.9, 4.9, SZC], high: '+x' });
 
     // ---------------------------------------------------------- in the square: honorific statues, a well
-    for (const [x, z] of [[-2, 9], [4, 9]] as const) {
-      b.box(1.2, 1.9, 1.6, tr, { at: [x, 0, z] });
-      b.box(0.5, 1.5, 0.4, P.bronze, { at: [x, 1.9, z] });
-      b.sphere(0.2, P.bronze, { at: [x, 3.6, z], segs: 6 });
-    }
-    b.cyl(0.7, 0.9, tr, { at: [3, 0, 1], segs: 8 });
+    forumStatues(b);
+    forumWell(b);
 
     // ---------------------------------------------------------- colliders: halls solid, square and porticoes walkable
     b.collider(L, nave + aisle + 0.6, { at: [xc, 0, BAS_ZC - aisle / 2] });

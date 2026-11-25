@@ -1,4 +1,5 @@
-import { P, tint, type BuildingDef } from '@ah/kit';
+import { P, mix, tint, type BuildingDef } from '@ah/kit';
+import { honorificStatue, precinctPaving, republicanPodiumCore } from './shared';
 
 const TZ = -5.5;
 const W = 13.4;
@@ -15,9 +16,9 @@ export const imperialTemple: BuildingDef = {
   style: 'Augustan Roman',
   date: 'c. AD 20',
   summary:
-    'Under Augustus and his successors the town rebuilt its chief temple in gleaming white marble from the new quarries at Luna (Carrara), probably for the cult of Rome and the emperor. ' +
+    'Under Augustus and his successors the town rebuilt its chief temple in gleaming white marble from the new quarries at Luna (Carrara), probably for the cult of Rome and the emperor, encasing the old podium in a longer and higher one. ' +
     'It is the classic Roman temple, and the old Italian plan is still there underneath: a high podium approached only by a front stair, a deep porch (six columns across and three deep), and half-columns along the cella walls. ' +
-    'The columns are now Corinthian, with capitals of carved acanthus leaves, and the temple stands in a paved precinct framed on three sides by colonnaded porticoes, the heart of the town’s forum.',
+    'The columns are now Corinthian, with capitals of carved acanthus leaves, and the temple stands in a paved precinct framed on three sides by colonnaded porticoes, the heart of the town’s forum. A new marble altar replaces the old stone one, but the bronze statue of Republican times still stands before the stair.',
   materials: ['Luna (Carrara) marble', 'concrete core', 'travertine', 'clay roof tiles'],
   lookFor: [
     { label: 'Corinthian columns', note: 'Tall slender columns with bell-shaped capitals of acanthus leaves, the favourite order of imperial Rome.', at: [-1.2, PH + CH - 0.3, TZ + D / 2 - 0.9] },
@@ -32,6 +33,8 @@ export const imperialTemple: BuildingDef = {
     const back = TZ - D / 2;
     // podium with base and crown mouldings, and a stair between two cheek walls
     b.box(W + 0.6, 0.5, D + 0.6, STONE, { at: [0, 0, TZ] });
+    // the Republican podium is kept inside the new one, which is longer, wider and higher
+    republicanPodiumCore(b, mix(P.tufa, STONE, 0.35));
     b.box(W, PH, D, tint(MARBLE, -0.03), { at: [0, 0, TZ] });
     b.box(W + 0.4, 0.35, D + 0.4, MARBLE, { at: [0, PH - 0.35, TZ] });
     b.stairs(10.4, PH, 4.4, 13, MARBLE, { at: [0, 0, front + 2.2] });
@@ -72,7 +75,7 @@ export const imperialTemple: BuildingDef = {
     b.sym((s) => b.box(0.5, 0.7, 0.3, MARBLE, { at: [s * 6.8, ry, fz] }));
 
     // the paved precinct
-    b.box(32, 0.05, 60, tint(P.paving, 0.03), { at: [0, 0, 0], jitter: false });
+    precinctPaving(b);
     // altar before the stair
     b.box(4.4, 0.3, 2.8, STONE, { at: [0, 0, front + 8.0] });
     b.box(3.8, 1.1, 2.2, MARBLE, { at: [0, 0.3, front + 8.0] });
@@ -97,7 +100,8 @@ export const imperialTemple: BuildingDef = {
     for (let x = -9.9; x <= 9.91; x += 3.3) plain(x, z2);
     b.box(PX * 2, 0.55, 0.55, STONE, { at: [0, portH + 0.1, z2] });
     b.shed(PX * 2 - 0.6, 3.0, 1.05, P.romanTile, { at: [0, portH + 0.65, z2 - 1.2], high: '-z' });
-    // honorary statues on bases in the open court
+    // honorary statues on bases in the open court, and the Republican one still in front of the temple
+    honorificStatue(b);
     b.sym((s) => {
       b.box(1.3, 1.8, 1.3, MARBLE, { at: [s * 8.5, 0, 20] });
       b.cyl(0.3, 2.0, P.bronze, { at: [s * 8.5, 1.8, 20], rTop: 0.22, segs: 6 });

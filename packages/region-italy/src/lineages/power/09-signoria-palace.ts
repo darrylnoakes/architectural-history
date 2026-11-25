@@ -11,6 +11,7 @@ import {
   palaceColliders,
   palazzoPubblico,
   pave,
+  squareWell,
 } from './shared';
 
 export const signoriaPalace: BuildingDef = {
@@ -37,6 +38,7 @@ export const signoriaPalace: BuildingDef = {
     palazzoPubblico(b, { stage: 1480 });
     lordsCourt(b);
     brickSquare(b, -21.5, 21.5, PAL.zf, 21.5);
+    squareWell(b);
 
     // ---- the lord's hanging garden on the right: walled parterres, a fountain, a loggia at the far end
     const gx0 = 7;

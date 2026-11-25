@@ -1,5 +1,6 @@
 import { P, tint, mix, type BuildingDef } from '@ah/kit';
-import { BANK, END, FOOT, WATER, hump, band, bar, steps, tilt, cutwaterPier, trinitaLayout } from './shared';
+import { BANK, END, WATER, TRINITA_STUMP, hump, band, bar, tilt, trinitaLayout, trinitaStumps } from './shared';
+import { IRON_PIERS, ironSubstructure } from './08-iron-bridge';
 
 export const baileyBridge: BuildingDef = {
   id: 'bailey-bridge',
@@ -9,14 +10,14 @@ export const baileyBridge: BuildingDef = {
   summary:
     'In the summer of 1944 the retreating German army blew up the town’s bridges to slow the Allied advance; in Florence, on the night of 3 to 4 August, every bridge over the Arno was destroyed except the Ponte Vecchio. ' +
     'Allied engineers soon put the road back across using a Bailey bridge, a British invention of 1940 to 1941 by Donald Bailey: a kit of steel panels, each light enough for six soldiers to carry, pinned together into trusses with no welding or special tools. ' +
-    'It rests on timber cribs built up on the broken stumps of the Renaissance piers, while the rest of the old bridge lies in the river. It carries one lane of traffic over a deck of timber planks.',
+    'It rests on timber cribs built up on what is left of the old bridge: the piers and abutments, broken off just above the water, are the same masonry that stood there before, while the rest lies in the river. It carries one lane of traffic over a deck of timber planks.',
   materials: ['steel panels', 'steel pins', 'timber decking', 'timber cribs', 'stones of the old bridge'],
   modelledOn: 'The Bailey bridges built across the Arno at Florence in 1944, one of them carried on the surviving piers of the Ponte Santa Trinita',
   lookFor: [
     { label: 'Bailey panel', note: 'Standard welded steel panels about 3 m long and 1.5 m high, pinned end to end to make the side trusses.', at: [2.3, 0.5, -6.0] },
     { label: 'Panel pins', note: 'Each panel is joined to the next by steel pins driven through lugs at the corners: no rivets, no welding.', at: [2.1, -0.25, 0] },
     { label: 'Timber crib', note: 'A stack of crossed timbers built up on the stump of a blown pier as a temporary support.', at: [2.6, -0.4, 4.4] },
-    { label: 'Ruins of the old bridge', note: 'Blocks of the Renaissance arches lie in the river where they fell; many were later dredged up and reused.', at: [-4.4, -1.0, -8.0] },
+    { label: 'Ruins of the old bridge', note: 'What was blown up lies in the river where it fell, stone blocks of the arches or twisted iron girders; much of it was later dredged up, and at Santa Trinita the stones were put back.', at: [-4.4, -1.0, -8.0] },
     { label: 'Timber deck', note: 'Planks (chesses) laid across steel cross-beams, held down by timber kerbs; one lane, one vehicle at a time.', at: [0, 0.35, 9.0] },
   ],
   build(b) {
@@ -31,35 +32,52 @@ export const baileyBridge: BuildingDef = {
     const steelL = tint(steel, 0.08);
     const timber = mix(P.oak, P.oakSilver, 0.35);
 
-    // ---- what is left of the Renaissance bridge
-    for (const z of T.piers) {
-      const top = -0.55 + b.range(-0.1, 0.1);
-      cutwaterPier(b, { z, len: T.W, thick: T.pierT, nose: 1.5, y0: FOOT, h: top - FOOT, color: stone });
-      // broken masonry on the stump
-      for (let i = 0; i < 4; i++) {
-        b.blob(b.range(0.35, 0.55), tint(stone, b.range(-0.1, 0)), { at: [b.range(-2.6, 2.6), top - 0.1, z + b.range(-0.6, 0.6)], stretch: [1.2, 0.7, 1], detail: 0 });
+    // ---- what is left of the old bridge. On the old crossing it is Ammannati's bridge, blown off
+    // just above the water: the lower lifts of its piers and abutments are the same stones that
+    // stood there before. Downstream it is the iron bridge, whose girders were dropped into the
+    // river while its low stone piers and abutments survived.
+    const onIron = b.variant > 0;
+    let supports: number[];
+    if (onIron) {
+      ironSubstructure(b, P.travertine, tint(P.travertine, -0.05));
+      supports = IRON_PIERS;
+      // the blown girders, twisted and half sunk across the river
+      const iron = mix(P.iron, P.slateBlue, 0.25);
+      for (const x of [-3.9, -1.3, 1.3, 3.9]) {
+        for (const [za, zb] of [[-11.4, -4.6], [-3.8, 3.8], [4.6, 11.4]] as const) {
+          const sag = b.range(0.2, 0.6);
+          bar(b, [x + b.range(-0.4, 0.4), WATER - sag, za], [x + b.range(-0.6, 0.6), WATER + b.range(-0.1, 0.4), zb], [0.36, 1.1], tint(iron, b.range(-0.08, 0.02)));
+        }
       }
-    }
-    // blasted abutments at the banks: ragged masonry ends
-    b.sym((s) => {
-      b.box(T.W, 0.9, 1.4, tint(stone, -0.04), { at: [0, -1.0, s * (BANK - 0.5)] });
-      for (let i = 0; i < 4; i++) b.blob(b.range(0.4, 0.6), tint(stone, b.range(-0.1, 0)), { at: [b.range(-3, 3), -0.2, s * (BANK - b.range(0.3, 1.1))], stretch: [1.2, 0.7, 1], detail: 0 });
-    });
-    // fallen blocks and arch fragments in the water
-    for (const op of T.ops) {
-      for (let i = 0; i < 7; i++) {
-        b.box(b.range(0.7, 1.3), b.range(0.4, 0.6), b.range(0.5, 0.9), tint(stone, b.range(-0.12, 0.0)), {
-          at: [b.range(-3.8, 3.8), WATER - 0.35, b.range(op.z0 + 0.4, op.z1 - 0.4)],
-          rot: [b.range(-0.3, 0.3), b.range(0, 3), b.range(-0.3, 0.3)],
-        });
+    } else {
+      trinitaStumps(b, T, stone);
+      supports = T.piers;
+      // broken masonry on the stumps
+      for (const z of T.piers) {
+        for (let i = 0; i < 4; i++) {
+          b.blob(b.range(0.35, 0.55), tint(stone, b.range(-0.1, 0)), { at: [b.range(-2.6, 2.6), TRINITA_STUMP - 0.1, z + b.range(-0.6, 0.6)], stretch: [1.2, 0.7, 1], detail: 0 });
+        }
+      }
+      // ragged masonry on the abutments
+      b.sym((s) => {
+        for (let i = 0; i < 4; i++) b.blob(b.range(0.4, 0.6), tint(stone, b.range(-0.1, 0)), { at: [b.range(-3, 3), -0.2, s * (BANK - b.range(0.3, 1.1))], stretch: [1.2, 0.7, 1], detail: 0 });
+      });
+      // fallen blocks and arch fragments in the water
+      for (const op of T.ops) {
+        for (let i = 0; i < 7; i++) {
+          b.box(b.range(0.7, 1.3), b.range(0.4, 0.6), b.range(0.5, 0.9), tint(stone, b.range(-0.12, 0.0)), {
+            at: [b.range(-3.8, 3.8), WATER - 0.35, b.range(op.z0 + 0.4, op.z1 - 0.4)],
+            rot: [b.range(-0.3, 0.3), b.range(0, 3), b.range(-0.3, 0.3)],
+          });
+        }
       }
     }
 
     // ---- timber cribs on the pier stumps and bank seats
     const bot = (z: number) => f(z) - 0.62; // underside of the bottom chord
-    for (const z of [...T.piers]) {
+    for (const z of supports) {
       const top = bot(z);
-      const y0 = -0.6;
+      const y0 = onIron ? -0.52 : TRINITA_STUMP;
       const n = Math.max(2, Math.round((top - y0) / 0.25));
       const h = (top - y0) / n;
       for (let i = 0; i < n; i++) {
@@ -126,6 +144,5 @@ export const baileyBridge: BuildingDef = {
       b.box(0.06, 0.6, 0.9, P.cladYellow, { at: [0, 1.4, 0] });
       b.box(0.07, 0.24, 0.6, P.black, { at: [0, 1.58, 0] });
     });
-    void steps;
   },
 };

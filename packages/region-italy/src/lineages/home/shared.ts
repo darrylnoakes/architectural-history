@@ -4,6 +4,38 @@ import { P, tint, facingAngle, type Builder, type Facing, type Vec3 } from '@ah/
 /** The street front line of the row houses (the plot runs from z = -9 to +9). */
 export const FRONT = 8.4;
 
+// ---------------------------------------------------------------- the back of the plot
+// An urban plot kept its boundaries for centuries, so the back garden is closed by the same walls
+// from the Roman atrium house to the Baroque palazzetto: built once, here, and called with the same
+// numbers by every stage that keeps them, so they stand still while the houses change.
+
+/** Plot width, and the line where the garden walls of the atrium house's hortus begin. */
+export const PLOT_W = 13.6;
+const YARD_Z0 = -4.4;
+const YARD_Z1 = -8.8;
+const YARD_H = 2.4;
+const YARD_T = 0.4;
+
+/**
+ * The walls of the Roman hortus, built with the atrium house: the back wall across the plot and the
+ * two side walls from the back of that house (z = -4.4) to it. Every later stage keeps them.
+ */
+export function gardenWalls(b: Builder, color: number, o: { jitter?: boolean } = {}): void {
+  const X = PLOT_W / 2;
+  b.box(PLOT_W, YARD_H, YARD_T, color, { at: [0, 0, YARD_Z1 + YARD_T / 2], jitter: o.jitter });
+  b.sym((s) => b.box(YARD_T, YARD_H, YARD_Z0 - YARD_Z1, color, { at: [s * (X - YARD_T / 2), 0, (YARD_Z0 + YARD_Z1) / 2], jitter: o.jitter }));
+}
+
+/** The side walls carried on from the Roman garden walls to the back of a house standing at `zb`. */
+export function gardenWallsTo(b: Builder, zb: number, color: number, o: { h?: number; jitter?: boolean } = {}): void {
+  if (zb <= YARD_Z0) return;
+  const X = PLOT_W / 2;
+  b.sym((s) => b.box(YARD_T, o.h ?? YARD_H, zb - YARD_Z0, color, { at: [s * (X - YARD_T / 2), 0, (zb + YARD_Z0) / 2], jitter: o.jitter }));
+}
+
+/** Where the plot's well was dug, under the medieval house; its well-head stays while the houses change. */
+export const WELL: Vec3 = [-4.6, 0, -3.6];
+
 /** A plaster colour for a central Italian house front. */
 export function plasterPick(b: Builder): number {
   return tint(b.pick([P.intonacoOchre, P.intonacoSienna, P.intonacoRose, P.intonacoCream, P.intonacoOchre]), b.range(-0.03, 0.03));

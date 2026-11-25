@@ -1,5 +1,6 @@
 import { P, tint, spread, type BuildingDef } from '@ah/kit';
-import { coppiRoof, coppiShed, pave, vegBed, well, washing } from './shared';
+import { coppiRoof, coppiShed, vegBed, washing } from './shared';
+import { OURS, ROW, THEIRS, rowGround, rowOpenings, rowYards } from './shared-row';
 
 export const casaASchiera: BuildingDef = {
   id: 'casa-a-schiera',
@@ -41,13 +42,8 @@ export const casaASchiera: BuildingDef = {
     },
   ],
   build(b) {
-    const W = 13.6;
-    const X = W / 2;
-    const uw = X; // each house is 6.8 m wide
-    const zf = 7.6; // ground-floor front
+    const { uw, zf, zb, g } = ROW; // each house is 6.8 m wide
     const jet = 0.85; // projection of the upper floors
-    const zb = -1.0;
-    const g = 4.0;
     const f1 = 3.1;
     const f2 = 2.9;
     const H = g + f1 + f2;
@@ -60,7 +56,7 @@ export const casaASchiera: BuildingDef = {
       const shut = b.pick([P.oak, P.oakDark, P.oakSilver]);
       const zc = (zf + zb) / 2;
       // ground storey of squared stone
-      b.box(uw, g, zf - zb, stone, { at: [cx, 0, zc] });
+      rowGround(b, cx, ours, stone);
       for (const y of [0.7, 1.4, 2.1, 2.8, 3.5]) b.box(uw, 0.035, 0.02, tint(stone, -0.14), { at: [cx, y, zf + 0.005] });
       // upper storeys carried forward over the street
       const zu = (zf + jet + zb) / 2;
@@ -82,18 +78,13 @@ export const casaASchiera: BuildingDef = {
 
       // the shop arch with its counter and a door to the stair
       const sx = cx - 0.8;
-      const dx = cx + 2.75;
-      b.panel(3.4, 3.4, tint(stone, 0.06), { at: [sx, 0, zf], facing: '+z', shape: 'round', depth: 0.03 });
-      b.panel(3.0, 3.2, P.windowDark, { at: [sx, 0, zf], facing: '+z', shape: 'round', depth: 0.05 });
+      rowOpenings(b, cx, tint(stone, 0.06), ours ? P.doorGreen : P.oakDark);
       b.box(3.0, 0.95, 0.5, P.oak, { at: [sx, 0, zf + 0.25] }); // counter board on trestles
       b.box(3.0, 0.12, 0.4, P.travertine, { at: [sx, 0, zf + 0.2] });
       const wares = ours ? [P.cream, P.doorRed, 0x5a6f8a, P.cream, P.ochreWash] : [P.terracotta, P.bronze, P.terracotta, P.iron];
       wares.forEach((c, i) => b.box(0.4, 0.22, 0.32, c, { at: [sx - 1.15 + i * (2.3 / (wares.length - 1)), 0.95, zf + 0.25] }));
       // the night shutters, lifted up and hooked under the arch as an awning
       b.group({ at: [sx, 3.15, zf + 0.06], rot: [-1.3, 0, 0] }, () => b.box(2.6, 0.06, 0.9, P.oak, { at: [0, 0, 0.45] }));
-      b.panel(1.25, 2.5, tint(stone, 0.06), { at: [dx, 0, zf], facing: '+z', shape: 'round', depth: 0.03 });
-      b.panel(0.95, 2.3, ours ? P.doorGreen : P.oakDark, { at: [dx, 0, zf], facing: '+z', shape: 'round', depth: 0.05 });
-      b.box(1.3, 0.15, 0.35, P.travertine, { at: [dx, 0, zf + 0.17] });
 
       // upper windows: round-arched, with cut-stone voussoirs and board shutters
       const zw = zf + jet;
@@ -125,12 +116,8 @@ export const casaASchiera: BuildingDef = {
       coppiShed(b, uw - 0.6, 1.2, 0.45, tile, { at: [cx, g + f1 - 0.2, zb - 0.6], high: '+z' });
       for (const x of [-uw / 2 + 0.4, uw / 2 - 0.4]) b.box(0.12, f1 - 0.6, 0.12, P.oak, { at: [cx + x, g + 0.35, zb - 1.05] });
 
-      // the yard
+      // the yard (its walls, cobbles, privy and the well are built with the next stages' in rowYards)
       const yz = (zb - 8.8) / 2;
-      pave(b, uw - 0.4, 1.6, P.cobble, [cx, 0, zb - 0.8]);
-      b.box(1.3, 2.1, 1.2, P.rubble, { at: [cx + 2.4, 0, -8.0] }); // privy
-      coppiShed(b, 1.5, 1.4, 0.35, tile, { at: [cx + 2.4, 2.1, -8.0], high: '+z' });
-      b.panel(0.65, 1.7, P.oak, { at: [cx + 2.4, 0, -7.4], facing: '+z' });
       vegBed(b, cx + (ours ? 1.2 : -1.0), yz - 0.6, 3.0, 3.0, { rows: 4 });
       if (ours) {
         washing(b, [cx - 2.8, 2.0, -6.2], [cx + 0.6, 2.0, -6.2], [P.white, P.cream, 0x8fa3b8, P.white]);
@@ -140,14 +127,12 @@ export const casaASchiera: BuildingDef = {
         b.tree(b.range(3.2, 4.0), { at: [cx - 1.6, 0, -6.6], kind: 'round', color: P.leafDark });
       }
     };
-    house(-X / 2, true);
-    house(X / 2, false);
-    // party wall line between the two houses, and the yard walls
+    house(OURS, true);
+    house(THEIRS, false);
+    // party wall line between the two houses, and the yards: the old garden walls of the plot, a
+    // dividing wall, a privy in each, and the well
     b.box(0.14, g, zf - zb + 0.04, tint(P.rubble, -0.05), { at: [0, 0, (zf + zb) / 2] });
     b.box(0.14, f1 + f2 + 0.25, zf + jet - zb + 0.04, tint(P.rubble, -0.05), { at: [0, g, (zf + jet + zb) / 2] });
-    well(b, [-4.6, 0, -3.6], tint(P.travertine, -0.05), { frame: 'iron' });
-    b.box(0.3, 2.2, -1.0 + 8.8, P.rubble, { at: [0, 0, (-1.0 - 8.8) / 2] });
-    b.sym((s) => b.box(0.3, 2.2, 7.8, P.rubble, { at: [s * (X - 0.15), 0, (-1.0 - 8.8) / 2] }));
-    b.box(W, 2.2, 0.3, P.rubble, { at: [0, 0, -8.65] });
+    rowYards(b, P.rubble, tint(P.travertine, -0.05), tile);
   },
 };

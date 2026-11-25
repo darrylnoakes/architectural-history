@@ -1,5 +1,5 @@
 import { P, mix, spread, tint, type BuildingDef } from '@ah/kit';
-import { COURT, PAL, PORTAL_X, TWR, column, kingMonument, lordsColliders, lordsCourt, palaceColliders, palazzoPubblico, pave } from './shared';
+import { COURT, PAL, PORTAL_X, TWR, column, kingMonument, lordsColliders, lordsCourt, palaceColliders, palazzoPubblico, pave, squareWell } from './shared';
 
 /** The new museum pavilion in zone C, over the excavated Roman portico. */
 const MP = { x0: 9, x1: 21, z0: -14, z1: 3, h: 6.5 };
@@ -28,6 +28,7 @@ export const civicRestoration: BuildingDef = {
     pave(b, 43, 14.5, 0, 14.25, mix(P.travertine, P.paving, 0.3));
     for (const z of spread(6, 8.5, 20.5)) b.box(43, 0.075, 0.25, P.pietraSerena, { at: [0, 0, z], jitter: false });
     kingMonument(b);
+    squareWell(b); // the medieval well-head, kept in the new paving
     pave(b, 16.5, 28.5, 13.25, -7.25, mix(P.travertine, P.paving, 0.45));
     for (const x of [-16, 4.5]) {
       b.box(3.6, 0.45, 0.6, P.travertine, { at: [x, 0, 12] });

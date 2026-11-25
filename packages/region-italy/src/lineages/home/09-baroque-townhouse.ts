@@ -1,5 +1,6 @@
 import { P, tint, spread, type Builder, type BuildingDef } from '@ah/kit';
-import { coppiRoof, FRONT, pave, pot, well } from './shared';
+import { coppiRoof, pave, pot } from './shared';
+import { OURS, ROW, THEIRS, rowGround, rowUpper, rowYards } from './shared-row';
 
 /** A moulded window surround with 'ears' at the top corners, on the front wall (facing +z). */
 function earFrame(b: Builder, x: number, y: number, z: number, w: number, h: number, c: number): void {
@@ -14,43 +15,44 @@ export const baroqueTownhouse: BuildingDef = {
   style: 'Baroque',
   date: 'c. 1680',
   summary:
-    'A prosperous family, a notary or a merchant, has bought the two old houses behind and rebuilt them as one small palace, a palazzetto, ' +
-    'copying the manners of the great Roman palaces on a modest scale. The plastered front is coloured ochre and ordered in five bays round a ' +
-    'big arched street door, with moulded window frames, pediments over the main floor and a balcony over the door. Low mezzanine windows ' +
-    'light the service rooms tucked between the main storeys, and on the roof an altana, a terrace under a tiled canopy, catches the evening breeze.',
+    'A prosperous family, a notary or a merchant, has bought the two old houses and made them one small palace, a palazzetto, copying the manners ' +
+    'of the great Roman palaces on a modest scale. The old walls are kept and raised by a storey, the two yards thrown into one court, and the whole hidden ' +
+    'behind a new plastered front, coloured ochre and ordered in five bays round a big arched street door, with moulded window frames, pediments over the main floor ' +
+    'and a balcony over the door. Low mezzanine windows light the service rooms tucked between the main storeys, and on the roof an altana, a terrace under a tiled canopy, catches the evening breeze.',
   materials: ['brick walls with lime plaster', 'stucco mouldings', 'travertine door frame and sills', 'wrought iron', 'clay pan-and-cover tiles'],
+  revisions: [{ year: 1880, note: 'The barred windows of the ground floor have been cut down to the street as shop fronts, let to a grocer, a barber and a tobacconist, as happened on almost every main street of the old towns after unification.' }],
   lookFor: [
     {
       label: 'Arched street door',
       note: 'The portone, tall enough for a carriage or a laden mule, framed in travertine with a keystone and a balcony over it.',
-      at: [0, 4.2, 8.75],
+      at: [0, 4.2, 7.95],
     },
     {
       label: 'Moulded window surrounds',
       note: 'Stucco frames with little ‘ears’ at the top corners, crowned by pediments that alternate triangle and arc on the main floor.',
-      at: [-2.72, 7.5, 8.55],
+      at: [-2.72, 7.5, 7.75],
     },
     {
       label: 'Mezzanine windows',
       note: 'Small square windows over the ground-floor windows and under the cornice light low rooms for servants, stores and the counting room.',
-      at: [-5.44, 3.6, 8.55],
+      at: [-5.44, 3.6, 7.75],
     },
     {
       label: 'Altana',
       note: 'A roof terrace under a tiled canopy, the Roman family’s place for air and a view over the roofs, and for drying the washing.',
-      at: [1.6, 17.0, 2.9],
+      at: [1.6, 17.0, 2.7],
     },
     {
       label: 'Cornice',
       note: 'A deep moulded cornice of stucco on brick caps the front, in place of the old timber eaves.',
-      at: [5.0, 13.95, 9.2],
+      at: [5.0, 13.95, 8.4],
     },
   ],
   build(b) {
     const W = 13.6;
     const X = W / 2;
-    const zf = FRONT;
-    const zb = -1.4;
+    // the walls of the two old houses, ground storeys and upper floors, are kept and raised (see shared-row)
+    const { zf, zb } = ROW;
     const D = zf - zb;
     const zc = (zf + zb) / 2;
     const g = 4.4; // ground floor with its mezzanine
@@ -66,8 +68,13 @@ export const baroqueTownhouse: BuildingDef = {
     const frame = b.pick([P.oakDark, P.oak, 0x6b4a32]);
     const bays = spread(5, -X, X);
 
-    // body
-    b.box(W, H, D, ochre, { at: [0, 0, zc] });
+    // body: the two old houses, their walls kept and raised by a storey, under one coat of plaster
+    for (const [cx, ours] of [[OURS, true], [THEIRS, false]] as [number, boolean][]) {
+      rowGround(b, cx, ours, ochre, { jitter: false });
+      rowUpper(b, cx, ochre, { jitter: false });
+    }
+    const raised = ROW.g + ROW.up;
+    b.box(W, H - raised, D, ochre, { at: [0, raised, zc], jitter: false });
     b.box(W + 0.02, 0.6, D + 0.02, tint(trav, -0.06), { at: [0, 0, zc] }); // plinth
     // quoins at the two ends of the front, string courses
     for (const s of [-1, 1]) {
@@ -87,13 +94,9 @@ export const baroqueTownhouse: BuildingDef = {
     b.box(W, 0.6, D + 1.2, ochre, { at: [0, H, zc] });
 
     // ---- ground floor: barred windows with mezzanine windows above, and the portone
+    // (the ground-floor windows themselves are built last, because they became shop fronts later)
     for (const [i, x] of bays.entries()) {
       if (i === 2) continue;
-      b.panel(1.4, 1.95, trav, { at: [x, 0.85, zf], facing: '+z', depth: 0.05 });
-      b.window(1.1, 1.7, { at: [x, 0.98, zf], facing: '+z', frame, glass, bars: [2, 3] });
-      for (const u of spread(4, -0.5, 0.5)) b.box(0.035, 1.75, 0.035, P.iron, { at: [x + u, 0.95, zf + 0.15] });
-      for (const v of [1.4, 2.2]) b.box(1.15, 0.035, 0.035, P.iron, { at: [x, v, zf + 0.15] });
-      b.box(1.5, 0.12, 0.22, trav, { at: [x, 0.8, zf + 0.1] });
       // mezzanine
       b.panel(1.0, 0.85, stucco, { at: [x, 3.15, zf], facing: '+z', depth: 0.05 });
       b.window(0.75, 0.62, { at: [x, 3.26, zf], facing: '+z', frame, glass, bars: [2, 1] });
@@ -173,21 +176,42 @@ export const baroqueTownhouse: BuildingDef = {
     b.panel(1.3, 2.6, frame, { at: [0, 0, zb], facing: '-z', shape: 'round', depth: 0.07 });
     const cz1 = -8.8;
     pave(b, W - 0.6, zb - cz1 - 0.3, tint(P.cotto, 0.05), [0, 0, (zb + cz1) / 2 - 0.15]);
-    b.box(W, 3.2, 0.35, ochre, { at: [0, 0, cz1 + 0.17] });
-    b.sym((s) => b.box(0.35, 3.2, zb - cz1, ochre, { at: [s * (X - 0.17), 0, (zb + cz1) / 2] }));
+    // the two yards thrown into one court: the old walls kept, plastered, and raised; the well kept
+    rowYards(b, ochre, tint(trav, -0.04), tile, { merged: true });
+    b.box(W, 0.8, 0.4, ochre, { at: [0, 2.4, cz1 + 0.2] });
+    b.sym((s) => b.box(0.4, 0.8, zb - cz1, ochre, { at: [s * (X - 0.2), 2.4, (zb + cz1) / 2] }));
+    b.box(W + 0.1, 0.1, 0.5, stucco, { at: [0, 3.2, cz1 + 0.2] });
     // wall fountain: a basin, a niche and a mask spout
-    b.panel(2.2, 2.6, stucco, { at: [0, 0, cz1 + 0.35], facing: '+z', shape: 'round', depth: 0.06 });
-    b.panel(1.5, 1.9, tint(ochre, -0.12), { at: [0, 0.9, cz1 + 0.35], facing: '+z', shape: 'round', depth: 0.08 });
-    b.lathe([[0.01, 0], [0.9, 0.1], [1.0, 0.7], [0.92, 0.72], [0.8, 0.25], [0.01, 0.25]], trav, { at: [0, 0, cz1 + 0.36], segs: 10, start: -Math.PI / 2, sweep: Math.PI });
-    b.box(1.6, 0.05, 0.7, P.water, { at: [0, 0.55, cz1 + 0.75], jitter: false });
-    b.sphere(0.16, trav, { at: [0, 1.6, cz1 + 0.5], segs: 6 });
+    b.panel(2.2, 2.6, stucco, { at: [0, 0, cz1 + 0.4], facing: '+z', shape: 'round', depth: 0.06 });
+    b.panel(1.5, 1.9, tint(ochre, -0.12), { at: [0, 0.9, cz1 + 0.4], facing: '+z', shape: 'round', depth: 0.08 });
+    b.lathe([[0.01, 0], [0.9, 0.1], [1.0, 0.7], [0.92, 0.72], [0.8, 0.25], [0.01, 0.25]], trav, { at: [0, 0, cz1 + 0.41], segs: 10, start: -Math.PI / 2, sweep: Math.PI });
+    b.box(1.6, 0.05, 0.7, P.water, { at: [0, 0.55, cz1 + 0.8], jitter: false });
+    b.sphere(0.16, trav, { at: [0, 1.6, cz1 + 0.55], segs: 6 });
     // lemons in pots, a well, a small pergola
     for (const x of [-5.2, -3.6, 3.6, 5.2]) {
       pot(b, [x, 0, -7.6], 1.2, P.leafDark);
       b.blob(0.12, P.marbleYellow, { at: [x + 0.2, 1.05, -7.4], detail: 0 });
     }
-    well(b, [-4.4, 0, -3.6], tint(trav, -0.04), { frame: 'iron' });
     for (const [x, z] of [[2.4, -3.0], [5.8, -3.0], [2.4, -5.6], [5.8, -5.6]] as [number, number][]) b.box(0.12, 2.5, 0.12, P.oak, { at: [x, 0, z] });
     b.box(3.8, 0.3, 3.0, P.leaf, { at: [4.1, 2.5, -4.3] });
+
+    // ---- the street windows of the ground floor, barred; in the nineteenth century, shop fronts
+    const shops = b.since(1880);
+    for (const [i, x] of bays.entries()) {
+      if (i === 2) continue;
+      if (!shops) {
+        b.panel(1.4, 1.95, trav, { at: [x, 0.85, zf], facing: '+z', depth: 0.05 });
+        b.window(1.1, 1.7, { at: [x, 0.98, zf], facing: '+z', frame, glass, bars: [2, 3] });
+        for (const u of spread(4, -0.5, 0.5)) b.box(0.035, 1.75, 0.035, P.iron, { at: [x + u, 0.95, zf + 0.15], jitter: false });
+        for (const v of [1.4, 2.2]) b.box(1.15, 0.035, 0.035, P.iron, { at: [x, v, zf + 0.15], jitter: false });
+        b.box(1.5, 0.12, 0.22, trav, { at: [x, 0.8, zf + 0.1], jitter: false });
+      } else {
+        // the sill cut down to the street: a glazed shop door and window in a timber frame, a sign board over it
+        b.panel(1.6, 2.95, trav, { at: [x, 0, zf], facing: '+z', depth: 0.05 });
+        b.window(1.3, 2.7, { at: [x, 0.1, zf], facing: '+z', frame: P.oakDark, glass, bars: [2, 2] });
+        b.box(1.7, 0.4, 0.12, P.doorGreen, { at: [x, 2.45, zf + 0.12], jitter: false });
+        b.box(1.5, 0.1, 0.3, trav, { at: [x, 0, zf + 0.15], jitter: false });
+      }
+    }
   },
 };

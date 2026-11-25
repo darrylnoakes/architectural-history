@@ -1,5 +1,5 @@
 import { P, tint, type BuildingDef, type Builder } from '@ah/kit';
-import { BANK, WATER, coppiRoof, flatRing, lin, roofRise, waterwheel } from './shared';
+import { BANK, RACE_MID, RACE_Z, WATER, coppiRoof, flatRing, lin, millRace, quayWall, roofRise, waterwheel } from './shared';
 
 /**
  * The circular throwing machine (filatoio alla bolognese), seen in its essentials: a central upright
@@ -69,7 +69,7 @@ export const silkMill: BuildingDef = {
   lookFor: [
     { label: 'Circular throwing machine', note: 'A turning wooden cage inside a fixed frame drives tier upon tier of spindles; select the mill to see it through a cut-away corner.', at: [11.5, 7.6, -3.8] },
     { label: 'Spindles and reels', note: 'Each spindle twisted a thread of silk, which was drawn up and wound onto the reels (aspi) on the tier above.', at: [12.5, 3.6, -1.6] },
-    { label: 'Waterwheel in the wheel-pit', note: 'Below the building a wheel in a stone channel turned the upright shaft of the machine through wooden gears.', at: [8.5, 2.4, -14.0] },
+    { label: 'Waterwheel in the wheel-pit', note: 'A wheel hung in the old mill channel between two brick walls turned the upright shaft of the machine through wooden gears.', at: [8.5, 2.4, -14.0] },
     { label: 'Street portico', note: 'An arcade along the front, as on the streets of Bologna, gave shelter to the door and the carts unloading raw silk.', at: [-4, 3.6, 3.6] },
     { label: 'Rows of windows', note: 'Many windows on every floor gave light for the workers mending broken threads, most of them women and children.', at: [-6, 9.4, 0.1] },
   ],
@@ -88,7 +88,9 @@ export const silkMill: BuildingDef = {
     const H = fl * n;
     const cutX = x0 + W / 2 - 6.6; // the end bay that is cut away
 
-    b.box(36, 0.15 - WATER + 0.6, 0.8, tint(brick, -0.05), { at: [0, WATER - 0.6, BANK + 0.2] });
+    // the Roman quay wall, and the medieval weir and mill channel, which drive a wheel again
+    quayWall(b, tint(brick, -0.05));
+    millRace(b, tint(P.pietraForte, -0.1));
 
     // ---- the closed part of the block
     const cw = cutX - (x0 - W / 2);
@@ -129,9 +131,9 @@ export const silkMill: BuildingDef = {
 
     // ---- the wheel-pit on the river side: two stone walls, the wheel between, a tiled hood over it
     const wx = bx - 2.0;
-    const wz = BANK - 2.0;
-    b.sym((s) => b.box(0.7, 3.6 - WATER + 0.6, 4.6, brick, { at: [wx + s * 1.3, WATER - 0.6, BANK - 1.0] }));
-    b.shed(3.4, 4.0, 0.7, P.coppi, { at: [wx, 3.6, BANK - 0.7], high: '+z' });
+    const wz = RACE_MID;
+    b.sym((s) => b.box(0.7, 3.6 - WATER + 0.6, BANK - RACE_Z, brick, { at: [wx + s * 1.3, WATER - 0.6, (BANK + RACE_Z) / 2] }));
+    b.shed(3.4, 3.4, 0.7, P.coppi, { at: [wx, 3.6, BANK - 1.0], high: '+z' });
     waterwheel(b, { at: [wx, WATER - 0.5 + 2.7, wz], r: 2.7, width: 1.5, paddles: 18, spokes: 8, spin: b.rand(), axle: 4.5 });
     // the shaft runs back into the building under an arched opening
     b.panel(1.6, 1.8, P.timberBlack, { at: [wx, 0.3, z0 - D / 2], facing: '-z', shape: 'round' });

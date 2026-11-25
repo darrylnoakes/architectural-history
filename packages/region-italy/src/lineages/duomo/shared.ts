@@ -209,6 +209,40 @@ export function pinnacle(b: Builder, at: Vec3, r: number, h: number, color: numb
   b.cone(r * 1.15, h * 0.65, color, { at: [at[0], at[1] + h * 0.35, at[2]], segs: 4, rotY: Math.PI / 4, jitter: false });
 }
 
+// ------------------------------------------------------------------ the pagan sanctuary (750 BC to AD 392)
+
+/**
+ * The stone altar of the open-air sanctuary. Altars were holier than the temples built behind them
+ * and were kept when the temples were rebuilt, so the same block stands in front of the open-air
+ * sanctuary, the Etruscan temple and the Republican one, until the Augustans replace it in marble.
+ */
+export const ALTAR_Z = 12.5;
+export function oldAltar(b: Builder, color: number) {
+  b.box(3.2, 0.25, 2.2, tint(color, -0.05), { at: [0, 0, ALTAR_Z] });
+  b.box(2.6, 0.8, 1.6, color, { at: [0, 0.25, ALTAR_Z] });
+  b.box(2.8, 0.15, 1.8, tint(color, 0.05), { at: [0, 1.05, ALTAR_Z] });
+}
+
+/** The Republican temple's podium (c. 120 BC), later encased in the larger Augustan podium. */
+export const REP_PODIUM = { z: -3.5, w: 10.6, d: 19.6, h: 2.4 };
+export function republicanPodiumCore(b: Builder, color: number) {
+  const { z, w, d, h } = REP_PODIUM;
+  b.box(w, h, d, color, { at: [0, 0, z] });
+}
+
+/** An honorific bronze statue on a stone base, put up in front of the Republican temple and left standing. */
+export function honorificStatue(b: Builder) {
+  const [x, z] = [-8.5, 9.3];
+  b.box(1.2, 1.6, 1.2, P.travertine, { at: [x, 0, z] });
+  b.cyl(0.35, 1.9, P.bronze, { at: [x, 1.6, z], rTop: 0.25, segs: 6 });
+  b.sphere(0.24, P.bronze, { at: [x, 3.65, z], segs: 6 });
+}
+
+/** The paved precinct of the Augustan temple, still underfoot when the first church is built in it. */
+export function precinctPaving(b: Builder) {
+  b.box(32, 0.05, 60, tint(P.paving, 0.03), { at: [0, 0, 0], jitter: false });
+}
+
 // ------------------------------------------------------------------ the octagonal baptistery
 
 /** Centre of face k of an octagon (corners at 22.5°), as [x, z] offset and facing angle. */
@@ -241,19 +275,25 @@ export function baptistery(b: Builder, ph: Phase) {
       }
       return;
     }
+    // the brick octagon of about 400 is kept inside: the twelfth century faces it in marble, raises it
+    // and gives it a new roof
+    b.cyl(r + 0.25, 0.3, P.travertine, o8);
+    b.cyl(r, 7, BRICK, { ...o8, at: [0, 0.3, 0] });
     const green = P.marbleGreen;
     const H = 10;
-    b.cyl(r + 0.3, 0.45, P.travertine, o8);
-    b.cyl(r, H, MARBLE, { ...o8, at: [0, 0.45, 0] });
-    for (const y of [4.6, 8.0]) b.cyl(r + 0.1, 0.32, green, { ...o8, at: [0, y, 0], jitter: false });
-    b.cyl(r + 0.2, 0.35, MARBLE, { ...o8, at: [0, H + 0.45, 0] });
+    const R = r + 0.12; // the marble skin over the old brick
+    const apR = R * Math.cos(Math.PI / 8);
+    b.cyl(R + 0.3, 0.45, P.travertine, o8);
+    b.cyl(R, H, MARBLE, { ...o8, at: [0, 0.45, 0] });
+    for (const y of [4.6, 8.0]) b.cyl(R + 0.1, 0.32, green, { ...o8, at: [0, y, 0], jitter: false });
+    b.cyl(R + 0.2, 0.35, MARBLE, { ...o8, at: [0, H + 0.45, 0] });
     // striped corner pilasters
     for (let k = 0; k < 8; k++) {
       const t = Math.PI / 8 + (k * Math.PI) / 4;
-      b.box(0.36, H, 0.36, green, { at: [r * Math.sin(t) * 0.97, 0.45, r * Math.cos(t) * 0.97], rotY: t, jitter: false });
+      b.box(0.36, H, 0.36, green, { at: [R * Math.sin(t) * 0.97, 0.45, R * Math.cos(t) * 0.97], rotY: t, jitter: false });
     }
     for (let k = 0; k < 8; k++) {
-      const [fx, fz, phi] = octFace(k, ap);
+      const [fx, fz, phi] = octFace(k, apR);
       // a green-framed blind arch in each face, the door on the side facing the cathedral front
       opening(b, 'round', 1.9, 3.7, [fx, 0.75, fz], phi, green, 0.04);
       opening(b, 'round', 1.55, 3.45, [fx, 0.8, fz], phi, MARBLE, 0.07);
@@ -261,7 +301,7 @@ export function baptistery(b: Builder, ph: Phase) {
       framed(b, 'round', 0.6, 1.5, [fx, 5.8, fz], phi, green, P.windowDark, 0.12);
       opening(b, 'rect', 1.4, 0.7, [fx, 9.0, fz], phi, green, 0.04);
     }
-    b.cone(r + 0.35, 3.2, tint(MARBLE, -0.04), { ...o8, at: [0, H + 0.8, 0] });
+    b.cone(R + 0.35, 3.2, tint(MARBLE, -0.04), { ...o8, at: [0, H + 0.8, 0] });
     b.cyl(0.55, 1.0, MARBLE, { ...o8, at: [0, H + 3.4, 0] });
     b.cone(0.7, 1.0, MARBLE, { ...o8, at: [0, H + 4.4, 0] });
   });

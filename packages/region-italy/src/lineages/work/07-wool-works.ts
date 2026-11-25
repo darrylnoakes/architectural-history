@@ -1,5 +1,5 @@
 import { P, tint, type BuildingDef, type Builder } from '@ah/kit';
-import { BANK, WATER, coppiRoof, jar, lin, roofRise, water, waterSteps } from './shared';
+import { BANK, WATER, coppiRoof, jar, lin, millRace, quayWall, roofRise, water, waterSteps } from './shared';
 
 /** A dyer's vat: a copper cauldron set in a masonry furnace with a stoke-hole. */
 function dyeVat(b: Builder, x: number, z: number, liquor: number, stone: number) {
@@ -24,7 +24,7 @@ export const woolWorks: BuildingDef = {
     { label: 'Tiratoio galleries', note: 'Open timber floors one above another, where cloth hung on stretching frames in the wind but out of the rain.', at: [-8, 11.0, 5.2] },
     { label: 'Dye vats', note: 'Copper cauldrons over small furnaces held the hot dye: woad for blue, madder for red, and costly kermes for scarlet.', at: [9.0, 1.8, -1.5] },
     { label: 'Furnace chimneys', note: 'Each vat had its own fire, and the dye house roof bristled with chimneys.', at: [10.5, 9.0, -7.2] },
-    { label: 'Rinsing steps', note: 'Dyed cloth was rinsed in the river, which ran blue and red below the dye works.', at: [6.0, -0.6, -12.0] },
+    { label: 'Rinsing steps', note: 'Dyed cloth was rinsed in the fast water of the old mill channel, which ran blue and red below the dye works.', at: [6.0, -0.6, -12.0] },
     { label: 'Guild arms', note: 'A shield with the lamb, the emblem of the wool guild in Florence and other cities, marks the guild’s property.', at: [-8, 5.6, 7.5] },
   ],
   influences: [],
@@ -34,7 +34,9 @@ export const woolWorks: BuildingDef = {
     const plaster = b.pick([P.intonacoCream, P.intonacoOchre]);
     const timber = b.pick([P.oak, tint(P.oak, 0.05)]);
 
-    b.box(36, 0.15 - WATER + 0.6, 0.8, tint(stone, -0.06), { at: [0, WATER - 0.6, BANK + 0.2] });
+    // the Roman quay wall, and the weir and channel of the old fulling mill, which still runs fast past the dye house
+    quayWall(b, tint(stone, -0.06));
+    millRace(b, tint(stone, -0.1));
     b.box(34, 0.04, 20, tint(P.gravel, -0.04), { at: [0, 0, 0], jitter: false });
 
     // ---- the tiratoio: stone ground floor, three open timber galleries, a deep roof
@@ -107,7 +109,7 @@ export const woolWorks: BuildingDef = {
     b.box(4.0, 0.14, 2.0, timber, { at: [dx + 3, -0.2, BANK - 1.0] });
     for (const x of [dx + 1.2, dx + 4.8]) b.cyl(0.12, 1.2, P.oakDark, { at: [x, WATER - 0.2, BANK - 1.8], segs: 5 });
     // a length of blue cloth being rinsed, trailing into the river
-    b.beam([dx + 2.4, -0.05, BANK - 1.5], [dx + 2.0, WATER + 0.02, BANK - 4.0], 1.0, 0.03, 0x34558a);
+    b.beam([dx + 2.4, -0.05, BANK - 1.0], [dx + 2.0, WATER + 0.2, BANK - 2.2], 1.0, 0.03, 0x34558a);
     // woad balls and madder in baskets, firewood, and jars of mordant (alum)
     for (let i = 0; i < 4; i++) b.cyl(0.35, 0.5, P.wattle, { at: [dx + 6.8 + (i % 2) * 0.8, 0, dz + 4.2 + Math.floor(i / 2) * 0.8], segs: 8 });
     for (let i = 0; i < 4; i++) b.sphere(0.2, 0x4a5a3a, { at: [dx + 6.8 + (i % 2) * 0.8, 0.55, dz + 4.2 + Math.floor(i / 2) * 0.8], segs: 6 });

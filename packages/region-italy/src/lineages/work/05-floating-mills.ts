@@ -1,6 +1,6 @@
 import { P, tint, type BuildingDef, type Builder } from '@ah/kit';
-import { BANK, WATER, amphora, lin, roofRise, waterwheel } from './shared';
-import { mooringStone } from './04-horrea';
+import { BANK, WATER, amphora, lin, quayWall, roofRise, waterwheel } from './shared';
+import { BUTTRESS_X, buttress, courtArcade, gateColumns, mooringStone, storeBay } from './04-horrea';
 
 /** A ruined wall from (x0, z0) to (x1, z1), broken into stretches of ragged height between hMin and hMax. */
 function ruinWall(b: Builder, x0: number, z0: number, x1: number, z1: number, t: number, hMin: number, hMax: number, color: number, y = 0) {
@@ -99,7 +99,7 @@ export const floatingMills: BuildingDef = {
     const dw = 4.2;
 
     // ---- what is left of the quay: the river wall and its mooring stones, the paving broken
-    b.box(36, 0.15 - WATER + 0.6, 1.0, tint(trav, -0.04), { at: [0, WATER - 0.6, BANK + 0.3] });
+    quayWall(b, tint(trav, -0.04));
     b.box(36.1, 0.2, 1.1, trav, { at: [0, 0.1, BANK + 0.3] });
     for (const x of [-14, -6, 2, 10]) mooringStone(b, x, -0.4, trav);
     b.box(36, 0.05, z0 - BANK, tint(P.earth, 0.06), { at: [0, 0, (z0 + BANK) / 2], jitter: false });
@@ -107,7 +107,8 @@ export const floatingMills: BuildingDef = {
 
     // ---- the ruined warehouse: its raised base, ragged walls, broken arcades and rubble
     b.box(W + 0.6, pod, z1 - z0 + 0.6, tint(trav, -0.1), { at: [0, 0, (z0 + z1) / 2] });
-    b.box(W - 1, 0.05, z1 - z0 - 1, tint(P.grassDry, -0.05), { at: [0, pod, (z0 + z1) / 2], jitter: false });
+    // the courtyard paving, weeds growing through it
+    b.box(W - 2 * dw, 0.06, z1 - z0 - 2 * dw, P.paving, { at: [0, pod, (z0 + z1) / 2], jitter: false });
     const y = pod;
     ruinWall(b, -W / 2, z1 - 0.3, -4.6, z1 - 0.3, 0.6, 0.4, 4.5, brick, y); // street wall
     ruinWall(b, 4.6, z1 - 0.3, W / 2, z1 - 0.3, 0.6, 0.4, 3.0, brick, y);
@@ -116,13 +117,14 @@ export const floatingMills: BuildingDef = {
     ruinWall(b, W / 2 - 0.3, z0 + 6, W / 2 - 0.3, z1, 0.6, 0.3, 3.5, brick, y);
     ruinWall(b, -W / 2 + dw, z0 + dw, W / 2 - dw - 4, z0 + dw, 0.5, 0.2, 3.0, brick, y); // inner walls of the ranges
     ruinWall(b, -W / 2 + dw, z1 - dw, W / 2 - dw, z1 - dw, 0.5, 0.2, 2.6, brick, y);
-    // buttresses still standing on the river side
-    for (const x of lin(6, -W / 2 + 1.5, W / 2 - 8)) b.box(0.8, b.range(1.5, 6), 0.6, tint(brick, -0.04), { at: [x, y, z0 - 0.3] });
-    // one bay of the courtyard arcade survives, and the doorway with its columns
-    b.archWall(6.4, 3.8, 0.5, brick, { at: [-6.5, y, z1 - dw - 1.6], facing: '-z', openings: 2, openW: 2.2, openH: 3.3 });
-    b.sym((s) => b.cyl(0.25, 3.5, tint(brick, 0.05), { at: [s * 1.9, y + 0.35, z1 + 0.25], segs: 10 }));
-    b.sym((s) => b.cyl(0.3, 0.35, P.travertine, { at: [s * 1.9, y, z1 + 0.25], segs: 10 }));
-    b.box(4.6, 0.45, 0.6, tint(brick, 0.05), { at: [0, y + 3.85, z1 + 0.25] });
+    // three buttresses still stand to their full height on the river side, the rest are stumps
+    BUTTRESS_X.forEach((x, i) => {
+      if (i === 0 || i === 2 || i === 5) buttress(b, tint(brick, -0.04), x);
+      else if (i < 6) b.box(0.8, b.range(0.6, 2.2), 0.6, tint(brick, -0.04), { at: [x, y, z0 - 0.3] });
+    });
+    // one length of the courtyard arcade survives, and the doorway with its columns
+    courtArcade(b, brick, -1);
+    gateColumns(b, tint(brick, 0.05), P.travertine);
     b.box(2.4, 3.8, 0.6, brick, { at: [-3.4, y, z1 - 0.3] });
     b.box(2.4, 3.8, 0.6, brick, { at: [3.4, y, z1 - 0.3] });
     b.stairs(5.0, pod, 1.6, 4, trav, { at: [0, 0, z1 + 0.8] });
@@ -138,14 +140,15 @@ export const floatingMills: BuildingDef = {
     b.tree(2.2, { at: [-11, y + 0.1, 6], kind: 'bush' });
     b.tree(2.0, { at: [8, y + 0.1, 0], kind: 'bush' });
 
-    // ---- the patched corner: two storerooms re-roofed with salvaged tiles, for the millers’ grain and flour
+    // ---- the patched corner: the end bay of the river range, still standing to its first floor,
+    // re-roofed with salvaged tiles as a store for the millers’ grain and flour
     const px = 10.5;
-    const pz = -4.6;
-    b.box(7, 4.0, 4.8, brick, { at: [px, y, pz] });
-    b.box(0.8, 4.0, 4.8, tint(P.tufa, -0.05), { at: [px - 3.5, y, pz] }); // a blocking wall of reused stone
-    b.gable(7.4, 4.8, roofRise(4.8, 22), tint(P.romanTile, -0.08), { at: [px, y + 4.0, pz], overhang: 0.35, wall: brick });
-    b.panel(1.3, 2.2, P.oakDark, { at: [px + 1.2, y, pz + 2.4], facing: '+z' });
-    b.panel(1.3, 2.2, P.oakDark, { at: [px - 1.0, y, pz - 2.4], facing: '-z' });
+    const pz = z0 + dw / 2;
+    storeBay(b, brick, px, pz, 7, dw);
+    b.box(0.8, 4.0, dw + 0.2, tint(P.tufa, -0.05), { at: [px - 3.5, y, pz] }); // a blocking wall of reused stone
+    b.gable(7.4, dw + 0.2, roofRise(dw + 0.2, 22), tint(P.romanTile, -0.08), { at: [px, y + 4.0, pz], overhang: 0.35, wall: brick });
+    b.panel(1.3, 2.2, P.oakDark, { at: [px + 1.2, y, pz + dw / 2], facing: '+z' });
+    b.panel(1.3, 2.2, P.oakDark, { at: [px - 1.0, y, pz - dw / 2], facing: '-z' });
     for (let i = 0; i < 5; i++) b.blob(0.32, P.wattle, { at: [px - 1.4 + (i % 3) * 0.6, y + 0.3, pz + 3.1 + Math.floor(i / 3) * 0.5], stretch: [1, 0.9, 1.2] });
     for (let i = 0; i < 2; i++) amphora(b, [px + 2.8 + i * 0.5, y, pz + 2.9]);
     // a lean-to shelter of poles and thatch against the ruin, where the millers live

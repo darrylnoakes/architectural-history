@@ -1,5 +1,5 @@
 import { P, tint, type BuildingDef, type Builder } from '@ah/kit';
-import { BANK, WATER, coppiRoof, lin, roofRise, water, waterwheel } from './shared';
+import { BANK, RACE_Z, WATER, coppiRoof, lin, millRace, quayWall, roofRise, waterwheel } from './shared';
 
 /** A tenter frame along X, `len` long, with a length of cloth stretched on it. */
 export function tenter(b: Builder, x: number, z: number, len: number, cloth: number, timber: number = P.oak) {
@@ -46,25 +46,10 @@ export const fullingMill: BuildingDef = {
     const quoin = tint(stone, 0.08);
     const timber = P.oak;
 
-    // ---- the bank: a stone river wall and the channel wall out in the river
-    b.box(36, 0.15 - WATER + 0.6, 0.8, tint(stone, -0.06), { at: [0, WATER - 0.6, BANK + 0.2] });
-    const cz = -13.6; // line of the channel wall
-    b.box(26, 0.7 - WATER + 0.6, 0.9, tint(stone, -0.1), { at: [-1, WATER - 0.6, cz] });
-    b.box(26, 0.12, 1.0, quoin, { at: [-1, 0.7, cz] });
-    water(b, 26, 2.1, [-1, WATER + 0.12, (cz + BANK) / 2 - 0.15]); // the fast water in the channel, a little higher
-    // the weir: a low stone-and-stake dam slanting upstream across the river
-    const wx0 = -14;
-    const wz0 = cz;
-    const wx1 = -18;
-    const wz1 = -25;
-    const wy = WATER + 0.22;
-    b.beam([wx0, wy - 0.25, wz0], [wx1, wy - 0.25, wz1], 1.2, 0.5, tint(stone, -0.12)); // crest
-    b.beam([wx0 + 1.0, WATER - 0.12, wz0], [wx1 + 1.0, WATER - 0.12, wz1], 1.0, 0.3, tint(stone, -0.2)); // apron below
-    b.beam([wx0 + 0.75, WATER + 0.06, wz0], [wx1 + 0.75, WATER + 0.06, wz1], 0.5, 0.06, 0xeef3f4); // white water spilling over
-    for (let i = 0; i < 12; i++) {
-      const f = i / 11;
-      b.cyl(0.08, 0.9, P.oakDark, { at: [wx0 + (wx1 - wx0) * f - 0.55, WATER - 0.4, wz0 + (wz1 - wz0) * f], segs: 5 });
-    }
+    // ---- the bank: the old Roman quay wall, and the new weir and channel wall out in the river
+    quayWall(b, tint(stone, -0.06));
+    const cz = RACE_Z; // line of the channel wall
+    millRace(b, tint(stone, -0.1));
 
     // ---- the mill: a two-storey stone hall on the bank with a tower at its upstream end
     const mx = -4;

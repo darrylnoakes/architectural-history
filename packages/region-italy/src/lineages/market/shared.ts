@@ -206,6 +206,23 @@ export function paving(b: Builder, w: number, d: number, color: number, h = 0.08
 }
 
 /**
+ * The travertine paving of the Roman forum, laid with the forum shops and kept by the macellum and by
+ * the medieval market held in its ruins. Draw it first in `build`, before any other random number,
+ * so its flags fall in the same places in every stage.
+ */
+export function forumPaving(b: Builder): void {
+  paving(b, 25.6, 21.6, P.travertine, 0.12, [0, 0, 0], 12);
+}
+
+/**
+ * The paving the commune laid on the market square, kept when the Renaissance loggia replaced the
+ * grain loggia. Draw it first in `build`.
+ */
+export function squarePaving(b: Builder): void {
+  paving(b, 25.6, 21.6, tint(P.pietraForte, -0.04), 0.1, [0, 0, 0], 12);
+}
+
+/**
  * Rows of cover tiles (imbrices or coppi) running down a roof slope: one rib per x in `xs`, from
  * (yLow, zLow) at the eaves up to (yHigh, zHigh) at the ridge. Slopes along Z; for an X slope use a group with rotY.
  */

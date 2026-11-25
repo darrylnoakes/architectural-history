@@ -1,5 +1,5 @@
 import { P, tint, mix, type BuildingDef } from '@ah/kit';
-import { BANK, FOOT, WATER, romanBridge, steps, bar, tilt } from './shared';
+import { FOOT, WATER, ROMAN_GAP, romanBridge, steps, bar, tilt } from './shared';
 
 export const brokenBridge: BuildingDef = {
   id: 'broken-bridge',
@@ -19,21 +19,10 @@ export const brokenBridge: BuildingDef = {
   ],
   build(b) {
     b.noCollide();
-    const L = romanBridge(b, { broken: 3, aged: 0.6 });
+    const L = romanBridge(b, { state: 'broken', aged: 0.6 });
     const { f, ops, W } = L;
     b.deck(W - 0.9, 34, 1.15, { yEnds: 0 });
-    const op = ops[3];
-    const road = mix(P.peperino, P.gravel, 0.55);
-
-    // road surface over the surviving parts
-    const roadRun = (za: number, zb: number) => {
-      const zs = steps(14, za, zb);
-      const pts: [number, number][] = [...zs.map((z) => [z, f(z) + 0.01] as [number, number]), ...zs.reverse().map((z) => [z, f(z) - 0.17] as [number, number])];
-      b.extrude(pts.map(([z, y]) => [-z, y] as [number, number]), W - 0.9, road, { rotY: Math.PI / 2 });
-    };
-    roadRun(-17, op.z0 + 0.7);
-    roadRun(op.z1 - 0.7, 17);
-
+    const op = ops[ROMAN_GAP];
     // rubble fallen into the river below the gap
     for (let i = 0; i < 9; i++) {
       b.blob(b.range(0.35, 0.6), tint(P.travertine, b.range(-0.12, -0.02)), {
@@ -84,7 +73,6 @@ export const brokenBridge: BuildingDef = {
     b.frame(4.8, 1.3, P.oak, { at: [tx + 2.4, 8.4, tz], facing: '+x', studs: 4, rails: 0 });
     b.frame(4.8, 1.3, P.oak, { at: [tx - 2.4, 8.4, tz], facing: '-x', studs: 4, rails: 0 });
     b.pyramid(5.2, 5.2, 1.6, P.shingle, { at: [tx, 9.7, tz], overhang: 0.2 });
-    void BANK;
 
     // weeds on the neglected parapets and a fig in the masonry
     b.blob(0.5, P.leafDark, { at: [-W / 2 - 0.1, -0.2, -8.0], stretch: [0.8, 1.2, 1.4], detail: 0 });

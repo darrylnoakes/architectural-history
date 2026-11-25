@@ -1,4 +1,4 @@
-import { P, tint, type BuildingDef } from '@ah/kit';
+import { P, tint, type Builder, type BuildingDef } from '@ah/kit';
 import {
   N,
   STOREY_Y,
@@ -16,7 +16,7 @@ import {
 } from './shared';
 
 /** Height of the podium wall round the arena. */
-const PODIUM = 3.2;
+export const PODIUM = 3.2;
 
 /** The stepped section of the seating, as [s, y] points from the podium to the top gallery. */
 function caveaProfile(): Pt[] {
@@ -58,6 +58,48 @@ function caveaY(s: number): number {
 
 /** The two straight passage walls of an axial entrance (bay 6 at +X, bay 18 at -X). */
 const PASSAGE_HALF = 1.55;
+
+/** The axial entrances at +X and -X (bays 6 and 18). */
+const GATE_BAYS = [N / 4, (3 * N) / 4];
+const isGatePier = (k: number) => GATE_BAYS.some((g) => k === g || k === g + 1);
+
+/**
+ * The Roman fabric that the houses of the Middle Ages were built into, laid out the same way in
+ * both stages so that it stays where it is when the houses arrive: the step the outer wall stands
+ * on, the cornice over the ground-storey arcade, the arena floor, the podium wall round the arena
+ * in runs between the bays where it is later cut through, and the radial walls under the seats.
+ */
+export const PODIUM_RUNS: [number, number][] = [[1, 5], [8, 12], [13, 17], [20, 24], [0, 1], [12, 13]];
+
+export function romanPlinth(b: Builder, color: number): void {
+  ringBand(b, [[0.99, 0], [1.03, 0], [1.03, 0.22], [1, 0.22]], color); // the step it stands on
+}
+
+export function groundBelt(b: Builder, color: number): void {
+  arcadeBelt(b, STOREY_Y[1] - 0.55, 0.55, color);
+}
+
+export function arenaFloor(b: Builder, color: number): void {
+  ringDisc(b, 0, 0.03, color);
+}
+
+/** The podium wall: every run, or the first `n` of PODIUM_RUNS. */
+export function romanPodium(b: Builder, color: number, n = PODIUM_RUNS.length): void {
+  for (const [k0, k1] of PODIUM_RUNS.slice(0, n)) ringBand(b, [[0, 0], [0, PODIUM]], color, { k0, k1 });
+}
+
+/** The bays the podium wall runs along. */
+export function hasPodium(k: number): boolean {
+  const i = ((k % N) + N) % N;
+  return PODIUM_RUNS.some(([a, c]) => i >= a && i < c);
+}
+
+export function radialWalls(b: Builder, color: number): void {
+  for (let k = 0; k < N; k++) {
+    if (isGatePier(k)) continue;
+    thickWall(b, vert(k, 0.02), vert(k, 0.75), 0.7, (u) => caveaY(0.02 + u * 0.73) - 1.3, color, 5);
+  }
+}
 
 export const amphitheatre: BuildingDef = {
   id: 'amphitheatre',
@@ -105,8 +147,7 @@ export const amphitheatre: BuildingDef = {
     const seats = tint(P.travertine, -0.04);
     const marble = tint(P.marble, -0.02);
     const sand = tint(P.sand, 0.02);
-    const gateBays = [N / 4, (3 * N) / 4]; // 6 and 18: the axial entrances at +X and -X
-    const isGatePier = (k: number) => gateBays.some((g) => k === g || k === g + 1);
+    const gateBays = GATE_BAYS; // 6 and 18: the axial entrances at +X and -X
 
     // ------------------------------------------------ outer wall: three arcaded storeys and their orders
     for (let k = 0; k < N; k++) {
@@ -115,8 +156,9 @@ export const amphitheatre: BuildingDef = {
         arcadeOrder(b, k, j, trav);
       }
     }
-    ringBand(b, [[0.99, 0], [1.03, 0], [1.03, 0.22], [1, 0.22]], travDark); // the step it stands on
-    for (const y of [STOREY_Y[1], STOREY_Y[2]]) arcadeBelt(b, y - 0.55, 0.55, travDark);
+    romanPlinth(b, travDark);
+    groundBelt(b, travDark);
+    arcadeBelt(b, STOREY_Y[2] - 0.55, 0.55, travDark);
     arcadeBelt(b, STOREY_Y[3] - 0.55, 0.65, travDark, 0.045);
     // upper floors of the ambulatory behind the arcades
     for (const y of [STOREY_Y[1] - 0.25, STOREY_Y[2] - 0.25]) {
@@ -150,9 +192,8 @@ export const amphitheatre: BuildingDef = {
     }
 
     // ------------------------------------------------ podium wall round the arena, broken by the two gates
-    ringBand(b, [[0, 0], [0, PODIUM]], marble, { k0: 8, k1: 17 });
-    ringBand(b, [[0, 0], [0, PODIUM]], marble, { k0: 20, k1: 29 });
-    ringDisc(b, 0, 0.03, sand);
+    romanPodium(b, marble);
+    arenaFloor(b, sand);
     for (const g of gateBays) {
       const p0 = vert(g - 1, 0);
       const p1 = vert(g + 2, 0);
@@ -185,12 +226,7 @@ export const amphitheatre: BuildingDef = {
     }
 
     // ------------------------------------------------ radial walls carrying the seats
-    for (let k = 0; k < N; k++) {
-      if (isGatePier(k)) continue;
-      const p0 = vert(k, 0.02);
-      const p1 = vert(k, 0.75);
-      thickWall(b, p0, p1, 0.7, (u) => caveaY(0.02 + u * 0.73) - 1.3, tint(P.brickOrange, -0.05), 5);
-    }
+    radialWalls(b, tint(P.brickOrange, -0.05));
 
     // ------------------------------------------------ boxes of honour on the short axis
     for (const side of [1, -1]) {

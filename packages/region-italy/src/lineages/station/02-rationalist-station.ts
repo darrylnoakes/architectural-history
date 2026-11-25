@@ -1,8 +1,8 @@
 import { P, mix, tint, type Builder, type BuildingDef } from '@ah/kit';
-import { HX, PLAT, TRACKS, catenary, clock, littorina, platform, track } from './shared';
+import { FORECOURT_Z, HX, PLAT, TRACKS, catenary, clock, forecourt, littorina, platform, track } from './shared';
 
-const ZF = 4.2; // street face of the long low block
-const ZB = -3.4; // track face
+const ZF = FORECOURT_Z; // street face of the long low block
+const ZB = PLAT.back; // track face
 const H = 7.4; // height of the long block
 const HW = 4.6; // half-width of the ticket hall under the glass cascade
 const HH = 11.2; // ticket hall height
@@ -44,7 +44,7 @@ export const rationalistStation: BuildingDef = {
     const G = { mat: 'glass' as const };
 
     // ---------------------------------------------------------------- forecourt
-    b.box(HX * 2, 0.05, 12 - ZF, mix(P.travertine, P.paving, 0.5), { at: [0, 0, (12 + ZF) / 2], jitter: false });
+    forecourt(b, mix(P.travertine, P.paving, 0.5));
 
     // ---------------------------------------------------------------- the long low block, either side of the hall
     b.sym((s) => {
@@ -111,7 +111,7 @@ export const rationalistStation: BuildingDef = {
     });
 
     // ---------------------------------------------------------------- platform, canopies, tracks and the railcar
-    platform(b, ZB, PLAT.edge, -HX, HX);
+    platform(b, PLAT.back, PLAT.edge, -HX, HX);
     for (const z of TRACKS) track(b, z);
     const zc = (ZB + PLAT.edge) / 2;
     for (const x of [-16, -11, -6, -1, 4, 9, 14]) {

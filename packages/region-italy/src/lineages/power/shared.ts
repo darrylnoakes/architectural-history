@@ -766,6 +766,12 @@ export function lordsColliders(b: Builder): void {
 
 // ------------------------------------------------------------------ the monument to the king (1885 onward)
 
+/** The stone well-head in the main square, sunk by the commune about 1210 and never taken away. */
+export function squareWell(b: Builder): void {
+  b.cyl(1.0, 1.0, P.travertine, { at: [12, 0, 15], segs: 8 });
+  b.collider(2, 2, { at: [12, 0, 15] });
+}
+
 /** Where the monument stands in the square. */
 export const MON: XZ = [-6, 15.5];
 
@@ -887,3 +893,106 @@ export function triumphalArch(b: Builder, color: number, o?: { stump?: boolean }
 }
 /** Height of the arch's attic top. */
 export const ARCH_TOP = ARCH.h + 5.2;
+
+/** Heights of the forum basilica: built about 150 BC, refaced in marble about AD 100, a ruin by 600. */
+export const BAS_H = { podium: 0.5, nave: 10.2, aisle: 6.2 };
+
+/** The basilica's podium of travertine, which outlasts the hall: the Lombard hall and the bishop's palace stand on it. */
+export function basilicaPodium(b: Builder): void {
+  const { x0, x1, z0, z1 } = BAS;
+  b.box(x1 - x0 + 0.6, BAS_H.podium, z1 - z0 + 0.6, P.travertine, { at: [(x0 + x1) / 2, 0, BAS_ZC] });
+}
+
+/** The basilica's apse wall (AD 100): a half-round of brick-faced concrete, left standing when the roof has gone. */
+export function apseWall(b: Builder): void {
+  const { x0, apseR } = BAS;
+  b.lathe([[apseR, 0], [apseR, BAS_H.nave - 2.5]], tint(P.romanTile, 0.04), { at: [x0, BAS_H.podium, BAS_ZC], segs: 9, start: Math.PI, sweep: Math.PI });
+}
+
+/** One of the Corinthian marble columns of the imperial basilica's front colonnade (i = 0..9 from the left). */
+export function basilicaColumn(b: Builder, i: number): void {
+  const { x0, x1, z1 } = BAS;
+  const x = spread(10, x0 + 0.5, x1 - 0.5)[i];
+  column(b, [x, BAS_H.podium, z1 - 0.4], 0.34, BAS_H.aisle - BAS_H.podium, P.marble, { order: 'corinthian' });
+}
+
+/** Where the imperial porticoes' Corinthian columns stand along each side of the square (x = ±12.6). */
+export const PORTICO_Z = spread(9, -8 + 0.6, 17.6 - 0.6);
+export function porticoColumn(b: Builder, s: number, i: number): void {
+  column(b, [s * 12.6, 0, PORTICO_Z[i]], 0.3, 4.8, P.marble, { order: 'corinthian' });
+}
+
+/**
+ * The forum basilica: a tall nave lit by a clerestory, a walled back aisle and a front aisle open to
+ * the square as a colonnade. About AD 100 the same hall is faced in marble (`imperial`): its stucco
+ * walls take a marble skin, its Ionic columns give way to Corinthian ones, its doors are cast in
+ * bronze and an apse for the tribunal is built against its left end.
+ */
+export function forumBasilica(b: Builder, imperial: boolean): void {
+  const { x0, x1, z0, z1, nave, apseR } = BAS;
+  const { podium: PH, nave: NH, aisle: AH } = BAS_H;
+  const L = x1 - x0;
+  const xc = (x0 + x1) / 2;
+  const aisle = (z1 - z0 - nave) / 2;
+  const wall = imperial ? P.marble : P.stucco;
+  const tr = P.travertine;
+  const tile = P.romanTile;
+  basilicaPodium(b);
+  b.box(L, NH, nave, wall, { at: [xc, PH, BAS_ZC] });
+  b.gable(L + 0.4, nave + 0.4, 1.7, tile, { at: [xc, NH + PH, BAS_ZC], overhang: 0.3, wall });
+  // back aisle: walled; front aisle: an open colonnade onto the forum
+  b.box(L, AH, aisle, tint(wall, -0.03), { at: [xc, PH, z0 + aisle / 2] });
+  b.shed(L + 0.4, aisle + 0.5, 1.3, tile, { at: [xc, AH + PH, z0 + aisle / 2 - 0.2], high: '+z' });
+  b.shed(L + 0.4, aisle + 0.5, 1.3, tile, { at: [xc, AH + PH, z1 - aisle / 2 + 0.2], high: '-z' });
+  b.box(L, 0.5, 0.8, wall, { at: [xc, AH, z1 - 0.4] });
+  b.sym((s) => b.box(0.5, AH, aisle, wall, { at: [s > 0 ? x1 - 0.25 : x0 + 0.25, PH, z1 - aisle / 2] }));
+  // clerestory windows on both sides of the nave, small windows in the back aisle
+  for (const x of spread(9, x0 + 1.5, x1 - 1.5)) {
+    for (const s of [1, -1]) archWindow(b, 1.0, 1.7, { at: [x, AH + 1.8, BAS_ZC + (s * nave) / 2], facing: s > 0 ? '+z' : '-z', frame: tr });
+    archWindow(b, 0.8, 1.2, { at: [x, 2.6, z0], facing: '-z', frame: tr });
+  }
+  // the right end wall: a door and a gable window
+  b.panel(2, 3.6, P.oakDark, { at: [x1, PH, BAS_ZC], facing: '+x' });
+  archWindow(b, 1.1, 1.8, { at: [x1, NH - 1.6, BAS_ZC], facing: '+x', frame: tr });
+  if (!imperial) {
+    for (const x of spread(10, x0 + 0.5, x1 - 0.5)) column(b, [x, PH, z1 - 0.4], 0.32, AH - PH, wall, { order: 'ionic' });
+    // doors into the hall behind the colonnade; a door and a gable window in the left end as well
+    for (const x of spread(3, x0 + 6, x1 - 6)) b.panel(1.8, 3.4, P.oakDark, { at: [x, PH, BAS_ZC + nave / 2], facing: '+z' });
+    b.panel(2, 3.6, P.oakDark, { at: [x0, PH, BAS_ZC], facing: '-x' });
+    archWindow(b, 1.1, 1.8, { at: [x0, NH - 1.6, BAS_ZC], facing: '-x', frame: tr });
+    return;
+  }
+  for (let i = 0; i < 10; i++) basilicaColumn(b, i);
+  b.box(L - 2, 0.3, 0.05, P.bronze, { at: [xc, AH + 0.1, z1 + 0.03], jitter: false }); // bronze-lettered dedication
+  for (const x of spread(3, x0 + 6, x1 - 6)) b.panel(2, 3.8, P.bronze, { at: [x, PH, BAS_ZC + nave / 2], facing: '+z' });
+  // the apse at the left end: a half-round of brick-faced concrete under a half-dome of tiles
+  apseWall(b);
+  b.lathe([[apseR + 0.3, NH - 2.6], [apseR * 0.75, NH - 1.2], [0.01, NH - 0.4]], tile, { at: [x0, PH, BAS_ZC], segs: 9, start: Math.PI, sweep: Math.PI });
+  for (const a of [Math.PI * 0.65, Math.PI, Math.PI * 1.35]) {
+    archWindow(b, 1.0, 1.9, { at: [x0 + Math.sin(a) * apseR, 4.4, BAS_ZC + Math.cos(a) * apseR], facing: a, frame: tr });
+  }
+}
+
+/** Two honorific statues on travertine bases in the forum (150 BC); the bronze goes, the bases stay. */
+export function forumStatues(b: Builder, bronze = true): void {
+  for (const [x, z] of [[-2, 9], [4, 9]] as const) {
+    b.box(1.2, 1.9, 1.6, P.travertine, { at: [x, 0, z] });
+    if (!bronze) continue;
+    b.box(0.5, 1.5, 0.4, P.bronze, { at: [x, 1.9, z] });
+    b.sphere(0.2, P.bronze, { at: [x, 3.6, z], segs: 6 });
+  }
+}
+
+/** The forum's well-head, still drawn from by the Lombards and the bishop's household. */
+export function forumWell(b: Builder): void {
+  b.cyl(0.7, 0.9, P.travertine, { at: [3, 0, 1], segs: 8 });
+}
+
+/** The marble pedestal of the emperor's bronze horseman (AD 100), standing bare after the bronze is melted down. */
+export function equestrianPedestal(b: Builder): void {
+  b.group({ at: [0, 0, 3] }, () => {
+    b.box(2.6, 0.4, 4.0, P.marble);
+    b.box(2.0, 2.6, 3.4, P.marble, { at: [0, 0.4, 0] });
+    b.box(2.3, 0.3, 3.7, P.marble, { at: [0, 3.0, 0], jitter: false });
+  });
+}

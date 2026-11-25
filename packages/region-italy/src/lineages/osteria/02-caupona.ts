@@ -1,5 +1,5 @@
 import { P, spread, tint, type BuildingDef } from '@ah/kit';
-import { amphora, ground, letterBoard, tiledGable, tiledShed } from './shared';
+import { amphora, ground, letterBoard, romanPavement, tiledGable, tiledShed } from './shared';
 
 const XL = -9; // block ends
 const XR = 9;
@@ -41,7 +41,7 @@ export const caupona: BuildingDef = {
     const midZ = (ZF + ZB) / 2;
 
     // street pavement and the garden ground
-    ground(b, 20, 1.8, P.peperino, [0, ZF + 1.0], 0.12);
+    romanPavement(b);
     ground(b, 2 * XR, ZB - ZG, P.earth, [0, (ZB + ZG) / 2], 0.03);
 
     // ---------------- the block: ground storey in pieces round the open shop, upper storey whole

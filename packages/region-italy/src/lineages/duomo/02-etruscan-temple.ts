@@ -1,5 +1,5 @@
 import { P, tint, mix, type BuildingDef } from '@ah/kit';
-import { statue } from './shared';
+import { ALTAR_Z, oldAltar, statue } from './shared';
 
 /** Temple centre and size: almost square, on a podium, front at +Z. */
 const TZ = -3.5;
@@ -23,7 +23,7 @@ export const etruscanTemple: BuildingDef = {
   style: 'Etruscan (Tuscan temple)',
   date: 'c. 500 BC',
   summary:
-    'The first temple on the site, built when the town was Etruscan or under Etruscan influence. It stands on a high podium of tufa and can only be approached from the front, by a single flight of steps: unlike a Greek temple, it has a front and a back. ' +
+    'The first temple on the site, built when the town was Etruscan or under Etruscan influence, behind the altar of the old open-air sanctuary, which stays in use before its stair. It stands on a high podium of tufa and can only be approached from the front, by a single flight of steps: unlike a Greek temple, it has a front and a back. ' +
     'The front half is a deep porch of widely spaced, unfluted columns; the back half holds three rooms (cellae) for three gods, behind three doors. ' +
     'Only the podium is stone. Walls are mud brick on a stone footing, the columns and beams are timber or plastered tufa, and the wide, low roof is protected by brightly painted terracotta plaques, antefixes along the eaves and life-size clay statues standing on the ridge.',
   materials: ['tufa podium', 'mud brick and plaster', 'timber', 'painted terracotta', 'clay roof tiles'],
@@ -103,9 +103,8 @@ export const etruscanTemple: BuildingDef = {
     }
     b.cyl(0.75, 0.12, RED, { at: [0, ridgeY + 0.6, front + OV - 0.1], rot: [Math.PI / 2, 0, 0], segs: 10 });
 
-    // the altar in front, and the sacred pool beside the temple
-    b.box(3.2, 1.1, 2.0, TUFA, { at: [0, 0, front + 6.2] });
-    b.box(3.5, 0.2, 2.3, tint(TUFA, 0.06), { at: [0, 1.1, front + 6.2] });
+    // the old altar of the open-air sanctuary, kept in front of the stair, and the sacred pool beside the temple
+    oldAltar(b, TUFA);
     b.box(7.0, 0.4, 3.6, tint(TUFA, -0.04), { at: [-12.0, 0, TZ - 4] });
     b.box(6.2, 0.05, 2.8, P.water, { at: [-12.0, 0.36, TZ - 4], mat: 'glass', jitter: false });
     b.box(22, 0.04, 34, mix(P.earth, P.grassDry, 0.5), { at: [0, 0, TZ + 4], jitter: false });
@@ -114,6 +113,6 @@ export const etruscanTemple: BuildingDef = {
     b.tree(5, { at: [12.0, 0, 14], kind: 'olive' });
 
     b.collider(W, D + 3.4, { at: [0, 0, TZ + 1.7] });
-    b.collider(3.4, 2.4, { at: [0, 0, front + 6.2] });
+    b.collider(3.2, 2.2, { at: [0, 0, ALTAR_Z] });
   },
 };

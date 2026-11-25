@@ -1,5 +1,5 @@
 import { P, spread, tint, type BuildingDef } from '@ah/kit';
-import { amphora, ground, letterBoard, tiledGable, tiledShed } from './shared';
+import { amphora, ground, letterBoard, romanPavement, tiledGable, tiledShed } from './shared';
 
 const XO = 10; // outer faces of the block
 const ZF = 9.0; // street face
@@ -49,7 +49,7 @@ export const thermopolium: BuildingDef = {
     const midZ = (ZF + ZY) / 2;
 
     // raised pavement of basalt-like stone, yard floor
-    ground(b, 21.6, 1.6, P.peperino, [0, ZF + 0.85], 0.22);
+    romanPavement(b);
     ground(b, 2 * XO, ZY - ZS1, tint(P.sand, -0.12), [0, (ZY + ZS1) / 2], 0.03);
 
     // ---------------- street range: ground storey in pieces round the bar and the passage

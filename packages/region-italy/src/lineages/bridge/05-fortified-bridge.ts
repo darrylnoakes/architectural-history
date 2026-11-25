@@ -21,7 +21,7 @@ export const fortifiedBridge: BuildingDef = {
   ],
   build(b) {
     b.noCollide();
-    const L = romanBridge(b, { repaired: 3, aged: 0.5 });
+    const L = romanBridge(b, { state: 'repaired', aged: 0.5 });
     const { f, W, piers } = L;
     b.deck(W - 0.9, 34, 1.15, { yEnds: 0 });
 

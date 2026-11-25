@@ -12,7 +12,17 @@ export const HX = 20;
 export const TRACKS = [-8.5, -10.75];
 export const GAUGE = 1.435;
 /** Height of the platform top, and its edge. */
-export const PLAT = { y: 0.55, edge: -7.0 };
+export const PLAT = { y: 0.55, edge: -7.0, back: -3.4 };
+/** Where the forecourt begins, at the foot of the street front. */
+export const FORECOURT_Z = 4.2;
+
+/**
+ * The forecourt from the street front to the edge of the plot. The same paving in front of the
+ * 1860s and the 1930s stations (it runs a little way under the older, deeper front).
+ */
+export function forecourt(b: Builder, color: number): void {
+  b.box(HX * 2, 0.05, 12 - FORECOURT_Z, color, { at: [0, 0, (12 + FORECOURT_Z) / 2], jitter: false });
+}
 
 /** Ballast, sleepers and rails for one track along X. */
 export function track(b: Builder, z: number, x0 = -HX, x1 = HX, o?: { sleeper?: number }): void {

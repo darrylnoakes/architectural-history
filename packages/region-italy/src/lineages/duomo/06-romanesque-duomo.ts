@@ -67,7 +67,7 @@ export const romanesqueDuomo: BuildingDef = {
     'With trade booming and the commune proud of itself, the city pulled down the old basilica and built a new, larger cathedral on the same lines, adding a transept to make a cross-shaped plan. ' +
     'It is faced in white marble banded with grey-green, and its front is a screen of round arches: blind arches below, then tiers of little open galleries on slender columns, a fashion set by Pisa Cathedral (begun 1064) and followed at Lucca. ' +
     'A freestanding bell tower, its openings multiplying towards the top, now stands beside it. ' +
-    'Only the eight-sided baptistery survives from before, refaced in green and white marble; inside, ancient columns were very likely reused again, as at Pisa.',
+    'Only the eight-sided baptistery survives from before, refaced in green and white marble over its old brick, raised and given a marble roof; inside, ancient columns were very likely reused again, as at Pisa.',
   materials: ['white marble', 'grey-green marble or serpentine', 'brick and rubble core', 'clay tiles'],
   lookFor: [
     { label: 'Galleries', note: 'Tiers of open arcades on small columns across the front: decoration, not passages anyone used much.', at: [0, 13.0, FF + 0.8] },

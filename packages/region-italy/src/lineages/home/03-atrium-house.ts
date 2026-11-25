@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { P, tint, spread, type Builder, type BuildingDef, type Vec3 } from '@ah/kit';
-import { coppiRoof, FRONT, pave, vegBed } from './shared';
+import { coppiRoof, FRONT, gardenWalls, pave, vegBed } from './shared';
 
 /**
  * The roof of a Tuscan atrium: four slopes falling inward from the outer walls to a rectangular
@@ -189,8 +189,8 @@ export const atriumHouse: BuildingDef = {
     const gz0 = zb;
     const gz1 = -8.8;
     const gw = tint(plaster, -0.05);
-    b.box(W, 2.4, 0.4, gw, { at: [0, 0, gz1 + 0.2] });
-    b.sym((s) => b.box(0.4, 2.4, gz0 - gz1, gw, { at: [s * (X - 0.2), 0, (gz0 + gz1) / 2] }));
+    // (the plot's back walls, kept by every house that follows: see gardenWalls)
+    gardenWalls(b, gw);
     b.box(W, 0.12, 0.55, tile, { at: [0, 2.4, gz1 + 0.2] });
     b.sym((s) => b.box(0.55, 0.12, gz0 - gz1, tile, { at: [s * (X - 0.2), 2.4, (gz0 + gz1) / 2] }));
     pave(b, 1.2, gz0 - gz1 - 0.4, P.gravel, [0, 0, (gz0 + gz1) / 2 - 0.2]);

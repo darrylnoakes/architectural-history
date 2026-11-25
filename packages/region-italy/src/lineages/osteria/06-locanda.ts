@@ -15,11 +15,56 @@ const RX = 5.8; // its yard face
 const GAL = 1.2;
 const RG = 3.6; // its storey height
 const RTOP = RG * 2;
-// stables across the back
-const ZBI = -5.4;
-const ZB = -10.3;
-const BH = 3.4;
-const BTOP = BH + 2.3;
+// stables across the back: kept by the Renaissance inn, and by the hotel after it
+export const ZBI = -5.4;
+export const ZB = -10.3;
+export const BH = 3.4;
+export const BTOP = BH + 2.3;
+const SXO = 10.2; // the stables run the full width of the plot
+
+/**
+ * The fabric of the old inn that later inns on the plot keep: the street paving in front, the yard
+ * floor, the yard wall on the left, the well and the stone stables with their hayloft across the back.
+ * `state`: as the locanda built them, as the Renaissance inn kept them, or as the 2016 hotel
+ * converted them (openings glazed, the roof made a terrace).
+ */
+export function innStreet(b: Builder, color: number): void {
+  ground(b, 21.6, 1.4, color, [0, 9.8], 0.1);
+}
+export function innYard(b: Builder, color: number): void {
+  ground(b, 2 * SXO, 4.6 - ZBI, color, [0, (4.6 + ZBI) / 2], 0.04);
+}
+export function innYardWall(b: Builder, stone: number): void {
+  b.box(0.5, 4.2, 4.6 - ZBI, stone, { at: [-SXO + 0.25, 0, (4.6 + ZBI) / 2] });
+}
+/** The well with its iron pulley arch. */
+export function innWell(b: Builder): void {
+  b.cyl(0.7, 0.9, P.travertine, { at: [-1.6, 0, -1.6], segs: 8 });
+  b.cyl(0.55, 0.05, P.windowDark, { at: [-1.6, 0.88, -1.6], segs: 8 });
+  b.sym((s) => b.box(0.16, 1.6, 0.16, P.iron, { at: [-1.6 + s * 0.65, 0.9, -1.6] }));
+  b.extrude([[-0.75, 0], [0.75, 0], [0.75, 0.1], [0, 0.6], [-0.75, 0.1]], 0.1, P.iron, { at: [-1.6, 2.45, -1.6] });
+  b.cyl(0.14, 0.12, P.oakDark, { at: [-1.6, 2.3, -1.6], segs: 8, rot: [Math.PI / 2, 0, 0] });
+}
+export function innStables(b: Builder, stone: number, loft: number, wood: number, tile: number, state: 'locanda' | 'inn' | 'hotel'): void {
+  const bz = (ZB + ZBI) / 2;
+  const dark = P.oakDark;
+  b.box(2 * SXO, BTOP, ZBI - ZB, stone, { at: [0, 0, bz] });
+  b.box(2 * SXO + 0.04, BTOP - BH, ZBI - ZB + 0.04, loft, { at: [0, BH, bz] });
+  for (const x of [-7.6, -3.8, 0, 3.8]) {
+    b.panel(1.8, 2.7, P.timberBlack, { at: [x, 0, ZBI], facing: '+z', shape: 'segmental' });
+    if (state === 'hotel') {
+      b.window(1.6, 2.5, { at: [x, 0, ZBI], facing: '+z', frame: P.steel, border: 0.05, mat: 'glass', glass: P.glassDark });
+      b.window(1.0, 0.9, { at: [x, BH + 0.4, ZBI], facing: '+z', frame: P.steel, border: 0.05, mat: 'glass', glass: P.glassDark });
+    } else {
+      b.panel(1.5, 2.45, wood, { at: [x - 0.12, 0, ZBI + 0.06], facing: '+z', rotY: -0.25 });
+      b.panel(1.0, 0.9, dark, { at: [x, BH + 0.4, ZBI], facing: '+z' });
+    }
+  }
+  if (state !== 'hotel') b.box(1.6, 0.1, 0.8, wood, { at: [-3.8, BH + 0.3, ZBI + 0.4] });
+  for (const x of spread(6, -SXO + 1, SXO - 1)) b.panel(0.3, 0.6, P.timberBlack, { at: [x, 2.0, ZB], facing: '-z' });
+  if (state !== 'hotel') tiledGable(b, 2 * SXO, ZBI - ZB, ((ZBI - ZB) / 2) * 0.42, tile, { at: [0, BTOP, bz], overhang: 0.3, wall: stone, step: 0.9 });
+  b.collider(2 * SXO, ZBI - ZB, { at: [0, 0, bz] });
+}
 
 /** A shop or tavern opening: a pointed arch with a fold-down counter and a shutter propped up as an awning. */
 function bancoOpening(b: Builder, x: number, w: number, wood: number, stone: number): void {
@@ -55,8 +100,8 @@ export const locanda: BuildingDef = {
     const wood = b.pick([P.oak, tint(P.oak, 0.05)]);
     const dark = P.oakDark;
 
-    ground(b, 21.6, 1.2, P.cobble, [0, ZF + 0.85], 0.06);
-    ground(b, 2 * XO, ZFI - ZBI, tint(P.cobble, 0.1), [0, (ZFI + ZBI) / 2], 0.04);
+    innStreet(b, P.cobble);
+    innYard(b, tint(P.cobble, 0.1));
 
     // ---------------- street range: stone ground storey, plastered upper floors jettied out on brackets
     const fw = XO - AW / 2;
@@ -150,7 +195,7 @@ export const locanda: BuildingDef = {
     tiledGable(b, rspan, rLen + 0.0, (rspan / 2) * 0.42, tile, { at: [XO - rspan / 2, RTOP, rz], ridge: 'z', overhang: 0.5, wall: plaster, step: 0.9 });
 
     // ---------------- left side: a high wall with a lean-to cart shed
-    b.box(0.5, 4.2, rLen, stone, { at: [-XO + 0.25, 0, rz] });
+    innYardWall(b, stone);
     for (const z of spread(4, ZBI + 0.3, ZFI - 0.3)) b.box(0.2, 3.0, 0.2, dark, { at: [-XO + 3.0, 0, z] });
     b.box(0.2, 0.22, rLen, dark, { at: [-XO + 3.0, 3.0, rz] });
     tiledShed(b, 3.4, rLen, 1.2, tile, { at: [-XO + 1.7, 3.1, rz], high: '-x' });
@@ -163,24 +208,10 @@ export const locanda: BuildingDef = {
     for (const [x, z] of [[-XO + 1.0, -3.2], [-XO + 1.7, -3.6], [-XO + 1.2, -4.3]] as const) barrel(b, [x, 0, z]);
 
     // ---------------- stables with a hayloft across the back
-    const bz = (ZB + ZBI) / 2;
-    b.box(2 * XO, BTOP, ZBI - ZB, stone, { at: [0, 0, bz] });
-    b.box(2 * XO + 0.04, BTOP - BH, ZBI - ZB + 0.04, tint(plaster, -0.03), { at: [0, BH, bz] });
-    for (const x of [-7.6, -3.8, 0, 3.8]) {
-      b.panel(1.8, 2.7, P.timberBlack, { at: [x, 0, ZBI], facing: '+z', shape: 'segmental' });
-      b.panel(1.5, 2.45, wood, { at: [x - 0.12, 0, ZBI + 0.06], facing: '+z', rotY: -0.25 });
-      b.panel(1.0, 0.9, dark, { at: [x, BH + 0.4, ZBI], facing: '+z' });
-    }
-    b.box(1.6, 0.1, 0.8, wood, { at: [-3.8, BH + 0.3, ZBI + 0.4] });
-    for (const x of spread(6, -XO + 1, XO - 1)) b.panel(0.3, 0.6, P.timberBlack, { at: [x, 2.0, ZB], facing: '-z' });
-    tiledGable(b, 2 * XO, ZBI - ZB, ((ZBI - ZB) / 2) * 0.42, tile, { at: [0, BTOP, bz], overhang: 0.3, wall: stone, step: 0.9 });
+    innStables(b, stone, tint(plaster, -0.03), wood, tile, 'locanda');
 
     // ---------------- the yard: a well with its pulley arch, a trough, a mounting block
-    b.cyl(0.7, 0.9, P.travertine, { at: [-1.6, 0, -1.6], segs: 8 });
-    b.cyl(0.55, 0.05, P.windowDark, { at: [-1.6, 0.88, -1.6], segs: 8 });
-    b.sym((s) => b.box(0.16, 1.6, 0.16, P.iron, { at: [-1.6 + s * 0.65, 0.9, -1.6] }));
-    b.extrude([[-0.75, 0], [0.75, 0], [0.75, 0.1], [0, 0.6], [-0.75, 0.1]], 0.1, P.iron, { at: [-1.6, 2.45, -1.6] });
-    b.cyl(0.14, 0.12, P.oakDark, { at: [-1.6, 2.3, -1.6], segs: 8, rot: [Math.PI / 2, 0, 0] });
+    innWell(b);
     b.box(2.6, 0.7, 0.8, P.travertine, { at: [-3.6, 0, ZBI + 1.0] });
     b.box(2.4, 0.05, 0.6, P.water, { at: [-3.6, 0.64, ZBI + 1.0], jitter: false });
     b.stairs(1.2, 0.8, 1.0, 3, P.travertine, { at: [2.0, 0, 2.8], rotY: -Math.PI / 2 });
@@ -190,6 +221,5 @@ export const locanda: BuildingDef = {
     b.sym((s) => b.collider(fw, ZF - ZFI, { at: [s * (AW / 2 + fw / 2), 0, fz] }));
     b.collider(XO - RX, rLen, { at: [rxm, 0, rz] });
     b.collider(0.5, rLen, { at: [-XO + 0.25, 0, rz] });
-    b.collider(2 * XO, ZBI - ZB, { at: [0, 0, bz] });
   },
 };

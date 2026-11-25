@@ -1,5 +1,6 @@
 import { P, mix, tint, type Builder, type BuildingDef } from '@ah/kit';
-import { N, STOREY_Y, arcadeBay, arcadeOrder, bayFrame, blockedBay, ringBand, ringDisc, ringPt, strip, vert } from './shared';
+import { N, STOREY_Y, arcadeBay, arcadeOrder, bayFrame, blockedBay, ringBand, ringPt, strip, vert } from './shared';
+import { PODIUM, arenaFloor, groundBelt, hasPodium, radialWalls, romanPlinth, romanPodium } from './02-amphitheatre';
 
 /** Bays left open at ground level as passages into the old arena: front, the two ends and the back. */
 const PASSAGES = [0, N / 4, N / 2, (3 * N) / 4];
@@ -12,6 +13,9 @@ const SECTORS: [number, number][] = [
   [18, 19], [19, 21], [21, 22], [22, 24],
 ];
 
+/** The revision: the yard cleared of gardens and sheds and paved as a public square (Lucca, 1830). */
+const PIAZZA = 1830;
+
 /** Floor levels of the houses above the Roman ground storey. */
 const FLOORS = [STOREY_Y[1], 7.9, 11.0];
 
@@ -20,7 +24,8 @@ function house(b: Builder, k0: number, k1: number, eaves: number, wall: number, 
   const ridge = eaves + 1.9;
   const y0 = passage ? STOREY_Y[1] : 0;
   // the face on the piazza and the face on the street
-  ringBand(b, [[0, y0], [0, eaves]], wall, { k0, k1 });
+  // (over the Roman podium wall where it still stands)
+  for (let k = k0; k < k1; k++) ringBand(b, [[0, !passage && hasPodium(k) ? PODIUM : y0], [0, eaves]], wall, { k0: k, k1: k + 1 });
   ringBand(b, [[1, STOREY_Y[1] - 0.4], [1, eaves]], wall, { k0, k1 });
   if (passage) ringBand(b, [[0, y0], [1, y0]], tint(wall, -0.2), { k0, k1 }); // the vault over the passage
   // end walls, with the gable to the ridge
@@ -45,9 +50,10 @@ export const arenaHouses: BuildingDef = {
   date: 'c. 1000 onward',
   summary:
     'After the shows ended the amphitheatre was quarried for stone and lime, but its vaults and arches were too useful to pull down. ' +
-    'From the early Middle Ages people built houses on the stumps of the seating and into the outer arcade, walling up the arches with brick and rubble, until the ruin became a ring of houses round an oval yard of gardens. ' +
+    'From the early Middle Ages people built houses on the stumps of the seating and into the outer arcade, walling up the arches with brick and rubble and raising their fronts on the low wall round the arena, until the ruin became a ring of houses round an oval yard of gardens. ' +
     'A family of the commune turned part of it into a fortified tower. Streets inside and outside still follow the curve of the Roman walls, and the old gates are passages under the houses.',
   materials: ['reused travertine and Roman brick', 'rubble stone', 'lime plaster', 'timber floors', 'coppi roof tiles'],
+  revisions: [{ year: PIAZZA, note: 'In 1830 the gardens, sheds and shacks in the oval were cleared away and it was paved as a public square, as Lorenzo Nottolini did at Lucca.' }],
   modelledOn:
     "Piazza dell'Anfiteatro, Lucca (houses on the Roman amphitheatre, the arena cleared as a piazza by Lorenzo Nottolini in 1830); the tower recalls the Frangipani fortress in the Colosseum",
   lookFor: [
@@ -96,7 +102,12 @@ export const arenaHouses: BuildingDef = {
         else b.window(0.6, 0.8, { at: [f.x - Math.sin(f.ang) * 0.12, 2.1, f.z - Math.cos(f.ang) * 0.12], facing: f.ang, frame: P.travertine });
       }
     }
-    ringBand(b, [[0.99, STOREY_Y[1] - 0.5], [1.03, STOREY_Y[1] - 0.45], [1.03, STOREY_Y[1] - 0.15], [1, STOREY_Y[1] - 0.1]], tint(trav, -0.05));
+    romanPlinth(b, tint(trav, -0.05));
+    groundBelt(b, tint(trav, -0.05));
+    // the podium wall round the arena, cut through where the passages come in, and the radial
+    // walls of the seating, now the party walls and cellars of the houses
+    romanPodium(b, tint(P.marble, -0.12), 4);
+    radialWalls(b, tint(P.brickOrange, -0.05));
 
     // ------------------------------------------------ the houses
     SECTORS.forEach(([k0, k1], i) => {
@@ -156,28 +167,29 @@ export const arenaHouses: BuildingDef = {
       });
     }
 
-    // ------------------------------------------------ the garden in the arena
-    ringDisc(b, 0, 0.02, tint(P.earth, 0.04));
+    // ------------------------------------------------ the garden in the arena (built last: in 1830 it is cleared and paved)
+    const piazza = b.since(PIAZZA);
+    arenaFloor(b, piazza ? mix(P.paving, P.pietraSerena, 0.4) : tint(P.earth, 0.04));
     ringBand(b, [[0.0, 0.04], [0.09, 0.04]], P.gravel, { k0: 0, k1: N });
-    const beds: [number, number, number, number][] = [
-      [-4.6, -1.6, 4.2, 2.0],
-      [-4.6, 1.6, 4.2, 2.0],
-      [1.0, -2.0, 3.2, 1.8],
-      [4.4, 1.2, 2.6, 1.8],
-    ];
-    for (const [x, z, w, d] of beds) {
-      b.box(w, 0.18, d, P.soil, { at: [x, 0.02, z] });
-      for (let r = 0; r < 3; r++) b.box(w - 0.4, 0.2, 0.2, b.pick([P.leaf, P.hedge, P.crop]), { at: [x, 0.2, z - d / 2 + 0.45 + r * ((d - 0.9) / 2)] });
-    }
-    // a well
-    b.cyl(0.75, 0.9, P.rubble, { at: [1.6, 0, 1.8], segs: 10 });
-    b.sym((s) => b.box(0.12, 1.9, 0.12, P.oakDark, { at: [1.6 + s * 0.6, 0.9, 1.8] }));
-    b.box(1.5, 0.12, 0.12, P.oakDark, { at: [1.6, 2.7, 1.8] });
-    // fruit trees and a lean-to shed against the ring
-    b.tree(4.0, { at: [-1.2, 0, -3.6], kind: 'olive' });
-    b.tree(3.6, { at: [6.4, 0, -1.4], kind: 'round', color: P.leafDark });
-    b.tree(3.2, { at: [-6.8, 0, 2.8], kind: 'olive' });
-    {
+    if (!piazza) {
+      const beds: [number, number, number, number][] = [
+        [-4.6, -1.6, 4.2, 2.0],
+        [-4.6, 1.6, 4.2, 2.0],
+        [1.0, -2.0, 3.2, 1.8],
+        [4.4, 1.2, 2.6, 1.8],
+      ];
+      for (const [x, z, w, d] of beds) {
+        b.box(w, 0.18, d, P.soil, { at: [x, 0.02, z] });
+        for (let r = 0; r < 3; r++) b.box(w - 0.4, 0.2, 0.2, b.pick([P.leaf, P.hedge, P.crop]), { at: [x, 0.2, z - d / 2 + 0.45 + r * ((d - 0.9) / 2)] });
+      }
+      // a well
+      b.cyl(0.75, 0.9, P.rubble, { at: [1.6, 0, 1.8], segs: 10 });
+      b.sym((s) => b.box(0.12, 1.9, 0.12, P.oakDark, { at: [1.6 + s * 0.6, 0.9, 1.8] }));
+      b.box(1.5, 0.12, 0.12, P.oakDark, { at: [1.6, 2.7, 1.8] });
+      // fruit trees and a lean-to shed against the ring
+      b.tree(4.0, { at: [-1.2, 0, -3.6], kind: 'olive' });
+      b.tree(3.6, { at: [6.4, 0, -1.4], kind: 'round', color: P.leafDark });
+      b.tree(3.2, { at: [-6.8, 0, 2.8], kind: 'olive' });
       const f = bayFrame(15, 0);
       b.group({ at: [f.x - Math.sin(f.ang) * 1.0, 0, f.z - Math.cos(f.ang) * 1.0], rotY: f.ang + Math.PI }, () => {
         b.box(2.2, 2.0, 1.8, P.oak);
@@ -195,6 +207,6 @@ export const arenaHouses: BuildingDef = {
         b.collider(w, Math.hypot(c[0] - a[0], c[1] - a[1]), { at: [(a[0] + c[0]) / 2, 0, (a[1] + c[1]) / 2], rotY: bayFrame(k, (s0 + s1) / 2).ang });
       }
     }
-    b.collider(0.5, 0.5, { at: [1.6, 0, 1.8] });
+    if (!piazza) b.collider(0.5, 0.5, { at: [1.6, 0, 1.8] });
   },
 };

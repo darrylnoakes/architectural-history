@@ -60,7 +60,7 @@ export const pilgrimHospital: BuildingDef = {
     const tile = b.pick([P.coppi, tint(P.coppi, -0.04)]);
     const wood = P.oakDark;
 
-    ground(b, 21.6, 1.0, P.cobble, [0, 10.3], 0.06);
+    ground(b, 21.6, 1.0, P.cobble, [0, 10.3], 0.1);
     ground(b, 20.6, 10.8, tint(P.earth, 0.05), [0, -5.2], 0.03);
 
     // ---------------- the long hall

@@ -1,5 +1,5 @@
 import { P, mix, type BuildingDef } from '@ah/kit';
-import { CENTRE_TOP, PAL, PORTAL_X, TWR, TWR_TOP, WING_TOP, brickSquare, palaceColliders, palazzoPubblico, pave } from './shared';
+import { CENTRE_TOP, PAL, PORTAL_X, TWR, TWR_TOP, WING_TOP, brickSquare, palaceColliders, palazzoPubblico, pave, squareWell } from './shared';
 
 export const palazzoPubblicoDef: BuildingDef = {
   id: 'palazzo-pubblico',
@@ -26,13 +26,12 @@ export const palazzoPubblicoDef: BuildingDef = {
     // the square in front, laid in brick between travertine strips, running round the right side
     brickSquare(b, -21.5, 21.5, PAL.zf, 21.5);
     pave(b, 14.5, 28, 14.25, -7, mix(P.cotto, P.paving, 0.45));
-    // a stone wellhead in the square and a low wall closing the yard behind
-    b.cyl(1.0, 1.0, P.travertine, { at: [13, 0, 0], segs: 8 });
+    // the old stone wellhead in the square, and a low wall closing the yard behind
+    squareWell(b);
     b.box(0.4, 2.6, 18, P.cotto, { at: [5.8, 0, -12] });
     b.box(25.8, 2.6, 0.4, P.cotto, { at: [-7.2, 0, -21] });
     b.box(0.4, 2.6, 18, P.cotto, { at: [-20, 0, -12] });
     palaceColliders(b, false);
-    b.collider(2.2, 2.2, { at: [13, 0, 0] });
     b.collider(0.6, 18, { at: [5.8, 0, -12] });
     b.collider(25.8, 0.6, { at: [-7.2, 0, -21] });
     b.collider(0.6, 18, { at: [-20, 0, -12] });

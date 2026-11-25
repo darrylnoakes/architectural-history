@@ -54,7 +54,7 @@ export const grandCafe: BuildingDef = {
     const roof = P.lead;
     const zm = (ZF + ZB) / 2;
 
-    ground(b, 21.6, 4.8, P.paving, [0, 8.6], 0.08);
+    ground(b, 21.6, 4.8, P.paving, [0, 8.6], 0.1);
 
     // ---------------- the café floor: a rusticated base
     b.box(2 * XO, G, ZF - ZB, stucco, { at: [0, 0, zm] });
@@ -141,10 +141,10 @@ export const grandCafe: BuildingDef = {
     });
 
     // a gas lamp on the corner
-    b.cyl(0.08, 3.4, P.castIron, { at: [0, 0.08, 9.8], segs: 6 });
+    b.cyl(0.08, 3.4, P.castIron, { at: [0, 0.1, 9.8], segs: 6 });
     b.lathe([[0.05, 0], [0.25, 0.3], [0.2, 0.6], [0.0, 0.75]], P.glassDark, { at: [0, 3.48, 9.8], segs: 6 });
-    cafeTable(b, [-1.8, 0.08, 9.6], P.marble, P.castIron, 2);
-    cafeTable(b, [1.8, 0.08, 9.6], P.marble, P.castIron, 2);
+    cafeTable(b, [-1.8, 0.1, 9.6], P.marble, P.castIron, 2);
+    cafeTable(b, [1.8, 0.1, 9.6], P.marble, P.castIron, 2);
 
     b.collider(2 * XO, ZF - ZB, { at: [0, 0, zm] });
   },

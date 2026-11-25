@@ -1,5 +1,5 @@
 import { P, tint, spread, type BuildingDef } from '@ah/kit';
-import { coppiRoof, coppiShed, hole, vegBed, well } from './shared';
+import { coppiRoof, coppiShed, gardenWalls, gardenWallsTo, vegBed, well, WELL } from './shared';
 
 export const domusSolarata: BuildingDef = {
   id: 'domus-solarata',
@@ -37,8 +37,8 @@ export const domusSolarata: BuildingDef = {
     },
     {
       label: 'Garden and well',
-      note: 'Behind the house a walled garden of vegetables, vines and a fig, with a well: the early medieval town was half countryside.',
-      at: [2.8, 1.3, -4.2],
+      note: 'Behind the house a garden of vegetables, vines and a fig, with a well, still closed at the back by the brick walls of a Roman garden: the early medieval town was half countryside.',
+      at: [-4.6, 1.3, -3.6],
     },
   ],
   build(b) {
@@ -123,18 +123,13 @@ export const domusSolarata: BuildingDef = {
     coppiShed(b, 3.8, 1.7, 0.55, tint(tile, -0.05), { at: [4.65, 1.9, zb - 0.85], high: '+z' });
     b.box(3.2, 0.8, 1.3, P.wattle, { at: [4.65, 0, zb - 0.85] });
 
-    // ---- the garden: wattle-fenced beds, vines on a pergola, a fig, a well, and a piece of Roman wall
-    const gz1 = -8.8;
-    // a fragment of the old brick wall, still standing at the back, with an arch
-    b.extrude([[-3, 0], [3, 0], [3, 2.6], [1.8, 3.4], [0.5, 4.2], [-0.8, 3.6], [-3, 2.2]], 0.6, tint(P.brickOrange, -0.05), {
-      at: [-3.6, 0, gz1 + 0.3],
-      holes: [hole(-0.6, 0, 1.6, 2.6, true)],
-    });
-    b.box(7.4, 1.4, 0.3, tint(tufa, -0.05), { at: [3.1, 0, gz1 + 0.15] });
-    b.sym((s) => b.box(0.3, 1.4, zb - gz1, tint(tufa, -0.05), { at: [s * (X - 0.15), 0, (zb + gz1) / 2] }));
-    vegBed(b, -3.2, -3.6, 5.0, 3.6, { rows: 7 });
+    // ---- the garden: beds, vines on a pergola, a fig, a well; the plot is still closed at the back by
+    // the walls of the Roman garden, carried on with a low wall of tufa to the house
+    gardenWalls(b, tint(P.brickOrange, -0.05));
+    gardenWallsTo(b, zb, tint(tufa, -0.05), { h: 1.4 });
+    vegBed(b, 2.0, -3.4, 4.6, 3.0, { rows: 6 });
     vegBed(b, 3.8, -7.2, 4.2, 2.4, { rows: 5, color: P.leafDark });
-    well(b, [2.8, 0, -4.2], tint(P.marble, -0.08), { frame: 'wood' });
+    well(b, WELL, tint(P.marble, -0.08), { frame: 'wood' });
     // vine pergola
     for (const [x, z] of [[-6.0, -6.0], [-1.2, -6.0], [-6.0, -7.4], [-1.2, -7.4]] as [number, number][]) b.box(0.12, 2.2, 0.12, P.oak, { at: [x, 0, z] });
     for (const z of [-6.0, -7.4]) b.box(5.0, 0.1, 0.1, P.oak, { at: [-3.6, 2.2, z] });

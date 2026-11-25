@@ -1,9 +1,12 @@
 import { P, linspace, spread, tint, type Builder, type BuildingDef } from '@ah/kit';
-import { barrel, columnArcade, frasca, ground, tiledGable } from './shared';
+import { barrel, columnArcade, frasca, tiledGable, tiledShed } from './shared';
+import { BH, BTOP, ZB, ZBI, innStables, innStreet, innWell, innYard, innYardWall } from './06-locanda';
+
+export { BH, BTOP, ZB, ZBI };
 
 // street range along the front, a side range down the side street (+X), stables across the back
 export const XO = 10.2;
-export const ZF = 9.4; // street face
+export const ZF = 9.1; // street face, on the old inn's building line
 export const ZFI = 3.8; // yard face of the street range
 export const G = 4.4; // ground storey: portico and tavern
 export const F1 = 4.0; // piano nobile with the corner loggia
@@ -15,11 +18,8 @@ export const PZ = 6.6; // back wall of the portico and loggia
 export const LX0 = 3.4; // where the upper loggia begins
 // side range
 export const SX = 5.2; // its yard face
-export const ZB = -10.2;
-// stables
-export const BZI = -5.6; // yard face
-export const BH = 3.6;
-export const BTOP = BH + 2.8;
+// the old inn's stables across the back (see 06-locanda), with a loggia added in front of them
+export const BZI = ZBI + 1.6; // line of the loggia columns
 export const GX = -6.6; // the carriage gate in the street front
 
 /** A cross window (finestra crociata): stone frame, mullion and transom in the form of a cross. */
@@ -45,8 +45,9 @@ export function buildRenaissanceInn(b: Builder, restored: boolean): void {
   const shaft = P.granite; // reused ancient granite columns
   const fz = (ZF + ZFI) / 2;
 
-  ground(b, 21.6, 1.4, restored ? P.paving : P.cobble, [0, ZF + 0.85], 0.06);
-  ground(b, SX + XO, ZFI - BZI, restored ? P.travertine : tint(P.cobble, 0.1), [(SX - XO) / 2, (ZFI + BZI) / 2], 0.04);
+  // the old inn's street paving and yard floor (relaid in 2016)
+  innStreet(b, restored ? P.paving : P.cobble);
+  innYard(b, restored ? P.travertine : tint(P.cobble, 0.1));
 
   // ---------------- street range, ground storey: closed on the left, portico on the right
   b.box(PX0 + XO, G, ZF - ZFI, plaster, { at: [(PX0 - XO) / 2, 0, fz] });
@@ -135,8 +136,8 @@ export function buildRenaissanceInn(b: Builder, restored: boolean): void {
   tiledGable(b, 2 * XO, fspan, fRise, tile, { at: [0, TOP, fz], overhang: 0.55, wall: plaster, step: 0.9 });
 
   // ---------------- side range along the side street: three storeys, the same storey lines
-  const sLen = ZFI - ZB;
-  const sz = (ZFI + ZB) / 2;
+  const sLen = ZFI - ZBI;
+  const sz = (ZFI + ZBI) / 2;
   const sxm = (SX + XO) / 2;
   b.box(XO - SX, TOP, sLen, plaster, { at: [sxm, 0, sz] });
   b.box(XO - SX + 0.04, 0.6, sLen + 0.04, trav, { at: [sxm, 0, sz] });
@@ -144,7 +145,7 @@ export function buildRenaissanceInn(b: Builder, restored: boolean): void {
   b.box(XO - SX + 0.08, 0.18, sLen + 0.08, trav, { at: [sxm, G + F1 - 0.08, sz] });
   b.box(XO - SX + 0.06, 0.6, sLen + 0.06, cotto, { at: [sxm, fy, sz] });
   b.box(XO - SX + 0.8, 0.18, sLen + 0.8, trav, { at: [sxm, TOP - 0.15, sz] });
-  for (const z of [1.6, -2.4, -6.4]) {
+  for (const z of [1.6, -2.4]) {
     crossWindow(b, XO, G + 0.9, z, '+x', trav, cotto);
     b.window(0.9, 1.1, { at: [XO, G + F1 + 0.9, z], facing: '+x', frame: trav, border: 0.1, bars: [2, 2] });
     b.window(1.0, 1.2, { at: [XO, 1.9, z], facing: '+x', frame: trav, bars: [4, 4], border: 0.12 });
@@ -152,61 +153,49 @@ export function buildRenaissanceInn(b: Builder, restored: boolean): void {
     b.window(0.9, 1.1, { at: [SX, G + F1 + 0.9, z], facing: '-x', frame: trav, border: 0.1 });
     b.panel(1.1, 2.4, wood, { at: [SX, 0, z - 1.1], facing: '-x', shape: 'round' });
   }
-  for (const x of [6.6, 9.0]) b.window(0.9, 1.1, { at: [x, G + F1 + 0.9, ZB], facing: '-z', frame: trav, border: 0.1 });
+  for (const x of [6.6, 9.0]) b.window(0.9, 1.1, { at: [x, G + F1 + 0.9, ZBI], facing: '-z', frame: trav, border: 0.1 });
   const sspan = XO - SX;
   const sRise = (sspan / 2) * 0.42;
   const zEnd = fz - (1 - sRise / fRise) * (fspan / 2) + 0.1;
-  tiledGable(b, sspan, zEnd - ZB, sRise, tile, { at: [sxm, TOP, (zEnd + ZB) / 2], ridge: 'z', overhang: 0.5, wall: plaster, step: 0.9 });
-  b.chimney(0.7, 2.0, 0.7, plaster, { at: [sxm + 0.8, TOP + sRise - 1.0, -4.0] });
+  tiledGable(b, sspan, zEnd - ZBI, sRise, tile, { at: [sxm, TOP, (zEnd + ZBI) / 2], ridge: 'z', overhang: 0.5, wall: plaster, step: 0.9 });
+  b.chimney(0.7, 2.0, 0.7, plaster, { at: [sxm + 0.8, TOP + sRise - 1.0, -3.4] });
   b.chimney(0.7, 2.0, 0.7, plaster, { at: [-5.0, TOP + fRise - 1.0, fz - 0.8] });
 
-  // ---------------- stables across the back of the yard, with an open loggia on columns
-  const bLen = SX + XO;
-  const bxm = (SX - XO) / 2;
-  const bz = (ZB + BZI) / 2;
-  b.box(bLen, BTOP, BZI - ZB - 1.6, plaster, { at: [bxm, 0, (ZB + BZI - 1.6) / 2] });
-  columnArcade(b, bLen, 5, 2.4, BH - 2.4, plaster, { at: [bxm, 0, BZI - 0.25], colColor: trav, r: 0.2, order: 'tuscan', t: 0.4 });
-  b.box(bLen, BTOP - BH, 1.6, plaster, { at: [bxm, BH, BZI - 0.8] });
-  b.box(bLen + 0.06, 0.15, BZI - ZB + 0.06, trav, { at: [bxm, BH - 0.05, bz] });
-  for (const x of spread(5, -XO, SX)) {
-    if (restored) {
-      b.window(2.0, 2.4, { at: [x, 0, BZI - 1.6], facing: '+z', frame: P.steel, border: 0.05, mat: 'glass', glass: P.glassDark });
-      b.window(1.0, 1.3, { at: [x, BH + 0.7, BZI], facing: '+z', frame: trav, border: 0.1, bars: [2, 2] });
-    } else {
-      b.panel(1.6, 2.3, wood, { at: [x, 0, BZI - 1.6], facing: '+z', shape: 'segmental' });
-      b.panel(0.9, 0.9, P.timberBlack, { at: [x, BH + 0.9, BZI], facing: '+z', shape: 'round' });
-    }
-    b.panel(0.3, 0.7, P.timberBlack, { at: [x, 2.2, ZB], facing: '-z' });
-  }
+  // ---------------- the old inn's stone stables across the back, kept, with a loggia of Tuscan
+  // columns built in front of them; in 2016 the openings are glazed and the roof is a terrace
+  innStables(b, tint(P.pietraForte, -0.02), tint(plaster, -0.03), wood, tile, restored ? 'hotel' : 'inn');
+  const lx0 = -XO + 0.5;
+  const lLen = SX - lx0;
+  const lxm = (SX + lx0) / 2;
+  columnArcade(b, lLen, 6, 2.2, 1.1, plaster, { at: [lxm, 0, BZI - 0.2], colColor: trav, r: 0.2, order: 'tuscan', t: 0.4 });
+  tiledShed(b, lLen, BZI - ZBI + 0.1, 0.4, tile, { at: [lxm, 3.33, ZBI + (BZI - ZBI + 0.1) / 2], high: '-z' });
+  b.box(lLen, 0.06, BZI - ZBI, trav, { at: [lxm, 0, (BZI + ZBI) / 2], jitter: false });
   if (restored) {
     // the stable roof made into a roof terrace: paving, a glass balustrade, a pergola, umbrellas
-    b.box(bLen, 0.25, BZI - ZB, trav, { at: [bxm, BTOP, bz] });
-    b.box(bLen, 1.05, 0.06, P.glass, { at: [bxm, BTOP + 0.25, BZI - 0.05], mat: 'glass', jitter: false });
-    b.box(0.06, 1.05, BZI - ZB, P.glass, { at: [-XO + 0.05, BTOP + 0.25, bz], mat: 'glass', jitter: false });
-    b.box(bLen, 1.05, 0.25, plaster, { at: [bxm, BTOP + 0.25, ZB + 0.12] });
-    for (const x of spread(4, -XO + 1, -1)) for (const z of [BZI - 0.6, ZB + 0.8]) b.box(0.1, 2.4, 0.1, P.castIron, { at: [x, BTOP + 0.25, z] });
-    for (const x of spread(4, -XO + 1, -1)) b.box(0.08, 0.1, BZI - ZB - 1.2, P.castIron, { at: [x, BTOP + 2.65, bz] });
-    for (const z of spread(7, ZB + 0.8, BZI - 0.6)) b.box(9.4, 0.05, 0.08, P.oak, { at: [-5.6, BTOP + 2.75, z] });
-    b.blob(1.1, P.leaf, { at: [-8.6, BTOP + 2.8, bz], stretch: [1.4, 0.3, 1.6], detail: 0 });
-    b.blob(0.9, P.leafDark, { at: [-4.0, BTOP + 2.8, bz + 0.6], stretch: [1.6, 0.3, 1.2], detail: 0 });
-  } else {
-    tiledGable(b, bLen, BZI - ZB, ((BZI - ZB) / 2) * 0.42, tile, { at: [bxm, BTOP, bz], overhang: 0.4, wall: plaster, step: 0.9 });
+    const tz = (ZB + ZBI) / 2;
+    const tw = 2 * XO;
+    b.box(tw, 0.25, ZBI - ZB, trav, { at: [0, BTOP, tz] });
+    b.box(SX + XO, 1.05, 0.06, P.glass, { at: [(SX - XO) / 2, BTOP + 0.25, ZBI - 0.05], mat: 'glass', jitter: false });
+    b.sym((e) => b.box(0.06, 1.05, ZBI - ZB, P.glass, { at: [e * (XO - 0.05), BTOP + 0.25, tz], mat: 'glass', jitter: false }));
+    b.box(tw, 1.05, 0.25, plaster, { at: [0, BTOP + 0.25, ZB + 0.12] });
+    for (const x of spread(4, -XO + 1, -1)) for (const z of [ZBI - 0.6, ZB + 0.8]) b.box(0.1, 2.4, 0.1, P.castIron, { at: [x, BTOP + 0.25, z] });
+    for (const x of spread(4, -XO + 1, -1)) b.box(0.08, 0.1, ZBI - ZB - 1.2, P.castIron, { at: [x, BTOP + 2.65, tz] });
+    for (const z of spread(7, ZB + 0.8, ZBI - 0.6)) b.box(9.4, 0.05, 0.08, P.oak, { at: [-5.6, BTOP + 2.75, z] });
+    b.blob(1.1, P.leaf, { at: [-8.6, BTOP + 2.8, tz], stretch: [1.4, 0.3, 1.6], detail: 0 });
+    b.blob(0.9, P.leafDark, { at: [-4.0, BTOP + 2.8, tz + 0.6], stretch: [1.6, 0.3, 1.2], detail: 0 });
   }
 
-  // ---------------- left side of the yard: a garden wall
-  b.box(0.5, 4.2, ZFI - BZI, plaster, { at: [-XO + 0.25, 0, (ZFI + BZI) / 2] });
-  b.box(0.7, 0.12, ZFI - BZI, tile, { at: [-XO + 0.25, 4.2, (ZFI + BZI) / 2] });
+  // ---------------- left side of the yard: the old inn's wall, given a tiled coping
+  innYardWall(b, plaster);
+  b.box(0.7, 0.12, ZFI - ZBI, tile, { at: [-XO + 0.25, 4.2, (ZFI + ZBI) / 2] });
 
-  // ---------------- the yard: an octagonal well-head
-  b.cyl(0.8, 0.95, trav, { at: [-2.0, 0, -0.8], segs: 8 });
-  b.cyl(0.62, 0.05, P.windowDark, { at: [-2.0, 0.93, -0.8], segs: 8 });
-  b.sym((s) => b.box(0.12, 1.5, 0.12, P.iron, { at: [-2.0 + s * 0.7, 0.95, -0.8] }));
-  b.extrude([[-0.8, 0], [0.8, 0], [0.8, 0.08], [0, 0.55], [-0.8, 0.08]], 0.08, P.iron, { at: [-2.0, 2.45, -0.8] });
+  // ---------------- the yard: the old inn's well
+  innWell(b);
 
   if (!restored) {
-    barrel(b, [1.4, 0, -3.6]);
-    barrel(b, [2.1, 0, -3.9], tint(P.oak, 0.05));
-    b.box(2.2, 0.6, 0.7, trav, { at: [-7.6, 0, -3.8] });
+    barrel(b, [1.4, 0, -2.8]);
+    barrel(b, [2.1, 0, -3.1], tint(P.oak, 0.05));
+    b.box(2.2, 0.6, 0.7, trav, { at: [-7.6, 0, -4.5] });
     b.tree(5, { at: [-8.2, 0, 1.6], kind: 'round', color: P.leafDark });
   }
 
@@ -214,8 +203,24 @@ export function buildRenaissanceInn(b: Builder, restored: boolean): void {
   b.collider(PX0 + XO, ZF - ZFI, { at: [(PX0 - XO) / 2, 0, fz] });
   b.collider(XO - PX0, PZ - ZFI, { at: [(XO + PX0) / 2, 0, (PZ + ZFI) / 2] });
   b.collider(XO - SX, sLen, { at: [sxm, 0, sz] });
-  b.collider(bLen, BZI - ZB - 1.6, { at: [bxm, 0, (ZB + BZI - 1.6) / 2] });
-  b.collider(0.5, ZFI - BZI, { at: [-XO + 0.25, 0, (ZFI + BZI) / 2] });
+  b.collider(0.5, ZFI - ZBI, { at: [-XO + 0.25, 0, (ZFI + ZBI) / 2] });
+
+  // ---------------- later alterations, built last so that nothing else moves
+  // c. 1680: the corner loggia walled in for more rooms (the 2016 restoration opened it again)
+  if (!restored && b.since(1680)) {
+    const ly = G + 0.12;
+    const lh = F1 - 0.12;
+    b.box(XO - LX0 - 0.2, lh, 0.3, plaster, { at: [(XO + LX0) / 2 - 0.1, ly, ZF - 0.3], jitter: false });
+    b.box(0.3, lh, ZF - PZ - 0.3, plaster, { at: [XO - 0.3, ly, (ZF + PZ) / 2 - 0.15], jitter: false });
+    for (const x of [5.0, 8.4]) b.window(0.9, 1.4, { at: [x, ly + 1.0, ZF - 0.15], facing: '+z', frame: trav, border: 0.1, bars: [2, 2] });
+    b.window(0.9, 1.4, { at: [XO - 0.15, ly + 1.0, (ZF + PZ) / 2], facing: '+x', frame: trav, border: 0.1, bars: [2, 2] });
+  }
+  // c. 1780: louvred shutters (persiane) on the street windows, kept in the restoration
+  if (restored || b.since(1780)) {
+    const green = P.doorGreen;
+    for (const x of [-8.8, -5.6, -2.4, 0.8]) b.sym((t) => b.panel(0.62, 2.0, green, { at: [x + t * 1.12, G + 0.9, ZF], facing: '+z', depth: 0.05, jitter: false }));
+    for (const x of [-8.8, -5.6, -2.4, 0.8, 4.2, 7.4]) b.sym((t) => b.panel(0.45, 1.1, green, { at: [x + t * 0.75, G + F1 + 0.9, ZF], facing: '+z', depth: 0.05, jitter: false }));
+  }
 }
 
 export const renaissanceInn: BuildingDef = {
@@ -227,7 +232,7 @@ export const renaissanceInn: BuildingDef = {
   summary:
     'With the popes back in Rome and the Jubilees bringing pilgrims in hundreds of thousands, innkeeping has become a respectable trade, and the best inns look like the palaces of the rich. ' +
     'This one is plastered and ordered in the new manner: a portico of round arches on reused ancient granite columns, an open loggia on the corner of the first floor, cross windows framed in travertine, and a frieze and cornice of moulded terracotta. ' +
-    'Behind the carriage gate the yard keeps the old inn’s stables, now behind a loggia of their own. The Albergo dell’Orso in Rome, on which it is modelled, is said to have lodged Montaigne in 1580.',
+    'The street range is rebuilt on the old building line, but behind the carriage gate the yard, its well and the old inn’s stone stables are kept, the stables now behind a loggia of their own. The Albergo dell’Orso in Rome, on which it is modelled, is said to have lodged Montaigne in 1580.',
   materials: ['brick and rubble, plastered', 'travertine', 'moulded terracotta', 'reused granite columns', 'clay pan-and-cover tiles'],
   lookFor: [
     { label: 'Corner loggia', note: 'An open gallery on the first floor at the corner, its columns carrying a flat architrave: a cool, airy room for guests to look out on the street.', at: [8.0, G + 2.2, ZF + 0.2] },
@@ -237,6 +242,10 @@ export const renaissanceInn: BuildingDef = {
     { label: 'Stable loggia', note: 'The stables across the back of the yard open behind a loggia of Tuscan columns, with the hay above.', at: [-4.0, 1.8, BZI + 0.3] },
   ],
   influences: ['renaissance-birth'],
+  revisions: [
+    { year: 1680, note: 'The corner loggia is walled in to make more rooms, as most open loggias in Rome were in the seventeenth century; two windows are set in the new wall.' },
+    { year: 1780, note: 'Green louvred shutters (persiane) are hung at the street windows, as they were all over Italy in the eighteenth century.' },
+  ],
   build(b) {
     buildRenaissanceInn(b, false);
   },

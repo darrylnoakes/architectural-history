@@ -1,5 +1,5 @@
 import { P, tint, type BuildingDef, type Builder } from '@ah/kit';
-import { archivolt, goods, hipRibs } from './shared';
+import { archivolt, goods, hipRibs, squarePaving } from './shared';
 
 /** The bronze boar fountain: a boar seated on a rocky base over a small basin, water from its mouth. */
 function boarFountain(b: Builder, at: [number, number, number], rotY: number): void {
@@ -46,7 +46,10 @@ export const renaissanceLoggia: BuildingDef = {
   ],
   modelledOn: 'The Loggia del Mercato Nuovo, Florence (Giovanni Battista del Tasso, 1547 to 1551), simplified',
   influences: ['renaissance-birth'],
+  revisions: [{ year: 1640, note: 'Pietro Tacca’s bronze boar, cast in about 1633 after an ancient marble, is set up as a fountain on the south side of the loggia.' }],
   build(b) {
+    // the square keeps the commune’s paving
+    squarePaving(b);
     const W = 20;
     const D = 15;
     const y0 = 0.5; // floor of the loggia, on a stepped platform
@@ -169,7 +172,7 @@ export const renaissanceLoggia: BuildingDef = {
     for (let i = 0; i < 3; i++) b.cyl(0.07, 0.05 + i * 0.03, P.gold, { at: [2.2 + i * 0.3, y0 + 0.84, 0.3], segs: 6 });
     b.box(0.5, 0.25, 0.35, P.oakDark, { at: [3.1, y0 + 0.84, 0.5] }); // strongbox
 
-    // the bronze boar on the south side
-    boarFountain(b, [5.8, 0, 9.8], 0);
+    // the bronze boar on the south side, from about 1640 (built last, so nothing else moves)
+    if (b.since(1640)) boarFountain(b, [5.8, 0.1, 9.8], 0);
   },
 };

@@ -1,5 +1,5 @@
 import { P, linspace, tint, type BuildingDef } from '@ah/kit';
-import { amphora, goods, paving, tileRibs } from './shared';
+import { amphora, forumPaving, goods, tileRibs } from './shared';
 
 export const forumShops: BuildingDef = {
   id: 'forum-shops',
@@ -20,6 +20,8 @@ export const forumShops: BuildingDef = {
   ],
   influences: ['etruscan-legacy'],
   build(b) {
+    // the forum paving, kept by the macellum and the medieval market after it
+    forumPaving(b);
     const BW = 20.4; // shop block
     const BD = 8.4;
     const WH = 5.8; // wall height of the block
@@ -32,8 +34,7 @@ export const forumShops: BuildingDef = {
     const tile = P.romanTile;
     const stucco = P.whiteRender;
 
-    // the forum paving and the raised walk under the porticoes
-    paving(b, 25.6, 21.6, P.travertine, 0.1, [0, 0, 0], 14);
+    // the raised walk under the porticoes
     b.box(BW + 1.6, F / 2, 2 * CZ + 1.4, tint(tufa, 0.04), { at: [0, 0.1, 0] });
     b.box(BW + 1.2, F / 2 - 0.1, 2 * CZ + 1.0, tint(tufa, 0.08), { at: [0, 0.1 + F / 2, 0] });
     const fy = F + 0.1;
@@ -125,7 +126,7 @@ export const forumShops: BuildingDef = {
     }
 
     // the mensa ponderaria in the forum in front of the portico
-    b.group({ at: [0, 0.1, 9.0] }, () => {
+    b.group({ at: [0, 0.12, 9.0] }, () => {
       b.box(2.4, 0.15, 1.1, P.travertine);
       for (const sx of [-1, 1]) b.box(0.35, 0.8, 0.8, tint(P.travertine, -0.05), { at: [sx * 0.85, 0.15, 0] });
       b.box(2.2, 0.32, 0.95, P.travertine, { at: [0, 0.95, 0] });
