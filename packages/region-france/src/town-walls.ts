@@ -66,8 +66,8 @@ const outer: { x: number; z: number; r: number }[] = [];
 for (let z = WALL.north; z <= WALL.river; z += 14) outer.push({ x: WALL.west - 16, z, r: 10 }, { x: WALL.east + 16, z, r: 10 });
 for (let x = WALL.west; x <= WALL.east; x += 14) outer.push({ x, z: WALL.north - 16, r: 10 });
 const inner: { x: number; z: number; r: number }[] = [];
-for (let z = -98.5; z <= 33; z += 12) inner.push({ x: -58.5, z, r: 9 }, { x: 91, z, r: 9 });
-for (let x = -58.5; x <= 91; x += 12) inner.push({ x, z: -98.5, r: 9 }, { x, z: 33, r: 9 });
+for (let z = -98.5; z <= 34; z += 12) inner.push({ x: -58.5, z, r: 9 }, { x: 95, z, r: 9 });
+for (let x = -58.5; x <= 95; x += 12) inner.push({ x, z: -98.5, r: 9 }, { x, z: 34, r: 9 });
 export const wallClearings = [...circuit.clearings, ...outer, ...inner];
 export const wallDetail = circuit.detail;
 
@@ -76,15 +76,17 @@ export const wallDetail = circuit.detail;
 /**
  * The late Roman wall (about 290 to 1200): a much smaller circuit than the open town had covered,
  * round the forum, the cathedral and a few streets of houses, with a gate on each of the two main
- * streets. Its west gate is the old triumphal arch, on a plot of its own (`porte-du-castrum`); the
- * other three are plain gates drawn here.
+ * streets: single arched passages between two towers. The west gate stands on a plot of its own
+ * (`porte-du-castrum`), so that the wall has a card; the other three are drawn here. The whole
+ * circuit comes down in 1200, when the longer wall is built outside it.
  *
- * Two stretches are taken over by the buildings that stand against them, which draw the wall
- * themselves from then on: the north-west corner, where the count has his hall from 600, and the
- * stretch behind the cathedral from 380.
+ * Two stretches are drawn for some of those years by the buildings that stand against them (so that
+ * they show the wall when looked at on their own): the north-west corner by the count's hall from
+ * 600, and the stretch behind the cathedral by the first two cathedrals, from 380 to 1050.
  */
-// (the west wall passes just outside the forum and the square in front of it, which it takes in whole)
-export const CASTRUM_BOX = { west: -58.5, east: 91, north: -98.5, south: 33 };
+// (each side is laid where it clears what stands on the plots: outside the forum and its square on
+// the west, behind the cathedral's east end, between the houses on the north and south)
+export const CASTRUM_BOX = { west: -58.5, east: 95, north: -98.5, south: 34 };
 
 type Side = 'n' | 'e' | 's' | 'w';
 const C = CASTRUM_BOX;
@@ -125,6 +127,7 @@ function gateOn(b: Builder, side: Side): void {
 }
 
 const G = CASTRUM_GATE.half;
+const HANDOVER = 15;
 const castrumFrom = from('castrum-wall');
 const castrumUntil = from('philippian-gate');
 
@@ -151,28 +154,50 @@ export const castrumProps: SiteProp[] = [
       gateOn(b, 's');
       stretch(b, 's', C.west, -G);
       cornerAt(b, C.west, C.south, -Math.PI / 2);
-      // west side, either side of the gate plot where the old arch stands
+      // west side, either side of the gate plot
       stretch(b, 'w', 15, C.south);
       stretch(b, 'w', -51.2, -15);
     },
   },
+  // Where a building's own model takes a stretch over, or hands it back, the town's stretch stays a
+  // few years longer (`HANDOVER`): the two are the same wall in the same place, so nothing shows, and
+  // the wall never dips while one gives way to the other.
   {
     // the north-west corner, until the count makes it his stronghold and the hall's own model draws it
     id: 'castrum-north-west',
     since: castrumFrom,
-    until: 600,
+    until: 600 + HANDOVER,
     solid: true,
     build(b) {
       stretch(b, 'w', C.north, -51.2);
       stretch(b, 'n', C.west, -10.2);
+    },
+  },
+  {
+    // (its corner tower changes: the count carries it up in timber, so the town's goes at once)
+    id: 'castrum-north-west-tower',
+    since: castrumFrom,
+    until: 600,
+    solid: true,
+    build(b) {
       cornerAt(b, C.west, C.north, Math.PI);
     },
   },
   {
-    // behind the plot where the first cathedral is built against the wall in 380
+    // behind the cathedral's plot, until the first cathedral is built just inside the wall in 380
     id: 'castrum-cathedral',
     since: castrumFrom,
-    until: 380,
+    until: 380 + HANDOVER,
+    solid: true,
+    build(b) {
+      stretch(b, 'e', -57, -23);
+    },
+  },
+  {
+    // ...and again from the Romanesque rebuilding, whose model does not draw it, until the wall comes down
+    id: 'castrum-cathedral-late',
+    since: 1050 - HANDOVER,
+    until: castrumUntil,
     solid: true,
     build(b) {
       stretch(b, 'e', -57, -23);

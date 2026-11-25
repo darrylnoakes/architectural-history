@@ -84,6 +84,12 @@ export const frankishPalace: BuildingDef = {
     { label: 'Forum gateway', note: 'The Roman arch from the main street into the forum, left standing when the rest was quarried, now hung with timber gates as the entrance to the count’s yard.', at: [0, 7.2, GATEWAY_Z + PW / 2 + 0.5] },
     { label: 'Chapel', note: 'A small stone chapel with a rounded apse, built of rubble and Roman brick, for the count’s household.', at: [-8.5, 3.4, 9.2] },
   ],
+  revisions: [
+    {
+      year: 1200,
+      note: 'The Roman wall is pulled down for its stone as the town’s new and longer wall goes up, and the count’s corner tower goes with it. The hall stands on in an open yard.',
+    },
+  ],
   modelledOn:
     'Generic: the reuse of late Roman walls and towers by Frankish counts and kings, as at Paris, where the palace stood at the end of the walled Île de la Cité, and Senlis, where the royal castle stands against the Gallo-Roman wall',
   build(b) {
@@ -98,11 +104,6 @@ export const frankishPalace: BuildingDef = {
     rectCollider(b, SQ.x1 + PW - 0.2, SQ.x1 + PW + 1.2, SQ.z0, SQ.z1);
     forumGateway(b);
     for (const s of [-1, 1]) rectCollider(b, s * 2.8 - 1.0, s * 2.8 + 1.0, GATEWAY_Z - PW / 2 - 0.4, GATEWAY_Z + PW / 2 + 0.4);
-    // ---- the Roman wall: the north-west corner of the late circuit, the corner tower the count's
-    romanCorner(b);
-    // a stair up to the wall-walk from the yard behind the hall
-    b.stairs(1.6, WH, 9, 18, romanDark, { at: [8, 0, WZ + WT / 2 + 4.5] });
-    b.deck(38, WT - 1.1, WH, { at: [2.8, 0, WZ - 0.1] });
 
     // ---- the hall: a low footing of reused stone, oak posts and planks, shingle roof, smoke louvre
     const { x0, x1, z0, z1, wall } = HL;
@@ -163,5 +164,14 @@ export const frankishPalace: BuildingDef = {
     b.cyl(0.9, 0.8, romanDark, { at: [-2, 0, 4], segs: 8 });
     b.collider(1.8, 1.8, { at: [-2, 0, 4] });
     b.tree(8, { kind: 'round', at: [11, 0, 14.5] });
+
+    // ---- the Roman wall: the north-west corner of the late circuit, the corner tower the count's,
+    // and a stair up to the wall-walk from the yard behind the hall. All of it goes in 1200 with the
+    // rest of the circuit (built last, so that nothing else changes when it does).
+    if (!b.since(1200)) {
+      romanCorner(b);
+      b.stairs(1.6, WH, 9, 18, romanDark, { at: [8, 0, WZ + WT / 2 + 4.5], jitter: false });
+      b.deck(38, WT - 1.1, WH, { at: [2.8, 0, WZ - 0.1] });
+    }
   },
 };

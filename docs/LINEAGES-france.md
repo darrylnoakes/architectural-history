@@ -91,7 +91,7 @@ last two centuries across the river. Every stage of every lineage stands somewhe
   hall, the works, the covered market, the station and a third of the houses. The bridges are
   `struck` in 1940.
 - The wall is drawn by the site between the three gate plots (`town-walls.ts`), from the pieces in
-  `lineages/remparts/curtain.ts`. There is none before about 120 BC or between about 20 BC and 290. The late Roman wall of 290 to 1200 is not on this line: it is a much smaller circuit round the forum and the cathedral (`castrumProps` in `town-walls.ts`), with the triumphal arch as its west gate on a plot of its own (`porte-du-castrum`) and three plain gates; the outer gate plots are open ground until the wall of 1200. The count's hall and the first cathedrals draw the stretches of it they stand against.
+  `lineages/remparts/curtain.ts`. There is none before about 120 BC or between about 20 BC and 290. The late Roman wall of 290 to 1200 is not on this line: it is a much smaller circuit round the forum and the cathedral (`castrumProps` in `town-walls.ts`), with four plain gates, the west one on a plot of its own (`porte-du-castrum`); the triumphal arches stand on the outer gate plots, outside it, and fall into ruin. The count's hall and the first cathedrals draw the stretches of it they stand against.
   After 1885 the west and north-west sides go for boulevards; the stretch behind the cathedral stays.
 - Stages marked **(stands alone)** stand on plots of their own.
 
@@ -338,8 +338,8 @@ The stage with no wall (`monumental-arch`) has no curtain.
 | from | id | building |
 |---|---|---|
 | -120 | `murus-gallicus` | The Gaulish rampart: an earth bank faced in dry stone with the ends of its timber lacing showing in rows, a ditch, a timber gate tower set back in a funnel entrance. Cameo: the Porte du Rebout, Bibracte. Carries an `end`: abandoned and levelled after the conquest (about 20 BC) |
-| 200 | `monumental-arch` | No wall: the open Roman town has a triple arch covered in reliefs on its main street, at the edge of the forum quarter. It stands on a plot of its own (`porte-du-castrum`), inside the outer gate plots, which are open ground from the levelling of the Gaulish rampart until 1200. Cameo: the Porte de Mars, Reims |
-| 290 | `castrum-wall` | The late Roman wall: small squared stone with brick bands on a base of reused carved blocks, round-fronted towers, the old arch built into it as a gate. Cameo: Le Mans, Senlis; Reims |
+| 200 | `monumental-arch` | No wall: the open Roman town marks its entrance on each main road with a triple arch covered in reliefs. After 275 the town shrinks into a much smaller walled circuit and the arches are left outside it, in ruin from about 450 until the wall of 1200 is built on their line. Cameo: the Porte de Mars, Reims |
+| 290 | `castrum-wall` | The late Roman wall: small squared stone with brick bands on a base of reused carved blocks, round-fronted towers, a plain gate of one arched passage between two towers. It stands only on the inner plot `porte-du-castrum` (290 to 1200); the outer gate plots skip it. Cameo: Le Mans, Senlis (Reims, where the arches became the gates, is cited as the contrast) |
 | 1200 | `philippian-gate` | A new wall for the grown town: a gate between two round towers with arrow loops, a portcullis, a curtain with round towers and a ditch. Cameo: the walls of Philip Augustus |
 | 1420 | `fortified-gate` | The Hundred Years' War: the gate raised with machicolations and steep roofs, a drawbridge, and an outwork (boulevard) for the first guns |
 | 1680 | `vauban-gate` | Vauban: low brick-faced ramparts with angled bastions, a ditch and a triangular outwork, and a gate dressed as a triumphal arch with the king's trophies. Cameo: the Porte de Paris and the citadel, Lille |

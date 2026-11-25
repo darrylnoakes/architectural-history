@@ -54,6 +54,10 @@ the named features up close on foot.
   random lightness of colours does not. From `apps/town`, `npx tsx tools/morph-report.ts <region> <lineage>` lists how
   much each stage keeps of the one before, and from the repo root `node tools/morph-shot.mjs`
   captures a change in the town in slow motion.
+- Scenery must not stand on what is built on the plots. After laying out or moving a wall, or moving
+  a plot near one, run `npx tsx tools/prop-clearance.ts <region>` from `apps/town`: it lists every
+  place where a solid site prop and a plot's building share ground in the same years. Only the
+  joins that are meant (a gate plot's own wall stubs) should be left.
 - A small dated alteration that does not make a new building (a drawbridge replaced by a fixed
   bridge, a road surfaced with asphalt, lettering removed) is a revision, not a stage: list
   `revisions: [{ year, note }]` on the definition and ask `b.since(year)` in `build`. The card keeps

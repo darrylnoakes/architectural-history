@@ -26,7 +26,16 @@ const lineage: Lineage = {
       },
       def: murusGallicus,
     },
-    { from: 200, builtUntil: 250, def: monumentalArch },
+    {
+      from: 200,
+      builtUntil: 250,
+      end: {
+        year: 450,
+        fate: 'ruin',
+        note: 'When the town drew in behind its wall after 275 the arch was left outside, on a road through ruined suburbs. Nobody kept it up, and it was quarried for its stone.',
+      },
+      def: monumentalArch,
+    },
     { from: 290, builtUntil: 380, def: castrumWall },
     { from: 1200, builtUntil: 1300, def: philippianGate },
     // The machicolated raising began in the 1360s, but gun boulevards appear only in the early

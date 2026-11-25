@@ -76,7 +76,7 @@ export const plots: Plot[] = [
   { id: 'palazzo', lineage: 'palazzo', x: 40, z: 19, rotY: N, seed: 41, hero: true, keep: 'baroque-palazzo' },
   { id: 'palazzo-2', lineage: 'palazzo', x: -44, z: 19, rotY: N, seed: 42, since: 1130, lag: 0.3, keep: 'gothic-palazzo' },
   { id: 'palazzo-3', lineage: 'palazzo', x: 66, z: 18.5, rotY: N, seed: 43, since: 1320, lag: 0.45, keep: 'renaissance-palazzo' },
-  { id: 'villa', lineage: 'palazzo', x: -18.5, z: -160, rotY: E, seed: 44, since: 1790, keep: 'neoclassical-villa' },
+  { id: 'villa', lineage: 'palazzo', x: -18.5, z: -165, rotY: E, seed: 44, since: 1790, keep: 'neoclassical-villa' },
   { id: 'villino', lineage: 'palazzo', x: -40, z: 154.5, rotY: N, seed: 45, since: 1905, keep: 'liberty-villa' },
   { id: 'villa-moderna', lineage: 'palazzo', x: 18.5, z: -160, rotY: W, seed: 46, since: 1936, keep: 'rationalist-villa' },
   { id: 'villa-oggi', lineage: 'palazzo', x: 18.5, z: -196, rotY: W, seed: 47, since: 2008 },

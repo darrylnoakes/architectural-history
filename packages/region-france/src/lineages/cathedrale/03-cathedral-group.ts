@@ -30,11 +30,11 @@ function hall(b: Builder, x: number, w: number, z0: number, z1: number, h: numbe
 
 /*
  * The plot is centred at world (60, -40) facing west: plot +Z is world west, plot +X world north, so
- * world x = 60 - z and world z = -40 + x. Behind its east end (z = WALL_Z, world x = 91) runs the east
- * side of the late Roman circuit (town-walls.ts), which the town draws until 380 and the cathedral's
- * models draw from then until 1050.
+ * world x = 60 - z and world z = -40 + x. Behind its east end (z = WALL_Z, world x = 95) runs the east
+ * side of the late Roman circuit (town-walls.ts), which the town draws until 380, the first two
+ * cathedrals' models draw from then until 1050, and the town draws again until it comes down in 1200.
  */
-export const WALL_Z = -31;
+export const WALL_Z = -35;
 
 /**
  * The stretch of the late Roman town wall behind the apses, across the plot's full width: the town's
@@ -44,7 +44,7 @@ export const WALL_Z = -31;
  */
 export function lateRomanWall(b: Builder) {
   b.group({ at: [40, 0, 60], rotY: Math.PI / 2 }, () => {
-    b.group({ at: [91, 0, 0], rotY: Math.PI / 2 }, () => curtain(b, 'castrum', 23, 57));
+    b.group({ at: [95, 0, 0], rotY: Math.PI / 2 }, () => curtain(b, 'castrum', 23, 57));
   });
   b.collider(34, CASTRUM.t, { at: [0, 0, WALL_Z] });
   b.collider(2 * CASTRUM.tower.r, 2 * CASTRUM.tower.r, { at: [0, 0, WALL_Z - CASTRUM.tower.z] });
