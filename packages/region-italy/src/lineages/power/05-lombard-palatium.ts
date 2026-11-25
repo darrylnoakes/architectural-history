@@ -4,11 +4,13 @@ import {
   BAS,
   BAS_H,
   BAS_ZC,
+  CUR,
   apseWall,
   archWindow,
   arcade,
   basilicaColumn,
   basilicaPodium,
+  curia,
   equestrianPedestal,
   forumStatues,
   forumWell,
@@ -62,24 +64,6 @@ export function archTower(b: Builder): void {
   b.pyramid(ARCH.w + 1.8, TD + 1.8, 2.6, tint(P.romanTile, -0.08), { at: [ARCH.x, HT + 2.05, TZ] });
 }
 
-/** The small apsed palace chapel of about 600, kept by the bishop for his household. */
-export function palaceChapel(b: Builder): void {
-  const CX = 10;
-  const CZ = 1.5;
-  b.box(7, 5.4, 5, mix(P.romanTile, P.rubble, 0.5), { at: [CX, 0, CZ] });
-  b.gable(7.4, 5.4, 1.6, P.romanTile, { at: [CX, 5.4, CZ], overhang: 0.2, wall: mix(P.romanTile, P.rubble, 0.5) });
-  b.lathe([[2.1, 0], [2.1, 4.2]], mix(P.romanTile, P.rubble, 0.5), { at: [CX + 3.5, 0, CZ], segs: 6, start: 0, sweep: Math.PI });
-  b.lathe([[2.3, 4.1], [0.01, 5.3]], P.romanTile, { at: [CX + 3.5, 0, CZ], segs: 6, start: 0, sweep: Math.PI });
-  b.panel(1.4, 2.6, P.oakDark, { at: [CX - 3.5, 0, CZ], facing: '-x', shape: 'round' });
-  for (const x of [CX - 1.5, CX + 1.5]) {
-    archWindow(b, 0.5, 1.1, { at: [x, 3.2, CZ + 2.5], facing: '+z', frame: P.marble });
-    archWindow(b, 0.5, 1.1, { at: [x, 3.2, CZ - 2.5], facing: '-z', frame: P.marble });
-  }
-  // a bell-cote on the west gable
-  b.box(0.9, 1.4, 0.4, mix(P.romanTile, P.rubble, 0.5), { at: [CX - 3.5, 6.6, CZ] });
-  b.cyl(0.2, 0.35, P.bronze, { at: [CX - 3.5, 7.1, CZ], rTop: 0.1, segs: 6 });
-}
-
 export const lombardPalatium: BuildingDef = {
   id: 'lombard-palatium',
   name: 'Lombard palace (palatium)',
@@ -87,14 +71,14 @@ export const lombardPalatium: BuildingDef = {
   date: 'c. AD 600',
   summary:
     'The Gothic War has left the forum in ruins, and since 568 the Lombards have ruled much of Italy. The duke, or the king’s steward (gastald), makes his residence in the shell of the old basilica: ' +
-    'a timber hall built inside the roofless walls, a tower raised on the triumphal arch from reused Roman blocks, and a small palace chapel. ' +
+    'a timber hall built inside the roofless walls, a tower raised on the triumphal arch from reused Roman blocks, and the old council house, re-roofed as the palace chapel. ' +
     'Marble is burnt for lime, a few columns still stand among those that fell, the horseman’s bronze is long gone from his pedestal, and the square has become gardens and pens. Power is again in the hands of an armed lord and his followers, and the town has shrunk to a fraction of its Roman size.',
   materials: ['timber', 'reused Roman brick and stone', 'shingles and salvaged tiles'],
   lookFor: [
     { label: 'Ruined basilica', note: 'The Roman walls stand roofless and broken, stripped of their marble facing down to the brick and concrete core.', at: [BAS.x1 + 0.6, 5, BAS.z0 + 1] },
     { label: 'Timber hall', note: 'The lord’s hall of posts and planks, built inside the old nave and roofed with salvaged tiles.', at: [-3, 6.2, BAS_ZC + 3.4] },
     { label: 'Tower on the arch', note: 'The Roman arch has become the base of a tower, its passage now the gate to the lord’s compound.', at: [ARCH.x + 4.4, 15, ARCH.z + 1.6] },
-    { label: 'Palace chapel', note: 'A small apsed church for the lord’s household; the Lombards, once Arian Christians, were gradually won over to the Catholic church in the seventh century.', at: [13.4, 4.6, 1.4] },
+    { label: 'Palace chapel', note: 'The Roman council house, stripped of its marble, re-roofed and given a bell-cote, as the Senate house in Rome became the church of Sant’Adriano in the 630s; the Lombards, once Arian Christians, were won over to the Catholic church in the seventh century.', at: [CUR.x + 3.5, 10.4, CUR.z + 1] },
     { label: 'Spolia', note: 'Blocks, column drums and inscriptions taken from Roman buildings and built into new walls.', at: [ARCH.x - 3.2, 11, ARCH.z - 4.2] },
   ],
   build(b) {
@@ -126,9 +110,10 @@ export const lombardPalatium: BuildingDef = {
     }
     // the side shop ranges: low ruined walls
     b.sym((s) => {
-      ruinWall(b, [s * 21, -8], [s * 21, 17.6], 0.6, 1, 4.2, mix(P.romanTile, P.rubble, 0.3));
-      ruinWall(b, [s * 14, -8], [s * 14, 17.6], 0.6, 0.6, 3.2, mix(P.romanTile, P.rubble, 0.3));
-      for (const i of [2, 4, 7]) porticoColumn(b, s, i);
+      const z0r = s > 0 ? -8 : CUR.z + 5.5; // on the left the range stops at the curia
+      ruinWall(b, [s * 21, z0r], [s * 21, 17.6], 0.6, 1, 4.2, mix(P.romanTile, P.rubble, 0.3));
+      ruinWall(b, [s * 14, z0r], [s * 14, 17.6], 0.6, 0.6, 3.2, mix(P.romanTile, P.rubble, 0.3));
+      for (const i of s > 0 ? [2, 4, 7] : [4, 7]) porticoColumn(b, s, i);
     });
     // the bare pedestal of the bronze horseman, melted down long ago, the bases of the older statues,
     // and the well-head, still in use
@@ -167,10 +152,8 @@ export const lombardPalatium: BuildingDef = {
       b.box(13.6 - ARCH.w / 2, 0.2, 0.15, P.oakDark, { at: [s * (13.6 + ARCH.w / 2) / 2, 2.2, ARCH.z - 0.65], jitter: false });
     });
 
-    // ---------------------------------------------------------- the palace chapel
-    palaceChapel(b);
-    const CX = 10;
-    const CZ = 1.5;
+    // ---------------------------------------------------------- the old council house, now the palace chapel
+    curia(b, 'chapel');
 
     // ---------------------------------------------------------- colliders
     b.collider(HW + 0.4, HD + 0.4, { at: [HX, 0, HZ] });
@@ -183,7 +166,6 @@ export const lombardPalatium: BuildingDef = {
       b.collider((ARCH.w - ARCH.passW) / 2, TD, { at: [s * (ARCH.passW / 2 + (ARCH.w - ARCH.passW) / 4), 0, TZ] });
       b.collider(13.6 - ARCH.w / 2, 0.5, { at: [s * (13.6 + ARCH.w / 2) / 2, 0, ARCH.z - 0.5] });
     });
-    b.collider(9, 5, { at: [CX + 0.6, 0, CZ] });
     void aisle;
   },
 };

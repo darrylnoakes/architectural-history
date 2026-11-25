@@ -15,7 +15,7 @@ function prof(i: number): [number, number] {
   // a slightly pointed, asymmetric curve: fuller on the track side, as at Porta Susa
   const z = ZC + A * Math.cos(t);
   const y = VH * Math.pow(Math.sin(t), 0.85) * (1 + 0.08 * Math.cos(t + 0.6));
-  return [z, y];
+  return [z, PLAT.y + y]; // the arches stand on the concourse floor, which is level with the platform
 }
 
 export const highSpeedStation: BuildingDef = {
@@ -25,7 +25,7 @@ export const highSpeedStation: BuildingDef = {
   date: '2013',
   summary:
     'The high-speed lines opened between 2005 and 2009 cut the journey from Turin or Milan to Rome to a few hours, and the cities answered with new stations. ' +
-    'Here the whole station is one long gallery of glass on a row of steel arches, a covered street that people cross freely between the town and the trains, with ticket offices and cafés standing inside it like pavilions. ' +
+    'Here the whole station is one long gallery of glass on a row of steel arches, a covered street that people cross freely between the town and the trains, with ticket offices and cafés standing inside it like pavilions. Its floor is raised to the 55 cm of the platform, the standard height on the Italian network, so from the steps at the street there is no other change of level before the train. ' +
     'Part of the glazing carries photovoltaic cells, so the roof makes some of its own electricity. Where the 1930s station was a solid mass with a window of glass, now the glass is the building.',
   materials: ['steel arches', 'laminated glass', 'photovoltaic glass', 'stone and concrete paving'],
   modelledOn: 'Torino Porta Susa (AREP with Silvio d’Ascia and Agostino Magnaghi, opened 2013), much reduced',
@@ -79,7 +79,7 @@ export const highSpeedStation: BuildingDef = {
       for (let i = 0; i < N; i++) {
         const [z0, y0] = prof(i);
         const [z1, y1] = prof(i + 1);
-        end.push(x, 0, ZC, x, y0, z0, x, y1, z1);
+        end.push(x, PLAT.y, ZC, x, y0, z0, x, y1, z1);
       }
       soup(b, end, glass, G);
     }
@@ -98,7 +98,7 @@ export const highSpeedStation: BuildingDef = {
     // feet of the arches in concrete
     for (let x = X0; x <= X1 + 0.01; x += RIB) for (const i of [0, N]) {
       const [z] = prof(i);
-      b.box(0.5, 0.5, 0.6, P.concrete, { at: [x, 0, z] });
+      b.box(0.5, 0.5, 0.6, P.concrete, { at: [x, PLAT.y, z] });
     }
 
     // ---------------------------------------------------------------- inside: pavilions and a mezzanine

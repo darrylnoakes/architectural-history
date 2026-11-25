@@ -1,6 +1,6 @@
 import { P, mix, spread, tint, type BuildingDef } from '@ah/kit';
-import { ARCH, BAS_H, ashlar, basilicaPodium, column, forumWell, lineColliders, merlons, pave, wallSeg, type XZ } from './shared';
-import { ARCH_TOWER_D, archTower, palaceChapel } from './05-lombard-palatium';
+import { ARCH, BAS_H, ashlar, curia, basilicaPodium, column, forumWell, lineColliders, merlons, pave, wallSeg, type XZ } from './shared';
+import { ARCH_TOWER_D, archTower } from './05-lombard-palatium';
 
 /** The enclosure wall, clockwise from the right of the gate (outside on the right). */
 const WALL: XZ[] = [
@@ -19,7 +19,7 @@ export const bishopsPalace: BuildingDef = {
   date: 'c. 1000',
   summary:
     'Charlemagne ended the Lombard kingdom in 774, and in the tenth century the emperors, short of loyal men, granted the powers of a count over many Italian towns to their bishops, above all in the north, though in Tuscany too bishops such as those of Volterra and Arezzo held wide lordly rights. ' +
-    'The bishop-count governs from the old palace of the Lombard lords, rebuilt: a new hall on the upper floor over a vaulted undercroft for stores, standing on the platform of the Roman basilica and reached by an outside stair, a tall square tower, and a battlemented wall round the whole, entered through the Lombards’ tower on the Roman arch; their little chapel still serves the household. ' +
+    'The bishop-count governs from the old palace of the Lombard lords, rebuilt: a new hall on the upper floor over a vaulted undercroft for stores, standing on the platform of the Roman basilica and reached by an outside stair, a tall square tower, and a battlemented wall round the whole, entered through the Lombards’ tower on the Roman arch; the Roman council house, their chapel, still serves the household. ' +
     'It is built of rough-coursed stone, with big squared blocks robbed from Roman ruins at the corners and base, small round-arched windows, and a low roof of coppi. Church and government are now in the same hands.',
   materials: ['rubble stone', 'reused Roman blocks', 'clay roof tiles (coppi)', 'timber'],
   lookFor: [
@@ -130,8 +130,8 @@ export const bishopsPalace: BuildingDef = {
       [[TX - TW / 2 - 0.2, TZ - TW / 2 - 0.2], [TX - TW / 2 - 0.2, TZ + TW / 2 + 0.2]],
     ] as [XZ, XZ][]) merlons(b, p, q, TH + 0.4, stone, { w: 0.8, h: 1.2, t: 0.45 });
 
-    // ---------------------------------------------------------- in the court: the Lombards' chapel, the old well, a stable, a Roman column as a mounting block
-    palaceChapel(b);
+    // ---------------------------------------------------------- in the court: the chapel in the Roman council house, the old well, a stable, a Roman column as a mounting block
+    curia(b, 'chapel');
     forumWell(b);
     b.box(9, 3.4, 4, stone, { at: [14.5, 0, -6] });
     b.shed(9.4, 4.4, 1.2, P.coppi, { at: [14.5, 3.4, -6], high: '+x' });
@@ -146,6 +146,5 @@ export const bishopsPalace: BuildingDef = {
     b.collider(TW, TW, { at: [TX, 0, TZ] });
     b.collider(9, 4, { at: [14.5, 0, -6] });
     b.collider(1.6, 1.6, { at: [3, 0, 1] });
-    b.collider(9, 5, { at: [10.6, 0, 1.5] });
   },
 };

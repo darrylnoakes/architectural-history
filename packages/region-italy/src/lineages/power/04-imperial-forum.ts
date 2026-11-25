@@ -26,7 +26,7 @@ export const imperialForum: BuildingDef = {
   date: 'c. AD 100 to 120',
   summary:
     'Under the emperors the forum is rebuilt in marble, paid for largely by the town’s leading families, whose gifts are recorded in inscriptions. ' +
-    'The old basilica is kept but faced in marble, its Ionic colonnade replaced by Corinthian columns, and an apse is built against one end to hold the tribunal, the raised seat from which the magistrates gave judgement. ' +
+    'The old basilica is kept but faced in marble, its Ionic colonnade replaced by Corinthian columns, and an apse is built against one end to hold the tribunal, the raised seat from which the magistrates gave judgement. The council house beside it, where the town’s councillors still meet, is refaced in the same way. ' +
     'A triumphal arch at the entrance and a gilded bronze horseman in the square honour the emperor. The town still elects its own magistrates, but the decisions that matter are made in Rome, and loyalty is shown in stone.',
   materials: ['marble', 'brick-faced concrete', 'travertine', 'gilded bronze', 'fired clay tiles'],
   lookFor: [
@@ -34,7 +34,7 @@ export const imperialForum: BuildingDef = {
     { label: 'Tribunal apse', note: 'The half-round end of the basilica, where the magistrates sat raised above the parties to a case.', at: [BAS.x0 - BAS.apseR - 0.4, 6, BAS_ZC] },
     { label: 'Equestrian statue', note: 'A gilded bronze rider on a marble pedestal, the emperor shown as the town’s protector.', at: [1.2, 6.2, 3] },
     { label: 'Corinthian colonnade', note: 'Marble columns with leafy capitals carry the porticoes round the square, a Greek order the Romans made their own.', at: [-12.6, 4.6, 8] },
-    { label: 'Clerestory', note: 'High windows above the aisle roofs light the basilica’s tall central hall.', at: [-3, 9.0, BAS_ZC + BAS.nave / 2 + 0.4] },
+    { label: 'Curia', note: 'The council house of the decurions, the Republican hall kept and refaced in marble, with half-columns, a pediment and a bronze-lettered dedication over its door.', at: [CUR.x + 3.6, 6.5, CUR.z + 3] },
   ],
   modelledOn: 'The Arch of Trajan at Benevento (AD 114 to 117), with a forum of the kind seen at Pompeii and Ostia, much reduced',
   influences: ['roman-empire-export', 'hellenistic-luxury'],
