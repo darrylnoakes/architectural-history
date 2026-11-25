@@ -1,5 +1,6 @@
 import { P, mix, spread, tint, type BuildingDef, type Builder } from '@ah/kit';
 import { type XZ, flatArch, lineColliders, pave, rectCollider, wallSeg } from './shared';
+import { GATEWAY_Z, POD, PW, SQ, cryptoporticus, forumGateway, forumSquare, plinth } from './02-forum';
 
 /** The late Roman town wall runs along the back (z = WZ) and the left side (x = WX) of the plot. */
 const WX = -18.2;
@@ -26,20 +27,30 @@ export const frankishPalace: BuildingDef = {
   style: 'Merovingian',
   date: 'c. 600',
   summary:
-    'The forum is long gone, its stone built into the wall that the shrunken town threw up after 275. Under the Frankish kings the town is governed by a count (comes) appointed by the king to judge, raise troops and collect dues, while the bishop, often still a man of the old Gallo-Roman families, is the other great power within the walls. ' +
+    'The forum was sacked in 275 and most of its stone built into the wall that the shrunken town threw up round its core. What could not be carted off is still there: the paved square, two plinths stripped of their bronzes, the vaulted cryptoporticus, now the count’s cellars, and the gateway arch, which serves as the gate of his yard. Under the Frankish kings the town is governed by a count (comes) appointed by the king to judge, raise troops and collect dues, while the bishop, often still a man of the old Gallo-Roman families, is the other great power within the walls. ' +
     'The count lives in a corner of the Roman wall, using one of its round-fronted towers as his strongpoint, heightened in timber. His hall is a long timber building on a footing of reused stone, with a shingled roof and a smoke louvre, where he holds his court (mallus) and feasts his followers; beside it is a small stone chapel.',
   materials: ['oak', 'reused Roman stone and brick', 'oak shingles', 'rubble masonry'],
   lookFor: [
     { label: 'Roman wall with brick bands', note: 'The late Roman rampart of small squared stones laced with courses of red brick, still the town’s defence three centuries on.', at: [WX + WT / 2 + 0.2, 4.0, 2] },
     { label: 'Roman tower heightened in timber', note: 'The round-fronted Roman tower at the corner, given a timber upper storey and a shingled roof as the count’s strongpoint.', at: [TW[0] + 1.5, WH + 3.5, TW[1] + TR + 0.3] },
     { label: 'Timber hall on stone footings', note: 'The count’s hall: oak posts and planks on a low wall of reused stone, under a steep roof of oak shingles.', at: [3, 1.0, HL.z1 + 0.3] },
-    { label: 'Smoke louvre', note: 'No chimneys yet: smoke from the open hearth escapes through a little roofed louvre on the ridge.', at: [3, HL.wall + 6.4, (HL.z0 + HL.z1) / 2] },
+    { label: 'Forum gateway', note: 'The Roman arch from the main street into the forum, left standing when the rest was quarried, now hung with timber gates as the entrance to the count’s yard.', at: [0, 7.2, GATEWAY_Z + PW / 2 + 0.5] },
     { label: 'Chapel', note: 'A small stone chapel with a rounded apse, built of rubble and Roman brick, for the count’s household.', at: [-8.5, 3.4, 9.2] },
   ],
   modelledOn:
     'Generic: the reuse of late Roman walls and towers by Frankish counts and kings, as at Paris, where the palace stood at the end of the walled Île de la Cité, and Senlis, where the royal castle stands against the Gallo-Roman wall',
   build(b) {
     pave(b, -21.8, 21.8, -21.8, 21.8, mix(P.earth, P.grassDry, 0.3), -0.02);
+    // ---- what is left of the forum: the paved square, two plinths robbed of their bronzes, the
+    // cryptoporticus (its portico gone, its vault turfed over) and the gateway arch
+    forumSquare(b);
+    for (const x of [-4.5, 4.5]) plinth(b, x, 3);
+    cryptoporticus(b);
+    b.box(PW + 1.0, 0.12, SQ.z1 - SQ.z0, P.turf, { at: [SQ.x1 + PW / 2 + 0.2, POD, (SQ.z0 + SQ.z1) / 2], jitter: false });
+    b.deck(PW + 1.0, SQ.z1 - SQ.z0, POD + 0.12, { at: [SQ.x1 + PW / 2 + 0.2, 0, (SQ.z0 + SQ.z1) / 2] });
+    rectCollider(b, SQ.x1 + PW - 0.2, SQ.x1 + PW + 1.2, SQ.z0, SQ.z1);
+    forumGateway(b);
+    for (const s of [-1, 1]) rectCollider(b, s * 2.8 - 1.0, s * 2.8 + 1.0, GATEWAY_Z - PW / 2 - 0.4, GATEWAY_Z + PW / 2 + 0.4);
     // ---- the Roman wall: back and left, with a wall-walk and a parapet
     const back: XZ[] = [[TW[0] + TR - 0.5, WZ], [21.8, WZ]];
     const side: XZ[] = [[WX, TW[1] + TR - 0.5], [WX, 21.8]];
@@ -113,26 +124,25 @@ export const frankishPalace: BuildingDef = {
     rectCollider(b, C.x0, C.x1 + 2.4, C.z0, C.z1);
 
     // ---- outbuildings: a kitchen and a stable, thatched
-    for (const [x, z, w, d] of [[14, 6, 7, 5], [12, -1, 5, 4]] as [number, number, number, number][]) {
+    for (const [x, z, w, d] of [[9, 8, 7, 5], [9.5, -1, 5, 4]] as [number, number, number, number][]) {
       b.box(w, 2.4, d, P.daub, { at: [x, 0, z] });
       b.gable(w, d, 3.0, P.thatch, { at: [x, 2.4, z], overhang: 0.5, thick: 0.4 });
       b.panel(1.2, 1.9, P.oakDark, { at: [x - 1, 0, z + d / 2], facing: '+z' });
       b.collider(w, d, { at: [x, 0, z] });
     }
-    // ---- a fence closing the open sides, with a gate onto the street
-    const fence: XZ[] = [[WX + WT / 2, 19.5], [-2, 19.5]];
-    const fence2: XZ[] = [[2, 19.5], [19.5, 19.5], [19.5, WZ + WT / 2]];
+    // ---- a fence closing the open sides, from the Roman wall to the old gateway and on round the cellars
+    const fence: XZ[] = [[WX + WT / 2, 19.5], [-2.8, 19.5]];
+    const fence2: XZ[] = [[2.8, 19.5], [21.5, 19.5], [21.5, WZ + WT / 2]];
     for (const line of [fence, fence2]) {
       for (let i = 0; i < line.length - 1; i++) wallSeg(b, line[i], line[i + 1], 0.25, 2.4, P.oakSilver);
       lineColliders(b, line, 0.5);
     }
-    for (const s of [-1, 1]) b.box(0.4, 3.6, 0.4, P.oak, { at: [s * 2, 0, 19.5] });
-    b.box(4.6, 0.3, 0.5, P.oak, { at: [0, 3.6, 19.5] });
-    b.gable(4.8, 1.4, 0.8, P.shingle, { at: [0, 3.9, 19.5] });
+    // timber gates hung in the Roman arch
+    for (const s of [-1, 1]) b.box(1.6, 3.6, 0.15, P.oakDark, { at: [s * 0.85, 0, GATEWAY_Z + 1.0] });
     // a broken Roman column left lying in the yard, and a well
-    b.log(0.4, 3.2, P.limestone, { at: [5, 0, 10], rotY: 0.6, segs: 8 });
+    b.log(0.4, 3.2, P.limestone, { at: [3, 0, 12.5], rotY: 0.6, segs: 8 });
     b.cyl(0.9, 0.8, romanDark, { at: [-2, 0, 4], segs: 8 });
     b.collider(1.8, 1.8, { at: [-2, 0, 4] });
-    b.tree(8, { kind: 'round', at: [16, 0, 14] });
+    b.tree(8, { kind: 'round', at: [11, 0, 14.5] });
   },
 };

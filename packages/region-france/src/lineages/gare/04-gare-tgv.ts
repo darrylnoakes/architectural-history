@@ -1,4 +1,4 @@
-import { P, mix, tint, type BuildingDef } from '@ah/kit';
+import { P, mix, tint, type Builder, type BuildingDef } from '@ah/kit';
 import { HX, PLAT, TRACKS, platform, quad, soup, tgv, track, forecourt, overheadLine } from './shared';
 
 // the station hall: a glass box
@@ -15,11 +15,89 @@ const CZ1 = -11.8; // ...and runs out over both tracks
 const CY = 9.0; // height at the platform-side edge
 const RISE = 1.4; // the gentle arch of its section
 const NZ = 8;
+/** The bus lane across the front of the square; the approach road arrives at its middle. */
+const LANE = { hx: 11.6, z0: 6.6, z1: 13.4 };
+/** The car parks, either side of the bus lane and on out beyond the plot. */
+const PARK = { x0: 11.8, x1: 31.8, z0: 6.0, z1: 13.4, aisle: 11.0 };
 
 /** Height of the underside of the canopy at z. */
 function roofY(z: number): number {
   const t = (z - CZ1) / (CZ0 - CZ1); // 0 at the track side, 1 at the street side
   return CY - 0.6 + RISE * Math.sin(Math.PI * t) + 0.6 * t;
+}
+
+
+/** Flat painted lines on the ground, [x, z, length along x, length along z], in one mesh. */
+function lines(b: Builder, ls: [number, number, number, number][], y: number, color: number): void {
+  const out: number[] = [];
+  for (const [x, z, lx, lz] of ls) quad(out, [x - lx / 2, y, z - lz / 2], [x - lx / 2, y, z + lz / 2], [x + lx / 2, y, z + lz / 2], [x + lx / 2, y, z - lz / 2]);
+  soup(b, out, color);
+}
+
+/**
+ * The bus station: a lane of asphalt across the front of the square, which the approach road
+ * reaches in the middle, with marked bus stands, two glass shelters and a bus waiting.
+ */
+function busStation(b: Builder): void {
+  const z0 = LANE.z0;
+  const z1 = LANE.z1;
+  b.box(2 * LANE.hx, 0.08, z1 - z0, P.asphalt, { at: [0, 0, (z0 + z1) / 2], jitter: false });
+  b.box(2 * LANE.hx, 0.16, 0.3, P.concreteWhite, { at: [0, 0, z0 - 0.15], jitter: false }); // the kerb of the square
+  // three bus stands marked in yellow along the kerb, and arrows of white down the middle of the lane
+  const stands: [number, number, number, number][] = [];
+  for (const x of [-8.0, 0, 8.0]) {
+    stands.push([x, z0 + 1.6, 7.0, 0.12], [x - 3.5, z0 + 1.6 - 1.45, 0.12, 2.9], [x + 3.5, z0 + 1.6 - 1.45, 0.12, 2.9]);
+  }
+  lines(b, stands.map(([x, z, lx, lz]) => [x, lx > 1 ? z0 + 3.0 : z0 + 1.5, lx, lz]), 0.085, P.cladYellow);
+  lines(b, [[-6, z0 + 4.6, 3.0, 0.15], [0, z0 + 4.6, 3.0, 0.15], [6, z0 + 4.6, 3.0, 0.15]], 0.085, P.white);
+  // glass shelters on the square, open to the lane
+  for (const x of [-8.0, 8.0]) {
+    b.group({ at: [x, 0.05, z0 - 1.0] }, () => {
+      b.box(3.6, 2.3, 0.06, mix(P.glass, P.white, 0.3), { at: [0, 0.1, -0.7], mat: 'glass' });
+      b.sym((s) => b.box(0.08, 2.4, 1.5, P.cladGrey, { at: [s * 1.8, 0, 0] }));
+      b.box(3.8, 0.12, 1.7, P.cladGrey, { at: [0, 2.4, 0] });
+      b.box(2.4, 0.45, 0.4, P.steel, { at: [0, 0, -0.4] });
+    });
+  }
+  // a town bus at the first stand
+  b.group({ at: [-8.0, 0.08, z0 + 1.5] }, () => {
+    const L = 11.8;
+    const body = mix(P.white, P.aluminium, 0.2);
+    b.box(L, 2.6, 2.5, body, { at: [0, 0.35, 0] });
+    b.box(L, 0.35, 2.52, P.cladGreen, { at: [0, 0.35, 0], jitter: false });
+    b.box(L - 1.0, 0.3, 2.0, tint(body, -0.08), { at: [0.3, 2.95, 0] });
+    b.sym((s) => b.box(L - 1.6, 1.1, 0.04, P.glassDark, { at: [0.4, 1.55, s * 1.26], mat: 'glass', jitter: false }));
+    b.box(0.04, 1.5, 2.2, P.glassDark, { at: [-L / 2 - 0.01, 1.25, 0], mat: 'glass', jitter: false });
+    for (const x of [-L / 2 + 2.5, L / 2 - 3.0]) b.sym((s) => b.log(0.45, 0.3, P.black, { at: [x, 0.45, s * 1.12], axis: 'z', segs: 8 }));
+    b.collider(L, 2.5);
+  });
+}
+
+/** Car parks either side of the bus station, running out beyond the plot onto the open ground. */
+function carParks(b: Builder): void {
+  const { x0, x1, z0, z1, aisle } = PARK;
+  const bay = 2.5;
+  const n = Math.round((x1 - x0) / bay);
+  const cars = [P.white, P.cladGrey, P.black, P.cladBlue, P.cladRed, mix(P.aluminium, P.steel, 0.4)];
+  b.sym((s) => {
+    const xc = s * (x0 + x1) / 2;
+    b.box(x1 - x0, 0.08, z1 - z0, P.asphalt, { at: [xc, 0, (z0 + z1) / 2], jitter: false });
+    // a row of bays facing the station, with an aisle behind them that opens on to the bus lane
+    const ls: [number, number, number, number][] = [];
+    for (let i = 0; i <= n; i++) ls.push([s * (x0 + i * bay), (z0 + aisle) / 2, 0.12, aisle - z0 - 0.4]);
+    lines(b, ls, 0.085, P.white);
+    b.box(0.6, 0.25, z1 - z0, P.grass, { at: [s * (x1 + 0.3), 0, (z0 + z1) / 2], jitter: false });
+    b.tree(4.4, { kind: 'round', at: [s * (x1 + 2.5), 0, (z0 + z1) / 2], color: mix(P.leaf, P.leafDark, 0.3) });
+    // the cars, most bays taken on a weekday
+    for (let i = 0; i < n; i++) {
+      if (!b.chance(0.75)) continue;
+      const x = s * (x0 + (i + 0.5) * bay);
+      const z = (z0 + aisle) / 2 - 0.2;
+      const col = b.pick(cars);
+      b.box(1.75, 0.75, 4.1, col, { at: [x, 0.2, z] });
+      b.box(1.55, 0.55, 2.1, mix(col, P.glassDark, 0.55), { at: [x, 0.95, z + 0.2] });
+    }
+  });
 }
 
 export const gareTgv: BuildingDef = {
@@ -28,8 +106,8 @@ export const gareTgv: BuildingDef = {
   style: 'Contemporary',
   date: '2007',
   summary:
-    'The high-speed line from Paris to the east (LGV Est) opened in June 2007 and put the cities of Champagne and Lorraine within an hour or two of the capital. Some towns were served at their old stations; others were given new ones, often outside the centre, where TGVs, buses, cars and the line into town could meet. ' +
-    'The new station is hardly a building at all: a long canopy of steel and glass on branching columns shelters the platforms, and the hall beneath it is a glass box of ticket machines, a café and seats, open to the light. ' +
+    'The high-speed line from Paris to the east (LGV Est) opened in June 2007 and put the cities of Champagne and Lorraine within an hour or two of the capital. Many towns were served at their old stations; this one, like Reims at Bezannes, was given a new station of its own on open ground at the edge of town, where TGVs, buses, cars and the trains into the centre meet. The old station in the town stays in use for the regional trains. ' +
+    'The new station is hardly a building at all: a long canopy of steel and glass on branching columns shelters the platforms, and the hall beneath it is a glass box of ticket machines, a café and seats, open to the light. In front of it, where the old station had a square and a cab rank, are a bus station and car parks, for most travellers now come by car. ' +
     'Glass printed with a pattern of white dots shades the platforms from the sun, and the wires overhead carry 25,000 volts to the train.',
   materials: ['steel', 'fritted glass', 'concrete', 'timber soffit', 'granite paving'],
   modelledOn: 'Champagne-Ardenne TGV at Bezannes, outside Reims (AREP for SNCF, opened 2007), and the other new stations of the LGV Est, in general terms; the canopy here is generic',
@@ -38,7 +116,7 @@ export const gareTgv: BuildingDef = {
     { label: 'Branching columns', note: 'Steel columns that divide into struts like the branches of a tree, so that few supports carry a wide roof.', at: [-12.0, 5.0, -4.6] },
     { label: 'Glass hall', note: 'The hall is a transparent box: you can see the trains from the forecourt.', at: [0.5, 3.0, BZ1 + 0.3] },
     { label: 'TGV', note: 'The high-speed train, with a power car at each end and coaches carried on shared bogies, built for 320 km/h on the new line.', at: [-15.0, 4.6, TRACKS[0] + 1.6] },
-    { label: 'Overhead line', note: 'Masts and wires carry 25 kV alternating current to the pantograph on the train’s roof.', at: [6.0, 7.0, -11.9] },
+    { label: 'Bus station and car parks', note: 'A station on the edge of town is reached by bus and by car: stands for the town buses and coaches, and car parks that take more ground than the station itself (only a corner of them is shown).', at: [-8.0, 3.4, LANE.z0 + 1.5] },
   ],
   build(b) {
     const steel = mix(P.white, P.steel, 0.3);
@@ -46,11 +124,10 @@ export const gareTgv: BuildingDef = {
     const frit = mix(P.white, P.glass, 0.35);
     const soffit = mix(P.larch, P.pine, 0.5);
 
-    // forecourt of granite paving, a strip of planting, bollards, young trees
+    // a square of granite paving in front of the hall, then the bus station and the car parks
     forecourt(b, mix(P.paving, P.granite, 0.4));
-    b.box(30, 0.3, 1.6, P.grass, { at: [0, 0, 10.6], jitter: false });
-    for (const x of [-13, -6, 6, 13]) b.tree(4.6, { kind: 'round', at: [x, 0, 10.3], color: mix(P.leaf, P.leafDark, 0.3) });
-    for (let x = -17; x <= 17; x += 2.0) if (Math.abs(x) > 3) b.cyl(0.1, 0.8, P.cladGrey, { at: [x, 0, 9.4], segs: 6 });
+    busStation(b);
+    carParks(b);
 
     // ------------------------------------------------ the glass hall, walkable, with doors front and back
     const L = BX1 - BX0;

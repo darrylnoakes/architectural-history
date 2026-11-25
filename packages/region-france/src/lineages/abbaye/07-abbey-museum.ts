@@ -1,5 +1,5 @@
 import { P, mix, type BuildingDef, type Builder } from '@ah/kit';
-import { CX, GARTH, GATE_X, MUSE, NZ, RANGE, abbey, flat, rectPts } from './shared';
+import { CRYPT, CX, GARTH, GATE_X, MUSE, NZ, RANGE, abbey, flat, rectPts } from './shared';
 
 function build(b: Builder) {
   abbey(b, MUSE);
@@ -25,13 +25,14 @@ export const abbeyMuseum: BuildingDef = {
   date: 'c. 1995',
   summary:
     'Mill and barracks gone, the town buys what is left and restores it as a museum and cultural centre: the Maurist ranges hold the collections, concerts and a library, and the cloister becomes a garden. ' +
-    'Nothing is rebuilt that cannot be proved. The lost church is shown only by its plan, its walls and pier bases marked out in stone in the lawn behind the old west front, which is cleaned and repaired. ' +
+    'Nothing is rebuilt that cannot be proved. The lost church is shown only by its plan, its walls and pier bases marked out in stone in the lawn behind the old west front, which is cleaned and repaired; the crypt under the choir, the oldest work on the site, is opened to visitors. ' +
     'A new entrance is added in glass and steel, plainly modern, so that no one could mistake it for part of the old abbey.',
   materials: ['restored limestone', 'slate', 'glass and steel', 'lawn and gravel'],
   lookFor: [
     { label: 'Plan marked in the grass', note: 'Stone strips trace the walls of the vanished church, and low blocks the bases of its piers and columns.', at: [CX - 8.5, 0.4, -8] },
     { label: 'West front', note: 'The one part of the church that survived, cleaned and repaired as the gateway to the site.', at: [CX, 9, NZ + 0.3] },
     { label: 'Cloister garden', note: 'The garth replanted with box-edged beds and gravel paths, the walks rebuilt round it.', at: [(GARTH.x0 + GARTH.x1) / 2 + 3.3, 1, (GARTH.z0 + GARTH.z1) / 2 + 2.8] },
+    { label: 'Crypt', note: 'The half-sunk crypt over the founding saint’s grave, built about 560 and never pulled down: every church on the site stood over it in turn.', at: [CX + CRYPT.w / 2 + 0.2, 1.6, -16.5] },
     { label: 'Glass pavilion', note: 'The new entrance, deliberately unlike the old work, as the conservation charters of the twentieth century ask.', at: [GATE_X, 3.9, RANGE.W.z1 + 3.4] },
   ],
   modelledOn:

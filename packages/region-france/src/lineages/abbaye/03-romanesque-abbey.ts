@@ -1,8 +1,9 @@
 import type { BuildingDef, Builder } from '@ah/kit';
-import { AW, CX, GARTH, RH, ROM, TOWER, abbey } from './shared';
+import { AW, CX, GARTH, RH, ROM, TOWER, abbey, garden } from './shared';
 
 function build(b: Builder) {
   abbey(b, ROM);
+  garden(b);
 }
 
 export const romanesqueAbbey: BuildingDef = {
@@ -13,7 +14,7 @@ export const romanesqueAbbey: BuildingDef = {
   summary:
     'After the Viking raids and the troubles of the tenth century the great abbeys, many of them now in the family of Cluny, rebuild in stone on a scale not seen since Rome. ' +
     'The church is vaulted in stone, so its walls are thick, its windows round-headed and modest, and flat buttresses stiffen it bay by bay. ' +
-    'Towers multiply: two over a deep entrance porch, the narthex, and an eight-sided one over the crossing. At the east end an ambulatory lets pilgrims walk round behind the altar past radiating chapels, each with its own altar for the monks’ daily masses. The cloister and ranges are rebuilt in stone on the old plan.',
+    'Towers multiply: two over a deep entrance porch, the narthex, and an eight-sided one over the crossing. At the east end an ambulatory lets pilgrims walk round behind the altar past radiating chapels, each with its own altar for the monks’ daily masses. The cloister and ranges are rebuilt in stone on the old plan, and the saint’s crypt is kept under the new choir.',
   materials: ['limestone ashlar', 'rubble core', 'flat clay tiles', 'stone spires'],
   lookFor: [
     { label: 'Narthex', note: 'A deep two-storey porch before the nave, where processions formed; at Cluny it was a church in its own right.', at: [CX, 7, 17.2] },

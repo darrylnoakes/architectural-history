@@ -7,12 +7,12 @@ const tile = P.romanTile;
 const plaster = mix(P.plaster, P.pierreBlonde, 0.4);
 
 /** The basilica across the back of the forum, and the curia at its left end. */
-const BAS = { x0: -13, x1: 17.5, z0: -21.5, z1: -10, aisle: 8, nave: 13.5 };
-const CUR = { x0: -21, x1: -14.5, z0: -20.5, z1: -11.5 };
+export const BAS = { x0: -13, x1: 17.5, z0: -21.5, z1: -10, aisle: 8, nave: 13.5 };
+export const CUR = { x0: -21, x1: -14.5, z0: -20.5, z1: -11.5 };
 /** The square and the porticoes round it. */
-const SQ = { x0: -15, x1: 15, z0: -5.5, z1: 15 };
-const PW = 5.5; // portico depth
-const POD = 1.6; // the east portico stands on the cryptoporticus
+export const SQ = { x0: -15, x1: 15, z0: -5.5, z1: 15 };
+export const PW = 5.5; // portico depth
+export const POD = 1.6; // the east portico stands on the cryptoporticus
 
 /** Bands of brick in the small squared stone (petit appareil) of a wall face. */
 function brickBands(b: Builder, w: number, at: [number, number, number], rotY: number, ys: number[]): void {
@@ -32,6 +32,42 @@ function portico(b: Builder, len: number, base: number, o: { at: [number, number
     b.shed(len + 0.4, PW + 1.4, 1.8, tile, { at: [0, base + colH + 1.05, -PW / 2 + 0.1], high: '-z' });
     if (o.doors) for (const x of spread(Math.round(len / 4.2), -len / 2 + 2, len / 2 - 2)) b.panel(1.6, 2.6, P.oakDark, { at: [x, base + 0.35, -PW + 0.35], facing: '+z' });
   });
+}
+
+/** The paved square with its joint lines (AD 60; still the count's yard in 600). */
+export function forumSquare(b: Builder): void {
+  pave(b, SQ.x0, SQ.x1, SQ.z0 - 2, SQ.z1, mix(P.paving, stone, 0.45));
+  for (const x of spread(7, SQ.x0 + 2, SQ.x1 - 2)) b.box(0.08, 0.075, SQ.z1 - SQ.z0 + 2, tint(P.paving, -0.08), { at: [x, 0, (SQ.z0 + SQ.z1) / 2 - 1], jitter: false });
+}
+
+/**
+ * The cryptoporticus under the east portico: its wall faces with their slanting light slits, and the
+ * steps up to the portico on its roof. Vaulted and half buried, it outlived the forum (600: the
+ * count's cellars).
+ */
+export function cryptoporticus(b: Builder): void {
+  b.box(PW + 1.0, POD, SQ.z1 - SQ.z0, dark, { at: [SQ.x1 + PW / 2 + 0.2, 0, (SQ.z0 + SQ.z1) / 2] });
+  for (const z of spread(8, SQ.z0 + 1.5, SQ.z1 - 1.5)) {
+    b.panel(0.35, 0.9, P.windowDark, { at: [SQ.x1 - 0.31, 0.35, z], facing: '-x' });
+    b.panel(0.35, 0.9, P.windowDark, { at: [SQ.x1 + PW + 0.7, 0.35, z], facing: '+x' });
+  }
+  for (const z of [SQ.z0 + 4, (SQ.z0 + SQ.z1) / 2, SQ.z1 - 4]) b.stairs(2.6, POD, 1.8, 6, dark, { at: [SQ.x1 - 1.2, 0, z], rotY: -Math.PI / 2 });
+}
+
+/** The monumental gateway from the main street (AD 60; the gate of the count's yard in 600). */
+export const GATEWAY_Z = SQ.z1 + PW / 2 + 0.4;
+export function forumGateway(b: Builder): void {
+  b.group({ at: [0, 0, GATEWAY_Z] }, () => {
+    arcade(b, 5.6, 8.6, PW + 0.8, stone, { openings: 1, openW: 3.4, openH: 6.0, shape: 'round', n: 3 });
+    b.box(6.2, 0.6, PW + 1.2, dark, { at: [0, 8.6, 0], jitter: false });
+  });
+}
+
+/** One of the pedestals of the honorary statues in the square, without its statue. */
+export function plinth(b: Builder, x: number, z: number): void {
+  b.box(1.4, 1.8, 1.4, stone, { at: [x, 0, z] });
+  b.box(1.6, 0.2, 1.6, dark, { at: [x, 1.8, z], jitter: false });
+  b.collider(1.5, 1.5, { at: [x, 0, z] });
 }
 
 export const forum: BuildingDef = {
@@ -56,8 +92,7 @@ export const forum: BuildingDef = {
   influences: ['roman-conquest'],
   build(b) {
     // the paved square
-    pave(b, SQ.x0, SQ.x1, SQ.z0 - 2, SQ.z1, mix(P.paving, stone, 0.45));
-    for (const x of spread(7, SQ.x0 + 2, SQ.x1 - 2)) b.box(0.08, 0.075, SQ.z1 - SQ.z0 + 2, tint(P.paving, -0.08), { at: [x, 0, (SQ.z0 + SQ.z1) / 2 - 1], jitter: false });
+    forumSquare(b);
 
     // ---- the basilica: aisles, a raised nave with clerestory, a colonnaded front to the forum
     const bx = (BAS.x0 + BAS.x1) / 2;
@@ -102,30 +137,22 @@ export const forum: BuildingDef = {
     portico(b, SQ.z1 - SQ.z0, 0, { at: [SQ.x0, 0, (SQ.z0 + SQ.z1) / 2], rotY: Math.PI / 2, doors: true });
     portico(b, SQ.z1 - SQ.z0, POD, { at: [SQ.x1, 0, (SQ.z0 + SQ.z1) / 2], rotY: -Math.PI / 2, doors: true });
     // the cryptoporticus under the east portico: its wall faces and slanting light slits
-    b.box(PW + 1.0, POD, SQ.z1 - SQ.z0, dark, { at: [SQ.x1 + PW / 2 + 0.2, 0, (SQ.z0 + SQ.z1) / 2] });
-    for (const z of spread(8, SQ.z0 + 1.5, SQ.z1 - 1.5)) {
-      b.panel(0.35, 0.9, P.windowDark, { at: [SQ.x1 - 0.31, 0.35, z], facing: '-x' });
-      b.panel(0.35, 0.9, P.windowDark, { at: [SQ.x1 + PW + 0.7, 0.35, z], facing: '+x' });
-    }
-    // steps up to the raised portico, and a stair going down into the gallery at its south end
-    for (const z of [SQ.z0 + 4, (SQ.z0 + SQ.z1) / 2, SQ.z1 - 4]) b.stairs(2.6, POD, 1.8, 6, dark, { at: [SQ.x1 - 1.2, 0, z], rotY: -Math.PI / 2 });
+    cryptoporticus(b);
+    // a stair going down into the gallery at the south end of the raised portico
     b.box(1.6, 0.05, 3.0, P.windowDark, { at: [SQ.x1 + 2.6, POD + 0.36, SQ.z1 - 1.8], jitter: false });
     b.deck(PW, SQ.z1 - SQ.z0, POD + 0.35, { at: [SQ.x1 + PW / 2, 0, (SQ.z0 + SQ.z1) / 2] });
     // the south range: porticoes either side of a monumental gateway onto the main street
     const half = (SQ.x1 - SQ.x0) / 2 - 2.6;
     for (const s of [-1, 1]) portico(b, half, 0, { at: [s * (half / 2 + 2.6), 0, SQ.z1 + 0.4], rotY: Math.PI });
-    b.group({ at: [0, 0, SQ.z1 + PW / 2 + 0.4] }, () => {
-      arcade(b, 5.6, 8.6, PW + 0.8, stone, { openings: 1, openW: 3.4, openH: 6.0, shape: 'round', n: 3 });
-      b.box(6.2, 0.6, PW + 1.2, dark, { at: [0, 8.6, 0], jitter: false });
+    forumGateway(b);
+    b.group({ at: [0, 0, GATEWAY_Z] }, () => {
       b.extrude([[-3.1, 0], [3.1, 0], [0, 1.4]], PW + 1.2, tile, { at: [0, 9.2, 0], rotY: 0 });
       statue(b, [0, 9.2, PW / 2 + 0.3], 2.0, P.bronze);
     });
     // statues and an altar in the square
     for (const [x, z] of [[-4.5, 3], [4.5, 3], [-4.5, -4], [4.5, -4]] as [number, number][]) {
-      b.box(1.4, 1.8, 1.4, stone, { at: [x, 0, z] });
-      b.box(1.6, 0.2, 1.6, dark, { at: [x, 1.8, z], jitter: false });
+      plinth(b, x, z);
       statue(b, [x, 2.0, z], 2.0, P.bronze, { arm: true });
-      b.collider(1.5, 1.5, { at: [x, 0, z] });
     }
     b.box(2.0, 1.1, 1.2, P.marble, { at: [0, 0, -2] });
     b.collider(2.0, 1.2, { at: [0, 0, -2] });

@@ -355,5 +355,5 @@ two tracks at z = -8.5 and -10.75, a platform, rails that the open line will joi
 |---|---|---|
 | 1849 | `embarcadere` | The first station: a neat classical pavilion and a timber and iron shed |
 | 1893 | `grande-gare` | A Belle Époque station: a stone front with a great glazed arch and a clock between sculpted figures, a wide iron and glass train shed. Cameo: the station of Tours (Laloux, 1898) |
-| 1928 | `reconstruction-station` | Rebuilt after the war in concrete and brick: an Art Deco clock tower, mosaics, a low wide hall. Cameo: the stations of Lens (1927) and Rouen (1928) |
-| 2007 | `gare-tgv` | The high-speed station: a long canopy of steel and glass over platforms, with a TGV at the platform. Cameo: Champagne-Ardenne TGV (2007) |
+| 1928 | `reconstruction-station` | Rebuilt after the war in concrete and brick: an Art Deco clock tower, mosaics, a low wide hall. Kept on the main station plot to the present. Revisions: the line electrified, with an electric locomotive in place of the steam Pacific (1959); regional trains only once the high-speed station opens (2007). Cameo: the stations of Lens (1927) and Rouen (1928) |
+| 2007 | `gare-tgv` | The high-speed station, on a plot of its own on open ground along the line east of the town (the old station stays in use): a long canopy of steel and glass over the platform, a glass hall, a TGV at the platform, and in front a bus station and car parks. Cameo: Champagne-Ardenne TGV (2007) |

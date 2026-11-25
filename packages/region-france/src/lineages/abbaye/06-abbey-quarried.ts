@@ -30,7 +30,7 @@ export const abbeyQuarried: BuildingDef = {
   date: 'c. 1800',
   summary:
     'In 1789 the Revolution takes the property of the Church to pay the nation’s debts, and in 1790 it abolishes monastic vows: the monks leave and the abbey is sold as national property. ' +
-    'Its buyers want stone, not a church: the vaults are brought down and the walls quarried away and carted off to build houses, until only the west front, too useful as a landmark or too hard to fell, is left standing alone. ' +
+    'Its buyers want stone, not a church: the vaults are brought down and the walls quarried away and carted off to build houses, until only the west front, too useful as a landmark or too hard to fell, is left standing alone. Under the choir the saint’s crypt of the sixth century, low and vaulted, comes to light again, not worth the trouble of breaking up. ' +
     'The Maurist ranges are too good to waste. One becomes a cotton-spinning mill, its long rooms filled with machines; the other houses soldiers.',
   materials: ['the old stone, for sale', 'rubble', 'timber hoists and carts'],
   lookFor: [
@@ -41,6 +41,6 @@ export const abbeyQuarried: BuildingDef = {
     { label: 'Barracks', note: 'The entrance range taken over by the army, with a tricolour over the gate and a sentry box.', at: [GATE_X + 1.3, 17.5, RANGE.W.z1 + 0.7] },
   ],
   modelledOn:
-    'Generic. The west front left standing alone is after Saint-Jean-des-Vignes at Soissons; the church pulled down for its stone is after Cluny (demolished from 1798 to the 1820s), and the monks’ buildings turned into a cotton mill after Royaumont (from 1791).',
+    'Generic. The west front left standing alone is after Saint-Jean-des-Vignes at Soissons; the church pulled down for its stone is after Cluny (demolished from 1798 to the 1820s), and the monks’ buildings turned into a cotton mill after Royaumont (from 1791). The crypt that outlived the church is after Saint-Médard at Soissons, whose Carolingian crypt is all that is left of the abbey.',
   build,
 };

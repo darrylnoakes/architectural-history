@@ -1,5 +1,5 @@
 import { P, mix, tint, type Builder, type BuildingDef } from '@ah/kit';
-import { HX, PLAT, TRACKS, clock, pacificTrain, platform, track, wallRects, forecourt, overheadLine } from './shared';
+import { HX, PLAT, TRACKS, clock, electricTrain, pacificTrain, terTrain, platform, track, wallRects, forecourt, overheadLine } from './shared';
 
 const ZF = 4.6; // street front of the hall
 const ZB = -3.0; // platform side
@@ -51,7 +51,11 @@ export const reconstructionStation: BuildingDef = {
   revisions: [
     {
       year: 1959,
-      note: 'The main line was electrified at 25,000 volts, as the Nord’s lines from Paris were at the end of the 1950s: masts and wires now stand over both tracks, and within a few years the steam engines were gone.',
+      note: 'The main line was electrified at 25,000 volts, as the Nord’s lines from Paris were at the end of the 1950s: masts and wires now stand over both tracks, and electric locomotives such as the BB 16000 of 1958, plain box cabs with a pantograph at each end, take over the expresses from the steam Pacifics.',
+    },
+    {
+      year: 2007,
+      note: 'When the high-speed station opened outside the town in 2007, the expresses to Paris moved there. The old station stays in use for the regional trains (TER), which the regions have run since 2002, now low electric units such as the AGC of 2004, and for the trains out to the new station.',
     },
   ],
   lookFor: [
@@ -177,7 +181,6 @@ export const reconstructionStation: BuildingDef = {
     }
     b.box(37.0, 0.18, 4.2, conc, { at: [0, top - 0.1, cz - 0.15] });
     b.box(37.0, 0.3, 0.12, conc, { at: [0, top - 0.2, cz - 2.25] }); // upstand at the edge
-    pacificTrain(b, [-19.2, 0, TRACKS[0]]);
     b.collider(36, 2.8, { at: [-1.0, 0, TRACKS[0]] });
     for (let x = -17.5; x <= 17.6; x += 5) b.collider(0.5, 0.5, { at: [x, 0, cz] });
 
@@ -186,7 +189,11 @@ export const reconstructionStation: BuildingDef = {
       b.cyl(0.25, 0.5, mix(P.glass, P.windowLit, 0.5), { at: [x, 4.6, 10.4], segs: 6 });
     }
 
-    // (built last: the revision adds it, so everything above stays the same)
+    // ------------------------------------------------ the line and the train at the platform
+    // (built last: the revisions alter only these, so everything above stays the same)
     if (b.since(1959)) overheadLine(b);
+    if (b.since(2007)) terTrain(b, [-18.6, 0, TRACKS[0]]);
+    else if (b.since(1959)) electricTrain(b, [-19.2, 0, TRACKS[0]]);
+    else pacificTrain(b, [-19.2, 0, TRACKS[0]]);
   },
 };

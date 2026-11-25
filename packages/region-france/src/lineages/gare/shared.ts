@@ -219,6 +219,103 @@ export function nineties(b: Builder, at: Vec3): void {
   });
 }
 
+/** A steel corridor coach of the 1920s to the 1960s, 13.4 m long, centred at local x. */
+function steelCoach(b: Builder, cx: number): void {
+  b.group({ at: [cx, 0, 0] }, () => {
+    const L = 13.4;
+    b.box(L, 2.5, 2.8, mix(P.doorGreen, P.black, 0.35), { at: [0, 1.1, 0] });
+    b.vault(2.9, L + 0.1, P.castIron, { at: [0, 3.55, 0], axis: 'x', squash: 0.25 });
+    for (const s of [-1, 1]) {
+      const rects: [number, number, number, number][] = [];
+      for (let i = 0; i < 9; i++) rects.push([-L / 2 + 0.9 + i * 1.46, 2.3, 1.0, 0.85]);
+      wallRects(b, rects, P.windowDark, [0, 0, s * 1.4], s > 0 ? '+z' : '-z', 0.02);
+    }
+    for (const x of [-L / 2 + 2, L / 2 - 2]) {
+      b.box(2.6, 0.4, 2.2, P.black, { at: [x, 0.5, 0] });
+      for (const dx of [-0.8, 0.8]) wheels(b, x + dx, 0.45, P.black);
+    }
+  });
+}
+
+/** The height of the contact wire put up by `overheadLine`. */
+const WIRE = 6.0;
+
+/** A pantograph raised from a roof at height y to the contact wire, at local x. */
+function pantograph(b: Builder, x: number, y: number): void {
+  const k = (WIRE - y) * 0.55;
+  b.box(1.2, 0.15, 1.0, P.black, { at: [x, y, 0] });
+  b.beam([x - 0.6, y + 0.15, 0], [x + k * 0.5, y + (WIRE - y) * 0.55, 0], 0.08, 0.08, P.steel);
+  b.beam([x + k * 0.5, y + (WIRE - y) * 0.55, 0], [x - 0.2, WIRE - 0.08, 0], 0.06, 0.06, P.steel);
+  b.box(0.15, 0.06, 1.7, P.steel, { at: [x - 0.2, WIRE - 0.08, 0] });
+}
+
+/**
+ * An electric locomotive of the Nord's first 25,000-volt lines (the BB 16000 of 1958, in general
+ * terms): a plain box cab on two four-wheeled bogies, both pantographs raised, facing -X, and a
+ * steel coach behind it. `at` is the front of the locomotive on the track centre line.
+ */
+export function electricTrain(b: Builder, at: Vec3): void {
+  const green = mix(P.doorGreen, P.black, 0.3);
+  const L = 16.2;
+  b.group({ at }, () => {
+    b.group({ at: [L / 2, 0, 0] }, () => {
+      b.box(L, 0.35, 2.8, P.black, { at: [0, 0.95, 0] });
+      b.box(L - 0.4, 2.75, 2.9, green, { at: [0, 1.3, 0] });
+      b.box(L - 1.2, 0.25, 2.6, tint(green, -0.08), { at: [0, 4.05, 0] });
+      // a pale band along the sides, and the cab windows at each end
+      b.sym((s) => b.box(L - 0.4, 0.18, 0.04, P.aluminium, { at: [0, 2.0, s * 1.46], jitter: false }));
+      for (const e of [-1, 1]) {
+        const x = e * (L / 2 - 0.2);
+        b.sym((s) => b.panel(1.0, 0.8, P.windowDark, { at: [x, 2.75, s * 0.7], facing: e > 0 ? '+x' : '-x', depth: 0.04 }));
+        b.sym((s) => b.panel(0.6, 0.7, P.windowDark, { at: [e * (L / 2 - 1.2), 2.8, s * 1.45], facing: s > 0 ? '+z' : '-z', depth: 0.03 }));
+        b.box(0.3, 0.55, 2.9, P.doorRed, { at: [e * (L / 2 + 0.05), 0.75, 0] });
+      }
+      // grilles for the cooling air along the sides
+      b.sym((s) => {
+        const rects: [number, number, number, number][] = [];
+        for (let i = 0; i < 6; i++) rects.push([-4.5 + i * 1.8, 2.5, 1.2, 0.9]);
+        wallRects(b, rects, tint(green, -0.15), [0, 0, s * 1.45], s > 0 ? '+z' : '-z', 0.02);
+      });
+      for (const x of [-L / 2 + 3.2, L / 2 - 3.2]) {
+        b.box(3.2, 0.5, 2.4, P.black, { at: [x, 0.45, 0] });
+        for (const dx of [-0.8, 0.8]) wheels(b, x + dx, 0.6, P.black);
+      }
+      for (const x of [-L / 2 + 3.5, L / 2 - 3.5]) pantograph(b, x, 4.3);
+    });
+    steelCoach(b, L + 7.2);
+  });
+}
+
+/**
+ * A regional electric train of the 2000s (an AGC unit in TER colours, in general terms): low
+ * articulated cars with rounded ends and wide windows, a pantograph raised, facing -X.
+ */
+export function terTrain(b: Builder, at: Vec3, len = 36): void {
+  const white = mix(P.white, P.aluminium, 0.3);
+  const band = mix(P.cladBlue, P.cladGrey, 0.2);
+  const W = 2.9;
+  const H = 4.1;
+  b.group({ at }, () => {
+    const nose: XY[] = [[0, 0.8], [0.4, 0.5], [3.0, 0.5], [3.0, H], [1.3, H], [0.25, 2.7]];
+    b.extrude(nose, W, white);
+    b.extrude(nose.map(([x, y]) => [len - x, y] as XY).reverse(), W, white);
+    b.extrude([[0.3, 2.75], [1.3, 3.95], [2.2, 3.95], [2.2, 2.7]], W + 0.04, P.glassDark, { mat: 'glass' });
+    const L = len - 6;
+    b.box(L, H - 0.5, W, white, { at: [len / 2, 0.5, 0] });
+    b.sym((s) => b.box(len - 1.0, 0.5, 0.04, band, { at: [len / 2, 0.9, s * (W / 2 + 0.01)], jitter: false }));
+    b.sym((s) => b.box(L - 1.0, 1.0, 0.04, P.glassDark, { at: [len / 2, 2.1, s * (W / 2 + 0.01)], mat: 'glass', jitter: false }));
+    for (const x of [len / 3, (2 * len) / 3]) {
+      b.box(0.3, H - 0.5, W + 0.06, band, { at: [x, 0.5, 0], jitter: false });
+      b.sym((s) => b.panel(1.3, 2.1, band, { at: [x + 1.6, 0.55, s * (W / 2)], facing: s > 0 ? '+z' : '-z', depth: 0.05 }));
+    }
+    for (const x of [2.4, len / 3, (2 * len) / 3, len - 2.4]) {
+      b.box(2.4, 0.4, 2.3, P.black, { at: [x, 0.25, 0] });
+      for (const dx of [-0.7, 0.7]) wheels(b, x + dx, 0.42, P.black);
+    }
+    pantograph(b, len / 3 + 3.0, H);
+  });
+}
+
 /** A Pacific express engine of the 1920s (bogie, three coupled wheels, trailing pair) with smoke deflectors, tender and two steel coaches. */
 export function pacificTrain(b: Builder, at: Vec3): void {
   const brown = mix(P.oakDark, P.doorRed, 0.35);
@@ -245,22 +342,7 @@ export function pacificTrain(b: Builder, at: Vec3): void {
       b.box(7.0, 2.1, 2.7, brown, { at: [0, 1.3, 0] });
       for (const x of [-2.6, -1.6, 1.6, 2.6]) wheels(b, x, 0.48, P.black);
     });
-    for (const cx of [27.0]) {
-      b.group({ at: [cx, 0, 0] }, () => {
-        const L = 13.4;
-        b.box(L, 2.5, 2.8, mix(P.doorGreen, P.black, 0.35), { at: [0, 1.1, 0] });
-        b.vault(2.9, L + 0.1, P.castIron, { at: [0, 3.55, 0], axis: 'x', squash: 0.25 });
-        for (const s of [-1, 1]) {
-          const rects: [number, number, number, number][] = [];
-          for (let i = 0; i < 9; i++) rects.push([-L / 2 + 0.9 + i * 1.46, 2.3, 1.0, 0.85]);
-          wallRects(b, rects, P.windowDark, [0, 0, s * 1.4], s > 0 ? '+z' : '-z', 0.02);
-        }
-        for (const x of [-L / 2 + 2, L / 2 - 2]) {
-          b.box(2.6, 0.4, 2.2, P.black, { at: [x, 0.5, 0] });
-          for (const dx of [-0.8, 0.8]) wheels(b, x + dx, 0.45, P.black);
-        }
-      });
-    }
+    steelCoach(b, 27.0);
   });
 }
 

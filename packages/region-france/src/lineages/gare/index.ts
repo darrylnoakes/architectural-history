@@ -14,6 +14,7 @@ const lineage: Lineage = {
     { from: 1849, builtUntil: 1870, def: embarcadere },
     { from: 1893, builtUntil: 1914, def: grandeGare },
     { from: 1928, builtUntil: 1939, def: reconstructionStation },
+    // on a plot of its own outside the town; the 1928 station stays in use on the main plot
     { from: 2007, def: gareTgv },
   ],
 };

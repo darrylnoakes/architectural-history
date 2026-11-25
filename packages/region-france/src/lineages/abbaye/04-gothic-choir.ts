@@ -17,7 +17,7 @@ export const gothicChoir: BuildingDef = {
   summary:
     'The abbot pulls down the Romanesque east end and builds a new choir that is lighter than anything before it. Pointed arches of different widths can be made to rise to the same height, so even the wedge-shaped bays of a curved walkway can be vaulted; stone ribs gather the weight of each vault on to a few points, slender single columns carry it, and buttresses outside take the thrust. ' +
     'The outer wall is freed to become glass: seven shallow chapels, so close together that they read as one rippling ring of windows, open off a double ambulatory. ' +
-    'The old nave, narthex and towers are left standing behind it, as the Carolingian nave was at Saint-Denis for almost ninety years: Gothic begins as a choir added to an older church.',
+    'The old nave, narthex and towers are left standing behind it, as the Carolingian nave was at Saint-Denis for almost ninety years: Gothic begins as a choir added to an older church. Under the new choir, as under Suger’s, the old crypt with the saint’s tomb is kept.',
   materials: ['fine limestone', 'monolithic columns', 'stained glass', 'flat clay tiles'],
   lookFor: [
     { label: 'Double ambulatory', note: 'Two concentric walkways round the sanctuary, divided only by a ring of columns, so the whole east end is one open space.', at: [amb[0], 6.8, amb[1]] },

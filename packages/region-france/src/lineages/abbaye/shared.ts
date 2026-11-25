@@ -716,7 +716,9 @@ function pierSites(): { at: Pt; round: boolean }[] {
     const t = Math.PI / 2 + (k * Math.PI) / G.n;
     out.push({ at: pol(CX, GH, G.r1, t), round: true }, { at: pol(CX, GH, G.r2, t), round: true });
   }
-  return out;
+  // the columns that stood on the crypt went with its vault's paving
+  const inCrypt = ([x, z]: Pt) => Math.abs(x - CX) < CRYPT.w / 2 + 0.4 && z > CRYPT.z0 - 0.4 && z < CRYPT.z1 + 0.4;
+  return out.filter((p) => !inCrypt(p.at));
 }
 
 /**
@@ -727,6 +729,8 @@ export function churchRemains(b: Builder, ph: Phase) {
   const museum = ph === MUSE;
   const wall = museum ? tint(STONE, 0.03) : tint(STONE, -0.05);
   westFront(b, wall, true);
+  // the crypt under the choir, vaulted and half sunk, outlives the church above it
+  crypt(b, tint(STONE, -0.05), tint(STONE, -0.1), { stair: false, vault: true });
   b.collider(12, 1.2, { at: [CX, 0, NZ - 0.6] });
   b.sym((s) => b.collider(TOWER.w, TOWER.w, { at: [CX + s * TOWER.dx, 0, TOWER.z] }));
   if (museum) {
@@ -748,7 +752,7 @@ export function churchRemains(b: Builder, ph: Phase) {
     else b.box(1.1, h, 1.1, wall, { at: [p.at[0], 0, p.at[1]] });
   }
   // rubble heaps where the vaults came down, and squared blocks sorted for sale
-  for (const [x, z, r] of [[-11, 2, 2.4], [-14, -9, 2.0], [-8, -15, 2.2], [-11, -7, 1.8], [-15, 6, 1.5]] as const) {
+  for (const [x, z, r] of [[-11, 2, 2.4], [-14, -9, 2.0], [-3.6, -15, 2.2], [-11, -7, 1.8], [-15, 6, 1.5]] as const) {
     b.blob(r, mix(P.rubble, STONE, 0.4), { at: [x, -r * 0.12, z], stretch: [1.3, 0.5, 1.1], detail: 0 });
   }
   for (const [x, z] of [[-5.5, 12.5], [-3.5, 14.5]] as const) {
